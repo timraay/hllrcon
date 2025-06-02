@@ -1,4 +1,4 @@
-<h1 align="center">`hllrcon` - Hell Let Loose RCON</h1>
+<h1 align="center"><code>hllrcon</code> - Hell Let Loose RCON</h1>
 
 <p align="center">
 <a href="https://github.com/timraay/hllrcon/releases" target="_blank">
