@@ -1,0 +1,110 @@
+[project]
+name = "hllrcon"
+version = "0.1.0"
+description = "Asynchronous implementation of the Hell Let Loose RCON protocol"
+readme = "README.md"
+authors = [
+    { name = "Tim Raaymakers" }
+]
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Development Status :: 4 - Beta",
+    "Framework :: AsyncIO",
+    "Framework :: Pydantic :: 2",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+license = "MIT"
+license-files = ["LICENSE*"]
+dependencies = [
+    "pydantic>=2.11.5",
+]
+
+[project.urls]
+# Documentation = "https://hllrcon.readthedocs.io/en/latest/index.html"
+Repository = "https://github.com/timraay/hllrcon"
+Issues = "https://github.com/timraay/hllrcon/issues"
+# Changelog = "https://hllrcon.readthedocs.io/en/latest/changelog.html"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
+[tool.ruff.lint]
+select = [
+    "ALL"
+]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D401",
+    "TD002",
+    "TD003",
+    "FIX002",
+    "ASYNC109",
+    "TRY003",
+    "PLR0913"
+]
+
+[tool.coverage.report]
+exclude_also = [
+    # Don't complain about missing debug-only code:
+    "def __repr__",
+
+    # Don't complain if tests don't hit defensive assertion code:
+    "raise AssertionError",
+    "raise NotImplementedError",
+
+    # Don't complain if non-runnable code isn't run:
+    "if __name__ == .__main__.:",
+
+    # Don't complain about abstract methods, they aren't run:
+    "@(abc\\.)?abstractmethod",
+
+    # Don't complain about type checker code
+    "if TYPE_CHECKING:",
+]
+omit = [
+    # Exclude "tests" and "scripts" folder from coverage report
+    "tests/*",
+    "scripts/*",
+]
+
+[tool.mypy]
+strict = true
+
+[tool.pytest.ini_options]
+markers = [
+    "do_allow_concurrent_requests",
+    "do_pop_v1_xorkey",
+    "do_use_request_headers",
+    "do_xor_responses",
+]
+asyncio_default_fixture_loop_scope = "function"
+
+[dependency-groups]
+dev = [
+    "mypy>=1.16.0",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=1.0.0",
+    "pytest-cov>=6.1.1",
+    "pytest-mock>=3.14.1",
+]

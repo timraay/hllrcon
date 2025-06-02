@@ -1,0 +1,26 @@
+{
+  // Configure unit testing integration
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+
+  // Enable auto import completions
+  "python.analysis.autoImportCompletions": true,
+
+  // Configure type checking
+  "python.analysis.typeCheckingMode": "off",
+  "mypy.dmypyExecutable": "${workspaceFolder}/.venv/Scripts/dmypy.exe",
+
+  "[python]": {
+    // Configure formatter
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "always",
+      "source.fixAll": "always"
+    },
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true
+  },
+
+  // Docstring generation
+  "autoDocstring.docstringFormat": "numpy",
+}
