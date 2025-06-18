@@ -17,6 +17,18 @@ class Rcon(RconCommands):
     """
 
     def __init__(self, host: str, port: int, password: str) -> None:
+        """Initialize a new `Rcon` instance.
+
+        Parameters
+        ----------
+        host : str
+            The hostname or IP address of the RCON server.
+        port : int
+            The port of the RCON server.
+        password : str
+            The password for the RCON server.
+
+        """
         super().__init__()
         self.host = host
         self.port = port

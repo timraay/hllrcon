@@ -1,6 +1,6 @@
 import json
 from functools import partial
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 from unittest import mock
 
 import pytest
@@ -8,6 +8,7 @@ from hllrcon.commands import RconCommands, cast_response_to_dict
 from hllrcon.responses import (
     AdminLogResponse,
     GetAllCommandsResponse,
+    GetBannedWordsResponse,
     GetCommandDetailsResponse,
     GetMapRotationResponse,
     GetPlayerResponse,
@@ -161,7 +162,7 @@ class TestCommands:
         sector5 = "Sector 5"
 
         await RconCommandsStub(
-            "ChangeSectorLayout",
+            "SetSectorLayout",
             2,
             {
                 "Sector_1": sector1,
@@ -170,7 +171,7 @@ class TestCommands:
                 "Sector_4": sector4,
                 "Sector_5": sector5,
             },
-        ).change_sector_layout(sector1, sector2, sector3, sector4, sector5)
+        ).set_sector_layout(sector1, sector2, sector3, sector4, sector5)
 
     async def test_commands_add_map_to_rotation(self) -> None:
         map_name = "Map1"
@@ -217,10 +218,10 @@ class TestCommands:
         old_index = 1
         new_index = 2
         await RconCommandsStub(
-            "MoveMapFromSequence",
+            "MoveMapInSequence",
             2,
             {"CurrentIndex": old_index, "NewIndex": new_index},
-        ).move_map_from_sequence(old_index, new_index)
+        ).move_map_in_sequence(old_index, new_index)
 
     async def test_commands_get_all_commands(self) -> None:
         response = await RconCommandsStub(
@@ -276,13 +277,13 @@ class TestCommands:
             "SendServerMessage",
             2,
             {"Message": message},
-        ).message_all_players(message)
+        ).set_welcome_message(message)
 
     async def test_commands_get_player(self) -> None:
         player_id = "player123"
 
         response = await RconCommandsStub(
-            "ServerInformation",
+            "GetServerInformation",
             2,
             {"Name": "player", "Value": player_id},
             json.dumps(
@@ -318,7 +319,7 @@ class TestCommands:
 
     async def test_commands_get_players(self) -> None:
         response = await RconCommandsStub(
-            "ServerInformation",
+            "GetServerInformation",
             2,
             {"Name": "players", "Value": ""},
             json.dumps(
@@ -358,7 +359,7 @@ class TestCommands:
 
     async def test_commands_get_map_rotation(self) -> None:
         response = await RconCommandsStub(
-            "ServerInformation",
+            "GetServerInformation",
             2,
             {"Name": "maprotation", "Value": ""},
             json.dumps(
@@ -387,7 +388,7 @@ class TestCommands:
 
     async def test_commands_get_map_sequence(self) -> None:
         response = await RconCommandsStub(
-            "ServerInformation",
+            "GetServerInformation",
             2,
             {"Name": "mapsequence", "Value": ""},
             json.dumps(
@@ -416,7 +417,7 @@ class TestCommands:
 
     async def test_commands_get_server_session(self) -> None:
         response = await RconCommandsStub(
-            "ServerInformation",
+            "GetServerInformation",
             2,
             {"Name": "session", "Value": ""},
             json.dumps(
@@ -438,7 +439,7 @@ class TestCommands:
 
     async def test_commands_get_server_config(self) -> None:
         response = await RconCommandsStub(
-            "ServerInformation",
+            "GetServerInformation",
             2,
             {"Name": "serverconfig", "Value": ""},
             json.dumps(
@@ -447,11 +448,26 @@ class TestCommands:
                     "buildNumber": "12345",
                     "buildRevision": "67890",
                     "supportedPlatforms": ["Steam", "WinGDK", "eos"],
+                    "passwordProtected": False,
                 },
             ),
         ).get_server_config()
 
         TypeAdapter(GetServerConfigResponse).validate_python(response)
+
+    async def test_commands_get_banned_words(self) -> None:
+        response = await RconCommandsStub(
+            "GetServerInformation",
+            2,
+            {"Name": "bannedwords", "Value": ""},
+            json.dumps(
+                {
+                    "bannedWords": ["garry", "blueberry"],
+                },
+            ),
+        ).get_banned_words()
+
+        TypeAdapter(GetBannedWordsResponse).validate_python(response)
 
     async def test_commands_broadcast(self) -> None:
         message = "Broadcast message"
@@ -472,7 +488,7 @@ class TestCommands:
     async def test_commands_get_command_details(self) -> None:
         command_id = "cmd1"
         response = await RconCommandsStub(
-            "ClientReferenceData",
+            "GetClientReferenceData",
             2,
             command_id,
             json.dumps(
@@ -513,7 +529,7 @@ class TestCommands:
         player_id = "pid"
         message = "Private message"
         await RconCommandsStub(
-            "SendServerMessage",
+            "MessagePlayer",
             2,
             {"Message": message, "PlayerId": player_id},
         ).message_player(player_id, message)
@@ -531,7 +547,7 @@ class TestCommands:
         player_id = "pid"
         reason = "AFK"
         await RconCommandsStub(
-            "Kick",
+            "KickPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason},
         ).kick_player(player_id, reason)
@@ -541,7 +557,7 @@ class TestCommands:
         reason = "Cheating"
         admin_name = "admin"
         await RconCommandsStub(
-            "PermanentBan",
+            "PermanentBanPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason, "AdminName": admin_name},
         ).ban_player(player_id, reason, admin_name)
@@ -552,7 +568,7 @@ class TestCommands:
         admin_name = "admin"
         duration_hours = 12
         await RconCommandsStub(
-            "TemporaryBan",
+            "TemporaryBanPlayer",
             2,
             {
                 "PlayerId": player_id,
@@ -565,10 +581,10 @@ class TestCommands:
     async def test_commands_remove_temp_ban(self) -> None:
         player_id = "pid"
         await RconCommandsStub(
-            "RemoveTempBan",
+            "RemoveTemporaryBan",
             2,
             {"PlayerId": player_id},
-        ).remove_temp_ban(player_id)
+        ).remove_temporary_ban(player_id)
 
     async def test_commands_remove_permanent_ban(self) -> None:
         player_id = "pid"
@@ -582,7 +598,7 @@ class TestCommands:
         commands = mock.Mock(spec=RconCommands)
         commands.remove_ban = partial(RconCommands.remove_ban, commands)
         await commands.remove_ban("pid")
-        commands.remove_temp_ban.assert_called_once_with("pid")
+        commands.remove_temporary_ban.assert_called_once_with("pid")
         commands.remove_permanent_ban.assert_called_once_with("pid")
 
     async def test_commands_set_auto_balance_enabled(self) -> None:
@@ -595,28 +611,104 @@ class TestCommands:
     async def test_commands_set_auto_balance_threshold(self) -> None:
         threshold = 5
         await RconCommandsStub(
-            "AutoBalanceThreshold",
+            "SetAutoBalanceThreshold",
             2,
             {"AutoBalanceThreshold": threshold},
         ).set_auto_balance_threshold(threshold)
 
     async def test_commands_set_vote_kick_enabled(self) -> None:
         await RconCommandsStub(
-            "EnableVoteToKick",
+            "SetVoteKick",
             2,
             {"Enabled": True},
         ).set_vote_kick_enabled(enabled=True)
 
     async def test_commands_reset_vote_kick_thresholds(self) -> None:
         await RconCommandsStub(
-            "ResetVoteToKickThreshold",
+            "ResetKickThreshold",
             2,
         ).reset_vote_kick_thresholds()
 
     async def test_commands_set_vote_kick_thresholds(self) -> None:
         thresholds = [(10, 2), (20, 3)]
         await RconCommandsStub(
-            "SetVoteToKickThreshold",
+            "SetVoteKickThreshold",
             2,
             {"ThresholdValue": "10,2,20,3"},
         ).set_vote_kick_thresholds(thresholds)
+
+    async def test_commands_add_banned_words(self) -> None:
+        words = ["badword1", "badword2"]
+        await RconCommandsStub(
+            "AddBannedWords",
+            2,
+            {"Words": ",".join(words)},
+        ).add_banned_words(words)
+
+    async def test_commands_remove_banned_words(self) -> None:
+        words = ["badword1", "badword2"]
+        await RconCommandsStub(
+            "RemoveBannedWords",
+            2,
+            {"Words": ",".join(words)},
+        ).remove_banned_words(words)
+
+    async def test_commands_add_vip(self) -> None:
+        player_id = "vip123"
+        description = "desc"
+        await RconCommandsStub(
+            "AddVipPlayer",
+            2,
+            {"PlayerId": player_id, "Description": description},
+        ).add_vip(player_id, description)
+
+    async def test_commands_remove_vip(self) -> None:
+        player_id = "vip123"
+        await RconCommandsStub(
+            "RemoveVipPlayer",
+            2,
+            {"PlayerId": player_id},
+        ).remove_vip(player_id)
+
+    async def test_commands_set_match_timer(self) -> None:
+        game_mode: Literal["Warfare"] = "Warfare"
+        minutes = 30
+        await RconCommandsStub(
+            "SetMatchTimer",
+            2,
+            {"GameMode": game_mode, "MatchLength": minutes},
+        ).set_match_timer(game_mode, minutes)
+
+    async def test_commands_remove_match_timer(self) -> None:
+        game_mode: Literal["Warfare"] = "Warfare"
+        await RconCommandsStub(
+            "RemoveMatchTimer",
+            2,
+            {"GameMode": game_mode},
+        ).reset_match_timer(game_mode)
+
+    async def test_commands_set_warmup_timer(self) -> None:
+        game_mode: Literal["Warfare"] = "Warfare"
+        minutes = 5
+        await RconCommandsStub(
+            "SetWarmupTimer",
+            2,
+            {"GameMode": game_mode, "WarmupLength": minutes},
+        ).set_warmup_timer(game_mode, minutes)
+
+    async def test_commands_remove_warmup_timer(self) -> None:
+        game_mode: Literal["Warfare"] = "Warfare"
+        await RconCommandsStub(
+            "RemoveWarmupTimer",
+            2,
+            {"GameMode": game_mode},
+        ).remove_warmup_timer(game_mode)
+
+    async def test_commands_set_dynamic_weather_enabled(self) -> None:
+        map_id = "map123"
+        enabled = True
+        await RconCommandsStub(
+            "SetMapWeatherToggle",
+            2,
+            {"MapId": map_id, "EnableDynamicWeather": enabled},
+        ).set_dynamic_weather_enabled(map_id, enabled=enabled)

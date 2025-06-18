@@ -1,6 +1,8 @@
 import asyncio
 from typing import TYPE_CHECKING, Any
 
+from typing_extensions import override
+
 from hllrcon.commands import RconCommands
 from hllrcon.exceptions import HLLConnectionLostError
 from hllrcon.protocol.protocol import RconProtocol
@@ -25,7 +27,14 @@ class RconConnection(RconCommands):
         self.on_disconnect: Callable[[], None] = lambda: None
 
     def is_connected(self) -> bool:
-        """Check if the connection is still active."""
+        """Check if the connection is still active.
+
+        Returns
+        -------
+        bool
+            True if the connection is active, False otherwise.
+
+        """
         return self._protocol.is_connected()
 
     def disconnect(self) -> None:
@@ -48,7 +57,23 @@ class RconConnection(RconCommands):
         port: int,
         password: str,
     ) -> "RconConnection":
-        """Connect to the RCON server."""
+        """Connect to the RCON server.
+
+        Parameters
+        ----------
+        host : str
+            The hostname or IP address of the RCON server.
+        port : int
+            The port number of the RCON server.
+        password : str
+            The password for the RCON server.
+
+        Returns
+        -------
+        RconConnection
+            A connection to the RCON server.
+
+        """
         protocol = await RconProtocol.connect(
             host=host,
             port=port,
@@ -61,6 +86,7 @@ class RconConnection(RconCommands):
 
         return self
 
+    @override
     async def execute(
         self,
         command: str,

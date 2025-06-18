@@ -157,6 +157,11 @@ class GetServerConfigResponse(TypedDict):
     buildNumber: str
     buildRevision: str
     supportedPlatforms: list[SupportedPlatform]
+    passwordProtected: bool
+
+
+class GetBannedWordsResponse(TypedDict):
+    bannedWords: list[str]
 
 
 class GetCommandDetailsResponseComboParameter(TypedDict):
