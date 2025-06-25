@@ -7,6 +7,9 @@
 <a href="https://pypi.python.org/pypi/hllrcon" target="_blank">
     <img src="https://img.shields.io/pypi/v/hllrcon.svg" alt=PyPI>
 </a>
+<a href="https://codecov.io/gh/timraay/hllrcon" target="_blank">
+    <img src="https://codecov.io/gh/timraay/hllrcon/branch/main/graph/badge.svg" alt="Branch Coverage">
+</a>
 <a href="https://github.com/timraay/hllrcon/blob/main/LICENSE" target="_blank">
     <img src="https://img.shields.io/github/license/timraay/hllrcon.svg" alt="License">
 </a>
