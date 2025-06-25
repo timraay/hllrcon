@@ -22,7 +22,7 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
-          python-version-file: ".python-version"
+          python-version-file: "pyproject.toml"
 
       - name: Lint with Ruff
         run: uv run ruff check hllrcon
@@ -42,7 +42,7 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
-          python-version-file: ".python-version"
+          python-version-file: "pyproject.toml"
 
       - name: Run mypy
         run: uv run mypy hllrcon
@@ -62,7 +62,7 @@ jobs:
       - name: "Set up Python"
         uses: actions/setup-python@v5
         with:
-          python-version-file: ".python-version"
+          python-version-file: "pyproject.toml"
 
       - name: Run tests with coverage
         run: uv run pytest tests --cov=hllrcon --cov-branch --cov-report=xml
