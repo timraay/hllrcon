@@ -1,0 +1,5 @@
+[lint]
+ignore = [
+    "ERA001",
+    "INP001",
+]

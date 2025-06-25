@@ -52,8 +52,8 @@ def test_pack_with_header(monkeypatch: pytest.MonkeyPatch) -> None:
         b'{"authToken":"tok","version":1,"name":"cmd","contentBody":"{\\"z\\":9}"}'
     )
     expected = (
-        req.request_id.to_bytes(4, byteorder="big")
-        + len(expected_body).to_bytes(4, byteorder="big")
+        req.request_id.to_bytes(4, byteorder="little")
+        + len(expected_body).to_bytes(4, byteorder="little")
         + expected_body
     )
     assert packed == expected

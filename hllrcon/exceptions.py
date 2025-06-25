@@ -19,6 +19,12 @@ class HLLCommandError(HLLError):
         self.status_code = status_code
         super().__init__(*args)
 
+    def __str__(self) -> str:
+        """Return a string representation of the error."""
+        exc_str = super().__str__()
+        header = f"({self.status_code})"
+        return f"{header} {exc_str}".rstrip()
+
 
 class HLLMessageError(HLLError):
     """Raised when the game server returns an unexpected value."""

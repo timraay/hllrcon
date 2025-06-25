@@ -5,11 +5,12 @@ from collections.abc import Callable, Coroutine, Mapping
 from functools import wraps
 from typing import Any, Literal, ParamSpec, TypeVar
 
+from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     AdminLogResponse,
-    GetAllCommandsResponse,
     GetBannedWordsResponse,
     GetCommandDetailsResponse,
+    GetCommandsResponse,
     GetMapRotationResponse,
     GetPlayerResponse,
     GetPlayersResponse,
@@ -40,6 +41,30 @@ def cast_response_to_dict(
                 msg = f"Expected JSON content to be a dict, got {type(parsed_result)}"
                 raise TypeError(msg)
             return dict_type(**parsed_result)
+
+        return wrapper
+
+    return decorator
+
+
+def cast_response_to_bool(
+    status_codes: set[int],
+) -> Callable[
+    [Callable[P, Coroutine[Any, Any, None]]],
+    Callable[P, Coroutine[Any, Any, bool]],
+]:
+    def decorator(
+        func: Callable[P, Coroutine[Any, Any, None]],
+    ) -> Callable[P, Coroutine[Any, Any, bool]]:
+        @wraps(func)
+        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> bool:
+            try:
+                await func(*args, **kwargs)
+            except HLLCommandError as e:
+                if e.status_code in status_codes:
+                    return False
+                raise
+            return True
 
         return wrapper
 
@@ -153,6 +178,32 @@ class RconCommands(ABC):
             {
                 "MapName": map_name,
             },
+        )
+
+    async def get_available_sector_names(
+        self,
+    ) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
+        """Retrieve a list of all sector names available on the current map.
+
+        Returns
+        -------
+        tuple[list[str], list[str], list[str], list[str], list[str]]
+            A list of sector names available on the current map.
+
+        """
+        details = await self.get_command_details("SetSectorLayout")
+        parameters = details["dialogueParameters"]
+        if not parameters or not all(
+            p["iD"].startswith("Sector_") for p in parameters[:5]
+        ):
+            msg = "Received unexpected response from server."
+            raise HLLMessageError(msg)
+        return (
+            parameters[0]["valueMember"].split(","),
+            parameters[1]["valueMember"].split(","),
+            parameters[2]["valueMember"].split(","),
+            parameters[3]["valueMember"].split(","),
+            parameters[4]["valueMember"].split(","),
         )
 
     async def set_sector_layout(
@@ -275,7 +326,7 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "ShuffleMapSequence",
+            "SetShuffleMapSequence",
             2,
             {
                 "Enable": enabled,
@@ -302,8 +353,24 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_dict(GetAllCommandsResponse)
-    async def get_all_commands(self) -> str:
+    async def get_available_maps(self) -> list[str]:
+        """Retrieve a list of all maps available on the server.
+
+        Returns
+        -------
+        list[str]
+            A list of map names available on the server.
+
+        """
+        details = await self.get_command_details("AddMapToRotation")
+        parameters = details["dialogueParameters"]
+        if not parameters or parameters[0]["iD"] != "MapName":
+            msg = "Received unexpected response from server."
+            raise HLLMessageError(msg)
+        return parameters[0]["valueMember"].split(",")
+
+    @cast_response_to_dict(GetCommandsResponse)
+    async def get_commands(self) -> str:
         """Retrieve a description of all the commands available on the server.
 
         Returns
@@ -312,7 +379,7 @@ class RconCommands(ABC):
             A response containing a list of all commands available on the server.
 
         """
-        return await self.execute("DisplayableCommands", 2)
+        return await self.execute("GetDisplayableCommands", 2)
 
     async def set_team_switch_cooldown(self, minutes: int) -> None:
         """Set the cooldown for switching teams.
@@ -583,15 +650,23 @@ class RconCommands(ABC):
             },
         )
 
-    async def kill_player(self, player_id: str, message: str) -> None:
+    @cast_response_to_bool({500})
+    async def kill_player(self, player_id: str, message: str | None = None) -> None:
         """Kill a specific player on the server.
 
         Parameters
         ----------
         player_id : str
             The ID of the player to kill.
-        message : str
-            The reason for killing the player. This will be displayed to the player.
+        message : str | None
+            The reason for killing the player. This will be displayed to the player, by
+            default None.
+
+        Returns
+        -------
+        bool
+            Whether the player was successfully killed. If the player is not on the
+            server or already dead, this will return `False`.
 
         """
         await self.execute(
@@ -603,6 +678,7 @@ class RconCommands(ABC):
             },
         )
 
+    @cast_response_to_bool({400})
     async def kick_player(self, player_id: str, message: str) -> None:
         """Kick a specific player from the server.
 
@@ -610,9 +686,14 @@ class RconCommands(ABC):
         ----------
         player_id : str
             The ID of the player to kick.
-
         message : str
             The reason for kicking the player. This will be displayed to the player.
+
+        Returns
+        -------
+        bool
+            Whether the player was successfully kicked. If the player is not on the
+            server, this will return `False`.
 
         """
         await self.execute(
@@ -668,6 +749,7 @@ class RconCommands(ABC):
                 },
             )
 
+    @cast_response_to_bool({400})
     async def remove_temporary_ban(self, player_id: str) -> None:
         """Remove a temporary ban for a specific player.
 
@@ -675,6 +757,12 @@ class RconCommands(ABC):
         ----------
         player_id : str
             The ID of the player to remove the temporary ban for.
+
+        Returns
+        -------
+        bool
+            Whether the player was successfully unbanned. If the player is not
+            temporarily banned, this will return `False`.
 
         """
         await self.execute(
@@ -685,6 +773,7 @@ class RconCommands(ABC):
             },
         )
 
+    @cast_response_to_bool({400})
     async def remove_permanent_ban(self, player_id: str) -> None:
         """Remove a permanent ban for a specific player.
 
@@ -692,6 +781,12 @@ class RconCommands(ABC):
         ----------
         player_id : str
             The ID of the player to remove the permanent ban for.
+
+        Returns
+        -------
+        bool
+            Whether the player was successfully unbanned. If the player is not
+            permanently banned, this will return `False`.
 
         """
         await self.execute(
@@ -702,7 +797,7 @@ class RconCommands(ABC):
             },
         )
 
-    async def remove_ban(self, player_id: str) -> None:
+    async def unban_player(self, player_id: str) -> bool:
         """Remove any temporary or permanent ban for a specific player.
 
         This is equivalent to calling both `remove_temporary_ban` and
@@ -713,11 +808,18 @@ class RconCommands(ABC):
         player_id : str
             The ID of the player to remove the ban for.
 
+        Returns
+        -------
+        bool
+            Whether the player was successfully unbanned. If the player is not
+            banned, this will return `False`.
+
         """
-        await asyncio.gather(
+        responses = await asyncio.gather(
             self.remove_temporary_ban(player_id),
             self.remove_permanent_ban(player_id),
         )
+        return any(responses)
 
     async def set_auto_balance_enabled(self, *, enabled: bool) -> None:
         """Enable or disable team balancing.
@@ -993,6 +1095,6 @@ class RconCommands(ABC):
             2,
             {
                 "MapId": map_id,
-                "EnableDynamicWeather": enabled,
+                "Enable": enabled,
             },
         )

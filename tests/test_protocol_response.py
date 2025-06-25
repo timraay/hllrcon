@@ -99,4 +99,4 @@ def test_raise_for_status_raises(code: RconResponseStatus) -> None:
     with pytest.raises(HLLCommandError) as excinfo:
         resp.raise_for_status()
     assert excinfo.value.status_code == code
-    assert str(excinfo.value) == "fail"
+    assert str(excinfo.value) == f"({code}) fail"

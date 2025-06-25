@@ -23,6 +23,7 @@ class PlayerTeam(IntEnum):
     GB = 3
     DAK = 4
     B8A = 5
+    UNASSIGNED = 6
 
 
 class PlayerRole(IntEnum):
@@ -51,14 +52,14 @@ class AdminLogResponse(TypedDict):
     entries: list[AdminLogResponseEntry]
 
 
-class GetAllCommandsResponseEntry(TypedDict):
+class GetCommandsResponseEntry(TypedDict):
     iD: str
     friendlyName: str
     isClientSupported: bool
 
 
-class GetAllCommandsResponse(TypedDict):
-    entries: list[GetAllCommandsResponseEntry]
+class GetCommandsResponse(TypedDict):
+    entries: list[GetCommandsResponseEntry]
 
 
 class GetPlayerResponseScoreData(TypedDict):
@@ -69,13 +70,13 @@ class GetPlayerResponseScoreData(TypedDict):
 
 
 class GetPlayerResponseWorldPosition(TypedDict):
-    x: int
+    x: float
     """The east-west horizontal axis. Between -100000 and 100000."""
 
-    y: int
+    y: float
     """The north-south horizontal axis. Between -100000 and 100000."""
 
-    z: int
+    z: float
     """The vertical axis."""
 
 
@@ -90,11 +91,10 @@ class GetPlayerResponse(TypedDict):
     """The player's ID"""
 
     platform: PlayerPlatform
-    """The player's platform. One of "steam", ???"""
+    """The player's platform"""
 
-    eOSId: str
-    """The player's Epic Online Services ID.
-        The "|" might be a bug and be removed in the future."""
+    eosId: str
+    """The player's Epic Online Services ID"""
 
     level: int
     """The player's level"""
@@ -148,8 +148,8 @@ class GetServerSessionResponse(TypedDict):
     maxPlayerCount: int
     queueCount: int
     maxQueueCount: int
-    vIPQueueCount: int
-    maxVIPQueueCount: int
+    vipQueueCount: int
+    maxVipQueueCount: int
 
 
 class GetServerConfigResponse(TypedDict):

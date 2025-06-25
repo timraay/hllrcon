@@ -200,7 +200,7 @@ def test_read_from_buffer_too_small(
 def test_read_from_buffer_incomplete_packet(
     protocol: RconProtocol,
 ) -> None:
-    data = b"\x00\x00\x00\x01\x00\x00\x00\x05Hell"
+    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hell"
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -216,7 +216,7 @@ def test_read_from_buffer_exactly_one_packet_with_waiters(
         "hllrcon.protocol.protocol.RconResponse.unpack",
         autospec=True,
     )
-    data = b"\x00\x00\x00\x01\x00\x00\x00\x05Hello"
+    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     waiter: asyncio.Future[RconResponse] = asyncio.Future()
     protocol._waiters[1] = waiter
@@ -237,7 +237,7 @@ def test_read_from_buffer_exactly_one_packet_missing_waiter(
         "hllrcon.protocol.protocol.RconResponse.unpack",
         autospec=True,
     )
-    data = b"\x00\x00\x00\x01\x00\x00\x00\x05Hello"
+    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -254,7 +254,7 @@ def test_read_from_buffer_exactly_one_packet_with_queue(
         "hllrcon.protocol.protocol.RconResponse.unpack",
         autospec=True,
     )
-    data = b"\x00\x00\x00\x01\x00\x00\x00\x05Hello"
+    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     waiter1: asyncio.Future[RconResponse] = asyncio.Future()
     waiter2: asyncio.Future[RconResponse] = asyncio.Future()
@@ -278,7 +278,7 @@ def test_read_from_buffer_exactly_one_packet_empty_queue(
         "hllrcon.protocol.protocol.RconResponse.unpack",
         autospec=True,
     )
-    data = b"\x00\x00\x00\x01\x00\x00\x00\x05Hello"
+    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -296,8 +296,8 @@ def test_read_from_buffer_more_than_one_packet(
         autospec=True,
     )
     data = (
-        b"\x00\x00\x00\x01\x00\x00\x00\x05Hello"
-        b"\x00\x00\x00\x02\x00\x00\x00\x05World"
+        b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
+        b"\x02\x00\x00\x00\x05\x00\x00\x00World"
         b"\x00\x00"
     )
 
@@ -504,8 +504,8 @@ def make_response(request_id: int, message: str) -> bytes:
     }
     body_encoded = json.dumps(body).encode("utf-8")
     return (
-        request_id.to_bytes(4, "big")
-        + len(body_encoded).to_bytes(4, "big")
+        request_id.to_bytes(4, "little")
+        + len(body_encoded).to_bytes(4, "little")
         + body_encoded
     )
 

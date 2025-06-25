@@ -5,11 +5,12 @@ from unittest import mock
 
 import pytest
 from hllrcon.commands import RconCommands, cast_response_to_dict
+from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     AdminLogResponse,
-    GetAllCommandsResponse,
     GetBannedWordsResponse,
     GetCommandDetailsResponse,
+    GetCommandsResponse,
     GetMapRotationResponse,
     GetPlayerResponse,
     GetPlayersResponse,
@@ -27,7 +28,7 @@ class RconCommandsStub(RconCommands):
         command: str,
         version: int,
         body: str | dict[str, Any] = "",
-        response: str = "",
+        response: str | HLLCommandError = "",
     ) -> None:
         super().__init__()
         self.command = command
@@ -44,6 +45,9 @@ class RconCommandsStub(RconCommands):
         assert command == self.command
         assert version == self.version
         assert body == self.body
+
+        if isinstance(self.response, HLLCommandError):
+            raise self.response
         return self.response
 
 
@@ -209,7 +213,7 @@ class TestCommands:
 
     async def test_commands_set_map_shuffle_enabled(self) -> None:
         await RconCommandsStub(
-            "ShuffleMapSequence",
+            "SetShuffleMapSequence",
             2,
             {"Enable": True},
         ).set_map_shuffle_enabled(enabled=True)
@@ -223,9 +227,77 @@ class TestCommands:
             {"CurrentIndex": old_index, "NewIndex": new_index},
         ).move_map_in_sequence(old_index, new_index)
 
-    async def test_commands_get_all_commands(self) -> None:
+    async def test_commands_get_available_maps(self) -> None:
+        command_id = "AddMapToRotation"
+        maps = ["foy_warfare", "stmariedumont_warfare", "hurtgenforest_warfare_V2"]
         response = await RconCommandsStub(
-            "DisplayableCommands",
+            "GetClientReferenceData",
+            2,
+            command_id,
+            json.dumps(
+                {
+                    "name": command_id,
+                    "text": "Add Map to Rotation",
+                    "description": "Add a new map to the map rotation at an index.",
+                    "dialogueParameters": [
+                        {
+                            "type": "Combo",
+                            "name": "Map Name",
+                            "iD": "MapName",
+                            "displayMember": ",".join(maps),
+                            "valueMember": ",".join(maps),
+                        },
+                        {
+                            "type": "Number",
+                            "name": "At Index",
+                            "iD": "Index",
+                            "displayMember": "",
+                            "valueMember": "",
+                        },
+                    ],
+                },
+            ),
+        ).get_available_maps()
+        assert response == maps
+
+    async def test_commands_get_available_maps_invalid_message(self) -> None:
+        command_id = "AddMapToRotation"
+        maps = ["foy_warfare", "stmariedumont_warfare", "hurtgenforest_warfare_V2"]
+        stub = RconCommandsStub(
+            "GetClientReferenceData",
+            2,
+            command_id,
+            json.dumps(
+                {
+                    "name": command_id,
+                    "text": "Add Map to Rotation",
+                    "description": "Add a new map to the map rotation at an index.",
+                    "dialogueParameters": [
+                        {
+                            "type": "Combo",
+                            "name": "Map Name",
+                            "iD": "NotMapName",  # Changed "MapName" to "NotMapName"
+                            "displayMember": ",".join(maps),
+                            "valueMember": ",".join(maps),
+                        },
+                        {
+                            "type": "Number",
+                            "name": "At Index",
+                            "iD": "Index",
+                            "displayMember": "",
+                            "valueMember": "",
+                        },
+                    ],
+                },
+            ),
+        )
+
+        with pytest.raises(HLLMessageError):
+            await stub.get_available_maps()
+
+    async def test_commands_get_commands(self) -> None:
+        response = await RconCommandsStub(
+            "GetDisplayableCommands",
             2,
             response=json.dumps(
                 {
@@ -243,9 +315,9 @@ class TestCommands:
                     ],
                 },
             ),
-        ).get_all_commands()
+        ).get_commands()
 
-        TypeAdapter(GetAllCommandsResponse).validate_python(response)
+        TypeAdapter(GetCommandsResponse).validate_python(response)
 
     async def test_commands_set_team_switch_cooldown(self) -> None:
         minutes = 10
@@ -292,7 +364,7 @@ class TestCommands:
                     "clanTag": "ClanA",
                     "iD": player_id,
                     "platform": "steam",
-                    "eOSId": "|1234567890",
+                    "eosId": "1234567890",
                     "level": 25,
                     "team": 1,
                     "role": 1,
@@ -330,7 +402,7 @@ class TestCommands:
                             "clanTag": "ClanA",
                             "iD": "123",
                             "platform": "steam",
-                            "eOSId": "|1234567890",
+                            "eosId": "1234567890",
                             "level": 25,
                             "team": 1,
                             "role": 1,
@@ -429,8 +501,8 @@ class TestCommands:
                     "maxPlayerCount": 100,
                     "queueCount": 5,
                     "maxQueueCount": 6,
-                    "vIPQueueCount": 1,
-                    "maxVIPQueueCount": 2,
+                    "vipQueueCount": 1,
+                    "maxVipQueueCount": 2,
                 },
             ),
         ).get_server_session()
@@ -537,11 +609,25 @@ class TestCommands:
     async def test_commands_kill_player(self) -> None:
         player_id = "pid"
         reason = "Misconduct"
-        await RconCommandsStub(
+        result = await RconCommandsStub(
             "PunishPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason},
         ).kill_player(player_id, reason)
+        assert result is True
+
+    async def test_commands_kill_player_already_dead(self) -> None:
+        player_id = "pid"
+        reason = "Already dead"
+        stub = RconCommandsStub(
+            "PunishPlayer",
+            2,
+            {"PlayerId": player_id, "Reason": reason},
+            response=HLLCommandError(500, "Unable to perform request."),
+        )
+
+        result = await stub.kill_player(player_id, reason)
+        assert result is False
 
     async def test_commands_kick_player(self) -> None:
         player_id = "pid"
@@ -596,7 +682,7 @@ class TestCommands:
 
     async def test_commands_remove_ban(self) -> None:
         commands = mock.Mock(spec=RconCommands)
-        commands.remove_ban = partial(RconCommands.remove_ban, commands)
+        commands.remove_ban = partial(RconCommands.unban_player, commands)
         await commands.remove_ban("pid")
         commands.remove_temporary_ban.assert_called_once_with("pid")
         commands.remove_permanent_ban.assert_called_once_with("pid")
@@ -710,5 +796,5 @@ class TestCommands:
         await RconCommandsStub(
             "SetMapWeatherToggle",
             2,
-            {"MapId": map_id, "EnableDynamicWeather": enabled},
+            {"MapId": map_id, "Enable": enabled},
         ).set_dynamic_weather_enabled(map_id, enabled=enabled)

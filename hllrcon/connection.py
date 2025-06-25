@@ -96,4 +96,5 @@ class RconConnection(RconCommands):
         if self._disconnect_event.is_set():
             raise HLLConnectionLostError
         response = await self._protocol.execute(command, version, body)
+        response.raise_for_status()
         return response.content_body
