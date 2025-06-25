@@ -4,7 +4,7 @@ from typing import Any, Literal, TypedDict
 from unittest import mock
 
 import pytest
-from hllrcon.commands import RconCommands, cast_response_to_dict
+from hllrcon.commands import RconCommands, cast_response_to_bool, cast_response_to_dict
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     AdminLogResponse,
@@ -95,6 +95,45 @@ class TestCastResponseToDict:
         assert dummy_func.__doc__ == "Docstring here."
 
 
+class TestCastResponseToBool:
+    async def test_cast_response_to_bool_success(self) -> None:
+        called = {}
+
+        @cast_response_to_bool({400})
+        async def dummy_func() -> None:
+            called["called"] = True
+
+        result = await dummy_func()
+        assert result is True
+        assert called == {"called": True}
+
+    async def test_cast_response_to_bool_failure(self) -> None:
+        called = {}
+
+        @cast_response_to_bool({400})
+        async def dummy_func() -> None:
+            called["called"] = True
+            msg = "Command failed"
+            raise HLLCommandError(400, msg)
+
+        result = await dummy_func()
+        assert result is False
+        assert called == {"called": True}
+
+    async def test_cast_response_to_bool_exception(self) -> None:
+        called = {}
+        msg = "Internal server error"
+
+        @cast_response_to_bool({400})
+        async def dummy_func() -> None:
+            called["called"] = True
+            raise HLLCommandError(500, msg)
+
+        with pytest.raises(HLLCommandError, match=msg):
+            await dummy_func()
+        assert called == {"called": True}
+
+
 class TestCommands:
     async def test_commands_add_admin(self) -> None:
         player_id = "Player ID"
@@ -157,6 +196,66 @@ class TestCommands:
             2,
             {"MapName": map_name},
         ).change_map(map_name)
+
+    async def test_commands_get_available_sector_names(self) -> None:
+        command_id = "SetSectorLayout"
+        sector_names: tuple[list[str], ...] = (
+            ["ROAD TO RECOGNE", "COBRU APPROACH", "ROAD TO NOVILLE"],
+            ["COBRU FACTORY", "FOY", "FLAK BATTERY"],
+            ["WEST BEND", "SOUTHERN EDGE", "DUGOUT BARN"],
+            ["N30 HIGHWAY", "BIZORY-FOY ROAD", "EASTERN OURTHE"],
+            ["ROAD TO BASTOGNE", "BOIS JACQUES", "FOREST OUTSKIRTS"],
+        )
+        response = await RconCommandsStub(
+            "GetClientReferenceData",
+            2,
+            command_id,
+            json.dumps(
+                {
+                    "name": "SetSectorLayout",
+                    "text": "Set Sector Layout",
+                    "description": "Configure the active sector layout",
+                    "dialogueParameters": [
+                        {
+                            "type": "Combo",
+                            "name": f"Sector {i + 1}",
+                            "iD": f"Sector_{i + 1}",
+                            "displayMember": ",".join(sector_names[i]),
+                            "valueMember": ",".join(sector_names[i]),
+                        }
+                        for i in range(5)
+                    ],
+                },
+            ),
+        ).get_available_sector_names()
+        assert response == sector_names
+
+    async def test_commands_get_available_sector_names_invalid_message(self) -> None:
+        command_id = "SetSectorLayout"
+        stub = RconCommandsStub(
+            "GetClientReferenceData",
+            2,
+            command_id,
+            json.dumps(
+                {
+                    "name": "SetSectorLayout",
+                    "text": "Set Sector Layout",
+                    "description": "Configure the active sector layout",
+                    "dialogueParameters": [
+                        {
+                            "type": "Combo",
+                            "name": "Sector 1",
+                            "iD": "Some incorrect ID",
+                            "displayMember": "blib,blab,blob",
+                            "valueMember": "blib,blab,blob",
+                        },
+                    ],
+                },
+            ),
+        )
+
+        with pytest.raises(HLLMessageError):
+            await stub.get_available_sector_names()
 
     async def test_commands_change_sector_layout(self) -> None:
         sector1 = "Sector 1"
