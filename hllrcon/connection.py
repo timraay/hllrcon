@@ -68,6 +68,15 @@ class RconConnection(RconCommands):
         password : str
             The password for the RCON server.
 
+        Raises
+        ------
+        HLLConnectionError
+            The address and port could not be resolved.
+        HLLConnectionRefusedError
+            The server refused the connection.
+        HLLAuthError
+            The provided password is incorrect.
+
         Returns
         -------
         RconConnection

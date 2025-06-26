@@ -8,6 +8,8 @@ from collections import deque
 from collections.abc import Callable
 from typing import Any, Self
 
+from typing_extensions import override
+
 from hllrcon.exceptions import (
     HLLAuthError,
     HLLConnectionError,
@@ -26,6 +28,30 @@ from hllrcon.protocol.response import RconResponse
 
 
 class RconProtocol(asyncio.Protocol):
+    """Implementation of the RCON protocol for Hell Let Loose.
+
+    This class extends the TCP protocol to handle communication with a
+    Hell Let Loose server using the RCON protocol, including sending commands
+    and receiving responses.
+
+    Example usage:
+    ```python
+    conn = await RconProtocol.connect(host=..., port=..., password=...)
+    response = await conn.execute(
+        command="KickPlayer",
+        version=2,
+        content_body={
+            "PlayerId": "75670000000000000",
+            "Reason": "Violation of rules",
+        },
+    )
+    conn.disconnect()
+    ```
+
+    You likely do not want to use this class directly. Instead, use `RconConnection`
+    which provides a higher-level interface for interacting with the game server.
+    """
+
     def __init__(
         self,
         loop: asyncio.AbstractEventLoop,
@@ -33,6 +59,24 @@ class RconProtocol(asyncio.Protocol):
         logger: logging.Logger | None = None,
         on_connection_lost: Callable[[Exception | None], Any] | None = None,
     ) -> None:
+        """Initialize a RconProtocol instance.
+
+        Do not initialize this class directly. Use the `connect` class method instead.
+
+        Parameters
+        ----------
+        loop : asyncio.AbstractEventLoop
+            The event loop to use for asynchronous operations.
+        timeout : float | None, optional
+            The timeout for operations, in seconds. If None, no timeout is set.
+        logger : logging.Logger | None, optional
+            A logger instance for logging messages. If None, a default logger is used.
+        on_connection_lost : Callable[[Exception | None], Any] | None, optional
+            A callback function to call when the connection is lost. It receives an
+            exception if the connection was lost due to an error, or None if it was
+            closed gracefully.
+
+        """
         self._transport: asyncio.Transport | None = None
         self._buffer: bytes = b""
 
@@ -66,6 +110,41 @@ class RconProtocol(asyncio.Protocol):
         logger: logging.Logger | None = None,
         on_connection_lost: Callable[[Exception | None], Any] | None = None,
     ) -> Self:
+        """Establish a connection to the Hell Let Loose server.
+
+        This method creates a connection to the specified server and authenticates
+        using the provided password. It returns an instance of the RconProtocol.
+
+        Parameters
+        ----------
+        host : str
+            The hostname or IP address of the Hell Let Loose server.
+        port : int
+            The port number on which the RCON server is listening.
+        password : str
+            The RCON password for authentication.
+        timeout : float | None, optional
+            The timeout for the connection attempt, in seconds, by default 10.
+        loop : asyncio.AbstractEventLoop | None, optional
+            The event loop to use for asynchronous operations, by default None. If None,
+            `asyncio.get_running_loop()` is used.
+        logger : logging.Logger | None, optional
+            A logger instance for logging messages, by default None. If None,
+            `logging.getLogger()` is used.
+        on_connection_lost : Callable[[Exception | None], Any] | None, optional
+            An optional callback function to call when the connection is lost, by
+            default None.
+
+        Raises
+        ------
+        HLLConnectionError
+            The address and port could not be resolved.
+        HLLConnectionRefusedError
+            The server refused the connection.
+        HLLAuthError
+            The provided password is incorrect.
+
+        """
         loop = loop or asyncio.get_running_loop()
 
         def protocol_factory() -> Self:  # type: ignore[type-var, misc]
@@ -99,13 +178,26 @@ class RconProtocol(asyncio.Protocol):
         return self
 
     def disconnect(self) -> None:
+        """Close the connection to the Hell Let Loose server.
+
+        If the connection is already closed, this method does nothing.
+        """
         if self._transport:
             self._transport.close()
         self._transport = None
 
     def is_connected(self) -> bool:
+        """Check if the protocol is connected to the server.
+
+        Returns
+        -------
+        bool
+            True if the protocol is connected, False otherwise.
+
+        """
         return self._transport is not None and not self._transport.is_closing()
 
+    @override
     def connection_made(self, transport: asyncio.BaseTransport) -> None:
         self.logger.info("Connection made! Transport: %s", transport)
         if not isinstance(transport, asyncio.Transport):
@@ -113,6 +205,7 @@ class RconProtocol(asyncio.Protocol):
             raise TypeError(msg)
         self._transport = transport
 
+    @override
     def data_received(self, data: bytes) -> None:
         self.logger.debug("Incoming: (%s) %s", self._xor(data).count(b"\t"), data[:10])
 
@@ -172,6 +265,7 @@ class RconProtocol(asyncio.Protocol):
             if self._buffer:
                 self._read_from_buffer()
 
+    @override
     def connection_lost(self, exc: Exception | None) -> None:
         self._transport = None
 
@@ -200,7 +294,21 @@ class RconProtocol(asyncio.Protocol):
                 self.logger.exception("Failed to invoke on_connection_lost hook")
 
     def _xor(self, message: bytes, offset: int = 0) -> bytes:
-        """Encrypt or decrypt a message using the XOR key provided by the server."""
+        """Encrypt or decrypt a message using the XOR key provided by the server.
+
+        Parameters
+        ----------
+        message : bytes
+            The message to encrypt or decrypt.
+        offset : int, optional
+            The offset to apply to the XOR key. Defaults to 0.
+
+        Returns
+        -------
+        bytes
+            The encrypted or decrypted message.
+
+        """
         if not self.xorkey:
             return message
 
@@ -227,6 +335,30 @@ class RconProtocol(asyncio.Protocol):
         version: int,
         content_body: dict[str, Any] | str = "",
     ) -> RconResponse:
+        """Execute a RCON command.
+
+        Sends a request to the server and waits for a response.
+
+        Parameters
+        ----------
+        command : str
+            The command to execute on the server.
+        version : int
+            The version of the command.
+        content_body : dict[str, Any] | str, optional
+            An additional payload to send along with the command. Must be
+            JSON-serializable.
+
+        Raises
+        ------
+        HLLConnectionError
+            The connection was closed
+        HLLCommandError
+            The server failed to execute the command
+        HLLMessageError
+            The server returned an unexpected response
+
+        """
         if not self._transport:
             msg = "Connection is closed"
             raise HLLConnectionError(msg)
@@ -279,6 +411,19 @@ class RconProtocol(asyncio.Protocol):
                 self._lock.release()
 
     async def authenticate(self, password: str) -> None:
+        """Authenticate with the Hell Let Loose server.
+
+        Parameters
+        ----------
+        password : str
+            The RCON password to authenticate with.
+
+        Raises
+        ------
+        HLLAuthError
+            The provided password is incorrect.
+
+        """
         self.logger.debug("Waiting to login...")
 
         xorkey_resp = await self.execute("ServerConnect", 2, "")
