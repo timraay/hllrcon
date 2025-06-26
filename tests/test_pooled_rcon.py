@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 from typing import Any
 from unittest import mock
 
@@ -12,6 +13,7 @@ from pytest_mock import MockerFixture
 def pool(mocker: MockerFixture) -> PooledRcon:
     def worker_factory(*_args: Any, **_kwargs: dict[str, Any]) -> mock.Mock:  # noqa: ANN401
         mock_worker = mock.Mock(PooledRconWorker)
+        mock_worker.is_connected.return_value = True
         mock_worker.is_disconnected.return_value = False
         return mock_worker
 
@@ -24,17 +26,17 @@ def pool(mocker: MockerFixture) -> PooledRcon:
         host="localhost",
         port=1234,
         password="password",
-        pool_size=2,
+        max_workers=2,
     )
 
 
 @pytest.mark.asyncio
 async def test_get_worker_empty_pool(pool: PooledRcon) -> None:
     async with pool._get_available_worker():
-        assert len(pool.workers) == 1
+        assert len(pool._workers) == 1
         assert pool._queue.empty()
 
-    assert len(pool.workers) == 1
+    assert len(pool._workers) == 1
     assert pool._queue.qsize() == 1
 
 
@@ -45,10 +47,10 @@ async def test_get_worker_one_available(pool: PooledRcon) -> None:
 
     async with pool._get_available_worker() as worker2:
         assert worker1 is worker2
-        assert len(pool.workers) == 1
+        assert len(pool._workers) == 1
         assert pool._queue.qsize() == 0
 
-    assert len(pool.workers) == 1
+    assert len(pool._workers) == 1
     assert pool._queue.qsize() == 1
 
 
@@ -59,10 +61,10 @@ async def test_get_worker_add_new(pool: PooledRcon) -> None:
         pool._get_available_worker() as worker2,
     ):
         assert worker1 is not worker2
-        assert len(pool.workers) == 2
+        assert len(pool._workers) == 2
         assert pool._queue.qsize() == 0
 
-    assert len(pool.workers) == 2
+    assert len(pool._workers) == 2
     assert pool._queue.qsize() == 2
 
 
@@ -87,19 +89,51 @@ async def test_get_worker_replace_disconnected(pool: PooledRcon) -> None:
             pass
 
         worker2.is_disconnected.return_value = True  # type: ignore[attr-defined]
-        pool.workers.remove(worker2)
+        pool._workers.remove(worker2)
 
         async with asyncio.timeout(0.1):
             async with pool._get_available_worker() as worker3:
                 assert worker2 is not worker3
 
 
-def test_pool_size_too_small() -> None:
-    with pytest.raises(ValueError, match="Pool size must be greater than 0"):
-        PooledRcon(host="localhost", port=1234, password="password", pool_size=0)
+@pytest.mark.parametrize("max_workers", [0, -1])
+def test_max_workers_too_small(max_workers: int) -> None:
+    with pytest.raises(ValueError, match="Max workers must be greater than 0"):
+        PooledRcon(
+            host="localhost",
+            port=1234,
+            password="password",
+            max_workers=max_workers,
+        )
 
-    with pytest.raises(ValueError, match="Pool size must be greater than 0"):
-        PooledRcon(host="localhost", port=1234, password="password", pool_size=-1)
+
+@pytest.mark.asyncio
+async def test_is_connected(pool: PooledRcon) -> None:
+    assert pool.is_connected() is False, "Pool should not be connected initially"
+
+    async with pool._get_available_worker():
+        assert pool.is_connected() is True
+
+    assert pool.is_connected() is True
+
+    pool.disconnect()
+    assert pool.is_connected() is False, "Pool should not be connected after disconnect"
+
+
+@pytest.mark.asyncio
+async def test_num_workers(pool: PooledRcon) -> None:
+    assert pool.num_workers == 0, "Pool should have no workers initially"
+
+    async with pool._get_available_worker():
+        assert pool.num_workers == 1
+
+        async with pool._get_available_worker():
+            assert pool.num_workers == 2
+
+    assert pool.num_workers == 2
+
+    pool.disconnect()
+    assert pool.num_workers == 0
 
 
 @pytest.mark.asyncio
@@ -115,3 +149,22 @@ async def test_execute(pool: PooledRcon) -> None:
 
     worker.execute.assert_called_once_with(command, version, body)
     assert result == "result"
+
+
+@pytest.mark.asyncio
+async def test_enter_exit(pool: PooledRcon) -> None:
+    async with pool.connect(), pool._get_available_worker() as worker:
+        assert pool._workers == [worker], "Worker should be added to the pool"
+
+    assert not pool._workers, "Workers should be cleared after exit"
+    assert pool._queue.empty(), "Queue should be empty after exit"
+
+    with contextlib.suppress(RuntimeError):
+        async with pool.connect(), pool._get_available_worker() as worker:
+            assert pool._workers == [worker], "Worker should be added to the pool again"
+
+            # Raise error this time
+            raise RuntimeError
+
+    assert not pool._workers, "Workers should be cleared after error"
+    assert pool._queue.empty(), "Queue should be empty after error"

@@ -1,4 +1,5 @@
 from . import pooled, responses
+from .client import RconClient
 from .exceptions import (
     HLLAuthError,
     HLLCommandError,
@@ -21,6 +22,7 @@ __all__ = (
     "HLLError",
     "HLLMessageError",
     "Rcon",
+    "RconClient",
     "__version__",
     "pooled",
     "responses",

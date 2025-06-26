@@ -170,6 +170,9 @@ class RconProtocol(asyncio.Protocol):
         self.logger.info("Connected!")
 
         try:
+            if DO_POP_V1_XORKEY:  # pragma: no cover
+                # Give some time for the server to send the XOR key
+                await asyncio.sleep(0.1)
             await self.authenticate(password)
         except HLLAuthError:
             self.disconnect()

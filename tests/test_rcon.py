@@ -95,12 +95,29 @@ async def test_get_connection_failure(
     assert await rcon._get_connection() == connection
 
 
+async def test_is_connected(rcon: Rcon, connection: mock.Mock) -> None:
+    assert rcon.is_connected() is False, "Should be disconnected initially"
+
+    await rcon._get_connection()
+    assert rcon.is_connected() is True, "Should be connected after getting connection"
+
+    connection.is_connected.return_value = False
+    assert rcon.is_connected() is False, "Should be disconnected after connection loss"
+
+    rcon._connection = asyncio.Future()
+    rcon._connection.set_exception(HLLError("Connection lost"))
+    assert rcon.is_connected() is False, "Should be disconnected after exception"
+
+    rcon._connection = asyncio.Future()
+    rcon._connection.cancel()
+    assert rcon.is_connected() is False, "Should be disconnected after cancelling"
+
+
 async def test_enter_exit(rcon: Rcon, connection: mock.Mock) -> None:
     assert rcon._connection is None, "Initial connection should be None"
 
-    async with rcon as conn:
+    async with rcon.connect():
         assert rcon._connection is not None, "Connection should be established"
-        assert rcon._connection.result() == conn
 
     connection.disconnect.assert_called_once()
     assert rcon._connection is None, "Connection should be reset to None after exit"
@@ -108,11 +125,10 @@ async def test_enter_exit(rcon: Rcon, connection: mock.Mock) -> None:
     connection.disconnect.reset_mock()
 
     with contextlib.suppress(RuntimeError):
-        async with rcon as conn:
+        async with rcon.connect():
             assert rcon._connection is not None, (
                 "Connection should be established again"
             )
-            assert rcon._connection.result() == conn
 
             # Raise error this time
             raise RuntimeError
@@ -122,7 +138,7 @@ async def test_enter_exit(rcon: Rcon, connection: mock.Mock) -> None:
 
 
 async def test_aexit_no_connection(rcon: Rcon) -> None:
-    async with rcon:
+    async with rcon.connect():
         rcon._connection = None
 
     assert rcon._connection is None
@@ -131,7 +147,7 @@ async def test_aexit_no_connection(rcon: Rcon) -> None:
 async def test_aexit_reconnecting(rcon: Rcon) -> None:
     fut: asyncio.Future[RconConnection] = asyncio.Future()
 
-    async with rcon:
+    async with rcon.connect():
         rcon._connection = fut
 
     assert rcon._connection is None
@@ -142,26 +158,10 @@ async def test_aexit_connection_failure(rcon: Rcon) -> None:
     fut: asyncio.Future[RconConnection] = asyncio.Future()
     fut.set_exception(HLLError("Connection failed"))
 
-    async with rcon:
+    async with rcon.connect():
         rcon._connection = fut
 
     assert rcon._connection is None
-
-
-async def test_iteration(
-    rcon: Rcon,
-    connection: mock.Mock,
-    connection2: mock.Mock,
-) -> None:
-    rcon._connection = asyncio.Future()
-    rcon._connection.set_result(connection2)
-
-    conn_iter = rcon.__aiter__()
-    assert await anext(conn_iter) == connection2
-    assert await anext(conn_iter) == connection2
-
-    rcon._connection = None
-    assert await anext(conn_iter) == connection
 
 
 async def test_execute(

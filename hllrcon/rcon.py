@@ -1,14 +1,15 @@
 import asyncio
 from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 from typing import Any
 
 from typing_extensions import override
 
-from hllrcon.commands import RconCommands
+from hllrcon.client import RconClient
 from hllrcon.connection import RconConnection
 
 
-class Rcon(RconCommands):
+class Rcon(RconClient):
     """An inferface for connecting to an RCON server.
 
     This class will (re)connect to the RCON server on-demand. Only when no connection is
@@ -69,15 +70,27 @@ class Rcon(RconCommands):
         else:
             return self._connection.result()
 
-    async def __aenter__(self) -> RconConnection:
-        return await self._get_connection()
+    @override
+    def is_connected(self) -> bool:
+        return (
+            self._connection is not None
+            and not self._connection.cancelled()
+            and self._connection.done()
+            and not self._connection.exception()
+            and self._connection.result().is_connected()
+        )
 
-    async def __aexit__(
-        self,
-        exc_type: type[BaseException] | None,
-        exc_value: BaseException | None,
-        traceback: object,
-    ) -> None:
+    @override
+    @asynccontextmanager
+    async def connect(self) -> AsyncGenerator[None]:
+        await self._get_connection()
+        try:
+            yield
+        finally:
+            self.disconnect()
+
+    @override
+    def disconnect(self) -> None:
         if self._connection:
             if self._connection.done():
                 if not self._connection.exception():
@@ -86,11 +99,6 @@ class Rcon(RconCommands):
                 self._connection.cancel()
 
         self._connection = None
-
-    async def __aiter__(self) -> AsyncGenerator[RconConnection]:
-        while True:
-            connection = await self._get_connection()
-            yield connection
 
     @override
     async def execute(
