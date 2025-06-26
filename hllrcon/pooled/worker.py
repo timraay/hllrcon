@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+from collections.abc import AsyncGenerator
 from typing import TYPE_CHECKING, Any
 
 from hllrcon.connection import RconConnection
@@ -77,6 +78,19 @@ class PooledRconWorker:
         else:
             return connection
 
+    def disconnect(self) -> None:
+        if self._connection:
+            if self._connection.done():
+                if (
+                    not self._connection.cancelled()
+                    and not self._connection.exception()
+                ):
+                    self._connection.result().disconnect()
+            else:
+                self._connection.cancel()
+
+        self.on_disconnect()
+
     def is_busy(self) -> bool:
         """Check if the worker is currently busy executing a command.
 
@@ -87,6 +101,23 @@ class PooledRconWorker:
 
         """
         return self._busy
+
+    def is_connected(self) -> bool:
+        """Check if the worker is connected to the RCON server.
+
+        Returns
+        -------
+        bool
+            True if the worker is connected, False otherwise.
+
+        """
+        return (
+            self._connection is not None
+            and not self._connection.cancelled()
+            and self._connection.done()
+            and not self._connection.exception()
+            and self._connection.result().is_connected()
+        )
 
     def is_disconnected(self) -> bool:
         """Check if the worker is disconnected from the RCON server.
@@ -104,7 +135,16 @@ class PooledRconWorker:
         self._busy = False
         self._disconnected = True
         with contextlib.suppress(ValueError):
-            self.pool.workers.remove(self)
+            self.pool._workers.remove(self)  # noqa: SLF001
+
+    @contextlib.asynccontextmanager
+    async def connect(self) -> AsyncGenerator[RconConnection, None]:
+        self._busy = True
+        try:
+            connection = await self._get_connection()
+            yield connection
+        finally:
+            self._busy = False
 
     async def execute(
         self,
@@ -129,9 +169,5 @@ class PooledRconWorker:
             The response from the server.
 
         """
-        self._busy = True
-        try:
-            connection = await self._get_connection()
+        async with self.connect() as connection:
             return await connection.execute(command, version, body)
-        finally:
-            self._busy = False

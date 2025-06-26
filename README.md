@@ -50,12 +50,33 @@ pip install hllrcon
 import asyncio
 from hllrcon import Rcon
 
-async def main():
-    async with Rcon(host="127.0.0.1", port=12345, password="your_rcon_password") as conn:
-        response = await conn.broadcast("Hello, HLL!")
-        print(response)
 
-asyncio.run(main())
+async def main():
+    # Initialize client
+    rcon = Rcon(
+        host="127.0.0.1",
+        port=12345,
+        password="your_rcon_password",
+    )
+
+    # Send commands. The client will (re)connect for you.
+    await rcon.broadcast("Hello, HLL!")
+    players = await rcon.get_players()
+
+    # Close the connection
+    rcon.disconnect()
+
+
+    # Alternatively, use the context manager interface to avoid
+    # having to manually disconnect.
+    async with rcon.connect():
+        assert rcon.is_connected() is True
+        await rcon.get_players("Hello, HLL!")
+
+
+if __name__ == '__main__':
+    # Run the program
+    asyncio.run(main())
 ```
 
 # License
