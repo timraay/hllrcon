@@ -71,7 +71,7 @@ async def main():
     # having to manually disconnect.
     async with rcon.connect():
         assert rcon.is_connected() is True
-        await rcon.get_players("Hello, HLL!")
+        await rcon.broadcast("Hello, HLL!")
 
 
 if __name__ == '__main__':
