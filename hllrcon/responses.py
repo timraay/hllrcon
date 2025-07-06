@@ -43,13 +43,13 @@ class PlayerRole(IntEnum):
     ArmyCommander = 13
 
 
-class AdminLogResponseEntry(TypedDict):
+class GetAdminLogResponseEntry(TypedDict):
     timestamp: str
     message: str
 
 
-class AdminLogResponse(TypedDict):
-    entries: list[AdminLogResponseEntry]
+class GetAdminLogResponse(TypedDict):
+    entries: list[GetAdminLogResponseEntry]
 
 
 class GetCommandsResponseEntry(TypedDict):
