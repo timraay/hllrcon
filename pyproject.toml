@@ -102,10 +102,12 @@ asyncio_default_fixture_loop_scope = "function"
 
 [dependency-groups]
 dev = [
+    "aiofiles>=24.1.0",
     "mypy>=1.16.0",
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.1.1",
     "pytest-mock>=3.14.1",
     "ruff>=0.12.0",
+    "types-aiofiles>=24.1.0.20250606",
 ]
