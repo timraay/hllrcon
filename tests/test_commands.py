@@ -8,7 +8,11 @@ from hllrcon.commands import RconCommands, cast_response_to_bool, cast_response_
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     AdminLogResponse,
+    ForceMode,
+    GetAdminGroupsResponse,
+    GetAdminUsersResponse,
     GetBannedWordsResponse,
+    GetBansResponse,
     GetCommandDetailsResponse,
     GetCommandsResponse,
     GetMapRotationResponse,
@@ -417,6 +421,121 @@ class TestCommands:
         ).get_commands()
 
         TypeAdapter(GetCommandsResponse).validate_python(response)
+
+    async def test_commands_get_admin_groups(self) -> None:
+        response = await RconCommandsStub(
+            "GetAdminGroups",
+            2,
+            response=json.dumps(
+                {
+                    "groupNames": [
+                        "owner",
+                        "senior",
+                        "junior",
+                        "spectator",
+                    ],
+                },
+            ),
+        ).get_admin_groups()
+
+        TypeAdapter(GetAdminGroupsResponse).validate_python(response)
+
+    async def test_commands_get_admin_users(self) -> None:
+        response = await RconCommandsStub(
+            "GetAdminUsers",
+            2,
+            response=json.dumps(
+                {
+                    "adminUsers": [
+                        {
+                            "userId": "user1",
+                            "group": "owner",
+                            "comment": "Owner of the server",
+                        },
+                        {
+                            "userId": "user2",
+                            "group": "senior",
+                            "comment": "Senior admin",
+                        },
+                    ],
+                },
+            ),
+        ).get_admin_users()
+
+        TypeAdapter(GetAdminUsersResponse).validate_python(response)
+
+    async def test_commands_get_permanent_bans(self) -> None:
+        response = await RconCommandsStub(
+            "GetPermanentBans",
+            2,
+            response=json.dumps(
+                {
+                    "banList": [
+                        {
+                            "userId": "player1",
+                            "userName": "Player One",
+                            "timeOfBanning": "2023-10-01T12:00:00Z",
+                            "durationHours": 0,
+                            "banReason": "Cheating",
+                            "adminName": "Admin1",
+                        },
+                        {
+                            "userId": "player2",
+                            "userName": "Player Two",
+                            "timeOfBanning": "2023-10-02T12:00:00Z",
+                            "durationHours": 0,
+                            "banReason": "Toxic behavior",
+                            "adminName": "Admin2",
+                        },
+                    ],
+                },
+            ),
+        ).get_permanent_bans()
+
+        TypeAdapter(GetBansResponse).validate_python(response)
+
+    async def test_commands_get_temporary_bans(self) -> None:
+        response = await RconCommandsStub(
+            "GetTemporaryBans",
+            2,
+            response=json.dumps(
+                {
+                    "banList": [
+                        {
+                            "userId": "player3",
+                            "userName": "Player Three",
+                            "timeOfBanning": "2023-10-03T12:00:00Z",
+                            "durationHours": 24,
+                            "banReason": "AFK farming",
+                            "adminName": "Admin3",
+                        },
+                        {
+                            "userId": "player4",
+                            "userName": "Player Four",
+                            "timeOfBanning": "2023-10-04T12:00:00Z",
+                            "durationHours": 48,
+                            "banReason": "Inappropriate language",
+                            "adminName": "Admin4",
+                        },
+                    ],
+                },
+            ),
+        ).get_temporary_bans()
+
+        TypeAdapter(GetBansResponse).validate_python(response)
+
+    async def test_commands_force_team_switch(self) -> None:
+        player_id = "player123"
+        force_mode = ForceMode.IMMEDIATE
+        response = await RconCommandsStub(
+            "ForceTeamSwitch",
+            2,
+            {
+                "PlayerId": player_id,
+                "ForceMode": force_mode,
+            },
+        ).force_team_switch(player_id, force_mode)
+        assert response is True
 
     async def test_commands_set_team_switch_cooldown(self) -> None:
         minutes = 10
@@ -854,6 +973,14 @@ class TestCommands:
             2,
             {"PlayerId": player_id},
         ).remove_vip(player_id)
+
+    async def test_commands_set_num_vip_slots(self) -> None:
+        num_slots = 5
+        await RconCommandsStub(
+            "SetVipSlotCount",
+            2,
+            {"VipSlotCount": num_slots},
+        ).set_num_vip_slots(num_slots)
 
     async def test_commands_set_match_timer(self) -> None:
         game_mode: Literal["Warfare"] = "Warfare"

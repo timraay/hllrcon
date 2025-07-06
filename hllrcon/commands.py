@@ -8,7 +8,11 @@ from typing import Any, Literal, ParamSpec, TypeVar
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     AdminLogResponse,
+    ForceMode,
+    GetAdminGroupsResponse,
+    GetAdminUsersResponse,
     GetBannedWordsResponse,
+    GetBansResponse,
     GetCommandDetailsResponse,
     GetCommandsResponse,
     GetMapRotationResponse,
@@ -380,6 +384,89 @@ class RconCommands(ABC):
 
         """
         return await self.execute("GetDisplayableCommands", 2)
+
+    @cast_response_to_dict(GetAdminGroupsResponse)
+    async def get_admin_groups(self) -> str:
+        """Retrieve a list of all admin groups available on the server.
+
+        Admin groups are defined inside of the server's `AdminPermissions.ini` file, and
+        control what permissions admins have on the server, such as entering admin
+        camera and kicking or banning players.
+
+        Returns
+        -------
+        GetAdminGroupsResponse
+            A list of all available admin groups.
+
+        """
+        return await self.execute("GetAdminGroups", 2)
+
+    @cast_response_to_dict(GetAdminUsersResponse)
+    async def get_admin_users(self) -> str:
+        """Retrieve a list of all users with admin permissions.
+
+        Returns
+        -------
+        GetAdminUsersResponse
+            A list of all admin users.
+
+        """
+        return await self.execute("GetAdminUsers", 2)
+
+    @cast_response_to_dict(GetBansResponse)
+    async def get_permanent_bans(self) -> str:
+        """Retrieve a list of all permanently banned players.
+
+        Returns
+        -------
+        GetBansGesponse
+            A list of all permanently banned players.
+
+        """
+        return await self.execute("GetPermanentBans", 2)
+
+    @cast_response_to_dict(GetBansResponse)
+    async def get_temporary_bans(self) -> str:
+        """Retrieve a list of all temporarily banned players.
+
+        Returns
+        -------
+        GetBansResponse
+            A list of all temporarily banned players.
+
+        """
+        return await self.execute("GetTemporaryBans", 2)
+
+    # TODO: Verify that responses are correctly casted to bool
+    @cast_response_to_bool({500})
+    async def force_team_switch(
+        self,
+        player_id: str,
+        force_mode: ForceMode = ForceMode.IMMEDIATE,
+    ) -> None:
+        """Force a player to switch to a specific team.
+
+        Parameters
+        ----------
+        player_id : str
+            The ID of the player to force switch.
+        force_mode : ForceMode
+            When to force the player to switch, by default `ForceMode.IMMEDIATE`.
+
+        Returns
+        -------
+        bool
+            Whether the player was successfully forced to switch teams.
+
+        """
+        await self.execute(
+            "ForceTeamSwitch",
+            2,
+            {
+                "PlayerId": player_id,
+                "ForceMode": force_mode,
+            },
+        )
 
     async def set_team_switch_cooldown(self, minutes: int) -> None:
         """Set the cooldown for switching teams.
@@ -980,6 +1067,26 @@ class RconCommands(ABC):
             2,
             {
                 "PlayerId": player_id,
+            },
+        )
+
+    async def set_num_vip_slots(self, num: int) -> None:
+        """Set the number of VIP slots on the server.
+
+        This determines how many players can be in the VIP list at the same time.
+        If the number of VIPs exceeds this limit, the oldest VIP will be removed.
+
+        Parameters
+        ----------
+        num : int
+            The number of VIP slots to set. Must be a non-negative integer.
+
+        """
+        await self.execute(
+            "SetVipSlotCount",
+            2,
+            {
+                "VipSlotCount": num,
             },
         )
 

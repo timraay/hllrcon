@@ -43,6 +43,15 @@ class PlayerRole(IntEnum):
     ArmyCommander = 13
 
 
+class ForceMode(IntEnum):
+    IMMEDIATE = 0
+    """Force the player to be switched immediately, killing them if currently alive."""
+
+    # TODO: Verify behavior when player is already dead
+    AFTER_DEATH = 1
+    """Force the player to be switched upon death."""
+
+
 class AdminLogResponseEntry(TypedDict):
     timestamp: str
     message: str
@@ -60,6 +69,33 @@ class GetCommandsResponseEntry(TypedDict):
 
 class GetCommandsResponse(TypedDict):
     entries: list[GetCommandsResponseEntry]
+
+
+class GetAdminGroupsResponse(TypedDict):
+    groupNames: list[str]
+
+
+class GetAdminUsersResponseEntry(TypedDict):
+    userId: str
+    group: str
+    comment: str
+
+
+class GetAdminUsersResponse(TypedDict):
+    adminUsers: list[GetAdminUsersResponseEntry]
+
+
+class GetBansResponseEntry(TypedDict):
+    userId: str
+    userName: str
+    timeOfBanning: str
+    durationHours: int
+    banReason: str
+    adminName: str
+
+
+class GetBansResponse(TypedDict):
+    banList: list[GetBansResponseEntry]
 
 
 class GetPlayerResponseScoreData(TypedDict):
@@ -144,6 +180,10 @@ class GetServerSessionResponse(TypedDict):
     serverName: str
     mapName: str
     gameMode: str
+    remainingMatchTime: int
+    matchTime: int
+    alliedScore: int
+    axisScore: int
     playerCount: int
     maxPlayerCount: int
     queueCount: int
