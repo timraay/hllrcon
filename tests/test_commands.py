@@ -7,7 +7,7 @@ import pytest
 from hllrcon.commands import RconCommands, cast_response_to_bool, cast_response_to_dict
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
-    AdminLogResponse,
+    GetAdminLogResponse,
     GetBannedWordsResponse,
     GetCommandDetailsResponse,
     GetCommandsResponse,
@@ -165,7 +165,7 @@ class TestCommands:
         filter_: str | None,
     ) -> None:
         response = await RconCommandsStub(
-            "AdminLog",
+            "GetAdminLog",
             2,
             {"LogBackTrackTime": 60, "Filters": filter_ or ""},
             (
@@ -174,9 +174,9 @@ class TestCommands:
                 '{"timestamp": "2023-10-01T12:01:00Z", "message": "Log 2"}'
                 "]}"
             ),
-        ).admin_log(60, filter_)
+        ).get_admin_log(60, filter_)
 
-        TypeAdapter(AdminLogResponse).validate_python(response)
+        TypeAdapter(GetAdminLogResponse).validate_python(response)
 
     async def test_commands_admin_log_seconds_span_invalid(self) -> None:
         with pytest.raises(
@@ -184,10 +184,10 @@ class TestCommands:
             match="seconds_span must be a non-negative integer",
         ):
             await RconCommandsStub(
-                "AdminLog",
+                "GetAdminLog",
                 2,
                 {"LogBackTrackTime": -1, "Filters": ""},
-            ).admin_log(-1)
+            ).get_admin_log(-1)
 
     async def test_commands_change_map(self) -> None:
         map_name = "Map Name"

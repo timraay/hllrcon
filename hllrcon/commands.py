@@ -7,7 +7,7 @@ from typing import Any, Literal, ParamSpec, TypeVar
 
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
-    AdminLogResponse,
+    GetAdminLogResponse,
     GetBannedWordsResponse,
     GetCommandDetailsResponse,
     GetCommandsResponse,
@@ -136,8 +136,8 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_dict(AdminLogResponse)
-    async def admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
+    @cast_response_to_dict(GetAdminLogResponse)
+    async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
         """Retrieve admin logs from the server.
 
         Parameters
@@ -153,7 +153,7 @@ class RconCommands(ABC):
             raise ValueError(msg)
 
         return await self.execute(
-            "AdminLog",
+            "GetAdminLog",
             2,
             {
                 "LogBackTrackTime": seconds_span,
