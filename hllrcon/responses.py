@@ -1,5 +1,15 @@
 from enum import IntEnum, StrEnum
-from typing import Literal, TypeAlias, TypedDict
+from typing import Literal, TypeAlias
+
+from pydantic import BaseModel, ConfigDict, Field
+from pydantic.alias_generators import to_camel
+
+
+class Response(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        validate_by_name=True,
+    )
 
 
 # TODO: Add console platforms
@@ -33,6 +43,7 @@ class PlayerRole(IntEnum):
     Medic = 3
     Spotter = 4
     Support = 5
+    MachineGunner = 6
     HeavyMachineGunner = 6
     AntiTank = 7
     Engineer = 8
@@ -43,33 +54,33 @@ class PlayerRole(IntEnum):
     ArmyCommander = 13
 
 
-class GetAdminLogResponseEntry(TypedDict):
+class GetAdminLogResponseEntry(Response):
     timestamp: str
     message: str
 
 
-class GetAdminLogResponse(TypedDict):
+class GetAdminLogResponse(Response):
     entries: list[GetAdminLogResponseEntry]
 
 
-class GetCommandsResponseEntry(TypedDict):
-    iD: str
-    friendlyName: str
-    isClientSupported: bool
+class GetCommandsResponseEntry(Response):
+    id: str = Field(validation_alias="iD")
+    friendly_name: str
+    is_client_supported: bool
 
 
-class GetCommandsResponse(TypedDict):
+class GetCommandsResponse(Response):
     entries: list[GetCommandsResponseEntry]
 
 
-class GetPlayerResponseScoreData(TypedDict):
-    cOMBAT: int
+class GetPlayerResponseScoreData(Response):
+    combat: int = Field(validation_alias="cOMBAT")
     offense: int
     defense: int
     support: int
 
 
-class GetPlayerResponseWorldPosition(TypedDict):
+class GetPlayerResponseWorldPosition(Response):
     x: float
     """The east-west horizontal axis. Between -100000 and 100000."""
 
@@ -80,20 +91,20 @@ class GetPlayerResponseWorldPosition(TypedDict):
     """The vertical axis."""
 
 
-class GetPlayerResponse(TypedDict):
+class GetPlayerResponse(Response):
     name: str
     """The player's name"""
 
-    clanTag: str
+    clan_tag: str
     """The player's clan tag. Empty string if none."""
 
-    iD: str
+    id: str = Field(validation_alias="iD")
     """The player's ID"""
 
     platform: PlayerPlatform
     """The player's platform"""
 
-    eosId: str
+    eos_id: str = Field(validation_alias="eosId")
     """The player's Epic Online Services ID"""
 
     level: int
@@ -117,87 +128,87 @@ class GetPlayerResponse(TypedDict):
     deaths: int
     """The player's deaths"""
 
-    scoreData: GetPlayerResponseScoreData
+    score_data: GetPlayerResponseScoreData
     """The player's score"""
 
-    worldPosition: GetPlayerResponseWorldPosition
+    world_position: GetPlayerResponseWorldPosition
     """The player's position in centimeters"""
 
 
-class GetPlayersResponse(TypedDict):
+class GetPlayersResponse(Response):
     players: list[GetPlayerResponse]
 
 
-class GetMapRotationResponseEntry(TypedDict):
+class GetMapRotationResponseEntry(Response):
     name: str
-    gameMode: str
-    timeOfDay: str
-    iD: str
+    game_mode: str
+    time_of_day: str
+    id: str = Field(validation_alias="iD")
     position: int
 
 
-class GetMapRotationResponse(TypedDict):
-    mAPS: list[GetMapRotationResponseEntry]
+class GetMapRotationResponse(Response):
+    maps: list[GetMapRotationResponseEntry] = Field(validation_alias="mAPS")
 
 
-class GetServerSessionResponse(TypedDict):
-    serverName: str
-    mapName: str
-    gameMode: str
-    playerCount: int
-    maxPlayerCount: int
-    queueCount: int
-    maxQueueCount: int
-    vipQueueCount: int
-    maxVipQueueCount: int
+class GetServerSessionResponse(Response):
+    server_name: str
+    map_name: str
+    game_mode: str
+    player_count: int
+    max_player_count: int
+    queue_count: int
+    max_queue_count: int
+    vip_queue_count: int
+    max_vip_queue_count: int
 
 
-class GetServerConfigResponse(TypedDict):
-    serverName: str
-    buildNumber: str
-    buildRevision: str
-    supportedPlatforms: list[SupportedPlatform]
-    passwordProtected: bool
+class GetServerConfigResponse(Response):
+    server_name: str
+    build_number: str
+    build_revision: str
+    supported_platforms: list[SupportedPlatform]
+    password_protected: bool
 
 
-class GetBannedWordsResponse(TypedDict):
-    bannedWords: list[str]
+class GetBannedWordsResponse(Response):
+    banned_words: list[str]
 
 
-class GetCommandDetailsResponseComboParameter(TypedDict):
+class GetCommandDetailsResponseComboParameter(Response):
     type: Literal["Combo"]
     """The type of parameter"""
 
     name: str
     """The user-friendly name of the parameter"""
 
-    iD: str
+    id: str = Field(validation_alias="iD")
     """The name of the parameter"""
 
-    displayMember: str
+    display_member: str
     """A comma-separated list of user-friendly values for this parameter. An empty
     string if `type` is not \"Combo\""""
 
-    valueMember: str
+    value_member: str
     """A comma-separated list of values for this parameter. An empty string if `type` is
     not \"Combo\""""
 
 
-class GetCommandDetailsResponseTextParameter(TypedDict):
+class GetCommandDetailsResponseTextParameter(Response):
     type: Literal["Text", "Number"]
     """The type of parameter"""
 
     name: str
     """The user-friendly name of the parameter"""
 
-    iD: str
+    id: str = Field(validation_alias="iD")
     """The name of the parameter"""
 
-    displayMember: Literal[""]
+    display_member: Literal[""]
     """A comma-separated list of user-friendly values for this parameter. An empty
     string if `type` is not \"Combo\""""
 
-    valueMember: Literal[""]
+    value_member: Literal[""]
     """A comma-separated list of values for this parameter. An empty string if `type` is
     not \"Combo\""""
 
@@ -207,7 +218,7 @@ GetCommandDetailsResponseParameter: TypeAlias = (
 )
 
 
-class GetCommandDetailsResponse(TypedDict):
+class GetCommandDetailsResponse(Response):
     name: str
     """Name of the command"""
 
@@ -217,5 +228,5 @@ class GetCommandDetailsResponse(TypedDict):
     description: str
     """Description of the command"""
 
-    dialogueParameters: list[GetCommandDetailsResponseParameter]
+    dialogue_parameters: list[GetCommandDetailsResponseParameter]
     """A list of parameters for this command"""

@@ -85,7 +85,9 @@ exclude_also = [
 omit = [
     # Exclude "tests" and "scripts" folder from coverage report
     "tests/**",
+    "tests/integration_tests/**",
     "scripts/**",
+    "tmp.py",
 ]
 
 [tool.mypy]
