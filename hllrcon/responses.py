@@ -1,8 +1,11 @@
+from datetime import datetime
 from enum import IntEnum, StrEnum
-from typing import Literal, TypeAlias
+from typing import Annotated, Literal, TypeAlias
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
+
+EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 
 
 class Response(BaseModel):
@@ -15,8 +18,22 @@ class Response(BaseModel):
 # TODO: Add console platforms
 class PlayerPlatform(StrEnum):
     STEAM = "steam"
+    """Steam"""
+
     EPIC = "epic"
-    XBOX = "xbl"
+    """Epic Games Store"""
+
+    XBL = "xbl"
+    """Xbox Game Pass"""
+
+    PSN = "psn"
+    """PlayStation Network"""
+
+    PS5 = "ps5"
+    """PlayStation 5"""
+
+    XSX = "xsx"
+    """Xbox Series X|S"""
 
 
 # TODO: Add console platforms
@@ -55,7 +72,7 @@ class PlayerRole(IntEnum):
 
 
 class GetAdminLogResponseEntry(Response):
-    timestamp: str
+    timestamp: datetime
     message: str
 
 
@@ -95,7 +112,7 @@ class GetPlayerResponse(Response):
     name: str
     """The player's name"""
 
-    clan_tag: str
+    clan_tag: Annotated[str | None, EmptyStringToNoneValidator]
     """The player's clan tag. Empty string if none."""
 
     id: str = Field(validation_alias="iD")
@@ -110,13 +127,16 @@ class GetPlayerResponse(Response):
     level: int
     """The player's level"""
 
-    team: PlayerTeam
+    team: Annotated[
+        PlayerTeam | None,
+        AfterValidator(lambda v: None if v == PlayerTeam.UNASSIGNED else v),
+    ]
     """The player's team"""
 
     role: PlayerRole
     """The player's role."""
 
-    platoon: str
+    platoon: Annotated[str | None, EmptyStringToNoneValidator]
     """The name of the player's squad. Empty string if not in a squad."""
 
     loadout: str
