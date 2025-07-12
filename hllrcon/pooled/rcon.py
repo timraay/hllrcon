@@ -16,6 +16,8 @@ class PooledRcon(RconClient):
     RCON workers. Each worker can handle a command execution independently, which
     improves performance and reduces latency for multiple requests.
 
+    This class will eventually be deprecated once the RCON protocol supports concurrent
+    requests.
 
     """
 
@@ -125,6 +127,32 @@ class PooledRcon(RconClient):
         finally:
             # Disconnect all workers when done.
             self.disconnect()
+
+    @override
+    async def wait_until_connected(self) -> None:
+        available_workers = [
+            worker for worker in self._workers if not worker.is_disconnected()
+        ]
+
+        # If no workers are available, create a new one.
+        if not available_workers:
+            async with self._get_available_worker() as worker:
+                await worker.wait_until_connected()
+
+        else:
+            # Check if any worker is connected.
+            for worker in available_workers:
+                if worker.is_connected():
+                    return
+
+            # Otherwise, wait for one to connect.
+            await asyncio.wait(
+                [
+                    asyncio.ensure_future(worker.wait_until_connected())
+                    for worker in available_workers
+                ],
+                return_when=asyncio.FIRST_COMPLETED,
+            )
 
     @override
     def disconnect(self) -> None:

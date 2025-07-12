@@ -78,6 +78,9 @@ class PooledRconWorker:
         else:
             return connection
 
+    async def wait_until_connected(self) -> None:
+        await self._get_connection()
+
     def disconnect(self) -> None:
         if self._connection:
             if self._connection.done():

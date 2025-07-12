@@ -30,5 +30,13 @@ class RconClient(RconCommands, ABC):
         yield
 
     @abstractmethod
+    async def wait_until_connected(self) -> None:
+        """Wait until the client is connected to the RCON server.
+
+        This might be useful to verify that a connection can be established before
+        continuing with other operations.
+        """
+
+    @abstractmethod
     def disconnect(self) -> None:
         """Disconnect from the RCON server."""

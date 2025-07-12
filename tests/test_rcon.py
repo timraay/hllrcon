@@ -98,7 +98,7 @@ async def test_get_connection_failure(
 async def test_is_connected(rcon: Rcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected initially"
 
-    await rcon._get_connection()
+    await rcon.wait_until_connected()
     assert rcon.is_connected() is True, "Should be connected after getting connection"
 
     connection.is_connected.return_value = False
