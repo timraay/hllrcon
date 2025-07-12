@@ -1,6 +1,7 @@
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
+import pytest
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
     GetAdminLogResponseEntry,
@@ -71,3 +72,60 @@ def test_get_player_response_team_unassigned() -> None:
     # Test other validators just for the sake of it
     assert response.clan_tag is None
     assert response.platoon is None
+
+
+class PlayerRoleProperties(NamedTuple):
+    role: PlayerRole
+    is_infantry: bool
+    is_tanker: bool
+    is_recon: bool
+    is_squad_leader: bool
+
+
+@pytest.mark.parametrize(
+    "properties",
+    [
+        PlayerRoleProperties(PlayerRole.Rifleman, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.Assault, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.AutomaticRifleman, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.Medic, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.Spotter, False, False, True, True),
+        PlayerRoleProperties(PlayerRole.Support, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.MachineGunner, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.AntiTank, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.Engineer, True, False, False, False),
+        PlayerRoleProperties(PlayerRole.Officer, True, False, False, True),
+        PlayerRoleProperties(PlayerRole.Sniper, False, False, True, False),
+        PlayerRoleProperties(PlayerRole.Crewman, False, True, False, False),
+        PlayerRoleProperties(PlayerRole.TankCommander, False, True, False, True),
+        PlayerRoleProperties(PlayerRole.ArmyCommander, False, False, False, True),
+    ],
+)
+def test_player_role_types(properties: PlayerRoleProperties) -> None:
+    assert properties.role.is_infantry() is properties.is_infantry
+    assert properties.role.is_tanker() is properties.is_tanker
+    assert properties.role.is_recon() is properties.is_recon
+    assert properties.role.is_squad_leader() is properties.is_squad_leader
+
+
+class PlayerTeamTypes(NamedTuple):
+    team: PlayerTeam
+    is_allied: bool
+    is_axis: bool
+
+
+@pytest.mark.parametrize(
+    "properties",
+    [
+        PlayerTeamTypes(PlayerTeam.GER, False, True),
+        PlayerTeamTypes(PlayerTeam.US, True, False),
+        PlayerTeamTypes(PlayerTeam.RUS, True, False),
+        PlayerTeamTypes(PlayerTeam.GB, True, False),
+        PlayerTeamTypes(PlayerTeam.DAK, False, True),
+        PlayerTeamTypes(PlayerTeam.B8A, True, False),
+        PlayerTeamTypes(PlayerTeam.UNASSIGNED, False, False),
+    ],
+)
+def test_player_team_types(properties: PlayerTeamTypes) -> None:
+    assert properties.team.is_allied() is properties.is_allied
+    assert properties.team.is_axis() is properties.is_axis

@@ -52,6 +52,46 @@ class PlayerTeam(IntEnum):
     B8A = 5
     UNASSIGNED = 6
 
+    def is_allied(self) -> bool:
+        """Check if the team is an allied team.
+
+        Allied factions are:
+        - United States (`US`)
+        - Soviet Union (`RUS`)
+        - Great Britain (`GB`)
+        - British 8th Army (`B8A`)
+
+        Returns
+        -------
+        bool
+            `True` if the team is an allied team, `False` otherwise.
+
+        """
+        return self in {
+            PlayerTeam.US,
+            PlayerTeam.RUS,
+            PlayerTeam.GB,
+            PlayerTeam.B8A,
+        }
+
+    def is_axis(self) -> bool:
+        """Check if the team is an axis team.
+
+        Axis factions are:
+        - Germany (`GER`)
+        - Deutsche Afrika Korps (`DAK`)
+
+        Returns
+        -------
+        bool
+            `True` if the team is an axis team, `False` otherwise.
+
+        """
+        return self in {
+            PlayerTeam.GER,
+            PlayerTeam.DAK,
+        }
+
 
 class PlayerRole(IntEnum):
     Rifleman = 0
@@ -69,6 +109,96 @@ class PlayerRole(IntEnum):
     Crewman = 11
     TankCommander = 12
     ArmyCommander = 13
+
+    def is_infantry(self) -> bool:
+        """Check if the role is associated with infantry units.
+
+        Roles included are:
+        - Officer
+        - Rifleman
+        - Assault
+        - Automatic Rifleman
+        - Medic
+        - Support
+        - Machine Gunner
+        - Anti-Tank
+        - Engineer
+
+        Returns
+        -------
+        bool
+            `True` if the role is an infantry role, `False` otherwise.
+
+        """
+        return self in {
+            PlayerRole.Rifleman,
+            PlayerRole.Assault,
+            PlayerRole.AutomaticRifleman,
+            PlayerRole.Medic,
+            PlayerRole.Support,
+            PlayerRole.MachineGunner,
+            PlayerRole.AntiTank,
+            PlayerRole.Engineer,
+            PlayerRole.Officer,
+        }
+
+    def is_tanker(self) -> bool:
+        """Check if the role is associated with armor units.
+
+        Roles included are:
+        - Tank Commander
+        - Crewman
+
+        Returns
+        -------
+        bool
+            `True` if the role is a tanker role, `False` otherwise.
+
+        """
+        return self in {
+            PlayerRole.Crewman,
+            PlayerRole.TankCommander,
+        }
+
+    def is_recon(self) -> bool:
+        """Check if the role is associated with recon units.
+
+        Roles included are:
+        - Spotter
+        - Sniper
+
+        Returns
+        -------
+        bool
+            `True` if the role is a recon role, `False` otherwise.
+
+        """
+        return self in {
+            PlayerRole.Spotter,
+            PlayerRole.Sniper,
+        }
+
+    def is_squad_leader(self) -> bool:
+        """Check if the role is that of a squad leader.
+
+        Roles included are:
+        - Commander
+        - Officer
+        - Tank Commander
+        - Spotter
+
+        Returns
+        -------
+        bool
+            `True` if the role is a squad leader role, `False` otherwise.
+
+        """
+        return self in {
+            PlayerRole.ArmyCommander,
+            PlayerRole.Officer,
+            PlayerRole.TankCommander,
+            PlayerRole.Spotter,
+        }
 
 
 class GetAdminLogResponseEntry(Response):
