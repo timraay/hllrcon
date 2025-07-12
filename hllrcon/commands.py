@@ -1,9 +1,10 @@
 import asyncio
-import json
 from abc import ABC, abstractmethod
-from collections.abc import Callable, Coroutine, Mapping
+from collections.abc import Callable, Coroutine
 from functools import wraps
 from typing import Any, Literal, ParamSpec, TypeVar
+
+from pydantic import BaseModel
 
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
@@ -19,28 +20,24 @@ from hllrcon.responses import (
 )
 
 P = ParamSpec("P")
-DictT = TypeVar("DictT", bound=Mapping[str, Any])
+ModelT = TypeVar("ModelT", bound=BaseModel)
 
 GameMode = Literal["Warfare", "Offensive", "Skirmish"]
 
 
-def cast_response_to_dict(
-    dict_type: type[DictT],
+def cast_response_to_model(
+    model_type: type[ModelT],
 ) -> Callable[
     [Callable[P, Coroutine[Any, Any, str]]],
-    Callable[P, Coroutine[Any, Any, DictT]],
+    Callable[P, Coroutine[Any, Any, ModelT]],
 ]:
     def decorator(
         func: Callable[P, Coroutine[Any, Any, str]],
-    ) -> Callable[P, Coroutine[Any, Any, DictT]]:
+    ) -> Callable[P, Coroutine[Any, Any, ModelT]]:
         @wraps(func)
-        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> DictT:
+        async def wrapper(*args: P.args, **kwargs: P.kwargs) -> ModelT:
             result = await func(*args, **kwargs)
-            parsed_result = json.loads(result)
-            if not isinstance(parsed_result, dict):
-                msg = f"Expected JSON content to be a dict, got {type(parsed_result)}"
-                raise TypeError(msg)
-            return dict_type(**parsed_result)
+            return model_type.model_validate_json(result)
 
         return wrapper
 
@@ -136,7 +133,7 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_dict(GetAdminLogResponse)
+    @cast_response_to_model(GetAdminLogResponse)
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
         """Retrieve admin logs from the server.
 
@@ -192,18 +189,18 @@ class RconCommands(ABC):
 
         """
         details = await self.get_command_details("SetSectorLayout")
-        parameters = details["dialogueParameters"]
+        parameters = details.dialogue_parameters
         if not parameters or not all(
-            p["iD"].startswith("Sector_") for p in parameters[:5]
+            p.id.startswith("Sector_") for p in parameters[:5]
         ):
             msg = "Received unexpected response from server."
             raise HLLMessageError(msg)
         return (
-            parameters[0]["valueMember"].split(","),
-            parameters[1]["valueMember"].split(","),
-            parameters[2]["valueMember"].split(","),
-            parameters[3]["valueMember"].split(","),
-            parameters[4]["valueMember"].split(","),
+            parameters[0].value_member.split(","),
+            parameters[1].value_member.split(","),
+            parameters[2].value_member.split(","),
+            parameters[3].value_member.split(","),
+            parameters[4].value_member.split(","),
         )
 
     async def set_sector_layout(
@@ -363,13 +360,13 @@ class RconCommands(ABC):
 
         """
         details = await self.get_command_details("AddMapToRotation")
-        parameters = details["dialogueParameters"]
-        if not parameters or parameters[0]["iD"] != "MapName":
+        parameters = details.dialogue_parameters
+        if not parameters or parameters[0].id != "MapName":
             msg = "Received unexpected response from server."
             raise HLLMessageError(msg)
-        return parameters[0]["valueMember"].split(",")
+        return parameters[0].value_member.split(",")
 
-    @cast_response_to_dict(GetCommandsResponse)
+    @cast_response_to_model(GetCommandsResponse)
     async def get_commands(self) -> str:
         """Retrieve a description of all the commands available on the server.
 
@@ -453,7 +450,7 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_dict(GetPlayerResponse)
+    @cast_response_to_model(GetPlayerResponse)
     async def get_player(self, player_id: str) -> str:
         """Retrieve detailed information about a player currently on the server.
 
@@ -474,7 +471,7 @@ class RconCommands(ABC):
             {"Name": "player", "Value": player_id},
         )
 
-    @cast_response_to_dict(GetPlayersResponse)
+    @cast_response_to_model(GetPlayersResponse)
     async def get_players(self) -> str:
         """Retrieve detailed information about all players currently on the server.
 
@@ -492,7 +489,7 @@ class RconCommands(ABC):
             {"Name": "players", "Value": ""},
         )
 
-    @cast_response_to_dict(GetMapRotationResponse)
+    @cast_response_to_model(GetMapRotationResponse)
     async def get_map_rotation(self) -> str:
         """Retrieve the current map rotation of the server.
 
@@ -508,7 +505,7 @@ class RconCommands(ABC):
             {"Name": "maprotation", "Value": ""},
         )
 
-    @cast_response_to_dict(GetMapRotationResponse)
+    @cast_response_to_model(GetMapRotationResponse)
     async def get_map_sequence(self) -> str:
         """Retrieve the current map sequence of the server.
 
@@ -524,7 +521,7 @@ class RconCommands(ABC):
             {"Name": "mapsequence", "Value": ""},
         )
 
-    @cast_response_to_dict(GetServerSessionResponse)
+    @cast_response_to_model(GetServerSessionResponse)
     async def get_server_session(self) -> str:
         """Retrieve information abou the current server session.
 
@@ -540,7 +537,7 @@ class RconCommands(ABC):
             {"Name": "session", "Value": ""},
         )
 
-    @cast_response_to_dict(GetServerConfigResponse)
+    @cast_response_to_model(GetServerConfigResponse)
     async def get_server_config(self) -> str:
         """Retrieve the server configuration.
 
@@ -556,7 +553,7 @@ class RconCommands(ABC):
             {"Name": "serverconfig", "Value": ""},
         )
 
-    @cast_response_to_dict(GetBannedWordsResponse)
+    @cast_response_to_model(GetBannedWordsResponse)
     async def get_banned_words(self) -> str:
         """Retrieve the list of banned words on the server.
 
@@ -610,7 +607,7 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_dict(GetCommandDetailsResponse)
+    @cast_response_to_model(GetCommandDetailsResponse)
     async def get_command_details(self, command: str) -> str:
         """Retrieve detailed information about a specific command.
 

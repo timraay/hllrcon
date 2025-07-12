@@ -1,7 +1,6 @@
 import asyncio
 import logging
 import os
-from typing import TypeAlias
 
 import pytest
 import pytest_asyncio
@@ -17,9 +16,6 @@ from hllrcon.responses import (
     GetServerSessionResponse,
 )
 from pydantic import TypeAdapter
-
-Player: TypeAlias = GetPlayerResponse
-Map: TypeAlias = GetMapRotationResponseEntry
 
 HLL_HOST = os.getenv("HLL_HOST")
 HLL_PORT = os.getenv("HLL_PORT")
@@ -41,28 +37,28 @@ async def rcon() -> Rcon:
 
 
 @pytest_asyncio.fixture
-async def players(rcon: Rcon) -> list[Player]:
+async def players(rcon: Rcon) -> list[GetPlayerResponse]:
     players = await rcon.get_players()
     TypeAdapter(GetPlayersResponse).validate_python(players)
 
-    if not players["players"]:
+    if not players.players:
         pytest.skip("No players found on the server")
 
-    return players["players"]
+    return players.players
 
 
 @pytest_asyncio.fixture
-async def rotation(rcon: Rcon) -> list[Map]:
+async def rotation(rcon: Rcon) -> list[GetMapRotationResponseEntry]:
     rotation = await rcon.get_map_rotation()
     TypeAdapter(GetMapRotationResponse).validate_python(rotation)
-    return rotation["mAPS"]
+    return rotation.maps
 
 
 @pytest_asyncio.fixture
-async def sequence(rcon: Rcon) -> list[Map]:
+async def sequence(rcon: Rcon) -> list[GetMapRotationResponseEntry]:
     rotation = await rcon.get_map_sequence()
     TypeAdapter(GetMapRotationResponse).validate_python(rotation)
-    return rotation["mAPS"]
+    return rotation.maps
 
 
 @pytest_asyncio.fixture
@@ -84,10 +80,13 @@ class TestIntegratedServer:
     def setup_module(self, caplog: pytest.LogCaptureFixture) -> None:
         caplog.set_level(logging.DEBUG)
 
-    async def test_validate_player_data(self, players: list[Player]) -> None:
+    async def test_validate_player_data(self, players: list[GetPlayerResponse]) -> None:
         pass
 
-    async def test_validate_rotation_data(self, rotation: list[Map]) -> None:
+    async def test_validate_rotation_data(
+        self,
+        rotation: list[GetMapRotationResponseEntry],
+    ) -> None:
         pass
 
     async def test_validate_server_session_data(
@@ -107,10 +106,7 @@ class TestIntegratedServer:
         TypeAdapter(GetCommandsResponse).validate_python(commands)
 
         details = await asyncio.gather(
-            *(
-                rcon.get_command_details(command["iD"])
-                for command in commands["entries"]
-            ),
+            *(rcon.get_command_details(command.id) for command in commands.entries),
         )
         TypeAdapter(list[GetCommandDetailsResponse]).validate_python(details)
 
@@ -122,19 +118,23 @@ class TestIntegratedServer:
         result = await rcon.kick_player("1234567890", "Test reason")
         assert result is False
 
-    async def test_modify_sequence(self, rcon: Rcon, sequence: list[Map]) -> None:
+    async def test_modify_sequence(
+        self,
+        rcon: Rcon,
+        sequence: list[GetMapRotationResponseEntry],
+    ) -> None:
         index = len(sequence)
 
         await rcon.add_map_to_sequence("foy_warfare", index)
 
         new_sequence = await rcon.get_map_sequence()
-        assert new_sequence["mAPS"] == [
+        assert new_sequence.maps == [
             *sequence,
-            Map(
+            GetMapRotationResponseEntry(
                 name="FOY",
-                gameMode="Warfare",
-                timeOfDay="Day",
-                iD="/Game/Maps/foy_warfare",
+                game_mode="Warfare",
+                time_of_day="Day",
+                id="/Game/Maps/foy_warfare",
                 position=index,
             ),
         ]
@@ -142,4 +142,4 @@ class TestIntegratedServer:
         await rcon.remove_map_from_sequence(index)
 
         new_sequence = await rcon.get_map_sequence()
-        assert new_sequence["mAPS"] == sequence
+        assert new_sequence.maps == sequence

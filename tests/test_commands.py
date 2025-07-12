@@ -1,23 +1,12 @@
 import json
 from functools import partial
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal
 from unittest import mock
 
 import pytest
-from hllrcon.commands import RconCommands, cast_response_to_bool, cast_response_to_dict
+from hllrcon.commands import RconCommands, cast_response_to_bool, cast_response_to_model
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
-from hllrcon.responses import (
-    GetAdminLogResponse,
-    GetBannedWordsResponse,
-    GetCommandDetailsResponse,
-    GetCommandsResponse,
-    GetMapRotationResponse,
-    GetPlayerResponse,
-    GetPlayersResponse,
-    GetServerConfigResponse,
-    GetServerSessionResponse,
-)
-from pydantic import TypeAdapter
+from pydantic import BaseModel, ValidationError
 
 pytestmark = pytest.mark.asyncio
 
@@ -51,42 +40,44 @@ class RconCommandsStub(RconCommands):
         return self.response
 
 
-class TestCastResponseToDict:
-    async def test_cast_response_to_dict_success(self) -> None:
-        class CustomDict(TypedDict):
-            x: int
-            y: int
+class CustomModel(BaseModel):
+    x: int
+    y: int
 
+
+class TestCastResponseToModel:
+    async def test_cast_response_to_model_success(self) -> None:
         called = {}
 
-        @cast_response_to_dict(CustomDict)
+        @cast_response_to_model(CustomModel)
         async def dummy_func(x: int, y: int = 0) -> str:
             called["x"] = x
             called["y"] = y
-            return '{"ok": true}'
+            return f'{{"x": {x + 1}, "y": {y + 1}}}'
 
         result = await dummy_func(5, y=10)
-        assert result == {"ok": True}
+        assert result.x == 6
+        assert result.y == 11
         assert called == {"x": 5, "y": 10}
 
-    async def test_cast_response_to_dict_raises_on_invalid_json(self) -> None:
-        @cast_response_to_dict(dict)
+    async def test_cast_response_to_model_raises_on_invalid_json(self) -> None:
+        @cast_response_to_model(CustomModel)
         async def dummy_func() -> str:
             return "not a json"
 
-        with pytest.raises(json.JSONDecodeError):
+        with pytest.raises(ValidationError, match="Invalid JSON"):
             await dummy_func()
 
-    async def test_cast_response_to_dict_raises_on_non_dict(self) -> None:
-        @cast_response_to_dict(dict)
+    async def test_cast_response_to_model_raises_on_non_dict(self) -> None:
+        @cast_response_to_model(CustomModel)
         async def dummy_func() -> str:
             return '["not a dict"]'
 
-        with pytest.raises(TypeError, match="Expected JSON content to be a dict"):
+        with pytest.raises(ValidationError, match="Input should be an object"):
             await dummy_func()
 
-    async def test_cast_response_to_dict_preserves_function_metadata(self) -> None:
-        @cast_response_to_dict(dict)
+    async def test_cast_response_to_model_preserves_function_metadata(self) -> None:
+        @cast_response_to_model(CustomModel)
         async def dummy_func() -> str:
             """Docstring here."""
             return '{"a": 1}'
@@ -164,7 +155,7 @@ class TestCommands:
         self,
         filter_: str | None,
     ) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetAdminLog",
             2,
             {"LogBackTrackTime": 60, "Filters": filter_ or ""},
@@ -175,8 +166,6 @@ class TestCommands:
                 "]}"
             ),
         ).get_admin_log(60, filter_)
-
-        TypeAdapter(GetAdminLogResponse).validate_python(response)
 
     async def test_commands_admin_log_seconds_span_invalid(self) -> None:
         with pytest.raises(
@@ -395,7 +384,7 @@ class TestCommands:
             await stub.get_available_maps()
 
     async def test_commands_get_commands(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetDisplayableCommands",
             2,
             response=json.dumps(
@@ -415,8 +404,6 @@ class TestCommands:
                 },
             ),
         ).get_commands()
-
-        TypeAdapter(GetCommandsResponse).validate_python(response)
 
     async def test_commands_set_team_switch_cooldown(self) -> None:
         minutes = 10
@@ -453,7 +440,7 @@ class TestCommands:
     async def test_commands_get_player(self) -> None:
         player_id = "player123"
 
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "player", "Value": player_id},
@@ -486,10 +473,8 @@ class TestCommands:
             ),
         ).get_player(player_id)
 
-        TypeAdapter(GetPlayerResponse).validate_python(response)
-
     async def test_commands_get_players(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "players", "Value": ""},
@@ -526,10 +511,8 @@ class TestCommands:
             ),
         ).get_players()
 
-        TypeAdapter(GetPlayersResponse).validate_python(response)
-
     async def test_commands_get_map_rotation(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "maprotation", "Value": ""},
@@ -555,10 +538,8 @@ class TestCommands:
             ),
         ).get_map_rotation()
 
-        TypeAdapter(GetMapRotationResponse).validate_python(response)
-
     async def test_commands_get_map_sequence(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "mapsequence", "Value": ""},
@@ -584,10 +565,8 @@ class TestCommands:
             ),
         ).get_map_sequence()
 
-        TypeAdapter(GetMapRotationResponse).validate_python(response)
-
     async def test_commands_get_server_session(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "session", "Value": ""},
@@ -606,10 +585,8 @@ class TestCommands:
             ),
         ).get_server_session()
 
-        TypeAdapter(GetServerSessionResponse).validate_python(response)
-
     async def test_commands_get_server_config(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "serverconfig", "Value": ""},
@@ -624,10 +601,8 @@ class TestCommands:
             ),
         ).get_server_config()
 
-        TypeAdapter(GetServerConfigResponse).validate_python(response)
-
     async def test_commands_get_banned_words(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetServerInformation",
             2,
             {"Name": "bannedwords", "Value": ""},
@@ -637,8 +612,6 @@ class TestCommands:
                 },
             ),
         ).get_banned_words()
-
-        TypeAdapter(GetBannedWordsResponse).validate_python(response)
 
     async def test_commands_broadcast(self) -> None:
         message = "Broadcast message"
@@ -658,7 +631,7 @@ class TestCommands:
 
     async def test_commands_get_command_details(self) -> None:
         command_id = "cmd1"
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetClientReferenceData",
             2,
             command_id,
@@ -693,8 +666,6 @@ class TestCommands:
                 },
             ),
         ).get_command_details(command_id)
-
-        TypeAdapter(GetCommandDetailsResponse).validate_python(response)
 
     async def test_commands_message_player(self) -> None:
         player_id = "pid"

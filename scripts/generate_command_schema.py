@@ -27,7 +27,7 @@ async def main() -> None:
 
     all_commands = await conn.get_commands()
     all_command_details = await asyncio.gather(
-        *(conn.get_command_details(entry["iD"]) for entry in all_commands["entries"]),
+        *(conn.get_command_details(entry.id) for entry in all_commands.entries),
     )
 
     async with aiofiles.open("commands_schema.json", "w", encoding="utf-8") as f:
