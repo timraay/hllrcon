@@ -64,7 +64,7 @@ async def test_get_connection_failure(
     monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
 
     with pytest.raises(HLLError, match="Connection failed"):
-        await worker._get_connection()
+        await worker.wait_until_connected()
 
 
 @pytest.mark.asyncio
@@ -85,7 +85,7 @@ async def test_get_connection_reuse_failure(
     worker._connection.set_exception(HLLError("Connection failed"))
 
     with pytest.raises(HLLError, match="Connection failed"):
-        await worker._get_connection()
+        await worker.wait_until_connected()
 
 
 @pytest.mark.asyncio
@@ -97,7 +97,7 @@ async def test_get_connection_wait(
 
     with pytest.raises(asyncio.TimeoutError):
         async with asyncio.timeout(0.1):
-            await worker._get_connection()
+            await worker.wait_until_connected()
 
     asyncio.get_event_loop().call_soon(worker._connection.set_result, connection)
     async with asyncio.timeout(0.1):
@@ -116,7 +116,7 @@ def test_is_busy(worker: PooledRconWorker) -> None:
 async def test_is_connected(worker: PooledRconWorker, connection: mock.Mock) -> None:
     assert worker.is_connected() is False, "Should be disconnected initially"
 
-    await worker._get_connection()
+    await worker.wait_until_connected()
     assert worker.is_connected() is True, "Should be connected after getting connection"
 
     connection.is_connected.return_value = False
@@ -146,7 +146,7 @@ async def test_on_disconnected(
     worker: PooledRconWorker,
     connection: RconConnection,
 ) -> None:
-    await worker._get_connection()
+    await worker.wait_until_connected()
 
     assert worker.is_disconnected() is False
     worker._busy = True
@@ -161,7 +161,7 @@ async def test_disconnect_while_connected(
     worker: PooledRconWorker,
     connection: mock.Mock,
 ) -> None:
-    await worker._get_connection()
+    await worker.wait_until_connected()
 
     assert not worker.is_disconnected()
     assert not worker.is_busy()

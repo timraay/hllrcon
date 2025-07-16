@@ -4,6 +4,7 @@ from typing import Any
 from unittest import mock
 
 import pytest
+from hllrcon.exceptions import HLLError
 from hllrcon.pooled.rcon import PooledRcon
 from hllrcon.pooled.worker import PooledRconWorker
 from pytest_mock import MockerFixture
@@ -168,3 +169,28 @@ async def test_enter_exit(pool: PooledRcon) -> None:
 
     assert not pool._workers, "Workers should be cleared after error"
     assert pool._queue.empty(), "Queue should be empty after error"
+
+
+@pytest.mark.asyncio
+async def test_wait_until_connected(pool: PooledRcon) -> None:
+    assert not pool.is_connected(), "Pool should not be connected initially"
+
+    await pool.wait_until_connected()
+    assert pool.is_connected(), "Pool should be connected after waiting"
+    assert pool.num_workers == 1, "Pool should have one worker after waiting"
+
+    # Test connected worker
+    await pool.wait_until_connected()
+
+    worker = pool._workers[0]
+
+    # Test connecting worker
+    worker.is_connected.return_value = False  # type: ignore[attr-defined]
+    worker.wait_until_connected = mock.AsyncMock()  # type: ignore[method-assign]
+    await pool.wait_until_connected()
+    worker.wait_until_connected.assert_awaited_once()
+
+    # Test disconnected worker
+    worker.is_disconnected.return_value = True  # type: ignore[attr-defined]
+    worker.wait_until_connected.side_effect = HLLError
+    await pool.wait_until_connected()
