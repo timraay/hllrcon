@@ -94,12 +94,6 @@ omit = [
 strict = true
 
 [tool.pytest.ini_options]
-markers = [
-    "do_allow_concurrent_requests",
-    "do_pop_v1_xorkey",
-    "do_use_request_headers",
-    "do_xor_responses",
-]
 asyncio_default_fixture_loop_scope = "function"
 
 [dependency-groups]

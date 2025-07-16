@@ -346,6 +346,8 @@ class GetServerSessionResponse(Response):
     allied_score: int
     axis_score: int
     player_count: int
+    allied_player_count: int
+    axis_player_count: int
     max_player_count: int
     queue_count: int
     max_queue_count: int
