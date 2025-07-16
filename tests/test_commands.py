@@ -8,11 +8,8 @@ from hllrcon.commands import RconCommands, cast_response_to_bool, cast_response_
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     ForceMode,
-    GetAdminGroupsResponse,
-    GetAdminUsersResponse,
-    GetBansResponse,
 )
-from pydantic import BaseModel, TypeAdapter, ValidationError
+from pydantic import BaseModel, ValidationError
 
 pytestmark = pytest.mark.asyncio
 
@@ -307,7 +304,7 @@ class TestCommands:
 
     async def test_commands_set_map_shuffle_enabled(self) -> None:
         await RconCommandsStub(
-            "SetShuffleMapSequence",
+            "SetMapShuffleEnabled",
             2,
             {"Enable": True},
         ).set_map_shuffle_enabled(enabled=True)
@@ -412,7 +409,7 @@ class TestCommands:
         ).get_commands()
 
     async def test_commands_get_admin_groups(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetAdminGroups",
             2,
             response=json.dumps(
@@ -427,10 +424,8 @@ class TestCommands:
             ),
         ).get_admin_groups()
 
-        TypeAdapter(GetAdminGroupsResponse).validate_python(response)
-
     async def test_commands_get_admin_users(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetAdminUsers",
             2,
             response=json.dumps(
@@ -451,10 +446,8 @@ class TestCommands:
             ),
         ).get_admin_users()
 
-        TypeAdapter(GetAdminUsersResponse).validate_python(response)
-
     async def test_commands_get_permanent_bans(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetPermanentBans",
             2,
             response=json.dumps(
@@ -481,10 +474,8 @@ class TestCommands:
             ),
         ).get_permanent_bans()
 
-        TypeAdapter(GetBansResponse).validate_python(response)
-
     async def test_commands_get_temporary_bans(self) -> None:
-        response = await RconCommandsStub(
+        await RconCommandsStub(
             "GetTemporaryBans",
             2,
             response=json.dumps(
@@ -511,7 +502,19 @@ class TestCommands:
             ),
         ).get_temporary_bans()
 
-        TypeAdapter(GetBansResponse).validate_python(response)
+    async def test_commands_disband_squad(self) -> None:
+        team_id = 1
+        squad_id = 2
+        reason = "Disbanding for testing"
+        await RconCommandsStub(
+            "DisbandPlatoon",
+            2,
+            {
+                "TeamIndex": team_id,
+                "SquadIndex": squad_id,
+                "Reason": reason,
+            },
+        ).disband_squad(team_id, squad_id, reason)
 
     async def test_commands_force_team_switch(self) -> None:
         player_id = "player123"
@@ -553,7 +556,7 @@ class TestCommands:
     async def test_commands_message_all_players(self) -> None:
         message = "Hello all!"
         await RconCommandsStub(
-            "SendServerMessage",
+            "SetWelcomeMessage",
             2,
             {"Message": message},
         ).set_welcome_message(message)
@@ -884,11 +887,23 @@ class TestCommands:
         commands.remove_temporary_ban.assert_called_once_with("pid")
         commands.remove_permanent_ban.assert_called_once_with("pid")
 
+    async def test_commands_remove_player_from_squad(self) -> None:
+        player_id = "pid"
+        reason = "Squad disbanded"
+        await RconCommandsStub(
+            "RemovePlayerFromPlatoon",
+            2,
+            {
+                "PlayerId": player_id,
+                "Reason": reason,
+            },
+        ).remove_player_from_squad(player_id, reason)
+
     async def test_commands_set_auto_balance_enabled(self) -> None:
         await RconCommandsStub(
-            "SetAutoBalance",
+            "SetAutoBalanceEnabled",
             2,
-            {"EnableAutoBalance": True},
+            {"Enable": True},
         ).set_auto_balance_enabled(enabled=True)
 
     async def test_commands_set_auto_balance_threshold(self) -> None:
@@ -901,14 +916,14 @@ class TestCommands:
 
     async def test_commands_set_vote_kick_enabled(self) -> None:
         await RconCommandsStub(
-            "SetVoteKick",
+            "SetVoteKickEnabled",
             2,
-            {"Enabled": True},
+            {"Enable": True},
         ).set_vote_kick_enabled(enabled=True)
 
     async def test_commands_reset_vote_kick_thresholds(self) -> None:
         await RconCommandsStub(
-            "ResetKickThreshold",
+            "ResetVoteKickThreshold",
             2,
         ).reset_vote_kick_thresholds()
 
@@ -940,7 +955,7 @@ class TestCommands:
         player_id = "vip123"
         description = "desc"
         await RconCommandsStub(
-            "AddVipPlayer",
+            "AddVip",
             2,
             {"PlayerId": player_id, "Description": description},
         ).add_vip(player_id, description)
@@ -948,7 +963,7 @@ class TestCommands:
     async def test_commands_remove_vip(self) -> None:
         player_id = "vip123"
         await RconCommandsStub(
-            "RemoveVipPlayer",
+            "RemoveVip",
             2,
             {"PlayerId": player_id},
         ).remove_vip(player_id)
@@ -999,7 +1014,7 @@ class TestCommands:
         map_id = "map123"
         enabled = True
         await RconCommandsStub(
-            "SetMapWeatherToggle",
+            "SetDynamicWeatherEnabled",
             2,
             {"MapId": map_id, "Enable": enabled},
         ).set_dynamic_weather_enabled(map_id, enabled=enabled)

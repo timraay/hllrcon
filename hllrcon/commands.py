@@ -327,7 +327,7 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "SetShuffleMapSequence",
+            "SetMapShuffleEnabled",
             2,
             {
                 "Enable": enabled,
@@ -434,6 +434,29 @@ class RconCommands(ABC):
         """
         return await self.execute("GetTemporaryBans", 2)
 
+    async def disband_squad(self, team_id: int, squad_id: int, reason: str) -> None:
+        """Disband a squad on the server.
+
+        Parameters
+        ----------
+        team_id : int
+            The ID of the team the squad belongs to.
+        squad_id : int
+            The ID of the squad to disband.
+        reason : str
+            The reason for disbanding the squad. This will be displayed to the players.
+
+        """
+        await self.execute(
+            "DisbandPlatoon",
+            2,
+            {
+                "TeamIndex": team_id,
+                "SquadIndex": squad_id,
+                "Reason": reason,
+            },
+        )
+
     # TODO: Verify that responses are correctly casted to bool
     @cast_response_to_bool({500})
     async def force_team_switch(
@@ -530,7 +553,7 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "SendServerMessage",
+            "SetWelcomeMessage",
             2,
             {
                 "Message": message,
@@ -905,11 +928,32 @@ class RconCommands(ABC):
         )
         return any(responses)
 
+    async def remove_player_from_squad(self, player_id: str, reason: str) -> None:
+        """Remove a player from their current squad.
+
+        Parameters
+        ----------
+        player_id : str
+            The ID of the player to remove from their squad.
+        reason : str
+            The reason for removing the player from their squad. This will be displayed
+            to the players.
+
+        """
+        await self.execute(
+            "RemovePlayerFromPlatoon",
+            2,
+            {
+                "PlayerId": player_id,
+                "Reason": reason,
+            },
+        )
+
     async def set_auto_balance_enabled(self, *, enabled: bool) -> None:
         """Enable or disable team balancing.
 
         When enabled, the server will prevent players from joining a team when
-        it has significantly more players than the other team. This treshold is
+        it has significantly more players than the other team. This threshold is
         configurable with `set_auto_balance_threshold`.
 
         Parameters
@@ -919,10 +963,10 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "SetAutoBalance",
+            "SetAutoBalanceEnabled",
             2,
             {
-                "EnableAutoBalance": enabled,
+                "Enable": enabled,
             },
         )
 
@@ -960,16 +1004,16 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "SetVoteKick",
+            "SetVoteKickEnabled",
             2,
             {
-                "Enabled": enabled,
+                "Enable": enabled,
             },
         )
 
     async def reset_vote_kick_thresholds(self) -> None:
         """Reset the vote kick thresholds to the default values."""
-        await self.execute("ResetKickThreshold", 2)
+        await self.execute("ResetVoteKickThreshold", 2)
 
     async def set_vote_kick_thresholds(self, thresholds: list[tuple[int, int]]) -> None:
         """Set the vote kick thresholds for different player counts.
@@ -1042,7 +1086,7 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "AddVipPlayer",
+            "AddVip",
             2,
             {
                 "PlayerId": player_id,
@@ -1060,7 +1104,7 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "RemoveVipPlayer",
+            "RemoveVip",
             2,
             {
                 "PlayerId": player_id,
@@ -1195,7 +1239,7 @@ class RconCommands(ABC):
 
         """
         await self.execute(
-            "SetMapWeatherToggle",
+            "SetDynamicWeatherEnabled",
             2,
             {
                 "MapId": map_id,
