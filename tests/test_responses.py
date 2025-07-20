@@ -2,9 +2,11 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
 import pytest
+from hllrcon.data import layers
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
     GetAdminLogResponseEntry,
+    GetMapRotationResponseEntry,
     GetPlayerResponse,
     PlayerPlatform,
     PlayerRole,
@@ -119,8 +121,8 @@ class PlayerTeamTypes(NamedTuple):
     [
         PlayerTeamTypes(PlayerTeam.GER, False, True),
         PlayerTeamTypes(PlayerTeam.US, True, False),
-        PlayerTeamTypes(PlayerTeam.RUS, True, False),
-        PlayerTeamTypes(PlayerTeam.GB, True, False),
+        PlayerTeamTypes(PlayerTeam.SOV, True, False),
+        PlayerTeamTypes(PlayerTeam.CW, True, False),
         PlayerTeamTypes(PlayerTeam.DAK, False, True),
         PlayerTeamTypes(PlayerTeam.B8A, True, False),
         PlayerTeamTypes(PlayerTeam.UNASSIGNED, False, False),
@@ -129,3 +131,24 @@ class PlayerTeamTypes(NamedTuple):
 def test_player_team_types(properties: PlayerTeamTypes) -> None:
     assert properties.team.is_allied() is properties.is_allied
     assert properties.team.is_axis() is properties.is_axis
+
+
+def test_map_rotation_entry_find_layer() -> None:
+    entry = GetMapRotationResponseEntry(
+        name="FOY",
+        game_mode="Warfare",
+        time_of_day="DAY",
+        id="foy_warfare",
+        position=0,
+    )
+    assert entry.find_layer() == layers.FOY_WARFARE_DAY
+
+    unknown_entry = GetMapRotationResponseEntry(
+        name="SOY",
+        game_mode="Warfare",
+        time_of_day="DAY",
+        id="not_foy_warfare",
+        position=1,
+    )
+    with pytest.raises(ValueError, match="not found"):
+        unknown_entry.find_layer()

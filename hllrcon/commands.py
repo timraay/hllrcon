@@ -6,6 +6,7 @@ from typing import Any, Literal, ParamSpec, TypeVar
 
 from pydantic import BaseModel
 
+from hllrcon.data import layers
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     GetAdminLogResponse,
@@ -158,14 +159,14 @@ class RconCommands(ABC):
             },
         )
 
-    async def change_map(self, map_name: str) -> None:
+    async def change_map(self, map_name: str | layers.Layer) -> None:
         """Change the current map to the specified map.
 
         Map changes are not immediate. Instead, a 60 second countdown is started.
 
         Parameters
         ----------
-        map_name : str
+        map_name : str | Layer
             The name of the map to change to.
 
         """
@@ -173,7 +174,7 @@ class RconCommands(ABC):
             "ChangeMap",
             2,
             {
-                "MapName": map_name,
+                "MapName": str(map_name),
             },
         )
 
@@ -239,12 +240,16 @@ class RconCommands(ABC):
             },
         )
 
-    async def add_map_to_rotation(self, map_name: str, index: int) -> None:
+    async def add_map_to_rotation(
+        self,
+        map_name: str | layers.Layer,
+        index: int,
+    ) -> None:
         """Add a map to the map rotation.
 
         Parameters
         ----------
-        map_name : str
+        map_name : str | Layer
             The name of the map to add.
         index : int
             The index in the rotation to add the map at.
@@ -254,7 +259,7 @@ class RconCommands(ABC):
             "AddMapToRotation",
             2,
             {
-                "MapName": map_name,
+                "MapName": str(map_name),
                 "Index": index,
             },
         )
@@ -276,12 +281,16 @@ class RconCommands(ABC):
             },
         )
 
-    async def add_map_to_sequence(self, map_name: str, index: int) -> None:
+    async def add_map_to_sequence(
+        self,
+        map_name: str | layers.Layer,
+        index: int,
+    ) -> None:
         """Add a map to the map sequence.
 
         Parameters
         ----------
-        map_name : str
+        map_name : str | Layer
             The name of the map to add.
         index : int
             The index in the sequence to add the map at.
@@ -291,7 +300,7 @@ class RconCommands(ABC):
             "AddMapToSequence",
             2,
             {
-                "MapName": map_name,
+                "MapName": str(map_name),
                 "Index": index,
             },
         )
