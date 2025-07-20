@@ -5,6 +5,8 @@ from typing import Annotated, Literal, TypeAlias
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
+from hllrcon.data import layers
+
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 
 
@@ -46,8 +48,8 @@ class SupportedPlatform(StrEnum):
 class PlayerTeam(IntEnum):
     GER = 0
     US = 1
-    RUS = 2
-    GB = 3
+    SOV = 2
+    CW = 3
     DAK = 4
     B8A = 5
     UNASSIGNED = 6
@@ -57,8 +59,8 @@ class PlayerTeam(IntEnum):
 
         Allied factions are:
         - United States (`US`)
-        - Soviet Union (`RUS`)
-        - Great Britain (`GB`)
+        - Soviet Union (`SOV`)
+        - Commonwealth (`CW`)
         - British 8th Army (`B8A`)
 
         Returns
@@ -69,8 +71,8 @@ class PlayerTeam(IntEnum):
         """
         return self in {
             PlayerTeam.US,
-            PlayerTeam.RUS,
-            PlayerTeam.GB,
+            PlayerTeam.SOV,
+            PlayerTeam.CW,
             PlayerTeam.B8A,
         }
 
@@ -101,7 +103,6 @@ class PlayerRole(IntEnum):
     Spotter = 4
     Support = 5
     MachineGunner = 6
-    HeavyMachineGunner = 6
     AntiTank = 7
     Engineer = 8
     Officer = 9
@@ -331,6 +332,22 @@ class GetMapRotationResponseEntry(Response):
     time_of_day: str
     id: str = Field(validation_alias="iD")
     position: int
+
+    def find_layer(self) -> layers.Layer:
+        """Attempt to find the layer associated with this map rotation entry.
+
+        Returns
+        -------
+        layers.Layer
+            The layer associated with this map rotation entry.
+
+        Raises
+        ------
+        ValueError
+            No layer information is known about this entry.
+
+        """
+        return layers.by_id(self.id)
 
 
 class GetMapRotationResponse(Response):

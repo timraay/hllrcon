@@ -49,6 +49,7 @@ pip install hllrcon
 ```py
 import asyncio
 from hllrcon import Rcon
+from hllrcon.data import layers
 
 
 async def main():
@@ -61,6 +62,7 @@ async def main():
 
     # Send commands. The client will (re)connect for you.
     await rcon.broadcast("Hello, HLL!")
+    await rcon.change_map(layers.STALINGRAD_WARFARE_DAY)
     players = await rcon.get_players()
 
     # Close the connection
