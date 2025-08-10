@@ -1,13 +1,18 @@
-from hllrcon.data.utils import IndexedBaseModel
+# ruff: noqa: N802
+
+
+from ._utils import IndexedBaseModel, class_cached_property
 
 
 class Team(IndexedBaseModel[int]):
     name: str
 
+    @class_cached_property
+    @classmethod
+    def ALLIES(cls) -> "Team":
+        return cls(id=1, name="Allies")
 
-ALLIES = Team(id=1, name="Allies")
-AXIS = Team(id=2, name="Axis")
-
-
-def by_id(team_id: int) -> Team:
-    return Team.by_id(team_id)
+    @class_cached_property
+    @classmethod
+    def AXIS(cls) -> "Team":
+        return cls(id=2, name="Axis")

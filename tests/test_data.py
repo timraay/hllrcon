@@ -1,6 +1,8 @@
 import pytest
-from hllrcon.data import factions, game_modes, layers, maps, teams
-from hllrcon.data.utils import IndexedBaseModel
+from hllrcon.data import Faction, GameMode, Layer, Map, Team
+from hllrcon.data._utils import IndexedBaseModel
+from hllrcon.data.game_modes import GameModeScale
+from hllrcon.data.layers import TimeOfDay, Weather
 
 
 class TestDataUtils:
@@ -23,29 +25,29 @@ class TestDataUtils:
 
 class TestDataFactions:
     def test_faction_by_id(self) -> None:
-        assert factions.by_id(0) == factions.GER
-        assert factions.by_id(1) == factions.US
-        assert factions.by_id(2) == factions.SOV
-        assert factions.by_id(3) == factions.CW
-        assert factions.by_id(4) == factions.DAK
-        assert factions.by_id(5) == factions.B8A
+        assert Faction.by_id(0) == Faction.GER
+        assert Faction.by_id(1) == Faction.US
+        assert Faction.by_id(2) == Faction.SOV
+        assert Faction.by_id(3) == Faction.CW
+        assert Faction.by_id(4) == Faction.DAK
+        assert Faction.by_id(5) == Faction.B8A
 
         with pytest.raises(ValueError, match="not found"):
-            factions.by_id(6)
+            Faction.by_id(6)
 
 
 class TestDataGameModes:
     def test_game_mode_by_id(self) -> None:
-        assert game_modes.by_id("warfare") == game_modes.WARFARE
-        assert game_modes.by_id("offensive") == game_modes.OFFENSIVE
-        assert game_modes.by_id("skirmish") == game_modes.SKIRMISH
+        assert GameMode.by_id("warfare") == GameMode.WARFARE
+        assert GameMode.by_id("offensive") == GameMode.OFFENSIVE
+        assert GameMode.by_id("skirmish") == GameMode.SKIRMISH
 
         with pytest.raises(ValueError, match="not found"):
-            game_modes.by_id("invalid_mode")
+            GameMode.by_id("invalid_mode")
 
     def test_game_mode_scale(self) -> None:
-        large = game_modes.GameMode(id="large", scale=game_modes.GameModeScale.LARGE)
-        small = game_modes.GameMode(id="small", scale=game_modes.GameModeScale.SMALL)
+        large = GameMode(id="large", scale=GameModeScale.LARGE)
+        small = GameMode(id="small", scale=GameModeScale.SMALL)
 
         assert large.is_large()
         assert not large.is_small()
@@ -56,17 +58,17 @@ class TestDataGameModes:
 
 class TestDataLayers:
     def test_layer_by_id(self) -> None:
-        assert layers.by_id("KHA_S_1944_P_Skirmish") == layers.KHARKOV_SKIRMISH_DAY
+        assert Layer.by_id("KHA_S_1944_P_Skirmish") == Layer.KHARKOV_SKIRMISH_DAY
 
         with pytest.raises(ValueError, match="not found"):
-            layers.by_id("Not a layer")
+            Layer.by_id("Not a layer")
 
     def test_layer_str(self) -> None:
-        layer = layers.KHARKOV_SKIRMISH_DAY
+        layer = Layer.KHARKOV_SKIRMISH_DAY
         assert str(layer) == layer.id
 
     def test_layer_repr(self) -> None:
-        layer = layers.KHARKOV_SKIRMISH_DAY
+        layer = Layer.KHARKOV_SKIRMISH_DAY
         expected_repr = (
             f"Layer(id='KHA_S_1944_P_Skirmish', map={layer.map!r}, "
             f"attackers={layer.attacking_team!r}, time_of_day={layer.time_of_day!r}, "
@@ -75,60 +77,60 @@ class TestDataLayers:
         assert repr(layer) == expected_repr
 
     def test_layer_equality(self) -> None:
-        layer = layers.KHARKOV_SKIRMISH_DAY
+        layer = Layer.KHARKOV_SKIRMISH_DAY
         assert layer == layer  # noqa: PLR0124
         assert layer == layer.id.lower()
-        assert layer != layers.KHARKOV_SKIRMISH_NIGHT
+        assert layer != Layer.KHARKOV_SKIRMISH_NIGHT
         assert layer != "Some other layer"
         assert layer != 12345
 
     def test_layer_hash(self) -> None:
-        layer = layers.KHARKOV_SKIRMISH_DAY
+        layer = Layer.KHARKOV_SKIRMISH_DAY
         assert hash(layer) == hash(layer.id.lower())
-        assert hash(layer) != hash(layers.KHARKOV_SKIRMISH_NIGHT)
+        assert hash(layer) != hash(Layer.KHARKOV_SKIRMISH_NIGHT)
 
     @pytest.mark.parametrize(
         ("layer", "name"),
         [
-            (layers.KHARKOV_SKIRMISH_DAY, "Kharkov Skirmish"),
-            (layers.DRIEL_OFFENSIVE_CW_DAY, "Driel Off. CW"),
-            (layers.MORTAIN_OFFENSIVE_GER_OVERCAST, "Mortain Off. GER (Overcast)"),
-            (layers.SMDM_SKIRMISH_RAIN, "St. Marie Du Mont Skirmish (Rain)"),
-            (layers.ALAMEIN_WARFARE_DUSK, "El Alamein Warfare (Dusk)"),
+            (Layer.KHARKOV_SKIRMISH_DAY, "Kharkov Skirmish"),
+            (Layer.DRIEL_OFFENSIVE_CW_DAY, "Driel Off. CW"),
+            (Layer.MORTAIN_OFFENSIVE_GER_OVERCAST, "Mortain Off. GER (Overcast)"),
+            (Layer.SMDM_SKIRMISH_RAIN, "St. Marie Du Mont Skirmish (Rain)"),
+            (Layer.ALAMEIN_WARFARE_DUSK, "El Alamein Warfare (Dusk)"),
             (
-                layers.ELSENBORN_OFFENSIVE_US_DAWN,
+                Layer.ELSENBORN_OFFENSIVE_US_DAWN,
                 "Elsenborn Ridge Off. US (Dawn, Snow)",
             ),
         ],
     )
-    def test_layer_pretty_name(self, layer: layers.Layer, name: str) -> None:
+    def test_layer_pretty_name(self, layer: Layer, name: str) -> None:
         assert layer.pretty_name == name
 
     def test_layer_pretty_name_missing_attacking_team(self) -> None:
-        layer = layers.Layer(
+        layer = Layer(
             id="test_layer",
-            map=maps.KHARKOV,
-            game_mode=game_modes.OFFENSIVE,
-            time_of_day=layers.TimeOfDay.DAY,
-            weather=layers.Weather.OVERCAST,
+            map=Map.KHARKOV,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.OVERCAST,
             attacking_team=None,
         )
         assert layer.pretty_name == "Kharkov Off. (Overcast)"
 
     def test_layer_attackers(self) -> None:
-        layer1 = layers.KURSK_OFFENSIVE_SOV_DAY
-        assert layer1.attacking_team == teams.ALLIES
-        assert layer1.defending_team == teams.AXIS
-        assert layer1.attacking_faction == factions.SOV
-        assert layer1.defending_faction == factions.GER
+        layer1 = Layer.KURSK_OFFENSIVE_SOV_DAY
+        assert layer1.attacking_team == Team.ALLIES
+        assert layer1.defending_team == Team.AXIS
+        assert layer1.attacking_faction == Faction.SOV
+        assert layer1.defending_faction == Faction.GER
 
-        layer2 = layers.KURSK_OFFENSIVE_GER_DAY
-        assert layer2.attacking_team == teams.AXIS
-        assert layer2.defending_team == teams.ALLIES
-        assert layer2.attacking_faction == factions.GER
-        assert layer2.defending_faction == factions.SOV
+        layer2 = Layer.KURSK_OFFENSIVE_GER_DAY
+        assert layer2.attacking_team == Team.AXIS
+        assert layer2.defending_team == Team.ALLIES
+        assert layer2.attacking_faction == Faction.GER
+        assert layer2.defending_faction == Faction.SOV
 
-        layer3 = layers.KURSK_WARFARE_DAY
+        layer3 = Layer.KURSK_WARFARE_DAY
         assert layer3.attacking_team is None
         assert layer3.defending_team is None
         assert layer3.attacking_faction is None
@@ -137,21 +139,21 @@ class TestDataLayers:
 
 class TestDataMaps:
     def test_map_by_id(self) -> None:
-        assert maps.by_id("kharkov") == maps.KHARKOV
-        assert maps.by_id("driel") == maps.DRIEL
-        assert maps.by_id("elalamein") == maps.EL_ALAMEIN
-        assert maps.by_id("mortain") == maps.MORTAIN
-        assert maps.by_id("elsenbornridge") == maps.ELSENBORN_RIDGE
+        assert Map.by_id("kharkov") == Map.KHARKOV
+        assert Map.by_id("driel") == Map.DRIEL
+        assert Map.by_id("elalamein") == Map.EL_ALAMEIN
+        assert Map.by_id("mortain") == Map.MORTAIN
+        assert Map.by_id("elsenbornridge") == Map.ELSENBORN_RIDGE
 
         with pytest.raises(ValueError, match="not found"):
-            maps.by_id("invalid_map")
+            Map.by_id("invalid_map")
 
     def test_map_str(self) -> None:
-        map_ = maps.KHARKOV
+        map_ = Map.KHARKOV
         assert str(map_) == map_.id
 
     def test_map_repr(self) -> None:
-        map_ = maps.KHARKOV
+        map_ = Map.KHARKOV
         expected_repr = (
             f"Map(id='kharkov', name='Kharkov', tag='KHA', "
             f"pretty_name='Kharkov', short_name='Kharkov', "
@@ -161,23 +163,23 @@ class TestDataMaps:
         assert repr(map_) == expected_repr
 
     def test_map_equality(self) -> None:
-        map_ = maps.KHARKOV
+        map_ = Map.KHARKOV
         assert map_ == map_  # noqa: PLR0124
         assert map_ == map_.id.lower()
-        assert map_ != maps.DRIEL
+        assert map_ != Map.DRIEL
         assert map_ != "Some other map"
         assert map_ != 12345
 
     def test_map_hash(self) -> None:
-        map_ = maps.KHARKOV
+        map_ = Map.KHARKOV
         assert hash(map_) == hash(map_.id.lower())
-        assert hash(map_) != hash(maps.DRIEL)
+        assert hash(map_) != hash(Map.DRIEL)
 
 
 class TestDataTeams:
     def test_team_by_id(self) -> None:
-        assert teams.by_id(1) == teams.ALLIES
-        assert teams.by_id(2) == teams.AXIS
+        assert Team.by_id(1) == Team.ALLIES
+        assert Team.by_id(2) == Team.AXIS
 
         with pytest.raises(ValueError, match="not found"):
-            teams.by_id(3)
+            Team.by_id(3)

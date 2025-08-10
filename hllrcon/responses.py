@@ -5,7 +5,7 @@ from typing import Annotated, Literal, TypeAlias
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
-from hllrcon.data import layers
+from hllrcon.data import Layer
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 
@@ -333,7 +333,7 @@ class GetMapRotationResponseEntry(Response):
     id: str = Field(validation_alias="iD")
     position: int
 
-    def find_layer(self) -> layers.Layer:
+    def find_layer(self) -> Layer:
         """Attempt to find the layer associated with this map rotation entry.
 
         Returns
@@ -347,7 +347,7 @@ class GetMapRotationResponseEntry(Response):
             No layer information is known about this entry.
 
         """
-        return layers.by_id(self.id)
+        return Layer.by_id(self.id)
 
 
 class GetMapRotationResponse(Response):

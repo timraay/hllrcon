@@ -2,7 +2,7 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any, NamedTuple, cast
 
 import pytest
-from hllrcon.data import layers
+from hllrcon.data import Layer
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
     GetAdminLogResponseEntry,
@@ -141,7 +141,7 @@ def test_map_rotation_entry_find_layer() -> None:
         id="foy_warfare",
         position=0,
     )
-    assert entry.find_layer() == layers.FOY_WARFARE_DAY
+    assert entry.find_layer() == Layer.FOY_WARFARE_DAY
 
     unknown_entry = GetMapRotationResponseEntry(
         name="SOY",
