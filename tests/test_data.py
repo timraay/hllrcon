@@ -1,8 +1,9 @@
 import pytest
 from hllrcon.data import Faction, GameMode, Layer, Map, Team
-from hllrcon.data._utils import IndexedBaseModel
+from hllrcon.data._utils import IndexedBaseModel, class_cached_property
 from hllrcon.data.game_modes import GameModeScale
 from hllrcon.data.layers import TimeOfDay, Weather
+from pydantic import BaseModel
 
 
 class TestDataUtils:
@@ -21,6 +22,29 @@ class TestDataUtils:
 
         with pytest.raises(ValueError, match="not found"):
             MyModel.by_id(3)
+
+        assert MyModel.all() == [foo, bar]
+
+    def test_indexed_model_resolves_properties(self) -> None:
+        class MyModel(IndexedBaseModel[int]):
+            @class_cached_property
+            @classmethod
+            def bar(cls) -> "MyModel":
+                return cls(id=2)
+
+        assert MyModel.bar.all() == [MyModel.bar]
+
+    def test_resolve_class_cache_property(self) -> None:
+        class MyModel(BaseModel, ignored_types=(class_cached_property,)):
+            id: int
+
+            @class_cached_property
+            @classmethod
+            def foo(cls) -> "MyModel":
+                return cls(id=3)
+
+        assert MyModel.foo is MyModel.foo
+        assert MyModel.foo.id == 3
 
 
 class TestDataFactions:
