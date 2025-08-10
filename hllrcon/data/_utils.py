@@ -51,6 +51,24 @@ class IndexedBaseModel(BaseModel, Generic[H]):
 
     @classmethod
     def by_id(cls, id_: H) -> Self:
+        """Look up a model by its identifier.
+
+        Parameters
+        ----------
+        id_ : H
+            The identifier of the model to look up.
+
+        Returns
+        -------
+        Self
+            The model instance with the given identifier.
+
+        Raises
+        ------
+        ValueError
+            If no model with the given identifier exists.
+
+        """
         if instance := cls._lookup_map.get(id_):
             return cast("Self", instance)
 
@@ -59,4 +77,12 @@ class IndexedBaseModel(BaseModel, Generic[H]):
 
     @classmethod
     def all(cls) -> list[Self]:
+        """Return all known instances of the model.
+
+        Returns
+        -------
+        list[Self]
+            A list of all model instances.
+
+        """
         return list(cls._lookup_map.values())  # type: ignore[arg-type]
