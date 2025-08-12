@@ -5,7 +5,7 @@ from typing import Annotated, Literal, TypeAlias
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
-from hllrcon.data import Layer
+from hllrcon.data import Layer, Role, RoleType
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 
@@ -111,6 +111,9 @@ class PlayerRole(IntEnum):
     TankCommander = 12
     ArmyCommander = 13
 
+    def get_role(self) -> Role:
+        return Role.by_id(self.value)
+
     def is_infantry(self) -> bool:
         """Check if the role is associated with infantry units.
 
@@ -131,17 +134,7 @@ class PlayerRole(IntEnum):
             `True` if the role is an infantry role, `False` otherwise.
 
         """
-        return self in {
-            PlayerRole.Rifleman,
-            PlayerRole.Assault,
-            PlayerRole.AutomaticRifleman,
-            PlayerRole.Medic,
-            PlayerRole.Support,
-            PlayerRole.MachineGunner,
-            PlayerRole.AntiTank,
-            PlayerRole.Engineer,
-            PlayerRole.Officer,
-        }
+        return self.get_role().type == RoleType.INFANTRY
 
     def is_tanker(self) -> bool:
         """Check if the role is associated with armor units.
@@ -156,10 +149,7 @@ class PlayerRole(IntEnum):
             `True` if the role is a tanker role, `False` otherwise.
 
         """
-        return self in {
-            PlayerRole.Crewman,
-            PlayerRole.TankCommander,
-        }
+        return self.get_role().type == RoleType.ARMOR
 
     def is_recon(self) -> bool:
         """Check if the role is associated with recon units.
@@ -174,10 +164,7 @@ class PlayerRole(IntEnum):
             `True` if the role is a recon role, `False` otherwise.
 
         """
-        return self in {
-            PlayerRole.Spotter,
-            PlayerRole.Sniper,
-        }
+        return self.get_role().type == RoleType.RECON
 
     def is_squad_leader(self) -> bool:
         """Check if the role is that of a squad leader.
@@ -194,12 +181,7 @@ class PlayerRole(IntEnum):
             `True` if the role is a squad leader role, `False` otherwise.
 
         """
-        return self in {
-            PlayerRole.ArmyCommander,
-            PlayerRole.Officer,
-            PlayerRole.TankCommander,
-            PlayerRole.Spotter,
-        }
+        return self.get_role().is_squad_leader
 
 
 class ForceMode(IntEnum):
@@ -333,12 +315,19 @@ class GetMapRotationResponseEntry(Response):
     id: str = Field(validation_alias="iD")
     position: int
 
-    def find_layer(self) -> Layer:
+    def find_layer(self, *, strict: bool = True) -> Layer:
         """Attempt to find the layer associated with this map rotation entry.
+
+        Parameters
+        ----------
+        strict : bool, optional
+            Whether to raise an exception if no such layer is known. If set to `False`,
+            will attempt to generate a fallback value based on the ID. By default
+            `True`.
 
         Returns
         -------
-        layers.Layer
+        Layer
             The layer associated with this map rotation entry.
 
         Raises
@@ -347,7 +336,7 @@ class GetMapRotationResponseEntry(Response):
             No layer information is known about this entry.
 
         """
-        return Layer.by_id(self.id)
+        return Layer.by_id(self.id, strict=strict)
 
 
 class GetMapRotationResponse(Response):

@@ -2,7 +2,10 @@
 
 from enum import StrEnum
 
-from ._utils import IndexedBaseModel, class_cached_property
+from ._utils import (
+    CaseInsensitiveIndexedBaseModel,
+    class_cached_property,
+)
 
 
 class GameModeScale(StrEnum):
@@ -10,8 +13,7 @@ class GameModeScale(StrEnum):
     SMALL = "small"
 
 
-class GameMode(IndexedBaseModel[str]):
-    id: str
+class GameMode(CaseInsensitiveIndexedBaseModel):
     scale: GameModeScale
 
     def is_large(self) -> bool:

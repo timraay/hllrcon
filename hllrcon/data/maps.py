@@ -1,8 +1,11 @@
 # ruff: noqa: N802
 
-from enum import Enum, StrEnum
+from enum import StrEnum
 
-from ._utils import IndexedBaseModel, class_cached_property
+from ._utils import (
+    CaseInsensitiveIndexedBaseModel,
+    class_cached_property,
+)
 from .factions import Faction
 
 
@@ -11,16 +14,7 @@ class Orientation(StrEnum):
     VERTICAL = "vertical"
 
 
-class Environment(str, Enum):
-    DAWN = "dawn"
-    DAY = "day"
-    DUSK = "dusk"
-    NIGHT = "night"
-    OVERCAST = "overcast"
-    RAIN = "rain"
-
-
-class Map(IndexedBaseModel[str]):
+class Map(CaseInsensitiveIndexedBaseModel):
     name: str
     tag: str
     pretty_name: str

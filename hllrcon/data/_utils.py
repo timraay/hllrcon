@@ -1,10 +1,12 @@
 from collections.abc import Callable, Hashable
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, Self, TypeVar, cast
+from typing import TYPE_CHECKING, Any, ClassVar, Generic, Never, Self, cast
 
 from pydantic import BaseModel, ConfigDict
+from typing_extensions import TypeVar
 
 T = TypeVar("T")
 H = TypeVar("H", bound=Hashable)
+R = TypeVar("R", default=Never)
 
 
 class class_cached_property(Generic[T]):  # noqa: N801
@@ -26,11 +28,12 @@ class class_cached_property(Generic[T]):  # noqa: N801
         self.resolved = True
 
 
-class IndexedBaseModel(BaseModel, Generic[H]):
+class IndexedBaseModel(BaseModel, Generic[H, R]):
     model_config = ConfigDict(
         ignored_types=(class_cached_property,),
+        frozen=True,
     )
-    _lookup_map: ClassVar[dict[Any, "IndexedBaseModel[Any]"]]
+    _lookup_map: ClassVar[dict[Any, "IndexedBaseModel[Any, Any]"]]
 
     id: H
 
@@ -42,15 +45,24 @@ class IndexedBaseModel(BaseModel, Generic[H]):
             if isinstance(value, class_cached_property):
                 value.resolve(cls)
 
-    def model_post_init(self, context: Any) -> None:  # noqa: ANN401, ARG002
-        if self.id in self._lookup_map:
-            msg = f"{self.__class__.__name__} with ID {self.id} already exists."
+    @classmethod
+    def _lookup_register(cls, id_: H, instance: Self) -> None:
+        if id_ in cls._lookup_map:
+            msg = f"{cls.__name__} with ID {id_} already exists."
             raise ValueError(msg)
 
-        self._lookup_map[self.id] = self
+        cls._lookup_map[id_] = instance
 
     @classmethod
-    def by_id(cls, id_: H) -> Self:
+    def _lookup_fallback(cls, id_: H) -> Self | R:
+        msg = f"{cls.__name__} with ID {id_} not found."
+        raise ValueError(msg)
+
+    def model_post_init(self, context: Any) -> None:  # noqa: ANN401, ARG002
+        self._lookup_register(self.id, self)
+
+    @classmethod
+    def by_id(cls, id_: H) -> Self | R:
         """Look up a model by its identifier.
 
         Parameters
@@ -60,7 +72,7 @@ class IndexedBaseModel(BaseModel, Generic[H]):
 
         Returns
         -------
-        Self
+        Self | R
             The model instance with the given identifier.
 
         Raises
@@ -72,8 +84,7 @@ class IndexedBaseModel(BaseModel, Generic[H]):
         if instance := cls._lookup_map.get(id_):
             return cast("Self", instance)
 
-        msg = f"{cls.__name__} with ID {id_} not found."
-        raise ValueError(msg)
+        return cls._lookup_fallback(id_)
 
     @classmethod
     def all(cls) -> list[Self]:
@@ -85,4 +96,14 @@ class IndexedBaseModel(BaseModel, Generic[H]):
             A list of all model instances.
 
         """
-        return list(cls._lookup_map.values())  # type: ignore[arg-type]
+        return list(cls._lookup_map.values())  # type: ignore[return-value]
+
+
+class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
+    @classmethod
+    def by_id(cls, id_: str) -> Self | R:
+        return super().by_id(id_.lower())
+
+    @classmethod
+    def _lookup_register(cls, id_: str, instance: Self) -> None:
+        return super()._lookup_register(id_.lower(), instance)

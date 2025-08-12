@@ -1,13 +1,48 @@
 # ruff: noqa: N802
 
+from typing import TYPE_CHECKING, ClassVar
+
 from ._utils import IndexedBaseModel, class_cached_property
 from .teams import Team
 
 
-class Faction(IndexedBaseModel[int]):
+class Faction(IndexedBaseModel[int, None]):
+    UNASSIGNED_ID: ClassVar[int] = 6
+
     name: str
     short_name: str
     team: Team
+
+    @classmethod
+    def _lookup_fallback(cls, id_: int) -> "Faction | None":
+        if id_ == cls.UNASSIGNED_ID:
+            return None
+
+        return super()._lookup_fallback(id_)
+
+    if TYPE_CHECKING:
+
+        @classmethod
+        def by_id(cls, id_: int) -> "Faction | None":
+            """Look up a faction by its identifier.
+
+            Parameters
+            ----------
+            id_ : int
+                The identifier of the faction to look up.
+
+            Returns
+            -------
+            Faction | None
+                The faction instance with the given identifier, or `None` if the
+                identifier corresponds with being unassigned.
+
+            Raises
+            ------
+            ValueError
+                If no faction with the given identifier exists.
+
+            """
 
     @class_cached_property
     @classmethod

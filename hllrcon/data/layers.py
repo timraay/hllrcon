@@ -1,14 +1,40 @@
+# mypy: disable-error-code="prop-decorator"
 # ruff: noqa: N802
 
+import re
 from enum import StrEnum
+from functools import cached_property
 
 from pydantic import computed_field
 
-from ._utils import IndexedBaseModel, class_cached_property
+from ._utils import (
+    CaseInsensitiveIndexedBaseModel,
+    class_cached_property,
+)
 from .factions import Faction
 from .game_modes import GameMode
-from .maps import Map
+from .maps import Map, Orientation
 from .teams import Team
+
+__all__ = (
+    "Layer",
+    "TimeOfDay",
+    "Weather",
+)
+
+
+RE_LAYER_NAME_SMALL = re.compile(
+    r"^(?P<tag>[A-Z]{3,5})_S_(?P<year>\d{4})_(?:(?P<environment>\w+)_)?P_(?P<game_mode>\w+)$",
+)
+RE_LAYER_NAME_LARGE = re.compile(
+    r"^(?P<tag>[A-Z]{3,5})_L_(?P<year>\d{4})_(?P<game_mode>\w+?)(?P<attackers>[A-Z]\w*?)?(?:_(?P<environment>\w+))?$",
+)
+RE_LEGACY_LAYER_NAME = re.compile(
+    r"^(?P<name>[a-z0-9]+)_(?P<game_mode>(?!off)[a-z]+)(?:_V2)?(?:_(?P<environment>[a-z]+))?$",
+)
+RE_LEGACY_LAYER_NAME_OFFENSIVE = re.compile(
+    r"^(?P<name>[a-z0-9]+)_(?P<game_mode>off(?:ensive)?)_?(?P<attackers>[a-zA-Z]+)(?:_(?P<environment>\w+))?$",
+)
 
 
 class TimeOfDay(StrEnum):
@@ -25,7 +51,45 @@ class Weather(StrEnum):
     SNOW = "snow"
 
 
-class Layer(IndexedBaseModel[str]):
+LAYER_GAME_MODE_MAP: dict[str, GameMode] = {
+    "warfare": GameMode.WARFARE,
+    "offensive": GameMode.OFFENSIVE,
+    "off": GameMode.OFFENSIVE,
+    "skirmish": GameMode.SKIRMISH,
+}
+
+LAYER_ATTACKERS_MAP: dict[str, Faction] = {
+    "us": Faction.US,
+    "ger": Faction.GER,
+    "dak": Faction.DAK,
+    "sov": Faction.SOV,
+    "soviet": Faction.SOV,
+    "rus": Faction.SOV,
+    "russian": Faction.SOV,
+    "ussr": Faction.SOV,
+    "cw": Faction.CW,
+    "gb": Faction.CW,
+    "com": Faction.CW,
+    "brit": Faction.CW,
+    "british": Faction.CW,
+    "b8a": Faction.CW,
+}
+
+LAYER_ENVIRONMENT_MAP: dict[str, tuple[TimeOfDay, Weather]] = {
+    "day": (TimeOfDay.DAY, Weather.CLEAR),
+    "dawn": (TimeOfDay.DAWN, Weather.CLEAR),
+    "morning": (TimeOfDay.DAWN, Weather.CLEAR),
+    "dusk": (TimeOfDay.DUSK, Weather.CLEAR),
+    "evening": (TimeOfDay.DUSK, Weather.CLEAR),
+    "night": (TimeOfDay.NIGHT, Weather.CLEAR),
+    "clear": (TimeOfDay.DAY, Weather.CLEAR),
+    "overcast": (TimeOfDay.DAY, Weather.OVERCAST),
+    "rain": (TimeOfDay.DAY, Weather.RAIN),
+    "snow": (TimeOfDay.DAY, Weather.SNOW),
+}
+
+
+class Layer(CaseInsensitiveIndexedBaseModel):
     map: Map
     game_mode: GameMode
     time_of_day: TimeOfDay
@@ -50,8 +114,116 @@ class Layer(IndexedBaseModel[str]):
             return str(self).lower() == str(other).lower()
         return NotImplemented
 
-    @computed_field  # type: ignore[prop-decorator]
-    @property
+    @classmethod
+    def _parse_id(cls, id_: str) -> "Layer":
+        exc = ValueError(f"Could not parse layer ID: {id_}")
+
+        for pattern in (
+            RE_LAYER_NAME_SMALL,
+            RE_LAYER_NAME_LARGE,
+            RE_LEGACY_LAYER_NAME,
+            RE_LEGACY_LAYER_NAME_OFFENSIVE,
+        ):
+            if match := pattern.match(id_):
+                break
+        else:
+            raise exc
+
+        groups = match.groupdict("")
+
+        map_id: str
+        map_tag: str
+        if groups.get("name"):
+            map_id = groups["name"]
+            map_tag = groups.get("tag") or map_id[:3].upper()
+        elif groups.get("tag"):
+            map_id = groups["tag"]
+            map_tag = map_id
+        else:  # pragma: no cover
+            raise exc
+
+        game_mode = LAYER_GAME_MODE_MAP.get(groups["game_mode"].lower())
+        if game_mode is None:
+            raise exc
+
+        if groups.get("attackers"):
+            attackers = LAYER_ATTACKERS_MAP.get(groups["attackers"].lower())
+        else:
+            attackers = None
+
+        time_of_day, weather = LAYER_ENVIRONMENT_MAP.get(
+            groups["environment"].lower(),
+            (TimeOfDay.DAY, Weather.CLEAR),
+        )
+
+        try:
+            map_ = Map.by_id(map_id)
+        except ValueError:
+            map_ = Map(
+                id=map_id,
+                name=map_id.capitalize(),
+                pretty_name=map_id.capitalize(),
+                short_name=map_id.capitalize(),
+                tag=map_tag,
+                allies=(
+                    attackers
+                    if attackers and attackers.team == Team.ALLIES
+                    else Faction.US
+                ),
+                axis=(
+                    attackers
+                    if attackers and attackers.team == Team.AXIS
+                    else Faction.GER
+                ),
+                orientation=Orientation.HORIZONTAL,
+                mirrored=False,
+            )
+
+        return Layer(
+            id=id_,
+            map=map_,
+            game_mode=game_mode,
+            time_of_day=time_of_day,
+            weather=weather,
+            attacking_team=attackers.team if attackers else None,
+        )
+
+    @classmethod
+    def by_id(cls, id_: str, *, strict: bool = True) -> "Layer":
+        """Look up a layer by its identifier.
+
+        Parameters
+        ----------
+        id_ : str
+            The identifier of the layer to look up.
+        strict : bool, optional
+            Whether to raise an exception if no such layer is known. If set to `False`,
+            will attempt to generate a fallback value based on the ID. By default
+            `True`.
+
+        Returns
+        -------
+        Layer
+            The layer with the given identifier.
+
+        Raises
+        ------
+        ValueError
+            If no layer with the given identifier exists.
+        ValueError
+            No reasonable fallback value could be generated.
+
+        """
+        try:
+            return super().by_id(id_)
+        except ValueError:
+            if strict:
+                raise
+
+            return cls._parse_id(id_)
+
+    @computed_field
+    @cached_property
     def pretty_name(self) -> str:
         out = self.map.pretty_name
         if self.game_mode == GameMode.OFFENSIVE:
@@ -73,8 +245,8 @@ class Layer(IndexedBaseModel[str]):
 
         return out
 
-    @computed_field  # type: ignore[prop-decorator]
-    @property
+    @computed_field
+    @cached_property
     def attacking_faction(self) -> Faction | None:
         if self.attacking_team == Team.ALLIES:
             return self.map.allies
@@ -82,8 +254,8 @@ class Layer(IndexedBaseModel[str]):
             return self.map.axis
         return None
 
-    @computed_field  # type: ignore[prop-decorator]
-    @property
+    @computed_field
+    @cached_property
     def defending_team(self) -> Team | None:
         if self.attacking_team == Team.ALLIES:
             return Team.AXIS
@@ -91,8 +263,8 @@ class Layer(IndexedBaseModel[str]):
             return Team.ALLIES
         return None
 
-    @computed_field  # type: ignore[prop-decorator]
-    @property
+    @computed_field
+    @cached_property
     def defending_faction(self) -> Faction | None:
         if self.attacking_team == Team.ALLIES:
             return self.map.axis
