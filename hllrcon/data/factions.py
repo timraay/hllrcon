@@ -9,6 +9,7 @@ from .teams import Team
 class Faction(IndexedBaseModel[int, None]):
     UNASSIGNED_ID: ClassVar[int] = 6
 
+    id: int
     name: str
     short_name: str
     team: Team

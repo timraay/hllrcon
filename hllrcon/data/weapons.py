@@ -43,6 +43,7 @@ class WeaponType(StrEnum):
 
 
 class Weapon(IndexedBaseModel[str]):
+    id: str
     name: str
     type: WeaponType
     vehicle_id: str | None = None
@@ -710,7 +711,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="FG42",
             name="FG42",
-            factions={Faction.GER, Faction.DAK},
+            factions={Faction.GER},
             type=WeaponType.ASSAULT_RIFLE,
         )
 
@@ -777,7 +778,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="FG42 x4",
             name="FG42",
-            factions={Faction.GER, Faction.DAK},
+            factions={Faction.GER},
             type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=4,
         )
@@ -1417,17 +1418,6 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def FIRE_SPOT(cls) -> "Weapon":
-        """*FireSpot*"""
-        return cls(
-            id="FireSpot",
-            name="Fire",
-            factions={Faction.SOV},
-            type=WeaponType.UNKNOWN,
-        )
-
-    @class_cached_property
-    @classmethod
     def PTRS_41(cls) -> "Weapon":
         """*PTRS-41*"""
         return cls(
@@ -1774,7 +1764,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="SMLE No.1 Mk III",
             name="SMLE Mk III",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.BOLT_ACTION_RIFLE,
         )
 
@@ -1785,8 +1775,19 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Rifle No.4 Mk I",
             name="No.4 Rifle Mk I",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.BOLT_ACTION_RIFLE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STEN_GUN(cls) -> "Weapon":
+        """*Sten Gun*"""
+        return cls(
+            id="Sten Gun",
+            name="Sten Mk II",
+            factions={Faction.B8A},
+            type=WeaponType.SUBMACHINE_GUN,
         )
 
     @class_cached_property
@@ -1818,7 +1819,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="M1928A1 THOMPSON",
             name="M1928A1 Thompson",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.SUBMACHINE_GUN,
         )
 
@@ -1829,7 +1830,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Bren Gun",
             name="Bren Gun",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ASSAULT_RIFLE,
         )
 
@@ -1840,7 +1841,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Lewis Gun",
             name="Lewis Gun",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.MACHINE_GUN,
         )
 
@@ -1851,7 +1852,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="FLAMETHROWER",
             name="Lifebuoy Flamethrower",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.FLAMETHROWER,
         )
 
@@ -1862,7 +1863,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Rifle No.4 Mk I Sniper",
             name="No.4 Rifle Mk I",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=8,
         )
@@ -1874,7 +1875,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Webley MK VI",
             name="Webley Mk IV",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.REVOLVER,
         )
 
@@ -1885,7 +1886,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Fairbairn–Sykes",  # noqa: RUF001
             name="Fairbairn-Sykes",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.MELEE,
         )
 
@@ -1907,7 +1908,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Mills Bomb",
             name="Mills Bomb",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.GRENADE,
         )
 
@@ -1929,7 +1930,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="PIAT",
             name="PIAT",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ROCKET_LAUNCHER,
         )
 
@@ -1940,7 +1941,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Boys Anti-tank Rifle",
             name="Boys AT Rifle",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ANTI_MATERIEL_RIFLE,
         )
 
@@ -1985,7 +1986,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 6-POUNDER [QF 6-Pounder]",
             name="57mm Cannon",
             vehicle_id="QF 6-Pounder",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.AT_GUN,
         )
 
@@ -1997,7 +1998,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 25-POUNDER [QF 25-Pounder]",
             name="88mm Howitzer",
             vehicle_id="QF 25-Pounder",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ARTILLERY,
         )
 
@@ -2009,7 +2010,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Daimler",
             name="Roadkill",
             vehicle_id="Daimler",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ROADKILL,
         )
 
@@ -2033,7 +2034,7 @@ class Weapon(IndexedBaseModel[str]):
             id="M3 Stuart Honey",
             name="Roadkill",
             vehicle_id="M3 Stuart Honey",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.ROADKILL,
         )
 
@@ -2057,7 +2058,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Crusader Mk.III",
             name="Roadkill",
             vehicle_id="Crusader Mk.III",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.ROADKILL,
         )
 
@@ -2105,7 +2106,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Bedford OYD (Supply)",
             name="Roadkill",
             vehicle_id="Bedford OYD (Supply)",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ROADKILL,
         )
 
@@ -2117,7 +2118,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Bedford OYD (Transport)",
             name="Roadkill",
             vehicle_id="Bedford OYD (Transport)",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.ROADKILL,
         )
 
@@ -2133,7 +2134,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 2-POUNDER [Daimler]",
             name="QF 2-Pounder",
             vehicle_id="Daimler",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2145,7 +2146,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA [Daimler]",
             name="BESA",
             vehicle_id="Daimler",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2181,7 +2182,7 @@ class Weapon(IndexedBaseModel[str]):
             id="37MM CANNON [M3 Stuart Honey]",
             name="37mm Cannon",
             vehicle_id="M3 Stuart Honey",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2193,7 +2194,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL M1919 [M3 Stuart Honey]",
             name="M1919 Browning",
             vehicle_id="M3 Stuart Honey",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2205,7 +2206,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL M1919 [M3 Stuart Honey]",
             name="M1919 Browning",
             vehicle_id="M3 Stuart Honey",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -2253,7 +2254,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 57MM [Crusader Mk.III]",
             name="QF 57mm",
             vehicle_id="Crusader Mk.III",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2265,7 +2266,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA [Crusader Mk.III]",
             name="BESA",
             vehicle_id="Crusader Mk.III",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2301,7 +2302,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 57MM [Churchill Mk.III]",
             name="QF 57mm",
             vehicle_id="Churchill Mk.III",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2313,7 +2314,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA 7.92mm [Churchill Mk.III]",
             name="BESA",
             vehicle_id="Churchill Mk.III",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2325,7 +2326,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA 7.92mm [Churchill Mk.III]",
             name="BESA",
             vehicle_id="Churchill Mk.III",
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -2375,7 +2376,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 2-POUNDER",
             name="QF 2-Pounder",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2399,7 +2400,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 57MM",
             name="QF 57mm",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2423,7 +2424,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2435,7 +2436,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA 7.92mm",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2447,7 +2448,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -2459,7 +2460,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA 7.92mm",
             name="7.92mm",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -2518,4 +2519,15 @@ class Weapon(IndexedBaseModel[str]):
             name="Katyusha Barrage",
             factions={Faction.SOV},
             type=WeaponType.COMMANDER_ABILITY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FIRE_SPOT(cls) -> "Weapon":
+        """*FireSpot*"""
+        return cls(
+            id="FireSpot",
+            name="Fire",
+            factions=set(Faction.all()),
+            type=WeaponType.UNKNOWN,
         )

@@ -1,7 +1,7 @@
 from collections.abc import Callable, Hashable
 from typing import TYPE_CHECKING, Any, ClassVar, Generic, Never, Self, cast
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, PrivateAttr
 from typing_extensions import TypeVar
 
 T = TypeVar("T")
@@ -35,10 +35,20 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
     )
     _lookup_map: ClassVar[dict[Any, "IndexedBaseModel[Any, Any]"]]
 
-    id: H
+    if TYPE_CHECKING:
+        id: H = PrivateAttr()
 
     @classmethod
     def __pydantic_init_subclass__(cls, **kwargs: Any) -> None:  # noqa: ANN401
+        if (
+            cls.model_fields
+            and "id" not in cls.model_fields
+            and "id" not in cls.model_computed_fields
+            and "id" not in cls.__dict__
+        ):
+            msg = f"{cls.__name__} must define an 'id' field."
+            raise ValueError(msg)
+
         cls._lookup_map = {}
 
         for value in cls.__dict__.values():
@@ -59,7 +69,7 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
         raise ValueError(msg)
 
     def model_post_init(self, context: Any) -> None:  # noqa: ANN401, ARG002
-        self._lookup_register(self.id, self)
+        self._lookup_register(self.id, self)  # type: ignore[attr-defined]
 
     @classmethod
     def by_id(cls, id_: H) -> Self | R:
@@ -100,6 +110,8 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
 
 
 class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
+    id: str
+
     @classmethod
     def by_id(cls, id_: str) -> Self | R:
         return super().by_id(id_.lower())

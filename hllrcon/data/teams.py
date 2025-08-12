@@ -5,6 +5,7 @@ from ._utils import IndexedBaseModel, class_cached_property
 
 
 class Team(IndexedBaseModel[int]):
+    id: int
     name: str
 
     @class_cached_property

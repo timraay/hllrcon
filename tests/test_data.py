@@ -33,6 +33,7 @@ def reset_lookup_maps() -> Generator[None]:
 class TestDataUtils:
     def test_indexed_model(self) -> None:
         class MyModel(IndexedBaseModel[int]):
+            id: int
             name: str
 
         foo = MyModel(id=1, name="Foo")
@@ -51,6 +52,8 @@ class TestDataUtils:
 
     def test_indexed_model_resolves_properties(self) -> None:
         class MyModel(IndexedBaseModel[int]):
+            id: int
+
             @class_cached_property
             @classmethod
             def bar(cls) -> "MyModel":

@@ -42,6 +42,7 @@ class VehicleSeat(BaseModel):
 
 
 class Vehicle(IndexedBaseModel[str]):
+    id: str
     name: str
     factions: set[Faction] = Field(min_length=1)
     type: VehicleType
@@ -1337,7 +1338,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Tetrarch",
             name="Tetrarch",
             type=VehicleType.LIGHT_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1372,7 +1373,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="M3 Stuart Honey",
             name="M3 Stuart Honey",
             type=VehicleType.LIGHT_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.B8A},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1410,7 +1411,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Cromwell",
             name="Cromwell",
             type=VehicleType.MEDIUM_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1448,7 +1449,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Crusader Mk.III",
             name="Crusader Mk III",
             type=VehicleType.MEDIUM_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.B8A},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1483,7 +1484,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Firefly",
             name="Sherman Firefly",
             type=VehicleType.HEAVY_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1518,7 +1519,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Churchill Mk.III",
             name="Churchill Mk III",
             type=VehicleType.HEAVY_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.B8A},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1556,7 +1557,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Churchill Mk.VII",
             name="Churchill Mk VII",
             type=VehicleType.HEAVY_TANK,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW},
             seats=[
                 VehicleSeat(
                     index=0,

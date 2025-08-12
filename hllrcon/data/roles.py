@@ -13,6 +13,7 @@ class RoleType(StrEnum):
 
 
 class Role(IndexedBaseModel[int]):
+    id: int
     name: str
     pretty_name: str
     type: RoleType

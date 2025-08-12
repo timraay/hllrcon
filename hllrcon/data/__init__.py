@@ -1,6 +1,7 @@
 from .factions import Faction
 from .game_modes import GameMode, GameModeScale
 from .layers import Layer, TimeOfDay, Weather
+from .loadouts import Loadout, LoadoutItem
 from .maps import Map, Orientation
 from .roles import Role, RoleType
 from .teams import Team
@@ -12,6 +13,8 @@ __all__ = (
     "GameMode",
     "GameModeScale",
     "Layer",
+    "Loadout",
+    "LoadoutItem",
     "Map",
     "Orientation",
     "Role",
