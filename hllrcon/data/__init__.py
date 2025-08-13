@@ -1,8 +1,8 @@
 from .factions import Faction
 from .game_modes import GameMode, GameModeScale
 from .layers import Layer, TimeOfDay, Weather
-from .loadouts import Loadout, LoadoutItem
-from .maps import Map, Orientation
+from .loadouts import Loadout, LoadoutId, LoadoutItem
+from .maps import Map, Orientation, Sector, Sectors
 from .roles import Role, RoleType
 from .teams import Team
 from .vehicles import Vehicle, VehicleSeat, VehicleType
@@ -14,11 +14,14 @@ __all__ = (
     "GameModeScale",
     "Layer",
     "Loadout",
+    "LoadoutId",
     "LoadoutItem",
     "Map",
     "Orientation",
     "Role",
     "RoleType",
+    "Sector",
+    "Sectors",
     "Team",
     "TimeOfDay",
     "Vehicle",

@@ -13,7 +13,7 @@ from ._utils import (
 )
 from .factions import Faction
 from .game_modes import GameMode
-from .maps import Map, Orientation
+from .maps import Map, Orientation, Sector, Sectors, Strongpoint
 from .teams import Team
 
 __all__ = (
@@ -176,7 +176,34 @@ class Layer(CaseInsensitiveIndexedBaseModel):
                     else Faction.GER
                 ),
                 orientation=Orientation.HORIZONTAL,
-                mirrored=False,
+                sectors=Sectors(
+                    Sector(
+                        Strongpoint(name="Sector 1"),
+                        Strongpoint(name="Sector 1"),
+                        Strongpoint(name="Sector 1"),
+                    ),
+                    Sector(
+                        Strongpoint(name="Sector 2"),
+                        Strongpoint(name="Sector 2"),
+                        Strongpoint(name="Sector 2"),
+                    ),
+                    Sector(
+                        Strongpoint(name="Sector 3"),
+                        Strongpoint(name="Sector 3"),
+                        Strongpoint(name="Sector 3"),
+                    ),
+                    Sector(
+                        Strongpoint(name="Sector 4"),
+                        Strongpoint(name="Sector 4"),
+                        Strongpoint(name="Sector 4"),
+                    ),
+                    Sector(
+                        Strongpoint(name="Sector 5"),
+                        Strongpoint(name="Sector 5"),
+                        Strongpoint(name="Sector 5"),
+                    ),
+                ),
+                mirror_factions=False,
             )
 
         return Layer(

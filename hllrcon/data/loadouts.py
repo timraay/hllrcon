@@ -2,7 +2,7 @@
 # ruff: noqa: N802, RUF001
 
 from functools import cached_property
-from typing import TYPE_CHECKING, NamedTuple
+from typing import NamedTuple, Self
 
 from pydantic import BaseModel, Field
 
@@ -29,7 +29,7 @@ class LoadoutItem(BaseModel, frozen=True):
         """The weapon corresponding to this item, if any."""
         try:
             return Weapon.by_id(self.name)
-        except KeyError:
+        except ValueError:
             return None
 
 
@@ -49,31 +49,37 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             name=self.name,
         )
 
-    if TYPE_CHECKING:
+    @classmethod
+    def _lookup_register(cls, id_: LoadoutId, instance: Self) -> None:
+        new_id = LoadoutId(*id_[:2], name=id_[2].lower())
+        return super()._lookup_register(new_id, instance)
 
-        @classmethod
-        def by_id(cls, id_: LoadoutId) -> "Loadout":
-            """Look up a loadout by its identifier.
+    @classmethod
+    def by_id(cls, id_: LoadoutId | tuple[int, int, str]) -> "Loadout":
+        """Look up a loadout by its identifier.
 
-            For convenience, you might want to use `Loadout.by_name()` instead.
+        An identifier consists of a faction ID, role ID, and name.
 
-            Parameters
-            ----------
-            id_ : LoadoutId
-                The identifier of the loadout to look up.
+        For convenience, it is suggested that you use `Loadout.by_name()` instead.
 
-            Returns
-            -------
-            Loadout
-                The loadout with the given identifier.
+        Parameters
+        ----------
+        id_ : LoadoutId
+            The identifier of the loadout to look up.
 
-            Raises
-            ------
-            KeyError
-                If no loadout with the given identifier exists.
+        Returns
+        -------
+        Loadout
+            The loadout with the given identifier.
 
-            """
-            return super().by_id(id_)
+        Raises
+        ------
+        KeyError
+            If no loadout with the given identifier exists.
+
+        """
+        new_id = LoadoutId(*id_[:2], name=id_[2].lower())
+        return super().by_id(new_id)
 
     @classmethod
     def by_name(cls, faction: Faction, role: Role, name: str) -> "Loadout":
@@ -99,7 +105,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             If no loadout with the given faction, role, and name exists.
 
         """
-        return super().by_id(
+        return cls.by_id(
             LoadoutId(
                 faction_id=faction.id,
                 role_id=role.id,

@@ -47,7 +47,7 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
             and "id" not in cls.__dict__
         ):
             msg = f"{cls.__name__} must define an 'id' field."
-            raise ValueError(msg)
+            raise TypeError(msg)
 
         cls._lookup_map = {}
 

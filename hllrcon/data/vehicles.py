@@ -33,7 +33,7 @@ class VehicleSeatType(StrEnum):
     PASSENGER = "Passenger"
 
 
-class VehicleSeat(BaseModel):
+class VehicleSeat(BaseModel, frozen=True):
     index: int
     type: VehicleSeatType
     weapons: list[Weapon] = Field(default_factory=list)

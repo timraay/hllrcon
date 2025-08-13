@@ -6,16 +6,18 @@ from hllrcon.data import (
     GameMode,
     GameModeScale,
     Layer,
+    Loadout,
     Map,
     Role,
     RoleType,
     Team,
     TimeOfDay,
+    Vehicle,
     Weapon,
     Weather,
 )
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
-from hllrcon.data.vehicles import Vehicle
+from hllrcon.data.loadouts import LoadoutId
 from pydantic import BaseModel
 
 
@@ -72,6 +74,12 @@ class TestDataUtils:
 
         assert MyModel.foo is MyModel.foo
         assert MyModel.foo.id == 3
+
+    def test_missing_id(self) -> None:
+        with pytest.raises(TypeError, match="must define an 'id' field."):
+
+            class MyModel(IndexedBaseModel[int]):
+                name: str
 
 
 class TestDataFactions:
@@ -272,7 +280,8 @@ class TestDataMaps:
             f"Map(id='kharkov', name='Kharkov', tag='KHA', "
             f"pretty_name='Kharkov', short_name='Kharkov', "
             f"allies={map_.allies!r}, axis={map_.axis!r}, "
-            f"orientation={map_.orientation!r}, mirrored={map_.mirrored!r})"
+            f"orientation={map_.orientation!r}, "
+            f"mirror_factions={map_.mirror_factions!r})"
         )
         assert repr(map_) == expected_repr
 
@@ -288,6 +297,22 @@ class TestDataMaps:
         map_ = Map.KHARKOV
         assert hash(map_) == hash(map_.id.lower())
         assert hash(map_) != hash(Map.DRIEL)
+
+    def test_map_sectors_index(self) -> None:
+        map_ = Map.KHARKOV
+
+        sector = map_.sectors.root[2]
+        assert map_.sectors[2] == sector
+
+        strongpoint = sector.root[1]
+        assert sector[1] == strongpoint
+        assert map_.sectors[2, 1] == strongpoint
+
+    def test_map_sectors_iter(self) -> None:
+        map_ = Map.KHARKOV
+
+        assert list(map_.sectors) == list(map_.sectors.root)
+        assert list(map_.sectors[0]) == list(map_.sectors[0].root)
 
 
 class TestDataTeams:
@@ -388,3 +413,47 @@ class TestDataVehicles:
 
         with pytest.raises(ValueError, match="not found"):
             Vehicle.by_id("sherman m4a3e2")
+
+
+class TestDataLoadouts:
+    def test_loadout_by_id(self) -> None:
+        assert (
+            Loadout.by_id(LoadoutId(Faction.US.id, Role.OFFICER.id, "NCO"))
+            == Loadout.US_OFFICER_NCO
+        )
+        assert (
+            Loadout.by_id(LoadoutId(Faction.CW.id, Role.RIFLEMAN.id, "Standard Issue"))
+            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+        )
+
+        assert (
+            Loadout.by_id(LoadoutId(Faction.CW.id, Role.RIFLEMAN.id, "sTaNdArD iSsUe"))
+            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+        )
+
+        with pytest.raises(ValueError, match="not found"):
+            Loadout.by_id(LoadoutId(Faction.US.id, Role.RIFLEMAN.id, "invalid_loadout"))
+        with pytest.raises(ValueError, match="not found"):
+            Loadout.by_id(LoadoutId(Faction.US.id, 69, "Standard Issue"))
+
+    def test_loadout_by_name(self) -> None:
+        assert (
+            Loadout.by_name(Faction.US, Role.OFFICER, "NCO") == Loadout.US_OFFICER_NCO
+        )
+        assert (
+            Loadout.by_name(Faction.CW, Role.RIFLEMAN, "Standard Issue")
+            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+        )
+
+        assert (
+            Loadout.by_name(Faction.CW, Role.RIFLEMAN, "sTaNdArD iSsUe")
+            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+        )
+
+        with pytest.raises(ValueError, match="not found"):
+            Loadout.by_name(Faction.US, Role.RIFLEMAN, "invalid_loadout")
+
+    def test_loadout_equipment_weapon(self) -> None:
+        assert Loadout.US_OFFICER_NCO.items[0].weapon == Weapon.M1_GARAND
+        assert Loadout.US_OFFICER_NCO.items[1].weapon == Weapon.MK2_GRENADE
+        assert Loadout.US_OFFICER_NCO.items[2].weapon is None
