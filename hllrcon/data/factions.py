@@ -45,20 +45,57 @@ class Faction(IndexedBaseModel[int, None]):
 
             """
 
+    @property
+    def is_allied(self) -> bool:
+        """Whether the faction is part of the allied forces.
+
+        Allied factions are:
+        - United States (`US`)
+        - Soviet Union (`SOV`)
+        - Commonwealth (`CW`)
+        - British 8th Army (`B8A`)
+        """
+        return self.team == Team.ALLIES
+
+    @property
+    def is_axis(self) -> bool:
+        """Whether the faction is part of the axis forces.
+
+        Axis factions are:
+        - Germany (`GER`)
+        - German Africa Corps (`DAK`)
+        """
+        return self.team == Team.AXIS
+
     @class_cached_property
     @classmethod
     def GER(cls) -> "Faction":
-        return cls(id=0, name="Germany", short_name="GER", team=Team.AXIS)
+        return cls(
+            id=0,
+            name="Germany",
+            short_name="GER",
+            team=Team.AXIS,
+        )
 
     @class_cached_property
     @classmethod
     def US(cls) -> "Faction":
-        return cls(id=1, name="United States", short_name="US", team=Team.ALLIES)
+        return cls(
+            id=1,
+            name="United States",
+            short_name="US",
+            team=Team.ALLIES,
+        )
 
     @class_cached_property
     @classmethod
     def SOV(cls) -> "Faction":
-        return cls(id=2, name="Soviet Union", short_name="SOV", team=Team.AXIS)
+        return cls(
+            id=2,
+            name="Soviet Union",
+            short_name="SOV",
+            team=Team.ALLIES,
+        )
 
     @class_cached_property
     @classmethod
@@ -68,7 +105,12 @@ class Faction(IndexedBaseModel[int, None]):
     @class_cached_property
     @classmethod
     def CW(cls) -> "Faction":
-        return cls(id=3, name="Allies", short_name="CW", team=Team.ALLIES)
+        return cls(
+            id=3,
+            name="Allies",
+            short_name="CW",
+            team=Team.ALLIES,
+        )
 
     @class_cached_property
     @classmethod

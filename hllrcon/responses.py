@@ -5,7 +5,7 @@ from typing import Annotated, Literal, TypeAlias
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
 
-from hllrcon.data import Layer, Role, RoleType
+from hllrcon.data import Faction, GameMode, Layer, Role, TimeOfDay
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 
@@ -45,7 +45,7 @@ class SupportedPlatform(StrEnum):
     EPIC = "eos"
 
 
-class PlayerTeam(IntEnum):
+class PlayerFactionId(IntEnum):
     GER = 0
     US = 1
     SOV = 2
@@ -54,134 +54,22 @@ class PlayerTeam(IntEnum):
     B8A = 5
     UNASSIGNED = 6
 
-    def is_allied(self) -> bool:
-        """Check if the team is an allied team.
 
-        Allied factions are:
-        - United States (`US`)
-        - Soviet Union (`SOV`)
-        - Commonwealth (`CW`)
-        - British 8th Army (`B8A`)
-
-        Returns
-        -------
-        bool
-            `True` if the team is an allied team, `False` otherwise.
-
-        """
-        return self in {
-            PlayerTeam.US,
-            PlayerTeam.SOV,
-            PlayerTeam.CW,
-            PlayerTeam.B8A,
-        }
-
-    def is_axis(self) -> bool:
-        """Check if the team is an axis team.
-
-        Axis factions are:
-        - Germany (`GER`)
-        - Deutsche Afrika Korps (`DAK`)
-
-        Returns
-        -------
-        bool
-            `True` if the team is an axis team, `False` otherwise.
-
-        """
-        return self in {
-            PlayerTeam.GER,
-            PlayerTeam.DAK,
-        }
-
-
-class PlayerRole(IntEnum):
-    Rifleman = 0
-    Assault = 1
-    AutomaticRifleman = 2
-    Medic = 3
-    Spotter = 4
-    Support = 5
-    MachineGunner = 6
-    AntiTank = 7
-    Engineer = 8
-    Officer = 9
-    Sniper = 10
-    Crewman = 11
-    TankCommander = 12
-    ArmyCommander = 13
-
-    def get_role(self) -> Role:
-        return Role.by_id(self.value)
-
-    def is_infantry(self) -> bool:
-        """Check if the role is associated with infantry units.
-
-        Roles included are:
-        - Officer
-        - Rifleman
-        - Assault
-        - Automatic Rifleman
-        - Medic
-        - Support
-        - Machine Gunner
-        - Anti-Tank
-        - Engineer
-
-        Returns
-        -------
-        bool
-            `True` if the role is an infantry role, `False` otherwise.
-
-        """
-        return self.get_role().type == RoleType.INFANTRY
-
-    def is_tanker(self) -> bool:
-        """Check if the role is associated with armor units.
-
-        Roles included are:
-        - Tank Commander
-        - Crewman
-
-        Returns
-        -------
-        bool
-            `True` if the role is a tanker role, `False` otherwise.
-
-        """
-        return self.get_role().type == RoleType.ARMOR
-
-    def is_recon(self) -> bool:
-        """Check if the role is associated with recon units.
-
-        Roles included are:
-        - Spotter
-        - Sniper
-
-        Returns
-        -------
-        bool
-            `True` if the role is a recon role, `False` otherwise.
-
-        """
-        return self.get_role().type == RoleType.RECON
-
-    def is_squad_leader(self) -> bool:
-        """Check if the role is that of a squad leader.
-
-        Roles included are:
-        - Commander
-        - Officer
-        - Tank Commander
-        - Spotter
-
-        Returns
-        -------
-        bool
-            `True` if the role is a squad leader role, `False` otherwise.
-
-        """
-        return self.get_role().is_squad_leader
+class PlayerRoleId(IntEnum):
+    RIFLEMAN = 0
+    ASSAULT = 1
+    AUTOMATIC_RIFLEMAN = 2
+    MEDIC = 3
+    SPOTTER = 4
+    SUPPORT = 5
+    MACHINE_GUNNER = 6
+    ANTI_TANK = 7
+    ENGINEER = 8
+    OFFICER = 9
+    SNIPER = 10
+    CREWMAN = 11
+    TANK_COMMANDER = 12
+    COMMANDER = 13
 
 
 class ForceMode(IntEnum):
@@ -276,17 +164,14 @@ class GetPlayerResponse(Response):
     level: int
     """The player's level"""
 
-    team: Annotated[
-        PlayerTeam | None,
-        AfterValidator(lambda v: None if v == PlayerTeam.UNASSIGNED else v),
-    ]
-    """The player's team"""
+    faction_id: PlayerFactionId = Field(validation_alias="team")
+    """The ID of the player's faction."""
 
-    role: PlayerRole
-    """The player's role."""
+    role_id: PlayerRoleId | int = Field(validation_alias="role")
+    """The ID of the player's role."""
 
     platoon: Annotated[str | None, EmptyStringToNoneValidator]
-    """The name of the player's squad. Empty string if not in a squad."""
+    """The name of the player's squad."""
 
     loadout: str
     """The player's current loadout. Might not be accurate if not spawned in."""
@@ -303,6 +188,14 @@ class GetPlayerResponse(Response):
     world_position: GetPlayerResponseWorldPosition
     """The player's position in centimeters"""
 
+    @property
+    def faction(self) -> Faction | None:
+        return Faction.by_id(self.faction_id)
+
+    @property
+    def role(self) -> Role:
+        return Role.by_id(self.role_id)
+
 
 class GetPlayersResponse(Response):
     players: list[GetPlayerResponse]
@@ -310,10 +203,14 @@ class GetPlayersResponse(Response):
 
 class GetMapRotationResponseEntry(Response):
     name: str
-    game_mode: str
-    time_of_day: str
+    game_mode_id: str = Field(validation_alias="gameMode")
+    time_of_day: TimeOfDay | str
     id: str = Field(validation_alias="iD")
     position: int
+
+    @property
+    def game_mode(self) -> GameMode:
+        return GameMode.by_id(self.game_mode_id)
 
     def find_layer(self, *, strict: bool = True) -> Layer:
         """Attempt to find the layer associated with this map rotation entry.
@@ -346,7 +243,7 @@ class GetMapRotationResponse(Response):
 class GetServerSessionResponse(Response):
     server_name: str
     map_name: str
-    game_mode: str
+    game_mode_id: str = Field(validation_alias="gameMode")
     remaining_match_time: int
     match_time: int
     allied_score: int
@@ -359,6 +256,10 @@ class GetServerSessionResponse(Response):
     max_queue_count: int
     vip_queue_count: int
     max_vip_queue_count: int
+
+    @property
+    def game_mode(self) -> GameMode:
+        return GameMode.by_id(self.game_mode_id)
 
 
 class GetServerConfigResponse(Response):

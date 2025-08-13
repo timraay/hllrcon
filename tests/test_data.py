@@ -1,4 +1,5 @@
 from collections.abc import Generator
+from typing import NamedTuple
 
 import pytest
 from hllrcon.data import (
@@ -9,7 +10,6 @@ from hllrcon.data import (
     Loadout,
     Map,
     Role,
-    RoleType,
     Team,
     TimeOfDay,
     Vehicle,
@@ -96,6 +96,26 @@ class TestDataFactions:
             Faction.by_id(7)
 
         assert None not in Faction.all()
+
+    class FactionProperties(NamedTuple):
+        faction: Faction
+        is_allied: bool
+        is_axis: bool
+
+    @pytest.mark.parametrize(
+        "properties",
+        [
+            FactionProperties(Faction.GER, False, True),
+            FactionProperties(Faction.US, True, False),
+            FactionProperties(Faction.SOV, True, False),
+            FactionProperties(Faction.CW, True, False),
+            FactionProperties(Faction.DAK, False, True),
+            FactionProperties(Faction.B8A, True, False),
+        ],
+    )
+    def test_faction_properties(self, properties: FactionProperties) -> None:
+        assert properties.faction.is_allied is properties.is_allied
+        assert properties.faction.is_axis is properties.is_axis
 
 
 class TestDataGameModes:
@@ -344,43 +364,37 @@ class TestDataRoles:
         with pytest.raises(ValueError, match="not found"):
             Team.by_id(14)
 
-    def test_role_properties(self) -> None:
-        all_squad_leaders = {role for role in Role.all() if role.is_squad_leader}
-        assert all_squad_leaders == {
-            Role.OFFICER,
-            Role.SPOTTER,
-            Role.COMMANDER,
-            Role.TANK_COMMANDER,
-        }
+    class RoleProperties(NamedTuple):
+        role: Role
+        is_infantry: bool
+        is_tanker: bool
+        is_recon: bool
+        is_squad_leader: bool
 
-        grouped_by_type: dict[RoleType, set[Role]] = {}
-        for role in Role.all():
-            grouped_by_type.setdefault(role.type, set()).add(role)
-
-        assert grouped_by_type == {
-            RoleType.INFANTRY: {
-                Role.RIFLEMAN,
-                Role.ASSAULT,
-                Role.AUTOMATIC_RIFLEMAN,
-                Role.MEDIC,
-                Role.SUPPORT,
-                Role.MACHINE_GUNNER,
-                Role.ANTI_TANK,
-                Role.ENGINEER,
-                Role.OFFICER,
-            },
-            RoleType.RECON: {
-                Role.SPOTTER,
-                Role.SNIPER,
-            },
-            RoleType.ARMOR: {
-                Role.CREWMAN,
-                Role.TANK_COMMANDER,
-            },
-            RoleType.COMMANDER: {
-                Role.COMMANDER,
-            },
-        }
+    @pytest.mark.parametrize(
+        "properties",
+        [
+            RoleProperties(Role.RIFLEMAN, True, False, False, False),
+            RoleProperties(Role.ASSAULT, True, False, False, False),
+            RoleProperties(Role.AUTOMATIC_RIFLEMAN, True, False, False, False),
+            RoleProperties(Role.MEDIC, True, False, False, False),
+            RoleProperties(Role.SPOTTER, False, False, True, True),
+            RoleProperties(Role.SUPPORT, True, False, False, False),
+            RoleProperties(Role.MACHINE_GUNNER, True, False, False, False),
+            RoleProperties(Role.ANTI_TANK, True, False, False, False),
+            RoleProperties(Role.ENGINEER, True, False, False, False),
+            RoleProperties(Role.OFFICER, True, False, False, True),
+            RoleProperties(Role.SNIPER, False, False, True, False),
+            RoleProperties(Role.CREWMAN, False, True, False, False),
+            RoleProperties(Role.TANK_COMMANDER, False, True, False, True),
+            RoleProperties(Role.COMMANDER, False, False, False, True),
+        ],
+    )
+    def test_role_properties(self, properties: RoleProperties) -> None:
+        assert properties.role.is_infantry is properties.is_infantry
+        assert properties.role.is_tanker is properties.is_tanker
+        assert properties.role.is_recon is properties.is_recon
+        assert properties.role.is_squad_leader is properties.is_squad_leader
 
 
 class TestDataWeapons:

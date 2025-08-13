@@ -1,16 +1,17 @@
 from datetime import UTC, datetime
-from typing import TYPE_CHECKING, Any, NamedTuple, cast
+from typing import TYPE_CHECKING, Any, cast
 
 import pytest
-from hllrcon.data import Layer
+from hllrcon.data import GameMode, Layer, Role
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
     GetAdminLogResponseEntry,
     GetMapRotationResponseEntry,
     GetPlayerResponse,
+    GetServerSessionResponse,
+    PlayerFactionId,
     PlayerPlatform,
-    PlayerRole,
-    PlayerTeam,
+    PlayerRoleId,
 )
 
 if TYPE_CHECKING:
@@ -49,8 +50,8 @@ def test_get_player_response_team_unassigned() -> None:
             "platform": PlayerPlatform.STEAM.value,
             "eosId": "eos-12345",
             "level": 10,
-            "team": PlayerTeam.UNASSIGNED.value,
-            "role": PlayerRole.Rifleman.value,
+            "team": PlayerFactionId.UNASSIGNED.value,
+            "role": PlayerRoleId.RIFLEMAN.value,
             "platoon": "",
             "loadout": "Standard Issue",
             "kills": 5,
@@ -69,86 +70,54 @@ def test_get_player_response_team_unassigned() -> None:
         },
     )
 
-    assert response.team is None
+    assert response.faction is None
+    assert response.role is Role.RIFLEMAN
 
     # Test other validators just for the sake of it
     assert response.clan_tag is None
     assert response.platoon is None
 
 
-class PlayerRoleProperties(NamedTuple):
-    role: PlayerRole
-    is_infantry: bool
-    is_tanker: bool
-    is_recon: bool
-    is_squad_leader: bool
+def test_get_server_session_game_mode() -> None:
+    response = GetServerSessionResponse(
+        server_name="Test Server",
+        map_name="FOY",
+        game_mode_id="Warfare",
+        remaining_match_time=300,
+        match_time=600,
+        allied_score=2,
+        axis_score=3,
+        player_count=64,
+        allied_player_count=32,
+        axis_player_count=32,
+        max_player_count=100,
+        queue_count=0,
+        max_queue_count=6,
+        vip_queue_count=0,
+        max_vip_queue_count=6,
+    )
 
-
-@pytest.mark.parametrize(
-    "properties",
-    [
-        PlayerRoleProperties(PlayerRole.Rifleman, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.Assault, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.AutomaticRifleman, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.Medic, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.Spotter, False, False, True, True),
-        PlayerRoleProperties(PlayerRole.Support, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.MachineGunner, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.AntiTank, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.Engineer, True, False, False, False),
-        PlayerRoleProperties(PlayerRole.Officer, True, False, False, True),
-        PlayerRoleProperties(PlayerRole.Sniper, False, False, True, False),
-        PlayerRoleProperties(PlayerRole.Crewman, False, True, False, False),
-        PlayerRoleProperties(PlayerRole.TankCommander, False, True, False, True),
-        PlayerRoleProperties(PlayerRole.ArmyCommander, False, False, False, True),
-    ],
-)
-def test_player_role_types(properties: PlayerRoleProperties) -> None:
-    assert properties.role.is_infantry() is properties.is_infantry
-    assert properties.role.is_tanker() is properties.is_tanker
-    assert properties.role.is_recon() is properties.is_recon
-    assert properties.role.is_squad_leader() is properties.is_squad_leader
-
-
-class PlayerTeamTypes(NamedTuple):
-    team: PlayerTeam
-    is_allied: bool
-    is_axis: bool
-
-
-@pytest.mark.parametrize(
-    "properties",
-    [
-        PlayerTeamTypes(PlayerTeam.GER, False, True),
-        PlayerTeamTypes(PlayerTeam.US, True, False),
-        PlayerTeamTypes(PlayerTeam.SOV, True, False),
-        PlayerTeamTypes(PlayerTeam.CW, True, False),
-        PlayerTeamTypes(PlayerTeam.DAK, False, True),
-        PlayerTeamTypes(PlayerTeam.B8A, True, False),
-        PlayerTeamTypes(PlayerTeam.UNASSIGNED, False, False),
-    ],
-)
-def test_player_team_types(properties: PlayerTeamTypes) -> None:
-    assert properties.team.is_allied() is properties.is_allied
-    assert properties.team.is_axis() is properties.is_axis
+    assert response.game_mode == GameMode.WARFARE
 
 
 def test_map_rotation_entry_find_layer() -> None:
     entry = GetMapRotationResponseEntry(
         name="FOY",
-        game_mode="Warfare",
+        game_mode_id="Warfare",
         time_of_day="DAY",
         id="foy_warfare",
         position=0,
     )
+    assert entry.game_mode == GameMode.WARFARE
     assert entry.find_layer() == Layer.FOY_WARFARE_DAY
 
     unknown_entry = GetMapRotationResponseEntry(
         name="SOY",
-        game_mode="Warfare",
+        game_mode_id="Offensive",
         time_of_day="DAY",
         id="not_foy_warfare",
         position=1,
     )
+    assert unknown_entry.game_mode == GameMode.OFFENSIVE
     with pytest.raises(ValueError, match="not found"):
         unknown_entry.find_layer()

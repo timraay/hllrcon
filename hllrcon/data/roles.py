@@ -18,7 +18,51 @@ class Role(IndexedBaseModel[int]):
     pretty_name: str
     type: RoleType
     is_squad_leader: bool
-    """Whether the player is a squad leader. This also includes the Commander."""
+    """Whether this role is exclusive to the squad leader.
+
+    Roles included are:
+    - Commander
+    - Officer
+    - Tank Commander
+    - Spotter
+    """
+
+    @property
+    def is_infantry(self) -> bool:
+        """Whether the role is associated with infantry units.
+
+        Roles included are:
+        - Officer
+        - Rifleman
+        - Assault
+        - Automatic Rifleman
+        - Medic
+        - Support
+        - Machine Gunner
+        - Anti-Tank
+        - Engineer
+        """
+        return self.type == RoleType.INFANTRY
+
+    @property
+    def is_tanker(self) -> bool:
+        """Whether the role is associated with armor units.
+
+        Roles included are:
+        - Tank Commander
+        - Crewman
+        """
+        return self.type == RoleType.ARMOR
+
+    @property
+    def is_recon(self) -> bool:
+        """Whether the role is associated with recon units.
+
+        Roles included are:
+        - Spotter
+        - Sniper
+        """
+        return self.type == RoleType.RECON
 
     @class_cached_property
     @classmethod
