@@ -26,6 +26,11 @@ class Role(IndexedBaseModel[int]):
     - Tank Commander
     - Spotter
     """
+    kill_combat_score: int
+    """The Combat Effectiveness score gained when killing a player with this role."""
+    assist_combat_score: int
+    """The Combat Effectiveness score gained when assisting in the kill of a player with
+    this role. Assists are gained when a player you downed gets killed by another."""
 
     @property
     def is_infantry(self) -> bool:
@@ -73,6 +78,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Rifleman",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=3,
+            assist_combat_score=2,
         )
 
     @class_cached_property
@@ -84,6 +91,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Assault",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )
 
     @class_cached_property
@@ -95,6 +104,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Automatic Rifleman",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )
 
     @class_cached_property
@@ -106,6 +117,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Medic",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )
 
     @class_cached_property
@@ -117,6 +130,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Spotter",
             type=RoleType.RECON,
             is_squad_leader=True,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )
 
     @class_cached_property
@@ -128,6 +143,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Support",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )
 
     @class_cached_property
@@ -139,6 +156,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Machine Gunner",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=9,
+            assist_combat_score=6,
         )
 
     @class_cached_property
@@ -150,6 +169,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Anti-Tank",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=9,
+            assist_combat_score=6,
         )
 
     @class_cached_property
@@ -161,6 +182,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Engineer",
             type=RoleType.INFANTRY,
             is_squad_leader=False,
+            kill_combat_score=9,
+            assist_combat_score=6,
         )
 
     @class_cached_property
@@ -172,6 +195,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Officer",
             type=RoleType.INFANTRY,
             is_squad_leader=True,
+            kill_combat_score=9,
+            assist_combat_score=6,
         )
 
     @class_cached_property
@@ -183,6 +208,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Sniper",
             type=RoleType.RECON,
             is_squad_leader=False,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )
 
     @class_cached_property
@@ -194,6 +221,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Crewman",
             type=RoleType.ARMOR,
             is_squad_leader=False,
+            kill_combat_score=3,
+            assist_combat_score=2,
         )
 
     @class_cached_property
@@ -205,6 +234,8 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Tank Commander",
             type=RoleType.ARMOR,
             is_squad_leader=True,
+            kill_combat_score=9,
+            assist_combat_score=6,
         )
 
     @class_cached_property
@@ -216,4 +247,6 @@ class Role(IndexedBaseModel[int]):
             pretty_name="Army Commander",
             type=RoleType.COMMANDER,
             is_squad_leader=True,
+            kill_combat_score=12,
+            assist_combat_score=8,
         )
