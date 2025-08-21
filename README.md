@@ -36,7 +36,8 @@ It allows you to interact with your HLL servers programmatically, supporting mod
 
 - Full async/await support
 - Command execution and response parsing
-- Connection pooling
+- Collection of vanilla maps, factions, weapons, and more
+- Alternative interfaces for synchronous applications
 - Well-typed and tested
 
 ## Installation
@@ -76,9 +77,42 @@ async def main():
         await rcon.broadcast("Hello, HLL!")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Run the program
     asyncio.run(main())
+```
+
+For integration of synchronous applications, a `SyncRcon` class is provided.
+
+```py
+from hllrcon.sync import SyncRcon
+
+rcon = SyncRcon(
+    host="127.0.0.1",
+    port=12345,
+    password="your_rcon_password",
+)
+
+# Connect and send a broadcast message
+with rcon.connect():
+    rcon.broadcast("Hello, HLL!")
+```
+
+The library contains a swathe of details about in-game maps, factions, weapons, vehicles, and more. Below is just an example of what it might be used for.
+
+```py
+from hllron.data import Weapon
+
+# Find a weapon by its ID
+weapon_id = "COAXIAL M1919 [Stuart M5A1]"
+weapon = Weapon.by_id(weapon_id)
+
+# Print out whichever vehicle seat the attacker must have been in, if any
+if weapon.vehicle:
+    for seat in weapon.vehicle.seats:
+        if weapon in seat.weapons:
+            print("This weapon belongs to the", seat.type.name, "seat")
+            break
 ```
 
 # License
