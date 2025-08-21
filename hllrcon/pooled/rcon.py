@@ -2,6 +2,7 @@ import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
+from warnings import deprecated
 
 from typing_extensions import override
 
@@ -9,15 +10,21 @@ from hllrcon.client import RconClient
 from hllrcon.pooled.worker import PooledRconWorker
 
 
+@deprecated(
+    "Use the `Rcon` class instead, which is more efficient and reliable. This class"
+    " will be removed when U19 is released, now that RCON protocol changes have made it"
+    " obsolete.",
+)
 class PooledRcon(RconClient):
     """A pooled RCON client that that manages multiple connections to an RCON server.
 
     This class allows for concurrent execution of commands by maintaining a pool of
     RCON workers. Each worker can handle a command execution independently, which
-    improves performance and reduces latency for multiple requests.
+    once used to improve performance and reduce latency for multiple requests.
 
-    This class will eventually be deprecated once the RCON protocol supports concurrent
-    requests.
+    This class has been deprecated since updates to the RCON protocol have made
+    it obsolete. Use the `Rcon` class instead, which delivers better and more
+    reliable performance.
 
     """
 
