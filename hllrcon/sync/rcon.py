@@ -3,7 +3,7 @@ import threading
 from collections.abc import Generator
 from concurrent.futures import Future
 from contextlib import contextmanager
-from typing import Any
+from typing import Any, override
 
 from hllrcon.rcon import Rcon
 from hllrcon.sync.commands import SyncRconCommands
@@ -127,29 +127,31 @@ class SyncRcon(SyncRconCommands):
             self._loop.stop()
         self._loop = None
 
-    def execute(
-        self,
-        command: str,
-        version: int,
-        body: str | dict[str, Any] = "",
-    ) -> str:
-        self.wait_until_connected()
-
-        if self._loop is None:  # pragma: no cover
-            msg = "Could not run event loop"
-            raise RuntimeError(msg)
-
-        return asyncio.run_coroutine_threadsafe(
-            self._rcon.execute(command, version, body),
-            loop=self._loop,
-        ).result()
-
     def execute_concurrently(
         self,
         command: str,
         version: int,
         body: str | dict[str, Any] = "",
     ) -> Future[str]:
+        """Schedule the execution of a command on the RCON server.
+
+        This method allows for concurrent execution of commands.
+
+        Parameters
+        ----------
+        command : str
+            The command to execute.
+        version : int
+            The version of the command to execute.
+        body : str | dict[str, Any], optional
+            The body of the command, by default an empty string.
+
+        Returns
+        -------
+        concurrent.futures.Future[str]
+            A Future representing the response from the server.
+
+        """
         self.wait_until_connected()
 
         if self._loop is None:  # pragma: no cover
@@ -160,3 +162,16 @@ class SyncRcon(SyncRconCommands):
             self._rcon.execute(command, version, body),
             loop=self._loop,
         )
+
+    @override
+    def execute(
+        self,
+        command: str,
+        version: int,
+        body: str | dict[str, Any] = "",
+    ) -> str:
+        return self.execute_concurrently(
+            command=command,
+            version=version,
+            body=body,
+        ).result()
