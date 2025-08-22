@@ -13,7 +13,7 @@ from ._utils import (
 )
 from .factions import Faction
 from .game_modes import GameMode
-from .maps import Map, Orientation, Sector, Sectors, Strongpoint
+from .maps import Map, Orientation, Sector, SectorRow, Sectors, Strongpoint
 from .teams import Team
 
 __all__ = (
@@ -177,30 +177,135 @@ class Layer(CaseInsensitiveIndexedBaseModel):
                 ),
                 orientation=Orientation.HORIZONTAL,
                 sectors=Sectors(
-                    Sector(
-                        Strongpoint(name="Sector 1"),
-                        Strongpoint(name="Sector 1"),
-                        Strongpoint(name="Sector 1"),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(0, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 1A",
+                                center=(-80000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(0, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 1B",
+                                center=(-80000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(0, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 1C",
+                                center=(-80000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
                     ),
-                    Sector(
-                        Strongpoint(name="Sector 2"),
-                        Strongpoint(name="Sector 2"),
-                        Strongpoint(name="Sector 2"),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(1, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 2A",
+                                center=(-40000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(1, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 2B",
+                                center=(-40000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(1, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 2C",
+                                center=(-40000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
                     ),
-                    Sector(
-                        Strongpoint(name="Sector 3"),
-                        Strongpoint(name="Sector 3"),
-                        Strongpoint(name="Sector 3"),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(2, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 3A",
+                                center=(0, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(2, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 3B",
+                                center=(0, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(2, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 3C",
+                                center=(0, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
                     ),
-                    Sector(
-                        Strongpoint(name="Sector 4"),
-                        Strongpoint(name="Sector 4"),
-                        Strongpoint(name="Sector 4"),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(3, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 4A",
+                                center=(40000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(3, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 4B",
+                                center=(40000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(3, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 4C",
+                                center=(40000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
                     ),
-                    Sector(
-                        Strongpoint(name="Sector 5"),
-                        Strongpoint(name="Sector 5"),
-                        Strongpoint(name="Sector 5"),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(4, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 5A",
+                                center=(80000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(4, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 5B",
+                                center=(80000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(4, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 5C",
+                                center=(80000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
                     ),
                 ),
                 mirror_factions=False,

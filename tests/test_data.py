@@ -8,8 +8,14 @@ from hllrcon.data import (
     GameModeScale,
     Layer,
     Loadout,
+    LoadoutId,
     Map,
+    Orientation,
     Role,
+    Sector,
+    SectorRow,
+    Sectors,
+    Strongpoint,
     Team,
     TimeOfDay,
     Vehicle,
@@ -17,8 +23,7 @@ from hllrcon.data import (
     Weather,
 )
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
-from hllrcon.data.loadouts import LoadoutId
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 
 @pytest.fixture(autouse=True)
@@ -333,6 +338,296 @@ class TestDataMaps:
 
         assert list(map_.sectors) == list(map_.sectors.root)
         assert list(map_.sectors[0]) == list(map_.sectors[0].root)
+
+    def test_strongpoint_is_inside(self) -> None:
+        sp = Strongpoint(
+            name="Foo",
+            center=(10, 0, 0),
+            radius=10,
+        )
+
+        assert sp.is_inside((10, 0, 0))
+        assert sp.is_inside((20, 0, 0))
+        assert sp.is_inside((10, 10, 0))
+        assert not sp.is_inside((-1, 0, 0))
+        assert not sp.is_inside((10, 10, 10))
+
+    def test_sector_is_inside(self) -> None:
+        sector = Sector(
+            grid_pos=(2, 3),  # from (x-20000, y20000) to (x20000, y60000)
+            strongpoint=Strongpoint(
+                name="Foo",
+                center=(10, 0, 0),
+                radius=10,
+            ),
+        )
+
+        assert sector.is_inside((0, 40000))
+        assert sector.is_inside((-19000, 21000))
+        assert sector.is_inside((19000, 21000))
+        assert sector.is_inside((19000, 59000))
+        assert sector.is_inside((-19000, 59000))
+
+        assert not sector.is_inside((0, 0))
+        assert not sector.is_inside((-21000, 40000))
+
+    def test_sector_row_is_inside(self) -> None:
+        row = Map.KHARKOV.sectors[2]
+
+        assert row.is_inside((0, 0))
+        assert row.is_inside((0, 19000))
+        assert not row.is_inside((0, 21000))
+        assert row.is_inside((59000, 19000))
+        assert not row.is_inside((61000, 19000))
+
+    def test_get_sector_at_pos_horizontal(self) -> None:
+        map_ = Map.ST_MERE_EGLISE
+
+        sector = map_.get_sector_at_pos((40000, 0))
+        assert sector is not None
+        assert sector.grid_pos == (3, 2)
+
+        sector = map_.get_sector_at_pos((30000, -61000))
+        assert sector is None
+
+        sector = map_.get_sector_at_pos((101000, 30000))
+        assert sector is None
+
+        sector = map_.get_sector_at_pos((21000, 21000))
+        assert sector is not None
+        assert sector.grid_pos == (3, 3)
+
+        sector = map_.get_sector_at_pos((-19000, -19000))
+        assert sector is not None
+        assert sector.grid_pos == (2, 2)
+
+    def test_get_sector_at_pos_vertical(self) -> None:
+        map_ = Map.KHARKOV
+
+        sector = map_.get_sector_at_pos((0, 40000))
+        assert sector is not None
+        assert sector.grid_pos == (2, 3)
+
+        sector = map_.get_sector_at_pos((-61000, 30000))
+        assert sector is None
+
+        sector = map_.get_sector_at_pos((30000, 101000))
+        assert sector is None
+
+        sector = map_.get_sector_at_pos((21000, 21000))
+        assert sector is not None
+        assert sector.grid_pos == (3, 3)
+
+        sector = map_.get_sector_at_pos((-19000, -19000))
+        assert sector is not None
+        assert sector.grid_pos == (2, 2)
+
+    def test_get_sector_row_at_pos_horizontal(self) -> None:
+        map_ = Map.ST_MERE_EGLISE
+
+        row = map_.get_sector_row_at_pos((0, 0))
+        assert row is not None
+        assert row is map_.sectors[2]
+
+        row = map_.get_sector_row_at_pos((21000, 40000))
+        assert row is not None
+        assert row is map_.sectors[3]
+
+        row = map_.get_sector_row_at_pos((21000, 23984932))
+        assert row is not None
+        assert row is map_.sectors[3]
+
+        row = map_.get_sector_row_at_pos((99000, 0))
+        assert row is not None
+        assert row is map_.sectors[4]
+
+        row = map_.get_sector_row_at_pos((-99000, 0))
+        assert row is not None
+        assert row is map_.sectors[0]
+
+        row = map_.get_sector_row_at_pos((101000, 0))
+        assert row is None
+
+        row = map_.get_sector_row_at_pos((-101000, 0))
+        assert row is None
+
+    def test_get_sector_row_at_pos_vertical(self) -> None:
+        map_ = Map.KHARKOV
+
+        row = map_.get_sector_row_at_pos((0, 0))
+        assert row is not None
+        assert row is map_.sectors[2]
+
+        row = map_.get_sector_row_at_pos((40000, 21000))
+        assert row is not None
+        assert row is map_.sectors[3]
+
+        row = map_.get_sector_row_at_pos((23984932, 21000))
+        assert row is not None
+        assert row is map_.sectors[3]
+
+        row = map_.get_sector_row_at_pos((0, 99000))
+        assert row is not None
+        assert row is map_.sectors[4]
+
+        row = map_.get_sector_row_at_pos((0, -99000))
+        assert row is not None
+        assert row is map_.sectors[0]
+
+        row = map_.get_sector_row_at_pos((0, 101000))
+        assert row is None
+
+        row = map_.get_sector_row_at_pos((0, -101000))
+        assert row is None
+
+    def test_validate_sector_grid_pos(self) -> None:
+        with pytest.raises(
+            ValidationError,
+            match=r"Invalid sector grid position: \(3, 1\)",
+        ):
+            Map(
+                id="foo",
+                name="Foo",
+                pretty_name="Foo",
+                short_name="Foo",
+                tag="FOO",
+                allies=Faction.US,
+                axis=Faction.GER,
+                orientation=Orientation.HORIZONTAL,
+                sectors=Sectors(
+                    SectorRow(
+                        Sector(
+                            grid_pos=(0, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 1A",
+                                center=(-80000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(0, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 1B",
+                                center=(-80000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(0, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 1C",
+                                center=(-80000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                    ),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(1, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 2A",
+                                center=(-40000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(1, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 2B",
+                                center=(-40000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(1, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 2C",
+                                center=(-40000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                    ),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(3, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 3A",
+                                center=(0, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(2, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 3B",
+                                center=(0, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(2, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 3C",
+                                center=(0, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                    ),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(3, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 4A",
+                                center=(40000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(3, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 4B",
+                                center=(40000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(3, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 4C",
+                                center=(40000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                    ),
+                    SectorRow(
+                        Sector(
+                            grid_pos=(4, 1),
+                            strongpoint=Strongpoint(
+                                name="Sector 5A",
+                                center=(80000, -40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(4, 2),
+                            strongpoint=Strongpoint(
+                                name="Sector 5B",
+                                center=(80000, 0, 0),
+                                radius=4000,
+                            ),
+                        ),
+                        Sector(
+                            grid_pos=(4, 3),
+                            strongpoint=Strongpoint(
+                                name="Sector 5C",
+                                center=(80000, 40000, 0),
+                                radius=4000,
+                            ),
+                        ),
+                    ),
+                ),
+                mirror_factions=False,
+            )
 
 
 class TestDataTeams:

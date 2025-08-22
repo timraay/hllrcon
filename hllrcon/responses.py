@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import IntEnum, StrEnum
-from typing import Annotated, Literal, TypeAlias
+from typing import Annotated, Literal, NamedTuple, TypeAlias
 
 from pydantic import AfterValidator, BaseModel, ConfigDict, Field
 from pydantic.alias_generators import to_camel
@@ -134,7 +134,7 @@ class GetPlayerResponseScoreData(Response):
     support: int
 
 
-class GetPlayerResponseWorldPosition(Response):
+class GetPlayerResponseWorldPosition(NamedTuple):
     x: float
     """The east-west horizontal axis. Between -100000 and 100000."""
 

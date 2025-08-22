@@ -114,6 +114,40 @@ if weapon.vehicle:
             print("This weapon belongs to the", seat.type.name, "seat")
             break
 ```
+```py
+from hllrcon import Rcon
+from hllrcon.data import Map, Team
+
+# Get the AA Network sector (SMDM, 3rd sector row, 2nd sector)
+active_sector = Map.ST_MARIE_DU_MONT.sectors[2, 1]
+assert active_sector.name == "AA Network"
+
+# Get the current online players
+rcon = Rcon(...)
+players = await rcon.get_players()
+
+# Calculate each team's capture strength towards the sector
+strength = {Team.ALLIES: 0, Team.AXIS: 0}
+for player in players.players:
+    if player.faction is None:
+        continue
+
+    if player.world_position == (0.0, 0.0, 0.0):
+        # Player is dead. Note: Does not exclude players bleeding out
+        continue
+
+    # Grant 3 strength if inside the strongpoint
+    if active_sector.strongpoint.is_inside(player.world_position):
+        strength[player.faction.team] += 3
+
+    # Only grant 1 strength if inside the sector
+    elif active_sector.is_inside(player.world_position):
+        strength[player.faction.team] += 1
+
+# Print out the results
+print("Allied cap weight:", strength[Team.ALLIES])
+print("Axis cap weight:", strength[Team.AXIS])
+```
 
 # License
 
