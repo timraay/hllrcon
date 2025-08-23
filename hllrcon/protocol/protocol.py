@@ -1,10 +1,9 @@
 import array
 import asyncio
 import base64
-import contextlib
+import itertools
 import logging
 import struct
-from collections import deque
 from collections.abc import Callable
 from typing import Any, Self
 
@@ -17,12 +16,7 @@ from hllrcon.exceptions import (
     HLLConnectionRefusedError,
     HLLMessageError,
 )
-from hllrcon.protocol.constants import (
-    DO_ALLOW_CONCURRENT_REQUESTS,
-    DO_POP_V1_XORKEY,
-    DO_USE_REQUEST_HEADERS,
-    HEADER_FORMAT,
-)
+from hllrcon.protocol.constants import RESPONSE_HEADER_FORMAT
 from hllrcon.protocol.request import RconRequest
 from hllrcon.protocol.response import RconResponse
 
@@ -80,16 +74,7 @@ class RconProtocol(asyncio.Protocol):
         self._transport: asyncio.Transport | None = None
         self._buffer: bytes = b""
 
-        if DO_USE_REQUEST_HEADERS:
-            self._waiters: dict[int, asyncio.Future[RconResponse]] = {}
-        else:
-            self._queue: deque[asyncio.Future[RconResponse]] = deque()
-
-        if not DO_ALLOW_CONCURRENT_REQUESTS:
-            self._lock = asyncio.Lock()
-
-        if DO_POP_V1_XORKEY:
-            self._seen_v1_xorkey: bool = False
+        self._waiters: dict[int, asyncio.Future[RconResponse]] = {}
 
         self.loop = loop
         self.timeout = timeout
@@ -98,6 +83,8 @@ class RconProtocol(asyncio.Protocol):
 
         self.xorkey: bytes | None = None
         self.auth_token: str | None = None
+
+        self._counter = itertools.count(start=0)
 
     @classmethod
     async def connect(
@@ -170,9 +157,6 @@ class RconProtocol(asyncio.Protocol):
         self.logger.info("Connected!")
 
         try:
-            if DO_POP_V1_XORKEY:  # pragma: no cover
-                # Give some time for the server to send the XOR key
-                await asyncio.sleep(0.1)
             await self.authenticate(password)
         except HLLAuthError:
             self.disconnect()
@@ -212,13 +196,6 @@ class RconProtocol(asyncio.Protocol):
     def data_received(self, data: bytes) -> None:
         self.logger.debug("Incoming: (%s) %s", self._xor(data).count(b"\t"), data[:10])
 
-        if DO_POP_V1_XORKEY and not self._seen_v1_xorkey:
-            self.logger.info("Ignoring V1 XOR-key: %s", data[:4])
-            self._seen_v1_xorkey = True
-            data = data[4:]
-            if not data:
-                return
-
         self._buffer += data
         self._read_from_buffer()
 
@@ -227,7 +204,7 @@ class RconProtocol(asyncio.Protocol):
         pkt_len: int
 
         # Read header
-        header_len = struct.calcsize(HEADER_FORMAT)
+        header_len = struct.calcsize(RESPONSE_HEADER_FORMAT)
         if len(self._buffer) < header_len:
             self.logger.debug(
                 "Buffer too small (%s < %s)",
@@ -235,7 +212,10 @@ class RconProtocol(asyncio.Protocol):
                 header_len,
             )
             return
-        pkt_id, pkt_len = struct.unpack(HEADER_FORMAT, self._buffer[:header_len])
+        pkt_id, pkt_len = struct.unpack(
+            RESPONSE_HEADER_FORMAT,
+            self._buffer[:header_len],
+        )
         pkt_size = header_len + pkt_len
         self.logger.debug("pkt_id = %s, pkt_len = %s", pkt_id, pkt_len)
 
@@ -248,20 +228,14 @@ class RconProtocol(asyncio.Protocol):
             self._buffer = self._buffer[pkt_size:]
 
             # Respond to waiter
-            if DO_USE_REQUEST_HEADERS:
-                waiter = self._waiters.pop(pkt_id, None)
-                if not waiter:
-                    self.logger.warning(
-                        "No waiter for packet with ID %s, %s",
-                        pkt_id,
-                        self._waiters,
-                    )
-                else:
-                    waiter.set_result(pkt)
-            elif not self._queue:
-                self.logger.warning("No waiter for packet with ID %s", pkt_id)
+            waiter = self._waiters.pop(pkt_id, None)
+            if not waiter:
+                self.logger.warning(
+                    "No waiter for packet with ID %s, %s",
+                    pkt_id,
+                    self._waiters,
+                )
             else:
-                waiter = self._queue.popleft()
                 waiter.set_result(pkt)
 
             # Repeat if buffer is not empty; Another complete packet might be on it
@@ -272,12 +246,8 @@ class RconProtocol(asyncio.Protocol):
     def connection_lost(self, exc: Exception | None) -> None:
         self._transport = None
 
-        if DO_USE_REQUEST_HEADERS:
-            waiters = list(self._waiters.values())
-            self._waiters.clear()
-        else:
-            waiters = list(self._queue)
-            self._queue.clear()
+        waiters = list(self._waiters.values())
+        self._waiters.clear()
 
         if exc:
             self.logger.warning("Connection lost: %s", exc)
@@ -373,45 +343,32 @@ class RconProtocol(asyncio.Protocol):
             auth_token=self.auth_token,
             content_body=content_body,
         )
+        # Temporary solution to ensure each connection uses its own counter
+        request.request_id = next(self._counter)
 
-        if not DO_ALLOW_CONCURRENT_REQUESTS:
-            await self._lock.acquire()
+        # Send request
+        header, body = request.pack()
+        message = header + self._xor(body)
+        self.logger.debug("Writing: %s", header + body)
+        self._transport.write(message)
 
         try:
-            # Send request
-            packed = request.pack()
-            message = self._xor(packed)
-            self.logger.debug("Writing: %s", packed)
-            self._transport.write(message)
+            # Create waiter for response
+            waiter: asyncio.Future[RconResponse] = self.loop.create_future()
+            self._waiters[request.request_id] = waiter
 
-            try:
-                # Create waiter for response
-                waiter: asyncio.Future[RconResponse] = self.loop.create_future()
-                if DO_USE_REQUEST_HEADERS:
-                    self._waiters[request.request_id] = waiter
-                else:
-                    self._queue.append(waiter)
-
-                # Wait for response
-                response = await asyncio.wait_for(waiter, timeout=self.timeout)
-                self.logger.debug(
-                    "Response: (%s) %s",
-                    response.name,
-                    response.content_body,
-                )
-                return response
-            finally:
-                # Cleanup waiter
-                waiter.cancel()
-
-                if DO_USE_REQUEST_HEADERS:
-                    self._waiters.pop(request.request_id, None)
-                else:
-                    with contextlib.suppress(ValueError):
-                        self._queue.remove(waiter)
+            # Wait for response
+            response = await asyncio.wait_for(waiter, timeout=self.timeout)
+            self.logger.debug(
+                "Response: (%s) %s",
+                response.name,
+                response.content_body,
+            )
+            return response
         finally:
-            if not DO_ALLOW_CONCURRENT_REQUESTS:
-                self._lock.release()
+            # Cleanup waiter
+            waiter.cancel()
+            self._waiters.pop(request.request_id, None)
 
     async def authenticate(self, password: str) -> None:
         """Authenticate with the Hell Let Loose server.

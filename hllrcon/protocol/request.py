@@ -3,13 +3,13 @@ import json
 import struct
 from typing import Any, ClassVar
 
-from hllrcon.protocol.constants import DO_USE_REQUEST_HEADERS, HEADER_FORMAT
+from hllrcon.protocol.constants import REQUEST_HEADER_FORMAT
 
 
 class RconRequest:
     """Represents a RCON request."""
 
-    __request_id_counter: ClassVar["itertools.count[int]"] = itertools.count(start=1)
+    __request_id_counter: ClassVar["itertools.count[int]"] = itertools.count(start=0)
 
     def __init__(
         self,
@@ -39,13 +39,13 @@ class RconRequest:
         self.content_body = content_body
         self.request_id: int = next(self.__request_id_counter)
 
-    def pack(self) -> bytes:
+    def pack(self) -> tuple[bytes, bytes]:
         """Packs the request into a bytes object.
 
         Returns
         -------
-        bytes
-            The packed request data.
+        tuple[bytes, bytes]
+            A tuple containing the header and body of the request.
 
         """
         body = {
@@ -59,7 +59,9 @@ class RconRequest:
             ),
         }
         body_encoded = json.dumps(body, separators=(",", ":")).encode()
-        if DO_USE_REQUEST_HEADERS:
-            header = struct.pack(HEADER_FORMAT, self.request_id, len(body_encoded))
-            return header + body_encoded
-        return body_encoded
+        header = struct.pack(
+            REQUEST_HEADER_FORMAT,
+            self.request_id,
+            len(body_encoded),
+        )
+        return header, body_encoded
