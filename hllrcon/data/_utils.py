@@ -69,7 +69,7 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
         raise ValueError(msg)
 
     def model_post_init(self, context: Any) -> None:  # noqa: ANN401, ARG002
-        self._lookup_register(self.id, self)  # type: ignore[attr-defined]
+        self._lookup_register(self.id, self)
 
     @classmethod
     def by_id(cls, id_: H) -> Self | R:
