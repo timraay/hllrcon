@@ -118,9 +118,10 @@ if weapon.vehicle:
 from hllrcon import Rcon
 from hllrcon.data import Map, Team
 
-# Get the AA Network sector (SMDM, 3rd sector row, 2nd sector)
-active_sector = Map.ST_MARIE_DU_MONT.sectors[2, 1]
-assert active_sector.name == "AA Network"
+# Get the AA Network capture zone (SMDM, 3rd sector, 2nd capture zone)
+sector = Layer.STMARIEDUMONT_WARFARE_DAY.sectors[2]
+capture_zone = sector.capture_zones[1]
+assert capture_zone.strongpoint.name == "AA Network"
 
 # Get the current online players
 rcon = Rcon(...)
@@ -137,11 +138,11 @@ for player in players.players:
         continue
 
     # Grant 3 strength if inside the strongpoint
-    if active_sector.strongpoint.is_inside(player.world_position):
+    if capture_zone.strongpoint.is_inside(player.world_position):
         strength[player.faction.team] += 3
 
-    # Only grant 1 strength if inside the sector
-    elif active_sector.is_inside(player.world_position):
+    # Only grant 1 strength if inside the capture zone
+    elif capture_zone.is_inside(player.world_position):
         strength[player.faction.team] += 1
 
 # Print out the results

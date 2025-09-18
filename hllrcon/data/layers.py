@@ -4,8 +4,44 @@
 import re
 from enum import StrEnum
 from functools import cached_property
+from typing import Self
 
-from pydantic import computed_field
+from pydantic import computed_field, model_validator
+
+from hllrcon.data.sectors import (
+    SECTORS_CARENTAN_LARGE,
+    SECTORS_CARENTAN_SMALL,
+    SECTORS_DRIEL_LARGE,
+    SECTORS_DRIEL_SMALL,
+    SECTORS_ELALAMEIN_LARGE,
+    SECTORS_ELALAMEIN_SMALL,
+    SECTORS_ELSENBORNRIDGE_LARGE,
+    SECTORS_ELSENBORNRIDGE_SMALL,
+    SECTORS_FOY_LARGE,
+    SECTORS_HILL400_LARGE,
+    SECTORS_HILL400_SMALL,
+    SECTORS_HURTGENFOREST_LARGE,
+    SECTORS_KHARKOV_LARGE,
+    SECTORS_KURSK_LARGE,
+    SECTORS_MORTAIN_LARGE,
+    SECTORS_MORTAIN_SMALL,
+    SECTORS_OMAHABEACH_LARGE,
+    SECTORS_PURPLEHEARTLANE_LARGE,
+    SECTORS_PURPLEHEARTLANE_SMALL,
+    SECTORS_REMAGEN_LARGE,
+    SECTORS_STALINGRAD_LARGE,
+    SECTORS_STALINGRAD_SMALL,
+    SECTORS_STMARIEDUMONT_LARGE,
+    SECTORS_STMARIEDUMONT_SMALL,
+    SECTORS_STMEREEGLISE_LARGE,
+    SECTORS_STMEREEGLISE_SMALL,
+    SECTORS_TOBRUK_LARGE,
+    SECTORS_TOBRUK_SMALL,
+    SECTORS_UTAHBEACH_LARGE,
+    Grid,
+    Sector,
+    Strongpoint,
+)
 
 from ._utils import (
     CaseInsensitiveIndexedBaseModel,
@@ -13,7 +49,7 @@ from ._utils import (
 )
 from .factions import Faction
 from .game_modes import GameMode
-from .maps import Map, Orientation, Sector, SectorRow, Sectors, Strongpoint
+from .maps import Map, Orientation
 from .teams import Team
 
 __all__ = (
@@ -94,7 +130,35 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     game_mode: GameMode
     time_of_day: TimeOfDay
     weather: Weather
+    grid: Grid
+    sectors: list[Sector]
     attacking_team: Team | None = None
+
+    @model_validator(mode="after")
+    def _set_sectors_layer_backref(self) -> Self:
+        for sector in self.sectors:
+            sector._layer = self  # type: ignore[misc] # noqa: SLF001
+
+            for capture_zone in sector.capture_zones:
+                capture_zone._layer = self  # type: ignore[misc] # noqa: SLF001
+
+        return self
+
+    @model_validator(mode="after")
+    def _apply_offset_to_strongpoints(self) -> Self:
+        for sector in self.sectors:
+            for capture_zone in sector.capture_zones:
+                # Bit of a hack to get around the model being frozen
+                object.__setattr__(
+                    capture_zone.strongpoint,
+                    "center",
+                    (
+                        capture_zone.strongpoint.center[0] + self.grid.offset[0],
+                        capture_zone.strongpoint.center[1] + self.grid.offset[1],
+                        capture_zone.strongpoint.center[2],
+                    ),
+                )
+        return self
 
     def __str__(self) -> str:
         return self.id
@@ -176,139 +240,54 @@ class Layer(CaseInsensitiveIndexedBaseModel):
                     else Faction.GER
                 ),
                 orientation=Orientation.HORIZONTAL,
-                sectors=Sectors(
-                    SectorRow(
-                        Sector(
-                            grid_pos=(0, 1),
-                            strongpoint=Strongpoint(
-                                name="Sector 1A",
-                                center=(-80000, -40000, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(0, 2),
-                            strongpoint=Strongpoint(
-                                name="Sector 1B",
-                                center=(-80000, 0, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(0, 3),
-                            strongpoint=Strongpoint(
-                                name="Sector 1C",
-                                center=(-80000, 40000, 0),
-                                radius=4000,
-                            ),
-                        ),
+                mirror_factions=False,
+            )
+
+        strongpoint = Strongpoint(
+            name="Sector",
+            center=(0.0, -9999.0, 0.0),
+            radius=0.0,
+        )
+
+        if game_mode.is_large():
+            grid = Grid.large(
+                scale=19840,
+            )
+            sectors = Sector.large_layout(
+                map_.orientation,
+                (
+                    (
+                        strongpoint.model_copy(update={"name": "Sector 1A"}),
+                        strongpoint.model_copy(update={"name": "Sector 1B"}),
+                        strongpoint.model_copy(update={"name": "Sector 1C"}),
                     ),
-                    SectorRow(
-                        Sector(
-                            grid_pos=(1, 1),
-                            strongpoint=Strongpoint(
-                                name="Sector 2A",
-                                center=(-40000, -40000, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(1, 2),
-                            strongpoint=Strongpoint(
-                                name="Sector 2B",
-                                center=(-40000, 0, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(1, 3),
-                            strongpoint=Strongpoint(
-                                name="Sector 2C",
-                                center=(-40000, 40000, 0),
-                                radius=4000,
-                            ),
-                        ),
+                    (
+                        strongpoint.model_copy(update={"name": "Sector 2A"}),
+                        strongpoint.model_copy(update={"name": "Sector 2B"}),
+                        strongpoint.model_copy(update={"name": "Sector 2C"}),
                     ),
-                    SectorRow(
-                        Sector(
-                            grid_pos=(2, 1),
-                            strongpoint=Strongpoint(
-                                name="Sector 3A",
-                                center=(0, -40000, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(2, 2),
-                            strongpoint=Strongpoint(
-                                name="Sector 3B",
-                                center=(0, 0, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(2, 3),
-                            strongpoint=Strongpoint(
-                                name="Sector 3C",
-                                center=(0, 40000, 0),
-                                radius=4000,
-                            ),
-                        ),
+                    (
+                        strongpoint.model_copy(update={"name": "Sector 3A"}),
+                        strongpoint.model_copy(update={"name": "Sector 3B"}),
+                        strongpoint.model_copy(update={"name": "Sector 3C"}),
                     ),
-                    SectorRow(
-                        Sector(
-                            grid_pos=(3, 1),
-                            strongpoint=Strongpoint(
-                                name="Sector 4A",
-                                center=(40000, -40000, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(3, 2),
-                            strongpoint=Strongpoint(
-                                name="Sector 4B",
-                                center=(40000, 0, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(3, 3),
-                            strongpoint=Strongpoint(
-                                name="Sector 4C",
-                                center=(40000, 40000, 0),
-                                radius=4000,
-                            ),
-                        ),
+                    (
+                        strongpoint.model_copy(update={"name": "Sector 4A"}),
+                        strongpoint.model_copy(update={"name": "Sector 4B"}),
+                        strongpoint.model_copy(update={"name": "Sector 4C"}),
                     ),
-                    SectorRow(
-                        Sector(
-                            grid_pos=(4, 1),
-                            strongpoint=Strongpoint(
-                                name="Sector 5A",
-                                center=(80000, -40000, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(4, 2),
-                            strongpoint=Strongpoint(
-                                name="Sector 5B",
-                                center=(80000, 0, 0),
-                                radius=4000,
-                            ),
-                        ),
-                        Sector(
-                            grid_pos=(4, 3),
-                            strongpoint=Strongpoint(
-                                name="Sector 5C",
-                                center=(80000, 40000, 0),
-                                radius=4000,
-                            ),
-                        ),
+                    (
+                        strongpoint.model_copy(update={"name": "Sector 5A"}),
+                        strongpoint.model_copy(update={"name": "Sector 5B"}),
+                        strongpoint.model_copy(update={"name": "Sector 5C"}),
                     ),
                 ),
-                mirror_factions=False,
+            )
+        else:
+            grid = Grid.small()
+            sectors = Sector.skirmish_layout(
+                map_.orientation,
+                strongpoint,
             )
 
         return Layer(
@@ -317,6 +296,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=game_mode,
             time_of_day=time_of_day,
             weather=weather,
+            grid=grid,
+            sectors=sectors,
             attacking_team=attackers.team if attackers else None,
         )
 
@@ -406,302 +387,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def SME_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="stmereeglise_warfare",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SME_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="stmereeglise_warfare_night",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SME_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="stmereeglise_offensive_us",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SME_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="stmereeglise_offensive_ger",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SME_SKIRMISH_DAY(cls) -> "Layer":
-        return cls(
-            id="SME_S_1944_Day_P_Skirmish",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SME_SKIRMISH_DAWN(cls) -> "Layer":
-        return cls(
-            id="SME_S_1944_Morning_P_Skirmish",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAWN,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SME_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="SME_S_1944_Night_P_Skirmish",
-            map=Map.ST_MERE_EGLISE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SMDM_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="stmariedumont_warfare",
-            map=Map.ST_MARIE_DU_MONT,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SMDM_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="stmariedumont_warfare_night",
-            map=Map.ST_MARIE_DU_MONT,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SMDM_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="stmariedumont_off_us",
-            map=Map.ST_MARIE_DU_MONT,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def SMDM_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="stmariedumont_off_ger",
-            map=Map.ST_MARIE_DU_MONT,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def UTAH_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="utahbeach_warfare",
-            map=Map.UTAH_BEACH,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def UTAH_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="utahbeach_warfare_night",
-            map=Map.UTAH_BEACH,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def UTAH_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="utahbeach_offensive_us",
-            map=Map.UTAH_BEACH,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def UTAH_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="utahbeach_offensive_ger",
-            map=Map.UTAH_BEACH,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def OMAHA_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="omahabeach_warfare",
-            map=Map.OMAHA_BEACH,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def OMAHA_WARFARE_DUSK(cls) -> "Layer":
-        return cls(
-            id="omahabeach_warfare_night",
-            map=Map.OMAHA_BEACH,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def OMAHA_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="omahabeach_offensive_us",
-            map=Map.OMAHA_BEACH,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def OMAHA_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="omahabeach_offensive_ger",
-            map=Map.OMAHA_BEACH,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="PHL_L_1944_Warfare",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="PHL_L_1944_Warfare_Night",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="PHL_L_1944_OffensiveUS",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="PHL_L_1944_OffensiveGER",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_SKIRMISH_RAIN(cls) -> "Layer":
-        return cls(
-            id="PHL_S_1944_Rain_P_Skirmish",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.RAIN,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_SKIRMISH_DAWN(cls) -> "Layer":
-        return cls(
-            id="PHL_S_1944_Morning_P_Skirmish",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAWN,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def PHL_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="PHL_S_1944_Night_P_Skirmish",
-            map=Map.PURPLE_HEART_LANE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
     def CARENTAN_WARFARE(cls) -> "Layer":
         return cls(
             id="carentan_warfare",
@@ -709,6 +394,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=20160,
+            ),
+            sectors=SECTORS_CARENTAN_LARGE,
         )
 
     @class_cached_property
@@ -720,6 +409,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=20160,
+            ),
+            sectors=SECTORS_CARENTAN_LARGE,
         )
 
     @class_cached_property
@@ -731,6 +424,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=20160,
+            ),
+            sectors=SECTORS_CARENTAN_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -743,6 +440,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=20160,
+            ),
+            sectors=SECTORS_CARENTAN_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -755,6 +456,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(150.0, -110.0),
+            ),
+            sectors=SECTORS_CARENTAN_SMALL,
         )
 
     @class_cached_property
@@ -766,6 +471,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.RAIN,
+            grid=Grid.small(
+                offset=(150.0, -110.0),
+            ),
+            sectors=SECTORS_CARENTAN_SMALL,
         )
 
     @class_cached_property
@@ -777,405 +486,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HURTGEN_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="hurtgenforest_warfare_V2",
-            map=Map.HURTGEN_FOREST,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HURTGEN_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="hurtgenforest_warfare_V2_night",
-            map=Map.HURTGEN_FOREST,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HURTGEN_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="hurtgenforest_offensive_US",
-            map=Map.HURTGEN_FOREST,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HURTGEN_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="hurtgenforest_offensive_ger",
-            map=Map.HURTGEN_FOREST,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="hill400_warfare",
-            map=Map.HILL_400,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="hill400_warfare_night",
-            map=Map.HILL_400,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="hill400_offensive_US",
-            map=Map.HILL_400,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="hill400_offensive_ger",
-            map=Map.HILL_400,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_SKIRMISH_DAY(cls) -> "Layer":
-        return cls(
-            id="HIL_S_1944_Day_P_Skirmish",
-            map=Map.HILL_400,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_SKIRMISH_DUSK(cls) -> "Layer":
-        return cls(
-            id="HIL_S_1944_Dusk_P_Skirmish",
-            map=Map.HILL_400,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="HIL_S_1944_Night_P_Skirmish",
-            map=Map.HILL_400,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def FOY_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="foy_warfare",
-            map=Map.FOY,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def FOY_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="foy_warfare_night",
-            map=Map.FOY,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def FOY_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="foy_offensive_us",
-            map=Map.FOY,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def FOY_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="foy_offensive_ger",
-            map=Map.FOY,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def FOY_SKIRMISH_DAY(cls) -> "Layer":
-        return cls(
-            id="FOY_S_1944_P_Skirmish",
-            map=Map.FOY,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def FOY_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="FOY_S_1944_Night_P_Skirmish",
-            map=Map.FOY,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KURSK_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="kursk_warfare",
-            map=Map.KURSK,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KURSK_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="kursk_warfare_night",
-            map=Map.KURSK,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KURSK_OFFENSIVE_SOV_DAY(cls) -> "Layer":
-        return cls(
-            id="kursk_offensive_rus",
-            map=Map.KURSK,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KURSK_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="kursk_offensive_ger",
-            map=Map.KURSK,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def STALINGRAD_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="stalingrad_warfare",
-            map=Map.STALINGRAD,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def STALINGRAD_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="stalingrad_warfare_night",
-            map=Map.STALINGRAD,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def STALINGRAD_OFFENSIVE_SOV_DAY(cls) -> "Layer":
-        return cls(
-            id="stalingrad_offensive_rus",
-            map=Map.STALINGRAD,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def STALINGRAD_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="stalingrad_offensive_ger",
-            map=Map.STALINGRAD,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def REMAGEN_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="remagen_warfare",
-            map=Map.REMAGEN,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def REMAGEN_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="remagen_warfare_night",
-            map=Map.REMAGEN,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def REMAGEN_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="remagen_offensive_us",
-            map=Map.REMAGEN,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def REMAGEN_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="remagen_offensive_ger",
-            map=Map.REMAGEN,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KHARKOV_WARFARE_DAY(cls) -> "Layer":
-        return cls(
-            id="kharkov_warfare",
-            map=Map.KHARKOV,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KHARKOV_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="kharkov_warfare_night",
-            map=Map.KHARKOV,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KHARKOV_OFFENSIVE_SOV_DAY(cls) -> "Layer":
-        return cls(
-            id="kharkov_offensive_rus",
-            map=Map.KHARKOV,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KHARKOV_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="kharkov_offensive_ger",
-            map=Map.KHARKOV,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KHARKOV_SKIRMISH_DAY(cls) -> "Layer":
-        return cls(
-            id="KHA_S_1944_P_Skirmish",
-            map=Map.KHARKOV,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-        )
-
-    @class_cached_property
-    @classmethod
-    def KHARKOV_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="KHA_S_1944_Night_P_Skirmish",
-            map=Map.KHARKOV,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(150.0, -110.0),
+            ),
+            sectors=SECTORS_CARENTAN_SMALL,
         )
 
     @class_cached_property
@@ -1187,6 +501,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_DRIEL_LARGE,
         )
 
     @class_cached_property
@@ -1198,6 +516,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_DRIEL_LARGE,
         )
 
     @class_cached_property
@@ -1209,6 +531,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_DRIEL_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1221,6 +547,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_DRIEL_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1233,6 +563,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAWN,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(-20.0, 28190.0),
+            ),
+            sectors=SECTORS_DRIEL_SMALL,
         )
 
     @class_cached_property
@@ -1244,6 +578,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(-20.0, 28190.0),
+            ),
+            sectors=SECTORS_DRIEL_SMALL,
         )
 
     @class_cached_property
@@ -1255,107 +593,667 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(-20.0, 28190.0),
+            ),
+            sectors=SECTORS_DRIEL_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def ALAMEIN_WARFARE_DAY(cls) -> "Layer":
+    def ELALAMEIN_WARFARE_DAY(cls) -> "Layer":
         return cls(
             id="elalamein_warfare",
             map=Map.EL_ALAMEIN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_ELALAMEIN_LARGE,
         )
 
     @class_cached_property
     @classmethod
-    def ALAMEIN_WARFARE_DUSK(cls) -> "Layer":
+    def ELALAMEIN_WARFARE_DUSK(cls) -> "Layer":
         return cls(
             id="elalamein_warfare_night",
             map=Map.EL_ALAMEIN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_ELALAMEIN_LARGE,
         )
 
     @class_cached_property
     @classmethod
-    def ALAMEIN_OFFENSIVE_B8A_DAY(cls) -> "Layer":
+    def ELALAMEIN_OFFENSIVE_B8A_DAY(cls) -> "Layer":
         return cls(
             id="elalamein_offensive_CW",
             map=Map.EL_ALAMEIN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_ELALAMEIN_LARGE,
             attacking_team=Team.ALLIES,
         )
 
     @class_cached_property
     @classmethod
-    def ALAMEIN_OFFENSIVE_DAK_DAY(cls) -> "Layer":
+    def ELALAMEIN_OFFENSIVE_DAK_DAY(cls) -> "Layer":
         return cls(
             id="elalamein_offensive_ger",
             map=Map.EL_ALAMEIN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_ELALAMEIN_LARGE,
             attacking_team=Team.AXIS,
         )
 
     @class_cached_property
     @classmethod
-    def ALAMEIN_SKIRMISH_DAY(cls) -> "Layer":
+    def ELALAMEIN_SKIRMISH_DAY(cls) -> "Layer":
         return cls(
             id="ELA_S_1942_P_Skirmish",
             map=Map.EL_ALAMEIN,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(-7500.0, 0.0),
+            ),
+            sectors=SECTORS_ELALAMEIN_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def ALAMEIN_SKIRMISH_DUSK(cls) -> "Layer":
+    def ELALAMEIN_SKIRMISH_DUSK(cls) -> "Layer":
         return cls(
             id="ELA_S_1942_Night_P_Skirmish",
             map=Map.EL_ALAMEIN,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(-7500.0, 0.0),
+            ),
+            sectors=SECTORS_ELALAMEIN_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def SMDM_SKIRMISH_DAY(cls) -> "Layer":
+    def ELSENBORNRIDGE_WARFARE_DAY(cls) -> "Layer":
         return cls(
-            id="SMDM_S_1944_Day_P_Skirmish",
-            map=Map.ST_MARIE_DU_MONT,
+            id="elsenbornridge_warfare_day",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_WARFARE_DAWN(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_warfare_morning",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_WARFARE_DUSK(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_warfare_evening",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_warfare_night",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveUS_day",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_US_DAWN(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveUS_morning",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_US_DUSK(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveUS_evening",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_US_NIGHT(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveUS_night",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveger_day",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_GER_DAWN(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveger_morning",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_GER_DUSK(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveger_evening",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_OFFENSIVE_GER_NIGHT(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_offensiveger_night",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.SNOW,
+            grid=Grid.large(),
+            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_skirmish_day",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.SNOW,
+            grid=Grid.small(),
+            sectors=SECTORS_ELSENBORNRIDGE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_SKIRMISH_DAWN(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_skirmish_morning",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.SNOW,
+            grid=Grid.small(),
+            sectors=SECTORS_ELSENBORNRIDGE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_SKIRMISH_DUSK(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_skirmish_evening",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.SNOW,
+            grid=Grid.small(),
+            sectors=SECTORS_ELSENBORNRIDGE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ELSENBORNRIDGE_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="elsenbornridge_skirmish_night",
+            map=Map.ELSENBORN_RIDGE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.SNOW,
+            grid=Grid.small(),
+            sectors=SECTORS_ELSENBORNRIDGE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FOY_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="foy_warfare",
+            map=Map.FOY,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_FOY_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FOY_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="foy_warfare_night",
+            map=Map.FOY,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_FOY_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FOY_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="foy_offensive_us",
+            map=Map.FOY,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_FOY_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FOY_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="foy_offensive_ger",
+            map=Map.FOY,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_FOY_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HURTGENFOREST_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="hurtgenforest_warfare_V2",
+            map=Map.HURTGEN_FOREST,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HURTGENFOREST_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HURTGENFOREST_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="hurtgenforest_warfare_V2_night",
+            map=Map.HURTGEN_FOREST,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HURTGENFOREST_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HURTGENFOREST_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="hurtgenforest_offensive_US",
+            map=Map.HURTGEN_FOREST,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HURTGENFOREST_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HURTGENFOREST_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="hurtgenforest_offensive_ger",
+            map=Map.HURTGEN_FOREST,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HURTGENFOREST_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HILL400_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="hill400_warfare",
+            map=Map.HILL_400,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HILL400_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HILL400_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="hill400_warfare_night",
+            map=Map.HILL_400,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HILL400_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HILL400_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="hill400_offensive_US",
+            map=Map.HILL_400,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HILL400_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HILL400_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="hill400_offensive_ger",
+            map=Map.HILL_400,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_HILL400_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HILL400_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="HIL_S_1944_Day_P_Skirmish",
+            map=Map.HILL_400,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_HILL400_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def SMDM_SKIRMISH_NIGHT(cls) -> "Layer":
+    def HILL400_SKIRMISH_DUSK(cls) -> "Layer":
         return cls(
-            id="SMDM_S_1944_Night_P_Skirmish",
-            map=Map.ST_MARIE_DU_MONT,
+            id="HIL_S_1944_Dusk_P_Skirmish",
+            map=Map.HILL_400,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_HILL400_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HILL400_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="HIL_S_1944_Night_P_Skirmish",
+            map=Map.HILL_400,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_HILL400_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def SMDM_SKIRMISH_RAIN(cls) -> "Layer":
+    def KHARKOV_WARFARE_DAY(cls) -> "Layer":
         return cls(
-            id="SMDM_S_1944_Rain_P_Skirmish",
-            map=Map.ST_MARIE_DU_MONT,
-            game_mode=GameMode.SKIRMISH,
+            id="kharkov_warfare",
+            map=Map.KHARKOV,
+            game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
-            weather=Weather.RAIN,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KHARKOV_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KHARKOV_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="kharkov_warfare_night",
+            map=Map.KHARKOV,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KHARKOV_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KHARKOV_OFFENSIVE_SOV_DAY(cls) -> "Layer":
+        return cls(
+            id="kharkov_offensive_rus",
+            map=Map.KHARKOV,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KHARKOV_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KHARKOV_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="kharkov_offensive_ger",
+            map=Map.KHARKOV,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KHARKOV_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KURSK_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="kursk_warfare",
+            map=Map.KURSK,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KURSK_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KURSK_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="kursk_warfare_night",
+            map=Map.KURSK,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KURSK_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KURSK_OFFENSIVE_SOV_DAY(cls) -> "Layer":
+        return cls(
+            id="kursk_offensive_rus",
+            map=Map.KURSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KURSK_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KURSK_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="kursk_offensive_ger",
+            map=Map.KURSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_KURSK_LARGE,
+            attacking_team=Team.AXIS,
         )
 
     @class_cached_property
@@ -1367,6 +1265,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
         )
 
     @class_cached_property
@@ -1378,6 +1278,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
         )
 
     @class_cached_property
@@ -1389,6 +1291,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.OVERCAST,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
         )
 
     @class_cached_property
@@ -1400,6 +1304,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
         )
 
     @class_cached_property
@@ -1411,6 +1317,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1423,6 +1331,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.OVERCAST,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1435,6 +1345,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1447,6 +1359,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1459,6 +1373,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1471,6 +1387,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.OVERCAST,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1483,6 +1401,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1495,6 +1415,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_MORTAIN_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1507,6 +1429,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(100.0, 0.0),
+            ),
+            sectors=SECTORS_MORTAIN_SMALL,
         )
 
     @class_cached_property
@@ -1518,6 +1444,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.OVERCAST,
+            grid=Grid.small(
+                offset=(100.0, 0.0),
+            ),
+            sectors=SECTORS_MORTAIN_SMALL,
         )
 
     @class_cached_property
@@ -1529,6 +1459,10 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(100.0, 0.0),
+            ),
+            sectors=SECTORS_MORTAIN_SMALL,
         )
 
     @class_cached_property
@@ -1540,190 +1474,520 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(100.0, 0.0),
+            ),
+            sectors=SECTORS_MORTAIN_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_WARFARE_DAY(cls) -> "Layer":
+    def OMAHABEACH_WARFARE_DAY(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_warfare_day",
-            map=Map.ELSENBORN_RIDGE,
+            id="omahabeach_warfare",
+            map=Map.OMAHA_BEACH,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_OMAHABEACH_LARGE,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_WARFARE_DAWN(cls) -> "Layer":
+    def OMAHABEACH_WARFARE_DUSK(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_warfare_morning",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DAWN,
-            weather=Weather.SNOW,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_WARFARE_DUSK(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_warfare_evening",
-            map=Map.ELSENBORN_RIDGE,
+            id="omahabeach_warfare_night",
+            map=Map.OMAHA_BEACH,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DUSK,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_OMAHABEACH_LARGE,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_WARFARE_NIGHT(cls) -> "Layer":
+    def OMAHABEACH_OFFENSIVE_US_DAY(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_warfare_night",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.SNOW,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_OFFENSIVE_US_DAY(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveUS_day",
-            map=Map.ELSENBORN_RIDGE,
+            id="omahabeach_offensive_us",
+            map=Map.OMAHA_BEACH,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_OMAHABEACH_LARGE,
             attacking_team=Team.ALLIES,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_OFFENSIVE_US_DAWN(cls) -> "Layer":
+    def OMAHABEACH_OFFENSIVE_GER_DAY(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_offensiveUS_morning",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAWN,
-            weather=Weather.SNOW,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_OFFENSIVE_US_DUSK(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveUS_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.SNOW,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_OFFENSIVE_US_NIGHT(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveUS_night",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.SNOW,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_OFFENSIVE_GER_DAY(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveger_day",
-            map=Map.ELSENBORN_RIDGE,
+            id="omahabeach_offensive_ger",
+            map=Map.OMAHA_BEACH,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_OMAHABEACH_LARGE,
             attacking_team=Team.AXIS,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_OFFENSIVE_GER_DAWN(cls) -> "Layer":
+    def PURPLEHEARTLANE_WARFARE_DAY(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_offensiveger_morning",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DAWN,
-            weather=Weather.SNOW,
-            attacking_team=Team.AXIS,
+            id="PHL_L_1944_Warfare",
+            map=Map.PURPLE_HEART_LANE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_PURPLEHEARTLANE_LARGE,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_OFFENSIVE_GER_DUSK(cls) -> "Layer":
+    def PURPLEHEARTLANE_WARFARE_NIGHT(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_offensiveger_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.SNOW,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_OFFENSIVE_GER_NIGHT(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveger_night",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
+            id="PHL_L_1944_Warfare_Night",
+            map=Map.PURPLE_HEART_LANE,
+            game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_PURPLEHEARTLANE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def PURPLEHEARTLANE_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="PHL_L_1944_OffensiveUS",
+            map=Map.PURPLE_HEART_LANE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_PURPLEHEARTLANE_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def PURPLEHEARTLANE_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="PHL_L_1944_OffensiveGER",
+            map=Map.PURPLE_HEART_LANE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_PURPLEHEARTLANE_LARGE,
             attacking_team=Team.AXIS,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_SKIRMISH_DAY(cls) -> "Layer":
+    def PURPLEHEARTLANE_SKIRMISH_RAIN(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_skirmish_day",
-            map=Map.ELSENBORN_RIDGE,
+            id="PHL_S_1944_Rain_P_Skirmish",
+            map=Map.PURPLE_HEART_LANE,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
-            weather=Weather.SNOW,
+            weather=Weather.RAIN,
+            grid=Grid.small(),
+            sectors=SECTORS_PURPLEHEARTLANE_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_SKIRMISH_DAWN(cls) -> "Layer":
+    def PURPLEHEARTLANE_SKIRMISH_DAWN(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_skirmish_morning",
-            map=Map.ELSENBORN_RIDGE,
+            id="PHL_S_1944_Morning_P_Skirmish",
+            map=Map.PURPLE_HEART_LANE,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAWN,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_PURPLEHEARTLANE_SMALL,
         )
 
     @class_cached_property
     @classmethod
-    def ELSENBORN_SKIRMISH_DUSK(cls) -> "Layer":
+    def PURPLEHEARTLANE_SKIRMISH_NIGHT(cls) -> "Layer":
         return cls(
-            id="elsenbornridge_skirmish_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.SNOW,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORN_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_skirmish_night",
-            map=Map.ELSENBORN_RIDGE,
+            id="PHL_S_1944_Night_P_Skirmish",
+            map=Map.PURPLE_HEART_LANE,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.SNOW,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_PURPLEHEARTLANE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="remagen_warfare",
+            map=Map.REMAGEN,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_REMAGEN_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="remagen_warfare_night",
+            map=Map.REMAGEN,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_REMAGEN_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="remagen_offensive_us",
+            map=Map.REMAGEN,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_REMAGEN_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="remagen_offensive_ger",
+            map=Map.REMAGEN,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_REMAGEN_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STALINGRAD_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="STA_L_1942_Warfare",
+            map=Map.STALINGRAD,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STALINGRAD_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STALINGRAD_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="STA_L_1942_Warfare_Night",
+            map=Map.STALINGRAD,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STALINGRAD_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STALINGRAD_OFFENSIVE_SOV_DAY(cls) -> "Layer":
+        return cls(
+            id="STA_L_1942_OffensiveRUS",
+            map=Map.STALINGRAD,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.OVERCAST,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STALINGRAD_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STALINGRAD_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="STA_L_1942_OffensiveGER",
+            map=Map.STALINGRAD,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STALINGRAD_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STALINGRAD_SKIRMISH_EVENING(cls) -> "Layer":
+        return cls(
+            id="STA_S_1942_P_Skirmish",
+            map=Map.STALINGRAD,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(150.0, -110.0),
+            ),
+            sectors=SECTORS_STALINGRAD_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="stmariedumont_warfare",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMARIEDUMONT_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="stmariedumont_warfare_night",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMARIEDUMONT_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="stmariedumont_off_us",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMARIEDUMONT_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="stmariedumont_off_ger",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMARIEDUMONT_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="SMDM_S_1944_Day_P_Skirmish",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(0.0, -27852.8),
+            ),
+            sectors=SECTORS_STMARIEDUMONT_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="SMDM_S_1944_Night_P_Skirmish",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(0.0, -27852.8),
+            ),
+            sectors=SECTORS_STMARIEDUMONT_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMARIEDUMONT_SKIRMISH_RAIN(cls) -> "Layer":
+        return cls(
+            id="SMDM_S_1944_Rain_P_Skirmish",
+            map=Map.ST_MARIE_DU_MONT,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.RAIN,
+            grid=Grid.small(
+                offset=(0.0, -27852.8),
+            ),
+            sectors=SECTORS_STMARIEDUMONT_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="stmereeglise_warfare",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMEREEGLISE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="stmereeglise_warfare_night",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMEREEGLISE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="stmereeglise_offensive_us",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMEREEGLISE_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="stmereeglise_offensive_ger",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMEREEGLISE_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="SME_S_1944_Day_P_Skirmish",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_STMEREEGLISE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_SKIRMISH_DAWN(cls) -> "Layer":
+        return cls(
+            id="SME_S_1944_Morning_P_Skirmish",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_STMEREEGLISE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="SME_S_1944_Night_P_Skirmish",
+            map=Map.ST_MERE_EGLISE,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_STMEREEGLISE_SMALL,
         )
 
     @class_cached_property
@@ -1735,6 +1999,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
         )
 
     @class_cached_property
@@ -1746,6 +2012,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
         )
 
     @class_cached_property
@@ -1757,6 +2025,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAWN,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
         )
 
     @class_cached_property
@@ -1768,6 +2038,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1780,6 +2052,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1792,6 +2066,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1804,6 +2080,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1816,6 +2094,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAWN,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.ALLIES,
         )
 
@@ -1828,6 +2108,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAWN,
             weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.AXIS,
         )
 
@@ -1840,6 +2122,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_TOBRUK_SMALL,
         )
 
     @class_cached_property
@@ -1851,6 +2135,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_TOBRUK_SMALL,
         )
 
     @class_cached_property
@@ -1862,4 +2148,68 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAWN,
             weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_TOBRUK_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def UTAH_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="utahbeach_warfare",
+            map=Map.UTAH_BEACH,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_UTAHBEACH_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def UTAH_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="utahbeach_warfare_night",
+            map=Map.UTAH_BEACH,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_UTAHBEACH_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def UTAH_OFFENSIVE_US_DAY(cls) -> "Layer":
+        return cls(
+            id="utahbeach_offensive_us",
+            map=Map.UTAH_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_UTAHBEACH_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def UTAH_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="utahbeach_offensive_ger",
+            map=Map.UTAH_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_UTAHBEACH_LARGE,
+            attacking_team=Team.AXIS,
         )
