@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from typing import TYPE_CHECKING, Any
 
 from typing_extensions import override
@@ -56,6 +57,7 @@ class RconConnection(RconCommands):
         host: str,
         port: int,
         password: str,
+        logger: logging.Logger | None = None,
     ) -> "RconConnection":
         """Connect to the RCON server.
 
@@ -67,6 +69,9 @@ class RconConnection(RconCommands):
             The port number of the RCON server.
         password : str
             The password for the RCON server.
+        logger : logging.Logger | None, optional
+            A logger instance for logging messages, by default None. If None,
+            `logging.getLogger(__name__)` is used.
 
         Raises
         ------
@@ -87,6 +92,7 @@ class RconConnection(RconCommands):
             host=host,
             port=port,
             password=password,
+            logger=logger,
         )
         self = cls(protocol)
 

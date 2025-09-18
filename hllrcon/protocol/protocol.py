@@ -20,6 +20,8 @@ from hllrcon.protocol.constants import RESPONSE_HEADER_FORMAT
 from hllrcon.protocol.request import RconRequest
 from hllrcon.protocol.response import RconResponse
 
+DEFAULT_LOGGER = logging.getLogger(__name__)
+
 
 class RconProtocol(asyncio.Protocol):
     """Implementation of the RCON protocol for Hell Let Loose.
@@ -78,7 +80,7 @@ class RconProtocol(asyncio.Protocol):
 
         self.loop = loop
         self.timeout = timeout
-        self.logger = logger or logging.getLogger()
+        self.logger = logger or DEFAULT_LOGGER
         self.on_connection_lost = on_connection_lost
 
         self.xorkey: bytes | None = None
@@ -117,7 +119,7 @@ class RconProtocol(asyncio.Protocol):
             `asyncio.get_running_loop()` is used.
         logger : logging.Logger | None, optional
             A logger instance for logging messages, by default None. If None,
-            `logging.getLogger()` is used.
+            `logging.getLogger(__name__)` is used.
         on_connection_lost : Callable[[Exception | None], Any] | None, optional
             An optional callback function to call when the connection is lost, by
             default None.

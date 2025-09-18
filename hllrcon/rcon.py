@@ -1,4 +1,5 @@
 import asyncio
+import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
@@ -17,7 +18,13 @@ class Rcon(RconClient):
     be established.
     """
 
-    def __init__(self, host: str, port: int, password: str) -> None:
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        password: str,
+        logger: logging.Logger | None = None,
+    ) -> None:
         """Initialize a new `Rcon` instance.
 
         Parameters
@@ -28,6 +35,9 @@ class Rcon(RconClient):
             The port of the RCON server.
         password : str
             The password for the RCON server.
+        logger : logging.Logger | None, optional
+            A logger instance for logging messages, by default None. If None,
+            `logging.getLogger(__name__)` is used.
 
         """
         super().__init__()
@@ -35,7 +45,16 @@ class Rcon(RconClient):
         self.port = port
         self.password = password
 
+        self._logger = logger
         self._connection: asyncio.Future[RconConnection] | None = None
+
+    @property
+    def logger(self) -> logging.Logger:
+        return self._logger or logging.getLogger(__name__)
+
+    @logger.setter
+    def logger(self, value: logging.Logger | None) -> None:
+        self._logger = value
 
     async def _get_connection(self) -> RconConnection:
         if (
@@ -55,6 +74,7 @@ class Rcon(RconClient):
                     host=self.host,
                     port=self.port,
                     password=self.password,
+                    logger=self._logger,
                 )
                 self._connection.set_result(connection)
             except Exception as e:

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import threading
 from collections.abc import Generator
 from concurrent.futures import Future
@@ -19,7 +20,13 @@ class SyncRcon(SyncRconCommands):
     which returns a `concurrent.futures.Future` object.
     """
 
-    def __init__(self, host: str, port: int, password: str) -> None:
+    def __init__(
+        self,
+        host: str,
+        port: int,
+        password: str,
+        logger: logging.Logger | None = None,
+    ) -> None:
         """Initialize a new `Rcon` instance.
 
         Parameters
@@ -30,9 +37,13 @@ class SyncRcon(SyncRconCommands):
             The port of the RCON server.
         password : str
             The password for the RCON server.
+        logger : logging.Logger | None, optional
+            A logger instance for logging messages, by default None. If None,
+            `logging.getLogger(__name__)` is used.
 
         """
-        self._rcon = Rcon(host, port, password)
+        self._logger = logger
+        self._rcon = Rcon(host, port, password, logger=logger)
         self._loop: asyncio.AbstractEventLoop | None = None
 
     @property
@@ -58,6 +69,15 @@ class SyncRcon(SyncRconCommands):
     @password.setter
     def password(self, value: str) -> None:
         self._rcon.password = value
+
+    @property
+    def logger(self) -> logging.Logger:
+        return self._logger or logging.getLogger(__name__)
+
+    @logger.setter
+    def logger(self, value: logging.Logger | None) -> None:
+        self._logger = value
+        self._rcon.logger = value
 
     def is_connected(self) -> bool:
         """Check if the client is connected to the RCON server.
