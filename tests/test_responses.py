@@ -96,14 +96,13 @@ def test_get_server_session_game_mode() -> None:
         vip_queue_count=0,
         max_vip_queue_count=6,
     )
-
     assert response.game_mode == GameMode.WARFARE
 
 
 def test_map_rotation_entry_find_layer() -> None:
     entry = GetMapRotationResponseEntry(
         name="FOY",
-        game_mode_id="Warfare",
+        game_mode_name="Warfare",
         time_of_day="DAY",
         id="foy_warfare",
         position=0,
@@ -111,9 +110,12 @@ def test_map_rotation_entry_find_layer() -> None:
     assert entry.game_mode == GameMode.WARFARE
     assert entry.find_layer() == Layer.FOY_WARFARE_DAY
 
+    entry.game_mode_name = "Control Skirmish - La Petite Chapelle"
+    assert entry.game_mode == GameMode.SKIRMISH
+
     unknown_entry = GetMapRotationResponseEntry(
         name="SOY",
-        game_mode_id="Offensive",
+        game_mode_name="Offensive",
         time_of_day="DAY",
         id="not_foy_warfare",
         position=1,

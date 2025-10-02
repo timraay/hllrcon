@@ -127,7 +127,7 @@ class TestIntegratedServer:
             *sequence,
             GetMapRotationResponseEntry(
                 name="FOY",
-                game_mode_id="Warfare",
+                game_mode_name="Warfare",
                 time_of_day="Day",
                 id="/Game/Maps/foy_warfare",
                 position=index,

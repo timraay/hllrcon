@@ -2,7 +2,7 @@ from datetime import datetime
 from enum import IntEnum, StrEnum
 from typing import Annotated, Literal, NamedTuple, TypeAlias
 
-from pydantic import AfterValidator, BaseModel, ConfigDict, Field
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, PlainValidator
 from pydantic.alias_generators import to_camel
 
 from hllrcon.data import Faction, GameMode, Layer, Role, TimeOfDay
@@ -88,6 +88,7 @@ class GetAdminLogResponseEntry(Response):
 
 class GetAdminLogResponse(Response):
     entries: list[GetAdminLogResponseEntry]
+    """A list of log entries, oldest entries first."""
 
 
 class GetCommandsResponseEntry(Response):
@@ -203,14 +204,21 @@ class GetPlayersResponse(Response):
 
 class GetMapRotationResponseEntry(Response):
     name: str
-    game_mode_id: str = Field(validation_alias="gameMode")
+    game_mode_name: str = Field(validation_alias="gameMode")
     time_of_day: TimeOfDay | str
-    id: str = Field(validation_alias="iD")
+    id: Annotated[str, PlainValidator(lambda x: x.rsplit("/", 1)[-1])] = Field(
+        validation_alias="iD",
+    )
     position: int
 
     @property
     def game_mode(self) -> GameMode:
-        return GameMode.by_id(self.game_mode_id)
+        if self.game_mode_name.startswith("Control Skirmish"):
+            return GameMode.SKIRMISH
+        if self.game_mode_name.endswith("Offensive"):
+            return GameMode.OFFENSIVE
+
+        return GameMode.by_id(self.game_mode_name)
 
     def find_layer(self, *, strict: bool = True) -> Layer:
         """Attempt to find the layer associated with this map rotation entry.
@@ -272,6 +280,10 @@ class GetServerConfigResponse(Response):
 
 class GetBannedWordsResponse(Response):
     banned_words: list[str]
+
+
+class GetVipsResponse(Response):
+    vips: list[str] = Field(validation_alias="vipPlayerIds")
 
 
 class GetCommandDetailsResponseComboParameter(Response):

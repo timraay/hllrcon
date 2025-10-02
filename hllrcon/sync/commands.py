@@ -26,6 +26,7 @@ from hllrcon.responses import (
     GetPlayersResponse,
     GetServerConfigResponse,
     GetServerSessionResponse,
+    GetVipsResponse,
 )
 
 P = ParamSpec("P")
@@ -152,6 +153,11 @@ class SyncRconCommands(ABC):
             The number of seconds to look back in the logs.
         filter_ : str | None
             A filter string to apply to the logs, by default None.
+
+        Returns
+        -------
+        GetAdminLogResponse
+            A response containing the admin logs.
 
         """
         if seconds_span < 0:
@@ -690,6 +696,22 @@ class SyncRconCommands(ABC):
             "GetServerInformation",
             2,
             {"Name": "bannedwords", "Value": ""},
+        )
+
+    @cast_response_to_model(GetVipsResponse)
+    def get_vips(self) -> str:
+        """Retrieve the list of VIPs.
+
+        Returns
+        -------
+        GetVipsResponse
+            The list of VIPs.
+
+        """
+        return self.execute(
+            "GetServerInformation",
+            2,
+            {"Name": "vipplayers", "Value": ""},
         )
 
     def broadcast(self, message: str) -> None:

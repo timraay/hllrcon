@@ -59,7 +59,10 @@ __all__ = (
 )
 
 
-RE_LAYER_NAME_SMALL = re.compile(
+RE_LAYER_NAME_SMALL1 = re.compile(
+    r"^(?P<tag>[A-Z]{3,5})_S_(?P<year>\d{4})_P_(?P<game_mode>\w+?)(?:_(?P<environment>\w+))?$",
+)
+RE_LAYER_NAME_SMALL2 = re.compile(
     r"^(?P<tag>[A-Z]{3,5})_S_(?P<year>\d{4})_(?:(?P<environment>\w+)_)?P_(?P<game_mode>\w+)$",
 )
 RE_LAYER_NAME_LARGE = re.compile(
@@ -74,17 +77,17 @@ RE_LEGACY_LAYER_NAME_OFFENSIVE = re.compile(
 
 
 class TimeOfDay(StrEnum):
-    DAWN = "dawn"
-    DAY = "day"
-    DUSK = "dusk"
-    NIGHT = "night"
+    DAWN = "Dawn"
+    DAY = "Day"
+    DUSK = "Dusk"
+    NIGHT = "Night"
 
 
 class Weather(StrEnum):
-    CLEAR = "clear"
-    OVERCAST = "overcast"
-    RAIN = "rain"
-    SNOW = "snow"
+    CLEAR = "Clear"
+    OVERCAST = "Overcast"
+    RAIN = "Rain"
+    SNOW = "Snow"
 
 
 LAYER_GAME_MODE_MAP: dict[str, GameMode] = {
@@ -183,7 +186,8 @@ class Layer(CaseInsensitiveIndexedBaseModel):
         exc = ValueError(f"Could not parse layer ID: {id_}")
 
         for pattern in (
-            RE_LAYER_NAME_SMALL,
+            RE_LAYER_NAME_SMALL1,
+            RE_LAYER_NAME_SMALL2,
             RE_LAYER_NAME_LARGE,
             RE_LEGACY_LAYER_NAME,
             RE_LEGACY_LAYER_NAME_OFFENSIVE,
@@ -1771,11 +1775,26 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def STALINGRAD_SKIRMISH_EVENING(cls) -> "Layer":
         return cls(
-            id="STA_S_1942_P_Skirmish",
+            id="STA_S_1942_P_Skirmish_Dusk",
             map=Map.STALINGRAD,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
             weather=Weather.CLEAR,
+            grid=Grid.small(
+                offset=(150.0, -110.0),
+            ),
+            sectors=SECTORS_STALINGRAD_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STALINGRAD_SKIRMISH_OVERCAST(cls) -> "Layer":
+        return cls(
+            id="STA_S_1942_P_Skirmish_Overcast",
+            map=Map.STALINGRAD,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.OVERCAST,
             grid=Grid.small(
                 offset=(150.0, -110.0),
             ),
