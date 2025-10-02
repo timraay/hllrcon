@@ -699,7 +699,7 @@ class SyncRconCommands(ABC):
         )
 
     @cast_response_to_model(GetVipsResponse)
-    def get_vips(self) -> str:
+    def get_vip_users(self) -> str:
         """Retrieve the list of VIPs.
 
         Returns

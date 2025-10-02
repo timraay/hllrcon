@@ -9,14 +9,16 @@ from typing import Any, Literal
 from unittest import mock
 
 import pytest
-from hllrcon.sync.commands import SyncRconCommands, cast_response_to_bool, cast_response_to_model
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     ForceMode,
 )
+from hllrcon.sync.commands import (
+    SyncRconCommands,
+    cast_response_to_bool,
+    cast_response_to_model,
+)
 from pydantic import BaseModel, ValidationError
-
-
 
 
 class SyncRconCommandsStub(SyncRconCommands):
@@ -748,7 +750,7 @@ class TestCommands:
             ),
         ).get_banned_words()
 
-    def test_commands_get_vips(self) -> None:
+    def test_commands_get_vip_users(self) -> None:
         SyncRconCommandsStub(
             "GetServerInformation",
             2,
@@ -758,7 +760,7 @@ class TestCommands:
                     "vipPlayerIds": ["123", "456"],
                 },
             ),
-        ).get_vips()
+        ).get_vip_users()
 
     def test_commands_broadcast(self) -> None:
         message = "Broadcast message"

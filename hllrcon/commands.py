@@ -695,7 +695,7 @@ class RconCommands(ABC):
         )
 
     @cast_response_to_model(GetVipsResponse)
-    async def get_vips(self) -> str:
+    async def get_vip_users(self) -> str:
         """Retrieve the list of VIPs.
 
         Returns

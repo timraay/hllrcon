@@ -743,7 +743,7 @@ class TestCommands:
             ),
         ).get_banned_words()
 
-    async def test_commands_get_vips(self) -> None:
+    async def test_commands_get_vip_users(self) -> None:
         await RconCommandsStub(
             "GetServerInformation",
             2,
@@ -753,7 +753,7 @@ class TestCommands:
                     "vipPlayerIds": ["123", "456"],
                 },
             ),
-        ).get_vips()
+        ).get_vip_users()
 
     async def test_commands_broadcast(self) -> None:
         message = "Broadcast message"
