@@ -7,6 +7,7 @@ from typing import Any, Literal, ParamSpec, TypeVar
 from pydantic import BaseModel
 
 from hllrcon.data import layers
+from hllrcon.data.factions import Faction
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     ForceMode,
@@ -23,6 +24,7 @@ from hllrcon.responses import (
     GetServerConfigResponse,
     GetServerSessionResponse,
     GetVipsResponse,
+    PlayerFactionId,
 )
 
 P = ParamSpec("P")
@@ -449,25 +451,32 @@ class RconCommands(ABC):
         """
         return await self.execute("GetTemporaryBans", 2)
 
-    async def disband_squad(self, team_id: int, squad_id: int, reason: str) -> None:
+    @cast_response_to_bool({400})
+    async def disband_squad(
+        self,
+        faction: Faction | PlayerFactionId | int,
+        squad_index: int,
+        reason: str,
+    ) -> None:
         """Disband a squad on the server.
 
         Parameters
         ----------
-        team_id : int
-            The ID of the team the squad belongs to.
-        squad_id : int
-            The ID of the squad to disband.
+        faction : Faction | PlayerFactionId | int
+            The ID of the faction the squad belongs to.
+        squad_index : int
+            The index of the squad to disband.
         reason : str
             The reason for disbanding the squad. This will be displayed to the players.
 
         """
+        team_index = faction.id if isinstance(faction, Faction) else int(faction)
         await self.execute(
             "DisbandPlatoon",
             2,
             {
-                "TeamIndex": team_id,
-                "SquadIndex": squad_id,
+                "TeamIndex": team_index,
+                "SquadIndex": squad_index,
                 "Reason": reason,
             },
         )
@@ -959,6 +968,7 @@ class RconCommands(ABC):
         )
         return any(responses)
 
+    @cast_response_to_bool({400})
     async def remove_player_from_squad(self, player_id: str, reason: str) -> None:
         """Remove a player from their current squad.
 
