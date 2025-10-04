@@ -2,9 +2,8 @@ import asyncio
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 from typing import Any
-from warnings import deprecated
 
-from typing_extensions import override
+from typing_extensions import deprecated, override
 
 from hllrcon.client import RconClient
 from hllrcon.pooled.worker import PooledRconWorker
