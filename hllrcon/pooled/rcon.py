@@ -6,6 +6,7 @@ from typing import Any
 from typing_extensions import deprecated, override
 
 from hllrcon.client import RconClient
+from hllrcon.exceptions import HLLRconWarning
 from hllrcon.pooled.worker import PooledRconWorker
 
 
@@ -13,6 +14,7 @@ from hllrcon.pooled.worker import PooledRconWorker
     "Use the `Rcon` class instead, which is more efficient and reliable. This class"
     " will be removed when U19 is released, now that RCON protocol changes have made it"
     " obsolete.",
+    category=HLLRconWarning,
 )
 class PooledRcon(RconClient):
     """A pooled RCON client that that manages multiple connections to an RCON server.
