@@ -4,7 +4,9 @@ import threading
 from collections.abc import Generator
 from concurrent.futures import Future
 from contextlib import contextmanager
-from typing import Any, override
+from typing import Any
+
+from typing_extensions import override
 
 from hllrcon.rcon import Rcon
 from hllrcon.sync.commands import SyncRconCommands
