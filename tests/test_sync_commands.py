@@ -976,7 +976,7 @@ class TestCommands:
         SyncRconCommandsStub(
             "AddVip",
             2,
-            {"PlayerId": player_id, "Description": description},
+            {"PlayerId": player_id, "Comment": description},
         ).add_vip(player_id, description)
 
     def test_commands_remove_vip(self) -> None:
