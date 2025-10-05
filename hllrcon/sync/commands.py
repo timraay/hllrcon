@@ -1135,7 +1135,7 @@ class SyncRconCommands(ABC):
             2,
             {
                 "PlayerId": player_id,
-                "Description": description,
+                "Comment": description,
             },
         )
 
