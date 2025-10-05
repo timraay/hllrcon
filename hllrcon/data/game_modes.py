@@ -1,6 +1,11 @@
+# ruff: noqa: N802
+
 from enum import StrEnum
 
-from hllrcon.data.utils import IndexedBaseModel
+from ._utils import (
+    CaseInsensitiveIndexedBaseModel,
+    class_cached_property,
+)
 
 
 class GameModeScale(StrEnum):
@@ -8,8 +13,7 @@ class GameModeScale(StrEnum):
     SMALL = "small"
 
 
-class GameMode(IndexedBaseModel[str]):
-    id: str
+class GameMode(CaseInsensitiveIndexedBaseModel):
     scale: GameModeScale
 
     def is_large(self) -> bool:
@@ -18,11 +22,17 @@ class GameMode(IndexedBaseModel[str]):
     def is_small(self) -> bool:
         return self.scale == GameModeScale.SMALL
 
+    @class_cached_property
+    @classmethod
+    def WARFARE(cls) -> "GameMode":
+        return cls(id="warfare", scale=GameModeScale.LARGE)
 
-WARFARE = GameMode(id="warfare", scale=GameModeScale.LARGE)
-OFFENSIVE = GameMode(id="offensive", scale=GameModeScale.LARGE)
-SKIRMISH = GameMode(id="skirmish", scale=GameModeScale.SMALL)
+    @class_cached_property
+    @classmethod
+    def OFFENSIVE(cls) -> "GameMode":
+        return cls(id="offensive", scale=GameModeScale.LARGE)
 
-
-def by_id(game_mode_id: str) -> GameMode:
-    return GameMode.by_id(game_mode_id)
+    @class_cached_property
+    @classmethod
+    def SKIRMISH(cls) -> "GameMode":
+        return cls(id="skirmish", scale=GameModeScale.SMALL)

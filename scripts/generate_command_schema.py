@@ -7,15 +7,19 @@ be saved to `commands_schema.json`.
 """
 
 import asyncio
-import json
 import logging
 
 import aiofiles
+from pydantic import RootModel
 
 from hllrcon.connection import RconConnection
+from hllrcon.responses import GetCommandDetailsResponse
 from scripts import HLL_SERVER_CREDENTIALS
 
 logging.basicConfig(level=logging.INFO)
+
+
+AllCommandDetails = RootModel[list[GetCommandDetailsResponse]]
 
 
 async def main() -> None:
@@ -26,12 +30,14 @@ async def main() -> None:
     conn = await RconConnection.connect(**HLL_SERVER_CREDENTIALS)
 
     all_commands = await conn.get_commands()
-    all_command_details = await asyncio.gather(
-        *(conn.get_command_details(entry.id) for entry in all_commands.entries),
+    all_command_details = AllCommandDetails(
+        await asyncio.gather(
+            *(conn.get_command_details(entry.id) for entry in all_commands.entries),
+        ),
     )
 
     async with aiofiles.open("commands_schema.json", "w", encoding="utf-8") as f:
-        content = json.dumps(all_command_details, indent=2, ensure_ascii=False)
+        content = all_command_details.model_dump_json(indent=2)
         await f.write(content)
 
 

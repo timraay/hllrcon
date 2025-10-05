@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from collections.abc import AsyncGenerator
 
 import pytest
 import pytest_asyncio
@@ -8,10 +9,8 @@ from hllrcon.rcon import Rcon
 from hllrcon.responses import (
     GetCommandDetailsResponse,
     GetCommandsResponse,
-    GetMapRotationResponse,
     GetMapRotationResponseEntry,
     GetPlayerResponse,
-    GetPlayersResponse,
     GetServerConfigResponse,
     GetServerSessionResponse,
 )
@@ -27,19 +26,21 @@ if not HLL_HOST or not HLL_PORT or not HLL_PASSWORD:
 pytestmark = pytest.mark.asyncio
 
 
-@pytest_asyncio.fixture
-async def rcon() -> Rcon:
-    return Rcon(
+@pytest_asyncio.fixture(scope="function")
+async def rcon() -> AsyncGenerator[Rcon]:
+    rcon = Rcon(
         host=str(HLL_HOST),
         port=int(HLL_PORT or ""),
         password=str(HLL_PASSWORD),
     )
+    await asyncio.sleep(0.1)
+    async with rcon.connect():
+        yield rcon
 
 
 @pytest_asyncio.fixture
 async def players(rcon: Rcon) -> list[GetPlayerResponse]:
     players = await rcon.get_players()
-    TypeAdapter(GetPlayersResponse).validate_python(players)
 
     if not players.players:
         pytest.skip("No players found on the server")
@@ -50,29 +51,23 @@ async def players(rcon: Rcon) -> list[GetPlayerResponse]:
 @pytest_asyncio.fixture
 async def rotation(rcon: Rcon) -> list[GetMapRotationResponseEntry]:
     rotation = await rcon.get_map_rotation()
-    TypeAdapter(GetMapRotationResponse).validate_python(rotation)
     return rotation.maps
 
 
 @pytest_asyncio.fixture
 async def sequence(rcon: Rcon) -> list[GetMapRotationResponseEntry]:
     rotation = await rcon.get_map_sequence()
-    TypeAdapter(GetMapRotationResponse).validate_python(rotation)
     return rotation.maps
 
 
 @pytest_asyncio.fixture
 async def server_config(rcon: Rcon) -> GetServerConfigResponse:
-    config = await rcon.get_server_config()
-    TypeAdapter(GetServerConfigResponse).validate_python(config)
-    return config
+    return await rcon.get_server_config()
 
 
 @pytest_asyncio.fixture
 async def server_session(rcon: Rcon) -> GetServerSessionResponse:
-    session = await rcon.get_server_session()
-    TypeAdapter(GetServerSessionResponse).validate_python(session)
-    return session
+    return await rcon.get_server_session()
 
 
 class TestIntegratedServer:
@@ -132,7 +127,7 @@ class TestIntegratedServer:
             *sequence,
             GetMapRotationResponseEntry(
                 name="FOY",
-                game_mode="Warfare",
+                game_mode_name="Warfare",
                 time_of_day="Day",
                 id="/Game/Maps/foy_warfare",
                 position=index,

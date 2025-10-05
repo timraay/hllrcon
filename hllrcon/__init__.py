@@ -1,4 +1,4 @@
-from . import data, pooled, responses
+from . import data, pooled, responses, sync
 from .client import RconClient
 from .exceptions import (
     HLLAuthError,
@@ -28,4 +28,5 @@ __all__ = (
     "data",
     "pooled",
     "responses",
+    "sync",
 )

@@ -3,7 +3,6 @@ import base64
 import binascii
 import itertools
 import json
-from collections import deque
 from unittest.mock import Mock
 
 import pytest
@@ -141,38 +140,7 @@ def test_connection_made(protocol: RconProtocol) -> None:
         protocol.connection_made(Mock(spec=asyncio.BaseTransport))
 
 
-@pytest.mark.do_pop_v1_xorkey(True)
-def test_data_received_including_xorkey(
-    mocker: MockerFixture,
-    protocol: RconProtocol,
-) -> None:
-    mocker.patch.object(protocol, "_read_from_buffer")
-
-    xorkey = b"\x0a\x0b\x0c\x0d"
-    data1 = b"Some data after xorkey"
-    protocol.data_received(xorkey + data1)
-
-    data2 = b"Even more data"
-    protocol.data_received(data2)
-
-    assert protocol._buffer == data1 + data2
-
-
-@pytest.mark.do_pop_v1_xorkey(True)
-def test_data_received_only_xorkey(
-    mocker: MockerFixture,
-    protocol: RconProtocol,
-) -> None:
-    mocker.patch.object(protocol, "_read_from_buffer")
-
-    xorkey = b"\x0a\x0b\x0c\x0d"
-    protocol.data_received(xorkey)
-
-    assert protocol._buffer == b""
-
-
-@pytest.mark.do_pop_v1_xorkey(False)
-def test_data_received_without_xorkey(
+def test_data_received(
     mocker: MockerFixture,
     protocol: RconProtocol,
 ) -> None:
@@ -207,8 +175,7 @@ def test_read_from_buffer_incomplete_packet(
     assert protocol._buffer == data
 
 
-@pytest.mark.do_use_request_headers(True)
-def test_read_from_buffer_exactly_one_packet_with_waiters(
+def test_read_from_buffer_exactly_one_packet(
     mocker: MockerFixture,
     protocol: RconProtocol,
 ) -> None:
@@ -228,7 +195,6 @@ def test_read_from_buffer_exactly_one_packet_with_waiters(
     mock_unpack.assert_called_once_with(1, b"Hello")
 
 
-@pytest.mark.do_use_request_headers(True)
 def test_read_from_buffer_exactly_one_packet_missing_waiter(
     mocker: MockerFixture,
     protocol: RconProtocol,
@@ -245,48 +211,6 @@ def test_read_from_buffer_exactly_one_packet_missing_waiter(
     mock_unpack.assert_called_once_with(1, b"Hello")
 
 
-@pytest.mark.do_use_request_headers(False)
-def test_read_from_buffer_exactly_one_packet_with_queue(
-    mocker: MockerFixture,
-    protocol: RconProtocol,
-) -> None:
-    mock_unpack = mocker.patch(
-        "hllrcon.protocol.protocol.RconResponse.unpack",
-        autospec=True,
-    )
-    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
-
-    waiter1: asyncio.Future[RconResponse] = asyncio.Future()
-    waiter2: asyncio.Future[RconResponse] = asyncio.Future()
-    protocol._queue.append(waiter1)
-    protocol._queue.append(waiter2)
-
-    protocol._buffer = data
-    protocol._read_from_buffer()
-    assert protocol._buffer == b""
-    assert waiter1.result()
-    assert not waiter2.done()
-    mock_unpack.assert_called_once_with(1, b"Hello")
-
-
-@pytest.mark.do_use_request_headers(False)
-def test_read_from_buffer_exactly_one_packet_empty_queue(
-    mocker: MockerFixture,
-    protocol: RconProtocol,
-) -> None:
-    mock_unpack = mocker.patch(
-        "hllrcon.protocol.protocol.RconResponse.unpack",
-        autospec=True,
-    )
-    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
-
-    protocol._buffer = data
-    protocol._read_from_buffer()
-    assert protocol._buffer == b""
-    mock_unpack.assert_called_once_with(1, b"Hello")
-
-
-@pytest.mark.do_use_request_headers(True)
 def test_read_from_buffer_more_than_one_packet(
     mocker: MockerFixture,
     protocol: RconProtocol,
@@ -316,7 +240,6 @@ def test_read_from_buffer_more_than_one_packet(
     mock_unpack.assert_called_with(2, b"World")
 
 
-@pytest.mark.do_use_request_headers(True)
 def test_connection_lost_use_request_headers(
     protocol: RconProtocol,
 ) -> None:
@@ -334,24 +257,6 @@ def test_connection_lost_use_request_headers(
     assert waiters[2].cancelled()
 
 
-@pytest.mark.do_use_request_headers(False)
-def test_connection_lost_no_request_headers(
-    protocol: RconProtocol,
-) -> None:
-    queue = deque[asyncio.Future[RconResponse]]()
-    queue.append(asyncio.Future())
-    queue.append(asyncio.Future())
-    protocol._queue = queue.copy()
-
-    protocol.connection_lost(None)
-
-    assert not protocol.is_connected()
-    assert not protocol._queue
-    assert queue[0].cancelled()
-    assert queue[1].cancelled()
-
-
-@pytest.mark.do_use_request_headers(True)
 def test_connection_lost_with_exception(
     protocol: RconProtocol,
 ) -> None:
@@ -511,17 +416,14 @@ def make_response(request_id: int, message: str) -> bytes:
 
 
 @pytest.mark.asyncio
-@pytest.mark.do_allow_concurrent_requests(True)
-@pytest.mark.do_use_request_headers(True)
-@pytest.mark.do_pop_v1_xorkey(False)
-async def test_execute_use_request_headers(
+async def test_execute(
     protocol: RconProtocol,
     transport: Mock,
 ) -> None:
     asyncio.get_event_loop().call_later(
         0.1,
         protocol.data_received,
-        make_response(1, "response"),
+        make_response(0, "response"),
     )
     response = await protocol.execute("command", 1, "body")
     assert response.content_body == "response"
@@ -529,28 +431,7 @@ async def test_execute_use_request_headers(
 
 
 @pytest.mark.asyncio
-@pytest.mark.do_allow_concurrent_requests(True)
-@pytest.mark.do_use_request_headers(False)
-@pytest.mark.do_pop_v1_xorkey(False)
-async def test_execute_no_request_headers(
-    protocol: RconProtocol,
-    transport: Mock,
-) -> None:
-    asyncio.get_event_loop().call_later(
-        0.1,
-        protocol.data_received,
-        make_response(1, "response"),
-    )
-    response = await protocol.execute("command", 1, "body")
-    assert response.content_body == "response"
-    transport.write.assert_called_once()
-
-
-@pytest.mark.asyncio
-@pytest.mark.do_allow_concurrent_requests(True)
-@pytest.mark.do_use_request_headers(True)
-@pytest.mark.do_pop_v1_xorkey(False)
-async def test_execute_use_request_headers_with_timeout(
+async def test_execute_with_timeout(
     protocol: RconProtocol,
     transport: Mock,
 ) -> None:
@@ -562,25 +443,7 @@ async def test_execute_use_request_headers_with_timeout(
 
 
 @pytest.mark.asyncio
-@pytest.mark.do_allow_concurrent_requests(True)
-@pytest.mark.do_use_request_headers(False)
-@pytest.mark.do_pop_v1_xorkey(False)
-async def test_execute_no_request_headers_with_timeout(
-    protocol: RconProtocol,
-    transport: Mock,
-) -> None:
-    protocol.timeout = 0.1
-    with pytest.raises(TimeoutError):
-        await protocol.execute("command", 1, "body")
-    assert not protocol._queue
-    transport.write.assert_called_once()
-
-
-@pytest.mark.asyncio
-@pytest.mark.do_allow_concurrent_requests(True)
-@pytest.mark.do_use_request_headers(True)
-@pytest.mark.do_pop_v1_xorkey(False)
-async def test_execute_concurrently_without_lock(
+async def test_execute_concurrently(
     protocol: RconProtocol,
     transport: Mock,
 ) -> None:
@@ -588,41 +451,7 @@ async def test_execute_concurrently_without_lock(
     asyncio.get_running_loop().call_later(
         0.5,
         protocol.data_received,
-        make_response(2, "response2") + make_response(1, "response1"),
-    )
-    responses = await asyncio.gather(
-        protocol.execute("command1", 1, "body1"),
-        protocol.execute("command2", 2, "body2"),
-    )
-    assert responses[0].content_body == "response1"
-    assert responses[1].content_body == "response2"
-    assert transport.write.call_count == 2
-
-
-@pytest.mark.asyncio
-@pytest.mark.do_allow_concurrent_requests(False)
-@pytest.mark.do_use_request_headers(True)
-@pytest.mark.do_pop_v1_xorkey(False)
-async def test_execute_concurrently_with_lock(
-    protocol: RconProtocol,
-    transport: Mock,
-) -> None:
-    def assert_lock_acquired(_data: bytes) -> None:
-        assert protocol._lock.locked(), "Lock should be acquired before writing"
-        assert not protocol._waiters
-
-    transport.write.side_effect = assert_lock_acquired
-
-    loop = protocol.loop
-    loop.call_later(
-        0.1,
-        protocol.data_received,
-        make_response(1, "response1"),
-    )
-    loop.call_later(
-        0.2,
-        protocol.data_received,
-        make_response(2, "response2"),
+        make_response(1, "response2") + make_response(0, "response1"),
     )
     responses = await asyncio.gather(
         protocol.execute("command1", 1, "body1"),

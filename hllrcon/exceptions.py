@@ -44,3 +44,7 @@ class HLLAuthError(HLLConnectionError):
 
 class HLLConnectionLostError(HLLConnectionError):
     """Raised when the connection to the server is lost."""
+
+
+class HLLRconWarning(UserWarning):
+    """Base warning for all warnings emitted by the hllrcon library."""

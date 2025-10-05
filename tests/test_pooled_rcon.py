@@ -9,6 +9,8 @@ from hllrcon.pooled.rcon import PooledRcon
 from hllrcon.pooled.worker import PooledRconWorker
 from pytest_mock import MockerFixture
 
+pytestmark = pytest.mark.filterwarnings("ignore::hllrcon.exceptions.HLLRconWarning")
+
 
 @pytest.fixture
 def pool(mocker: MockerFixture) -> PooledRcon:

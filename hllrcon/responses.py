@@ -1,11 +1,11 @@
 from datetime import datetime
 from enum import IntEnum, StrEnum
-from typing import Annotated, Literal, TypeAlias
+from typing import Annotated, Literal, NamedTuple, TypeAlias
 
-from pydantic import AfterValidator, BaseModel, ConfigDict, Field
+from pydantic import AfterValidator, BaseModel, ConfigDict, Field, PlainValidator
 from pydantic.alias_generators import to_camel
 
-from hllrcon.data import layers
+from hllrcon.data import Faction, GameMode, Layer, Role, TimeOfDay
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 
@@ -45,7 +45,7 @@ class SupportedPlatform(StrEnum):
     EPIC = "eos"
 
 
-class PlayerTeam(IntEnum):
+class PlayerFactionId(IntEnum):
     GER = 0
     US = 1
     SOV = 2
@@ -54,152 +54,31 @@ class PlayerTeam(IntEnum):
     B8A = 5
     UNASSIGNED = 6
 
-    def is_allied(self) -> bool:
-        """Check if the team is an allied team.
 
-        Allied factions are:
-        - United States (`US`)
-        - Soviet Union (`SOV`)
-        - Commonwealth (`CW`)
-        - British 8th Army (`B8A`)
-
-        Returns
-        -------
-        bool
-            `True` if the team is an allied team, `False` otherwise.
-
-        """
-        return self in {
-            PlayerTeam.US,
-            PlayerTeam.SOV,
-            PlayerTeam.CW,
-            PlayerTeam.B8A,
-        }
-
-    def is_axis(self) -> bool:
-        """Check if the team is an axis team.
-
-        Axis factions are:
-        - Germany (`GER`)
-        - Deutsche Afrika Korps (`DAK`)
-
-        Returns
-        -------
-        bool
-            `True` if the team is an axis team, `False` otherwise.
-
-        """
-        return self in {
-            PlayerTeam.GER,
-            PlayerTeam.DAK,
-        }
+class PlayerRoleId(IntEnum):
+    RIFLEMAN = 0
+    ASSAULT = 1
+    AUTOMATIC_RIFLEMAN = 2
+    MEDIC = 3
+    SPOTTER = 4
+    SUPPORT = 5
+    MACHINE_GUNNER = 6
+    ANTI_TANK = 7
+    ENGINEER = 8
+    OFFICER = 9
+    SNIPER = 10
+    CREWMAN = 11
+    TANK_COMMANDER = 12
+    COMMANDER = 13
 
 
-class PlayerRole(IntEnum):
-    Rifleman = 0
-    Assault = 1
-    AutomaticRifleman = 2
-    Medic = 3
-    Spotter = 4
-    Support = 5
-    MachineGunner = 6
-    AntiTank = 7
-    Engineer = 8
-    Officer = 9
-    Sniper = 10
-    Crewman = 11
-    TankCommander = 12
-    ArmyCommander = 13
+class ForceMode(IntEnum):
+    IMMEDIATE = 0
+    """Force the player to be switched immediately, killing them if currently alive."""
 
-    def is_infantry(self) -> bool:
-        """Check if the role is associated with infantry units.
-
-        Roles included are:
-        - Officer
-        - Rifleman
-        - Assault
-        - Automatic Rifleman
-        - Medic
-        - Support
-        - Machine Gunner
-        - Anti-Tank
-        - Engineer
-
-        Returns
-        -------
-        bool
-            `True` if the role is an infantry role, `False` otherwise.
-
-        """
-        return self in {
-            PlayerRole.Rifleman,
-            PlayerRole.Assault,
-            PlayerRole.AutomaticRifleman,
-            PlayerRole.Medic,
-            PlayerRole.Support,
-            PlayerRole.MachineGunner,
-            PlayerRole.AntiTank,
-            PlayerRole.Engineer,
-            PlayerRole.Officer,
-        }
-
-    def is_tanker(self) -> bool:
-        """Check if the role is associated with armor units.
-
-        Roles included are:
-        - Tank Commander
-        - Crewman
-
-        Returns
-        -------
-        bool
-            `True` if the role is a tanker role, `False` otherwise.
-
-        """
-        return self in {
-            PlayerRole.Crewman,
-            PlayerRole.TankCommander,
-        }
-
-    def is_recon(self) -> bool:
-        """Check if the role is associated with recon units.
-
-        Roles included are:
-        - Spotter
-        - Sniper
-
-        Returns
-        -------
-        bool
-            `True` if the role is a recon role, `False` otherwise.
-
-        """
-        return self in {
-            PlayerRole.Spotter,
-            PlayerRole.Sniper,
-        }
-
-    def is_squad_leader(self) -> bool:
-        """Check if the role is that of a squad leader.
-
-        Roles included are:
-        - Commander
-        - Officer
-        - Tank Commander
-        - Spotter
-
-        Returns
-        -------
-        bool
-            `True` if the role is a squad leader role, `False` otherwise.
-
-        """
-        return self in {
-            PlayerRole.ArmyCommander,
-            PlayerRole.Officer,
-            PlayerRole.TankCommander,
-            PlayerRole.Spotter,
-        }
+    # TODO: Verify behavior when player is already dead
+    AFTER_DEATH = 1
+    """Force the player to be switched upon death."""
 
 
 class GetAdminLogResponseEntry(Response):
@@ -209,6 +88,7 @@ class GetAdminLogResponseEntry(Response):
 
 class GetAdminLogResponse(Response):
     entries: list[GetAdminLogResponseEntry]
+    """A list of log entries, oldest entries first."""
 
 
 class GetCommandsResponseEntry(Response):
@@ -221,6 +101,33 @@ class GetCommandsResponse(Response):
     entries: list[GetCommandsResponseEntry]
 
 
+class GetAdminGroupsResponse(Response):
+    group_names: list[str]
+
+
+class GetAdminUsersResponseEntry(Response):
+    user_id: str
+    group: str
+    comment: str
+
+
+class GetAdminUsersResponse(Response):
+    admin_users: list[GetAdminUsersResponseEntry]
+
+
+class GetBansResponseEntry(Response):
+    user_id: str
+    user_name: str
+    time_of_banning: str
+    duration_hours: int
+    ban_reason: str
+    admin_name: str
+
+
+class GetBansResponse(Response):
+    ban_list: list[GetBansResponseEntry]
+
+
 class GetPlayerResponseScoreData(Response):
     combat: int = Field(validation_alias="cOMBAT")
     offense: int
@@ -228,7 +135,7 @@ class GetPlayerResponseScoreData(Response):
     support: int
 
 
-class GetPlayerResponseWorldPosition(Response):
+class GetPlayerResponseWorldPosition(NamedTuple):
     x: float
     """The east-west horizontal axis. Between -100000 and 100000."""
 
@@ -258,17 +165,14 @@ class GetPlayerResponse(Response):
     level: int
     """The player's level"""
 
-    team: Annotated[
-        PlayerTeam | None,
-        AfterValidator(lambda v: None if v == PlayerTeam.UNASSIGNED else v),
-    ]
-    """The player's team"""
+    faction_id: PlayerFactionId = Field(validation_alias="team")
+    """The ID of the player's faction."""
 
-    role: PlayerRole
-    """The player's role."""
+    role_id: PlayerRoleId | int = Field(validation_alias="role")
+    """The ID of the player's role."""
 
     platoon: Annotated[str | None, EmptyStringToNoneValidator]
-    """The name of the player's squad. Empty string if not in a squad."""
+    """The name of the player's squad."""
 
     loadout: str
     """The player's current loadout. Might not be accurate if not spawned in."""
@@ -285,6 +189,14 @@ class GetPlayerResponse(Response):
     world_position: GetPlayerResponseWorldPosition
     """The player's position in centimeters"""
 
+    @property
+    def faction(self) -> Faction | None:
+        return Faction.by_id(self.faction_id)
+
+    @property
+    def role(self) -> Role:
+        return Role.by_id(self.role_id)
+
 
 class GetPlayersResponse(Response):
     players: list[GetPlayerResponse]
@@ -292,17 +204,35 @@ class GetPlayersResponse(Response):
 
 class GetMapRotationResponseEntry(Response):
     name: str
-    game_mode: str
-    time_of_day: str
-    id: str = Field(validation_alias="iD")
+    game_mode_name: str = Field(validation_alias="gameMode")
+    time_of_day: TimeOfDay | str
+    id: Annotated[str, PlainValidator(lambda x: x.rsplit("/", 1)[-1])] = Field(
+        validation_alias="iD",
+    )
     position: int
 
-    def find_layer(self) -> layers.Layer:
+    @property
+    def game_mode(self) -> GameMode:
+        if self.game_mode_name.startswith("Control Skirmish"):
+            return GameMode.SKIRMISH
+        if self.game_mode_name.endswith("Offensive"):
+            return GameMode.OFFENSIVE
+
+        return GameMode.by_id(self.game_mode_name)
+
+    def find_layer(self, *, strict: bool = True) -> Layer:
         """Attempt to find the layer associated with this map rotation entry.
+
+        Parameters
+        ----------
+        strict : bool, optional
+            Whether to raise an exception if no such layer is known. If set to `False`,
+            will attempt to generate a fallback value based on the ID. By default
+            `True`.
 
         Returns
         -------
-        layers.Layer
+        Layer
             The layer associated with this map rotation entry.
 
         Raises
@@ -311,7 +241,7 @@ class GetMapRotationResponseEntry(Response):
             No layer information is known about this entry.
 
         """
-        return layers.by_id(self.id)
+        return Layer.by_id(self.id, strict=strict)
 
 
 class GetMapRotationResponse(Response):
@@ -321,13 +251,23 @@ class GetMapRotationResponse(Response):
 class GetServerSessionResponse(Response):
     server_name: str
     map_name: str
-    game_mode: str
+    game_mode_id: str = Field(validation_alias="gameMode")
+    remaining_match_time: int
+    match_time: int
+    allied_score: int
+    axis_score: int
     player_count: int
+    allied_player_count: int
+    axis_player_count: int
     max_player_count: int
     queue_count: int
     max_queue_count: int
     vip_queue_count: int
     max_vip_queue_count: int
+
+    @property
+    def game_mode(self) -> GameMode:
+        return GameMode.by_id(self.game_mode_id)
 
 
 class GetServerConfigResponse(Response):
@@ -340,6 +280,10 @@ class GetServerConfigResponse(Response):
 
 class GetBannedWordsResponse(Response):
     banned_words: list[str]
+
+
+class GetVipsResponse(Response):
+    vips: list[str] = Field(validation_alias="vipPlayerIds")
 
 
 class GetCommandDetailsResponseComboParameter(Response):

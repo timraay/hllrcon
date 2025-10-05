@@ -1,4 +1,3 @@
-import pytest
 from hllrcon.protocol.request import RconRequest
 
 
@@ -17,43 +16,15 @@ def test_rconrequest_id_is_unique() -> None:
     assert req1.request_id != req2.request_id
 
 
-def test_pack_with_dict_body_no_header(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("hllrcon.protocol.request.DO_USE_REQUEST_HEADERS", False)
-    req = RconRequest("cmd", 1, "tok", {"a": 1})
-    packed = req.pack()
-    expected = (
-        b'{"authToken":"tok","version":1,"name":"cmd","contentBody":"{\\"a\\":1}"}'
-    )
-    assert packed == expected
-
-
-def test_pack_with_str_body_no_header(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("hllrcon.protocol.request.DO_USE_REQUEST_HEADERS", False)
-    req = RconRequest("cmd", 1, "tok", "body")
-    packed = req.pack()
-    expected = b'{"authToken":"tok","version":1,"name":"cmd","contentBody":"body"}'
-    assert packed == expected
-
-
-def test_pack_with_none_auth_token(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("hllrcon.protocol.request.DO_USE_REQUEST_HEADERS", False)
-    req = RconRequest("cmd", 1, None, "body")
-    packed = req.pack()
-    expected = b'{"authToken":"","version":1,"name":"cmd","contentBody":"body"}'
-    assert packed == expected
-
-
-def test_pack_with_header(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr("hllrcon.protocol.request.DO_USE_REQUEST_HEADERS", True)
+def test_pack_with_header() -> None:
     req = RconRequest("cmd", 1, "tok", {"z": 9})
     packed = req.pack()
 
     expected_body = (
         b'{"authToken":"tok","version":1,"name":"cmd","contentBody":"{\\"z\\":9}"}'
     )
-    expected = (
-        req.request_id.to_bytes(4, byteorder="little")
-        + len(expected_body).to_bytes(4, byteorder="little")
-        + expected_body
-    )
-    assert packed == expected
+    expected_header = req.request_id.to_bytes(4, byteorder="little") + len(
+        expected_body,
+    ).to_bytes(4, byteorder="little")
+    assert packed[0] == expected_header
+    assert packed[1] == expected_body

@@ -1,5 +1,6 @@
 import asyncio
 import contextlib
+import logging
 from typing import Any
 from unittest import mock
 
@@ -32,6 +33,14 @@ def rcon(monkeypatch: pytest.MonkeyPatch, connection: mock.Mock) -> Rcon:
 
     monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
     return Rcon(host="localhost", port=1234, password="password")
+
+
+async def test_logger(rcon: Rcon) -> None:
+    assert rcon.logger.name == "hllrcon.rcon"
+    rcon.logger = logging.getLogger("test")
+    assert rcon.logger.name == "test"
+    rcon.logger = None
+    assert rcon.logger.name == "hllrcon.rcon"
 
 
 async def test_get_connection_new(rcon: Rcon, connection: mock.Mock) -> None:

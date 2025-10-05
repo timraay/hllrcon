@@ -3,27 +3,27 @@
     "name": "AddAdmin",
     "text": "Add Admin",
     "description": "Add a player to the admin list.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Player Id",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Combo",
         "name": "Admin Group",
-        "iD": "AdminGroup",
-        "displayMember": "owner,senior,junior,spectator",
-        "valueMember": "owner,senior,junior,spectator"
+        "id": "AdminGroup",
+        "display_member": "owner,senior,junior,spectator",
+        "value_member": "owner,senior,junior,spectator"
       },
       {
         "type": "Text",
         "name": "Comment",
-        "iD": "Comment",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Comment",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -31,13 +31,13 @@
     "name": "AddBannedWords",
     "text": "Add Banned Words",
     "description": "Add banned words to the profanity filter. Separate words with commas.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Banned Words",
-        "iD": "BannedWords",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "BannedWords",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -45,20 +45,20 @@
     "name": "AddMapToRotation",
     "text": "Add Map to Rotation",
     "description": "Add a new map to the map rotation at an index.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Map Name",
-        "iD": "MapName",
-        "displayMember": "foy_warfare,stmariedumont_warfare,hurtgenforest_warfare_V2,utahbeach_warfare,stmereeglise_warfare,hill400_warfare,carentan_warfare,kursk_warfare,stalingrad_warfare,remagen_warfare,foy_warfare_night,hurtgenforest_warfare_V2_night,kursk_warfare_night,remagen_warfare_night,omahabeach_warfare,kharkov_warfare,elalamein_warfare,driel_warfare,carentan_warfare_night,stmereeglise_warfare_night,driel_warfare_night,elalamein_warfare_night,kharkov_warfare_night,stalingrad_warfare_night,mortain_warfare_day,mortain_warfare_overcast,stmariedumont_warfare_night,utahbeach_warfare_night,omahabeach_warfare_night,mortain_warfare_dusk,PHL_L_1944_Warfare,PHL_L_1944_Warfare_Night,elsenbornridge_warfare_day,elsenbornridge_warfare_morning,elsenbornridge_warfare_night,tobruk_warfare_day,tobruk_warfare_dusk,tobruk_warfare_morning,utahbeach_offensive_us,utahbeach_offensive_ger,omahabeach_offensive_us,stmereeglise_offensive_ger,foy_offensive_ger,hill400_offensive_US,stmereeglise_offensive_us,carentan_offensive_us,hurtgenforest_offensive_ger,hurtgenforest_offensive_US,kursk_offensive_ger,kursk_offensive_rus,stalingrad_offensive_rus,stalingrad_offensive_ger,stmariedumont_off_us,stmariedumont_off_ger,carentan_offensive_ger,foy_offensive_us,hill400_offensive_ger,remagen_offensive_ger,remagen_offensive_us,omahabeach_offensive_ger,kharkov_offensive_rus,kharkov_offensive_ger,elalamein_offensive_CW,elalamein_offensive_ger,driel_offensive_ger,driel_offensive_us,mortain_offensiveger_day,mortain_offensiveger_overcast,mortain_offensiveUS_day,mortain_offensiveUS_overcast,mortain_offensiveUS_dusk,mortain_offensiveger_dusk,PHL_L_1944_OffensiveGER,PHL_L_1944_OffensiveUS,elsenbornridge_offensiveUS_day,elsenbornridge_offensiveger_day,elsenbornridge_offensiveUS_morning,elsenbornridge_offensiveger_morning,elsenbornridge_offensiveUS_night,elsenbornridge_offensiveger_night,tobruk_offensivebritish_day,tobruk_offensiveger_day,tobruk_offensivebritish_dusk,tobruk_offensiveger_dusk,tobruk_offensivebritish_morning,tobruk_offensiveger_morning,ELA_S_1942_P_Skirmish,ELA_S_1942_Night_P_Skirmish,DRL_S_1944_P_Skirmish,DRL_S_1944_Night_P_Skirmish,DRL_S_1944_Day_P_Skirmish,mortain_skirmish_day,mortain_skirmish_overcast,SMDM_S_1944_Day_P_Skirmish,SMDM_S_1944_Night_P_Skirmish,SMDM_S_1944_Rain_P_Skirmish,CAR_S_1944_Day_P_Skirmish,CAR_S_1944_Rain_P_Skirmish,CAR_S_1944_Dusk_P_Skirmish,SME_S_1944_Day_P_Skirmish,SME_S_1944_Morning_P_Skirmish,SME_S_1944_Night_P_Skirmish,mortain_skirmish_dusk,PHL_S_1944_Rain_P_Skirmish,PHL_S_1944_Morning_P_Skirmish,PHL_S_1944_Night_P_Skirmish,HIL_S_1944_Day_P_Skirmish,HIL_S_1944_Dusk_P_Skirmish,elsenbornridge_skirmish_day,elsenbornridge_skirmish_morning,elsenbornridge_skirmish_night,tobruk_skirmish_day,tobruk_skirmish_dusk,tobruk_skirmish_morning",
-        "valueMember": "foy_warfare,stmariedumont_warfare,hurtgenforest_warfare_V2,utahbeach_warfare,stmereeglise_warfare,hill400_warfare,carentan_warfare,kursk_warfare,stalingrad_warfare,remagen_warfare,foy_warfare_night,hurtgenforest_warfare_V2_night,kursk_warfare_night,remagen_warfare_night,omahabeach_warfare,kharkov_warfare,elalamein_warfare,driel_warfare,carentan_warfare_night,stmereeglise_warfare_night,driel_warfare_night,elalamein_warfare_night,kharkov_warfare_night,stalingrad_warfare_night,mortain_warfare_day,mortain_warfare_overcast,stmariedumont_warfare_night,utahbeach_warfare_night,omahabeach_warfare_night,mortain_warfare_dusk,PHL_L_1944_Warfare,PHL_L_1944_Warfare_Night,elsenbornridge_warfare_day,elsenbornridge_warfare_morning,elsenbornridge_warfare_night,tobruk_warfare_day,tobruk_warfare_dusk,tobruk_warfare_morning,utahbeach_offensive_us,utahbeach_offensive_ger,omahabeach_offensive_us,stmereeglise_offensive_ger,foy_offensive_ger,hill400_offensive_US,stmereeglise_offensive_us,carentan_offensive_us,hurtgenforest_offensive_ger,hurtgenforest_offensive_US,kursk_offensive_ger,kursk_offensive_rus,stalingrad_offensive_rus,stalingrad_offensive_ger,stmariedumont_off_us,stmariedumont_off_ger,carentan_offensive_ger,foy_offensive_us,hill400_offensive_ger,remagen_offensive_ger,remagen_offensive_us,omahabeach_offensive_ger,kharkov_offensive_rus,kharkov_offensive_ger,elalamein_offensive_CW,elalamein_offensive_ger,driel_offensive_ger,driel_offensive_us,mortain_offensiveger_day,mortain_offensiveger_overcast,mortain_offensiveUS_day,mortain_offensiveUS_overcast,mortain_offensiveUS_dusk,mortain_offensiveger_dusk,PHL_L_1944_OffensiveGER,PHL_L_1944_OffensiveUS,elsenbornridge_offensiveUS_day,elsenbornridge_offensiveger_day,elsenbornridge_offensiveUS_morning,elsenbornridge_offensiveger_morning,elsenbornridge_offensiveUS_night,elsenbornridge_offensiveger_night,tobruk_offensivebritish_day,tobruk_offensiveger_day,tobruk_offensivebritish_dusk,tobruk_offensiveger_dusk,tobruk_offensivebritish_morning,tobruk_offensiveger_morning,ELA_S_1942_P_Skirmish,ELA_S_1942_Night_P_Skirmish,DRL_S_1944_P_Skirmish,DRL_S_1944_Night_P_Skirmish,DRL_S_1944_Day_P_Skirmish,mortain_skirmish_day,mortain_skirmish_overcast,SMDM_S_1944_Day_P_Skirmish,SMDM_S_1944_Night_P_Skirmish,SMDM_S_1944_Rain_P_Skirmish,CAR_S_1944_Day_P_Skirmish,CAR_S_1944_Rain_P_Skirmish,CAR_S_1944_Dusk_P_Skirmish,SME_S_1944_Day_P_Skirmish,SME_S_1944_Morning_P_Skirmish,SME_S_1944_Night_P_Skirmish,mortain_skirmish_dusk,PHL_S_1944_Rain_P_Skirmish,PHL_S_1944_Morning_P_Skirmish,PHL_S_1944_Night_P_Skirmish,HIL_S_1944_Day_P_Skirmish,HIL_S_1944_Dusk_P_Skirmish,elsenbornridge_skirmish_day,elsenbornridge_skirmish_morning,elsenbornridge_skirmish_night,tobruk_skirmish_day,tobruk_skirmish_dusk,tobruk_skirmish_morning"
+        "id": "MapName",
+        "display_member": "foy_warfare,stmariedumont_warfare,hurtgenforest_warfare_V2,utahbeach_warfare,stmereeglise_warfare,hill400_warfare,carentan_warfare,kursk_warfare,remagen_warfare,foy_warfare_night,hurtgenforest_warfare_V2_night,kursk_warfare_night,remagen_warfare_night,omahabeach_warfare,kharkov_warfare,elalamein_warfare,driel_warfare,carentan_warfare_night,stmereeglise_warfare_night,driel_warfare_night,elalamein_warfare_night,kharkov_warfare_night,mortain_warfare_day,mortain_warfare_overcast,stmariedumont_warfare_night,utahbeach_warfare_night,omahabeach_warfare_night,mortain_warfare_dusk,PHL_L_1944_Warfare,PHL_L_1944_Warfare_Night,elsenbornridge_warfare_day,elsenbornridge_warfare_morning,elsenbornridge_warfare_night,tobruk_warfare_day,tobruk_warfare_dusk,tobruk_warfare_morning,STA_L_1942_Warfare,STA_L_1942_Warfare_Night,utahbeach_offensive_us,utahbeach_offensive_ger,omahabeach_offensive_us,stmereeglise_offensive_ger,foy_offensive_ger,hill400_offensive_US,stmereeglise_offensive_us,carentan_offensive_us,hurtgenforest_offensive_ger,hurtgenforest_offensive_US,kursk_offensive_ger,kursk_offensive_rus,stmariedumont_off_us,stmariedumont_off_ger,carentan_offensive_ger,foy_offensive_us,hill400_offensive_ger,remagen_offensive_ger,remagen_offensive_us,omahabeach_offensive_ger,kharkov_offensive_rus,kharkov_offensive_ger,elalamein_offensive_CW,elalamein_offensive_ger,driel_offensive_ger,driel_offensive_us,mortain_offensiveger_day,mortain_offensiveger_overcast,mortain_offensiveUS_day,mortain_offensiveUS_overcast,mortain_offensiveUS_dusk,mortain_offensiveger_dusk,PHL_L_1944_OffensiveGER,PHL_L_1944_OffensiveUS,elsenbornridge_offensiveUS_day,elsenbornridge_offensiveger_day,elsenbornridge_offensiveUS_morning,elsenbornridge_offensiveger_morning,elsenbornridge_offensiveUS_night,elsenbornridge_offensiveger_night,tobruk_offensivebritish_day,tobruk_offensiveger_day,tobruk_offensivebritish_dusk,tobruk_offensiveger_dusk,tobruk_offensivebritish_morning,tobruk_offensiveger_morning,STA_L_1942_OffensiveRUS,STA_L_1942_OffensiveGER,ELA_S_1942_P_Skirmish,ELA_S_1942_Night_P_Skirmish,DRL_S_1944_P_Skirmish,DRL_S_1944_Night_P_Skirmish,DRL_S_1944_Day_P_Skirmish,mortain_skirmish_day,mortain_skirmish_overcast,SMDM_S_1944_Day_P_Skirmish,SMDM_S_1944_Night_P_Skirmish,SMDM_S_1944_Rain_P_Skirmish,CAR_S_1944_Day_P_Skirmish,CAR_S_1944_Rain_P_Skirmish,CAR_S_1944_Dusk_P_Skirmish,SME_S_1944_Day_P_Skirmish,SME_S_1944_Morning_P_Skirmish,SME_S_1944_Night_P_Skirmish,mortain_skirmish_dusk,PHL_S_1944_Rain_P_Skirmish,PHL_S_1944_Morning_P_Skirmish,PHL_S_1944_Night_P_Skirmish,HIL_S_1944_Day_P_Skirmish,HIL_S_1944_Dusk_P_Skirmish,elsenbornridge_skirmish_day,elsenbornridge_skirmish_morning,elsenbornridge_skirmish_night,tobruk_skirmish_day,tobruk_skirmish_dusk,tobruk_skirmish_morning,STA_S_1942_P_Skirmish_Dusk,STA_S_1942_P_Skirmish_Overcast",
+        "value_member": "foy_warfare,stmariedumont_warfare,hurtgenforest_warfare_V2,utahbeach_warfare,stmereeglise_warfare,hill400_warfare,carentan_warfare,kursk_warfare,remagen_warfare,foy_warfare_night,hurtgenforest_warfare_V2_night,kursk_warfare_night,remagen_warfare_night,omahabeach_warfare,kharkov_warfare,elalamein_warfare,driel_warfare,carentan_warfare_night,stmereeglise_warfare_night,driel_warfare_night,elalamein_warfare_night,kharkov_warfare_night,mortain_warfare_day,mortain_warfare_overcast,stmariedumont_warfare_night,utahbeach_warfare_night,omahabeach_warfare_night,mortain_warfare_dusk,PHL_L_1944_Warfare,PHL_L_1944_Warfare_Night,elsenbornridge_warfare_day,elsenbornridge_warfare_morning,elsenbornridge_warfare_night,tobruk_warfare_day,tobruk_warfare_dusk,tobruk_warfare_morning,STA_L_1942_Warfare,STA_L_1942_Warfare_Night,utahbeach_offensive_us,utahbeach_offensive_ger,omahabeach_offensive_us,stmereeglise_offensive_ger,foy_offensive_ger,hill400_offensive_US,stmereeglise_offensive_us,carentan_offensive_us,hurtgenforest_offensive_ger,hurtgenforest_offensive_US,kursk_offensive_ger,kursk_offensive_rus,stmariedumont_off_us,stmariedumont_off_ger,carentan_offensive_ger,foy_offensive_us,hill400_offensive_ger,remagen_offensive_ger,remagen_offensive_us,omahabeach_offensive_ger,kharkov_offensive_rus,kharkov_offensive_ger,elalamein_offensive_CW,elalamein_offensive_ger,driel_offensive_ger,driel_offensive_us,mortain_offensiveger_day,mortain_offensiveger_overcast,mortain_offensiveUS_day,mortain_offensiveUS_overcast,mortain_offensiveUS_dusk,mortain_offensiveger_dusk,PHL_L_1944_OffensiveGER,PHL_L_1944_OffensiveUS,elsenbornridge_offensiveUS_day,elsenbornridge_offensiveger_day,elsenbornridge_offensiveUS_morning,elsenbornridge_offensiveger_morning,elsenbornridge_offensiveUS_night,elsenbornridge_offensiveger_night,tobruk_offensivebritish_day,tobruk_offensiveger_day,tobruk_offensivebritish_dusk,tobruk_offensiveger_dusk,tobruk_offensivebritish_morning,tobruk_offensiveger_morning,STA_L_1942_OffensiveRUS,STA_L_1942_OffensiveGER,ELA_S_1942_P_Skirmish,ELA_S_1942_Night_P_Skirmish,DRL_S_1944_P_Skirmish,DRL_S_1944_Night_P_Skirmish,DRL_S_1944_Day_P_Skirmish,mortain_skirmish_day,mortain_skirmish_overcast,SMDM_S_1944_Day_P_Skirmish,SMDM_S_1944_Night_P_Skirmish,SMDM_S_1944_Rain_P_Skirmish,CAR_S_1944_Day_P_Skirmish,CAR_S_1944_Rain_P_Skirmish,CAR_S_1944_Dusk_P_Skirmish,SME_S_1944_Day_P_Skirmish,SME_S_1944_Morning_P_Skirmish,SME_S_1944_Night_P_Skirmish,mortain_skirmish_dusk,PHL_S_1944_Rain_P_Skirmish,PHL_S_1944_Morning_P_Skirmish,PHL_S_1944_Night_P_Skirmish,HIL_S_1944_Day_P_Skirmish,HIL_S_1944_Dusk_P_Skirmish,elsenbornridge_skirmish_day,elsenbornridge_skirmish_morning,elsenbornridge_skirmish_night,tobruk_skirmish_day,tobruk_skirmish_dusk,tobruk_skirmish_morning,STA_S_1942_P_Skirmish_Dusk,STA_S_1942_P_Skirmish_Overcast"
       },
       {
         "type": "Number",
         "name": "At Index",
-        "iD": "Index",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Index",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -66,41 +66,41 @@
     "name": "AddMapToSequence",
     "text": "Add Map to Sequence",
     "description": "Add map to server map sequence.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Map Name",
-        "iD": "MapName",
-        "displayMember": "tobruk_warfare_day,tobruk_offensivebritish_day,foy_warfare,mortain_skirmish_overcast",
-        "valueMember": "tobruk_warfare_day,tobruk_offensivebritish_day,foy_warfare,mortain_skirmish_overcast"
+        "id": "MapName",
+        "display_member": "carentan_warfare,stmereeglise_warfare,foy_warfare",
+        "value_member": "carentan_warfare,stmereeglise_warfare,foy_warfare"
       },
       {
         "type": "Number",
         "name": "At Index",
-        "iD": "Index",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Index",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
   {
-    "name": "AddVipPlayer",
-    "text": "Add VIP Player",
+    "name": "AddVip",
+    "text": "Add VIP",
     "description": "Give a player VIP status.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Player ID",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Text",
         "name": "Description",
-        "iD": "Description",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Description",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -108,58 +108,137 @@
     "name": "ChangeMap",
     "text": "Change Map",
     "description": "Select a map to change the server map.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "MapName",
-        "iD": "MapName",
-        "displayMember": "tobruk_warfare_day,tobruk_offensivebritish_day,foy_warfare,mortain_skirmish_overcast",
-        "valueMember": "tobruk_warfare_day,tobruk_offensivebritish_day,foy_warfare,mortain_skirmish_overcast"
+        "id": "MapName",
+        "display_member": "carentan_warfare,stmereeglise_warfare,foy_warfare",
+        "value_member": "carentan_warfare,stmereeglise_warfare,foy_warfare"
       }
     ]
+  },
+  {
+    "name": "DisbandPlatoon",
+    "text": "Disband Platoon",
+    "description": "Disband a squad and force players within the platoon to redeploy.",
+    "dialogue_parameters": [
+      {
+        "type": "Combo",
+        "name": "Team",
+        "id": "TeamIndex",
+        "display_member": "Axis,Allies",
+        "value_member": "1,2"
+      },
+      {
+        "type": "Number",
+        "name": "Platoon Index",
+        "id": "SquadIndex",
+        "display_member": "",
+        "value_member": ""
+      },
+      {
+        "type": "Text",
+        "name": "Reason",
+        "id": "Reason",
+        "display_member": "",
+        "value_member": ""
+      }
+    ]
+  },
+  {
+    "name": "ForceTeamSwitch",
+    "text": "Force Team Switch",
+    "description": "Forces a player to switch teams.",
+    "dialogue_parameters": [
+      {
+        "type": "Combo",
+        "name": "Players",
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
+      },
+      {
+        "type": "Combo",
+        "name": "Force Mode",
+        "id": "ForceMode",
+        "display_member": "OnDeath,Immediate",
+        "value_member": "0,1"
+      }
+    ]
+  },
+  {
+    "name": "GetAdminGroups",
+    "text": "Get Admin Groups",
+    "description": "Get a list of admin user groups.",
+    "dialogue_parameters": []
   },
   {
     "name": "GetAdminLog",
     "text": "Get Admin Log",
     "description": "Retrieve admin log.",
-    "dialogueParameters": []
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetAdminUsers",
+    "text": "Get Admin Users",
+    "description": "Get a list of admin users.",
+    "dialogue_parameters": []
   },
   {
     "name": "GetClientReferenceData",
     "text": "None",
     "description": "None",
-    "dialogueParameters": []
+    "dialogue_parameters": []
   },
   {
     "name": "GetDisplayableCommands",
     "text": "None",
     "description": "None",
-    "dialogueParameters": []
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetPermanentBans",
+    "text": "Get Permanent Bans",
+    "description": "Retrieve a list of players who have a permanent ban.",
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetServerChangelist",
+    "text": "Get Server Changelist",
+    "description": "Retrieves the servers changelist number.",
+    "dialogue_parameters": []
   },
   {
     "name": "GetServerInformation",
     "text": "Get Server Information",
     "description": "None",
-    "dialogueParameters": []
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetTemporaryBans",
+    "text": "Get Temporary Bans",
+    "description": "Retrieve a list of players who have temporary bans.",
+    "dialogue_parameters": []
   },
   {
     "name": "KickPlayer",
     "text": "Kick Player",
     "description": "Select player to kick and add a reason.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Reason",
-        "iD": "Reason",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Reason",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Combo",
         "name": "Player",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -167,26 +246,26 @@
     "name": "Login",
     "text": "Connect",
     "description": "None",
-    "dialogueParameters": []
+    "dialogue_parameters": []
   },
   {
     "name": "MessagePlayer",
     "text": "Message Player",
     "description": "Create a message to send to a player in game.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Message",
-        "iD": "Message",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Message",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Combo",
         "name": "Player",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -194,20 +273,20 @@
     "name": "MoveMapInSequence",
     "text": "Move Map in Sequence",
     "description": "Change the position on a map in the server queue",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "From",
-        "iD": "CurrentIndex",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "CurrentIndex",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Number",
         "name": "To",
-        "iD": "NewIndex",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "NewIndex",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -215,27 +294,27 @@
     "name": "PermanentBanPlayer",
     "text": "Permanently Ban Player",
     "description": "Permanently ban a player from the server.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Players",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Text",
         "name": "Reason",
-        "iD": "Reason",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Reason",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Text",
         "name": "Admin Name",
-        "iD": "AdminName",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "AdminName",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -243,20 +322,20 @@
     "name": "PunishPlayer",
     "text": "Punish Player",
     "description": "Select a player to punish by killing.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Players",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Text",
         "name": "Reason",
-        "iD": "Reason",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Reason",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -264,13 +343,13 @@
     "name": "RemoveAdmin",
     "text": "Remove Admin",
     "description": "Remove player from admin privileges.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Player Id",
-        "iD": "PlayerId",
-        "displayMember": "76561199023367826,76561198004895814",
-        "valueMember": "76561199023367826,76561198004895814"
+        "id": "PlayerId",
+        "display_member": "76561199023367826,76561198004895814",
+        "value_member": "76561199023367826,76561198004895814"
       }
     ]
   },
@@ -278,13 +357,13 @@
     "name": "RemoveBannedWords",
     "text": "Remove Banned Words",
     "description": "Remove banned words from the profanity filter. Separate words with commas.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Banned Words",
-        "iD": "BannedWords",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "BannedWords",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -292,13 +371,13 @@
     "name": "RemoveMapFromRotation",
     "text": "Remove Map From Rotation",
     "description": "Remove map from the map rotation at an index.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "At Index",
-        "iD": "Index",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Index",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -306,13 +385,13 @@
     "name": "RemoveMapFromSequence",
     "text": "Remove Map From Sequence",
     "description": "Remove map from the server map sequence.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "At Index",
-        "iD": "Index",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Index",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -320,13 +399,13 @@
     "name": "RemoveMatchTimer",
     "text": "Remove Match Timer",
     "description": "Remove the match timer override for a specific game-mode.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Game Mode",
-        "iD": "GameMode",
-        "displayMember": "Warfare,Offensive,Skirmish",
-        "valueMember": "Warfare,Offensive,Skirmish"
+        "id": "GameMode",
+        "display_member": "Warfare,Offensive,Skirmish",
+        "value_member": "Warfare,Offensive,Skirmish"
       }
     ]
   },
@@ -334,13 +413,34 @@
     "name": "RemovePermanentBan",
     "text": "Remove Permanent Ban",
     "description": "Remove permanent ban on a player",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Players",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
+      }
+    ]
+  },
+  {
+    "name": "RemovePlayerFromPlatoon",
+    "text": "Remove Player From Platoon",
+    "description": "Removes a player from their current platoon.",
+    "dialogue_parameters": [
+      {
+        "type": "Combo",
+        "name": "Players",
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
+      },
+      {
+        "type": "Text",
+        "name": "Reason",
+        "id": "Reason",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -348,27 +448,27 @@
     "name": "RemoveTemporaryBan",
     "text": "Remove Temporary Ban",
     "description": "Remove a temporary ban from a player.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Players",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
   {
-    "name": "RemoveVipPlayer",
-    "text": "Remove VIP Player",
+    "name": "RemoveVip",
+    "text": "Remove VIP",
     "description": "Remove VIP status from a player.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Player ID",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "123,76561199023367826",
+        "value_member": "123,76561199023367826"
       }
     ]
   },
@@ -376,61 +476,53 @@
     "name": "RemoveWarmupTimer",
     "text": "Remove Warmup Timer",
     "description": "Remove warmup timer override for a specific game mode.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Game Mode",
-        "iD": "GameMode",
-        "displayMember": "Warfare,Skirmish",
-        "valueMember": "Warfare,Skirmish"
+        "id": "GameMode",
+        "display_member": "Warfare,Skirmish",
+        "value_member": "Warfare,Skirmish"
       }
     ]
   },
   {
-    "name": "ResetKickThreshold",
+    "name": "ResetVoteKickThreshold",
     "text": "Reset Vote to Kick Threshold",
     "description": "Remove custom vote to kick thresholds and revert to default.",
-    "dialogueParameters": []
+    "dialogue_parameters": []
   },
   {
     "name": "ServerBroadcast",
     "text": "Server Broadcast",
     "description": "Create a message to broadcast to the server.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Broadcast Message",
-        "iD": "Message",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Message",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
   {
-    "name": "SendServerMessage",
-    "text": "Send Server Message",
-    "description": "Send a message to the server.",
-    "dialogueParameters": [
-      {
-        "type": "Text",
-        "name": "Server Message",
-        "iD": "Message",
-        "displayMember": "",
-        "valueMember": ""
-      }
-    ]
+    "name": "ServerConnect",
+    "text": "Server Connect",
+    "description": "Server Connect",
+    "dialogue_parameters": []
   },
   {
-    "name": "SetAutoBalance",
-    "text": "Set Auto Balance",
+    "name": "SetAutoBalanceEnabled",
+    "text": "Set Auto Balance Enabled",
     "description": "Enable or disable the auto balance.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
-        "name": "SetAutoBalance",
-        "iD": "EnableAutoBalance",
-        "displayMember": "On,Off",
-        "valueMember": "true,false"
+        "name": "Set Auto Balance",
+        "id": "Enable",
+        "display_member": "On,Off",
+        "value_member": "true,false"
       }
     ]
   },
@@ -438,13 +530,34 @@
     "name": "SetAutoBalanceThreshold",
     "text": "Set Auto Balance Threshold",
     "description": "Set the threshold value for teams when using auto balance.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "SetAutoAutoBalance",
-        "iD": "AutoBalanceThreshold",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "AutoBalanceThreshold",
+        "display_member": "",
+        "value_member": ""
+      }
+    ]
+  },
+  {
+    "name": "SetDynamicWeatherEnabled",
+    "text": "Set Dynamic Weather Enabled",
+    "description": "Enable or disable dynamic weather for a specific map.",
+    "dialogue_parameters": [
+      {
+        "type": "Combo",
+        "name": "Map ID",
+        "id": "MapId",
+        "display_member": "carentan_warfare,stmereeglise_warfare,foy_warfare",
+        "value_member": "carentan_warfare,stmereeglise_warfare,foy_warfare"
+      },
+      {
+        "type": "Combo",
+        "name": "Enable",
+        "id": "Enable",
+        "display_member": "On,Off",
+        "value_member": "true,false"
       }
     ]
   },
@@ -452,13 +565,13 @@
     "name": "SetHighPingThreshold",
     "text": "Set High Ping Threshold",
     "description": "Set the ping (in ms) that is considered too high for smooth gameplay.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "SetHighPingThreshold",
-        "iD": "HighPingThresholdMs",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "HighPingThresholdMs",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -466,34 +579,27 @@
     "name": "SetIdleKickDuration",
     "text": "Set Idle Kick Duration",
     "description": "Set how long a player can be idle before being kicked.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "Set Idle Kick Duration in Minutes",
-        "iD": "IdleTimeoutMinutes",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "IdleTimeoutMinutes",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
   {
-    "name": "SetMapWeatherToggle",
-    "text": "Set Map Weather Toggle",
-    "description": "Enable or disable dynamic weather for a specific map.",
-    "dialogueParameters": [
+    "name": "SetMapShuffleEnabled",
+    "text": "Set Map Shuffle Enabled",
+    "description": "Randomises the server map queue",
+    "dialogue_parameters": [
       {
         "type": "Combo",
-        "name": "Map ID",
-        "iD": "MapId",
-        "displayMember": "tobruk_warfare_day,tobruk_offensivebritish_day,foy_warfare,mortain_skirmish_overcast",
-        "valueMember": "tobruk_warfare_day,tobruk_offensivebritish_day,foy_warfare,mortain_skirmish_overcast"
-      },
-      {
-        "type": "Combo",
-        "name": "Enable",
-        "iD": "Enable",
-        "displayMember": "On,Off",
-        "valueMember": "true,false"
+        "name": "Enable Map Shuffle",
+        "id": "Enable",
+        "display_member": "On,Off",
+        "value_member": "true,false"
       }
     ]
   },
@@ -501,20 +607,20 @@
     "name": "SetMatchTimer",
     "text": "Set Match Timer",
     "description": "Configure the match length in minutes for a specific game-mode. Warfare can be between 30 - 180 minutes. Offensive can be between 10 - 60 minutes per capture point. Skirmish can be between 10 - 60 minutes",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Game Mode",
-        "iD": "GameMode",
-        "displayMember": "Warfare,Offensive,Skirmish",
-        "valueMember": "Warfare,Offensive,Skirmish"
+        "id": "GameMode",
+        "display_member": "Warfare,Offensive,Skirmish",
+        "value_member": "Warfare,Offensive,Skirmish"
       },
       {
         "type": "Number",
         "name": "Match Length (Minutes)",
-        "iD": "MatchLength",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "MatchLength",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -522,13 +628,13 @@
     "name": "SetMaxQueuedPlayers",
     "text": "Set Max Queued Players",
     "description": "Set the maximum number of queued players.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "Set Max Queued Players",
-        "iD": "MaxQueuedPlayers",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "MaxQueuedPlayers",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -536,55 +642,41 @@
     "name": "SetSectorLayout",
     "text": "Set Sector Layout",
     "description": "Configure the active sector layout",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Sector 1",
-        "iD": "Sector_1",
-        "displayMember": "US HQ #01,US HQ #01,,US HQ #02,US HQ #02",
-        "valueMember": "US HQ #01,US HQ #01,,US HQ #02,US HQ #02"
+        "id": "Sector_1",
+        "display_member": "FLAK POSITION,VAULAVILLE,LA PRAIRIE",
+        "value_member": "FLAK POSITION,VAULAVILLE,LA PRAIRIE"
       },
       {
         "type": "Combo",
         "name": "Sector 2",
-        "iD": "Sector_2",
-        "displayMember": ",,,,",
-        "valueMember": ",,,,"
+        "id": "Sector_2",
+        "display_member": "ROUTE DU HARAS,WESTERN APPROACH,RUE DE GAMBOSVILLE",
+        "value_member": "ROUTE DU HARAS,WESTERN APPROACH,RUE DE GAMBOSVILLE"
       },
       {
         "type": "Combo",
         "name": "Sector 3",
-        "iD": "Sector_3",
-        "displayMember": ",,LA PETITE CHAPELLE SAINT-MICHEL,,",
-        "valueMember": ",,LA PETITE CHAPELLE SAINT-MICHEL,,"
+        "id": "Sector_3",
+        "display_member": "HOSPICE,SAINTE-MÈRE-ÉGLISE,CHECKPOINT",
+        "value_member": "HOSPICE,SAINTE-MÈRE-ÉGLISE,CHECKPOINT"
       },
       {
         "type": "Combo",
         "name": "Sector 4",
-        "iD": "Sector_4",
-        "displayMember": ",,,,",
-        "valueMember": ",,,,"
+        "id": "Sector_4",
+        "display_member": "ARTILLERY BATTERY,THE CEMETERY,MAISON DU CRIQUE",
+        "value_member": "ARTILLERY BATTERY,THE CEMETERY,MAISON DU CRIQUE"
       },
       {
         "type": "Combo",
         "name": "Sector 5",
-        "iD": "Sector_5",
-        "displayMember": "German HQ #01,German HQ #01,,German HQ #02,German HQ #02",
-        "valueMember": "German HQ #01,German HQ #01,,German HQ #02,German HQ #02"
-      }
-    ]
-  },
-  {
-    "name": "SetShuffleMapSequence",
-    "text": "Set Shuffle Map Sequence",
-    "description": "Randomises the server map queue",
-    "dialogueParameters": [
-      {
-        "type": "Combo",
-        "name": "Enable Map Shuffle",
-        "iD": "Enable",
-        "displayMember": "On,Off",
-        "valueMember": "true,false"
+        "id": "Sector_5",
+        "display_member": "LES VIEUX VERGERS,CROSS ROADS,RUISSEAU DE FERME",
+        "value_member": "LES VIEUX VERGERS,CROSS ROADS,RUISSEAU DE FERME"
       }
     ]
   },
@@ -592,27 +684,41 @@
     "name": "SetTeamSwitchCooldown",
     "text": "Set Team Switch Cooldown",
     "description": "Set cooldown time for team switching.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Number",
         "name": "Team Switch Timer",
-        "iD": "TeamSwitchTimer",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "TeamSwitchTimer",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
   {
-    "name": "SetVoteKick",
-    "text": "Set Vote to Kick",
+    "name": "SetVipSlotCount",
+    "text": "Set VIP Slot Count",
+    "description": "Set the VIP slot count for the server.",
+    "dialogue_parameters": [
+      {
+        "type": "Number",
+        "name": "VIP Slot Count",
+        "id": "VipSlotCount",
+        "display_member": "",
+        "value_member": ""
+      }
+    ]
+  },
+  {
+    "name": "SetVoteKickEnabled",
+    "text": "Set Vote to Kick Enabled",
     "description": "Enable or disable the vote to kick functionality.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
-        "name": "Enabled",
-        "iD": "Enabled",
-        "displayMember": "On,Off",
-        "valueMember": "true,false"
+        "name": "Enable",
+        "id": "Enable",
+        "display_member": "On,Off",
+        "value_member": "true,false"
       }
     ]
   },
@@ -620,13 +726,13 @@
     "name": "SetVoteKickThreshold",
     "text": "Set Vote to Kick Threshold",
     "description": "Set the vote to kick threshold.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Text",
         "name": "Threshold (Format: Player Count, Threshold ...)",
-        "iD": "ThresholdValue",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "ThresholdValue",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -634,20 +740,34 @@
     "name": "SetWarmupTimer",
     "text": "Set Warmup Timer",
     "description": "Override the length of the warmup timer for a specific game-mode between 1 to 10 minutes.",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Game Mode",
-        "iD": "GameMode",
-        "displayMember": "Warfare,Skirmish",
-        "valueMember": "Warfare,Skirmish"
+        "id": "GameMode",
+        "display_member": "Warfare,Skirmish",
+        "value_member": "Warfare,Skirmish"
       },
       {
         "type": "Number",
         "name": "Warmup Timer Length (Minutes)",
-        "iD": "WarmupLength",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "WarmupLength",
+        "display_member": "",
+        "value_member": ""
+      }
+    ]
+  },
+  {
+    "name": "SetWelcomeMessage",
+    "text": "Set Welcome Message",
+    "description": "Send a message to the server.",
+    "dialogue_parameters": [
+      {
+        "type": "Text",
+        "name": "Server Message",
+        "id": "Message",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   },
@@ -655,34 +775,34 @@
     "name": "TemporaryBanPlayer",
     "text": "Temporary Ban Player",
     "description": "Temporary ban a player from the server",
-    "dialogueParameters": [
+    "dialogue_parameters": [
       {
         "type": "Combo",
         "name": "Players",
-        "iD": "PlayerId",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "PlayerId",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Number",
         "name": "Duration (Hours)",
-        "iD": "Duration",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Duration",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Text",
         "name": "Reason",
-        "iD": "Reason",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "Reason",
+        "display_member": "",
+        "value_member": ""
       },
       {
         "type": "Text",
         "name": "Admin Name",
-        "iD": "AdminName",
-        "displayMember": "",
-        "valueMember": ""
+        "id": "AdminName",
+        "display_member": "",
+        "value_member": ""
       }
     ]
   }
