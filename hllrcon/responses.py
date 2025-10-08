@@ -1,13 +1,21 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import IntEnum, StrEnum
-from typing import Annotated, Literal, NamedTuple, TypeAlias
+from typing import Annotated, Literal, NamedTuple
 
-from pydantic import AfterValidator, BaseModel, ConfigDict, Field, PlainValidator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    PlainValidator,
+)
 from pydantic.alias_generators import to_camel
 
 from hllrcon.data import Faction, GameMode, Layer, Role, TimeOfDay
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
+SplitStringValidator = BeforeValidator(lambda x: str(x).split(",") if x else [])
 
 
 class Response(BaseModel):
@@ -118,7 +126,7 @@ class GetAdminUsersResponse(Response):
 class GetBansResponseEntry(Response):
     user_id: str
     user_name: str
-    time_of_banning: str
+    time_of_banning: datetime
     duration_hours: int
     ban_reason: str
     admin_name: str
@@ -252,7 +260,12 @@ class GetServerSessionResponse(Response):
     server_name: str
     map_name: str
     game_mode_id: str = Field(validation_alias="gameMode")
-    remaining_match_time: int
+    remaining_match_time: Annotated[
+        timedelta,
+        PlainValidator(
+            lambda x: x if isinstance(x, timedelta) else timedelta(seconds=int(x)),
+        ),
+    ]
     match_time: int
     allied_score: int
     axis_score: int
@@ -286,8 +299,8 @@ class GetVipsResponse(Response):
     vips: list[str] = Field(validation_alias="vipPlayerIds")
 
 
-class GetCommandDetailsResponseComboParameter(Response):
-    type: Literal["Combo"]
+class GetCommandDetailsResponseParameter(Response):
+    type: Literal["Combo", "Text", "Number"]
     """The type of parameter"""
 
     name: str
@@ -296,37 +309,12 @@ class GetCommandDetailsResponseComboParameter(Response):
     id: str = Field(validation_alias="iD")
     """The name of the parameter"""
 
-    display_member: str
-    """A comma-separated list of user-friendly values for this parameter. An empty
-    string if `type` is not \"Combo\""""
+    display_member: Annotated[list[str], SplitStringValidator]
+    """A list of user-friendly values for this parameter. Empty if `type` is not
+    \"Combo\""""
 
-    value_member: str
-    """A comma-separated list of values for this parameter. An empty string if `type` is
-    not \"Combo\""""
-
-
-class GetCommandDetailsResponseTextParameter(Response):
-    type: Literal["Text", "Number"]
-    """The type of parameter"""
-
-    name: str
-    """The user-friendly name of the parameter"""
-
-    id: str = Field(validation_alias="iD")
-    """The name of the parameter"""
-
-    display_member: Literal[""]
-    """A comma-separated list of user-friendly values for this parameter. An empty
-    string if `type` is not \"Combo\""""
-
-    value_member: Literal[""]
-    """A comma-separated list of values for this parameter. An empty string if `type` is
-    not \"Combo\""""
-
-
-GetCommandDetailsResponseParameter: TypeAlias = (
-    GetCommandDetailsResponseComboParameter | GetCommandDetailsResponseTextParameter
-)
+    value_member: Annotated[list[str], SplitStringValidator]
+    """A list of values for this parameter. An empty list if `type` is not \"Combo\""""
 
 
 class GetCommandDetailsResponse(Response):

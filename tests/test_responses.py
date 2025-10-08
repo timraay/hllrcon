@@ -1,4 +1,4 @@
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING, Any, cast
 
 import pytest
@@ -83,7 +83,7 @@ def test_get_server_session_game_mode() -> None:
         server_name="Test Server",
         map_name="FOY",
         game_mode_id="Warfare",
-        remaining_match_time=300,
+        remaining_match_time=timedelta(seconds=300),
         match_time=600,
         allied_score=2,
         axis_score=3,

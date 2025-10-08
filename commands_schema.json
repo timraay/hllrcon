@@ -8,22 +8,32 @@
         "type": "Text",
         "name": "Player Id",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Combo",
         "name": "Admin Group",
         "id": "AdminGroup",
-        "display_member": "owner,senior,junior,spectator",
-        "value_member": "owner,senior,junior,spectator"
+        "display_member": [
+          "owner",
+          "senior",
+          "junior",
+          "spectator"
+        ],
+        "value_member": [
+          "owner",
+          "senior",
+          "junior",
+          "spectator"
+        ]
       },
       {
         "type": "Text",
         "name": "Comment",
         "id": "Comment",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -36,8 +46,8 @@
         "type": "Text",
         "name": "Banned Words",
         "id": "BannedWords",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -50,15 +60,249 @@
         "type": "Combo",
         "name": "Map Name",
         "id": "MapName",
-        "display_member": "foy_warfare,stmariedumont_warfare,hurtgenforest_warfare_V2,utahbeach_warfare,stmereeglise_warfare,hill400_warfare,carentan_warfare,kursk_warfare,remagen_warfare,foy_warfare_night,hurtgenforest_warfare_V2_night,kursk_warfare_night,remagen_warfare_night,omahabeach_warfare,kharkov_warfare,elalamein_warfare,driel_warfare,carentan_warfare_night,stmereeglise_warfare_night,driel_warfare_night,elalamein_warfare_night,kharkov_warfare_night,mortain_warfare_day,mortain_warfare_overcast,stmariedumont_warfare_night,utahbeach_warfare_night,omahabeach_warfare_night,mortain_warfare_dusk,PHL_L_1944_Warfare,PHL_L_1944_Warfare_Night,elsenbornridge_warfare_day,elsenbornridge_warfare_morning,elsenbornridge_warfare_night,tobruk_warfare_day,tobruk_warfare_dusk,tobruk_warfare_morning,STA_L_1942_Warfare,STA_L_1942_Warfare_Night,utahbeach_offensive_us,utahbeach_offensive_ger,omahabeach_offensive_us,stmereeglise_offensive_ger,foy_offensive_ger,hill400_offensive_US,stmereeglise_offensive_us,carentan_offensive_us,hurtgenforest_offensive_ger,hurtgenforest_offensive_US,kursk_offensive_ger,kursk_offensive_rus,stmariedumont_off_us,stmariedumont_off_ger,carentan_offensive_ger,foy_offensive_us,hill400_offensive_ger,remagen_offensive_ger,remagen_offensive_us,omahabeach_offensive_ger,kharkov_offensive_rus,kharkov_offensive_ger,elalamein_offensive_CW,elalamein_offensive_ger,driel_offensive_ger,driel_offensive_us,mortain_offensiveger_day,mortain_offensiveger_overcast,mortain_offensiveUS_day,mortain_offensiveUS_overcast,mortain_offensiveUS_dusk,mortain_offensiveger_dusk,PHL_L_1944_OffensiveGER,PHL_L_1944_OffensiveUS,elsenbornridge_offensiveUS_day,elsenbornridge_offensiveger_day,elsenbornridge_offensiveUS_morning,elsenbornridge_offensiveger_morning,elsenbornridge_offensiveUS_night,elsenbornridge_offensiveger_night,tobruk_offensivebritish_day,tobruk_offensiveger_day,tobruk_offensivebritish_dusk,tobruk_offensiveger_dusk,tobruk_offensivebritish_morning,tobruk_offensiveger_morning,STA_L_1942_OffensiveRUS,STA_L_1942_OffensiveGER,ELA_S_1942_P_Skirmish,ELA_S_1942_Night_P_Skirmish,DRL_S_1944_P_Skirmish,DRL_S_1944_Night_P_Skirmish,DRL_S_1944_Day_P_Skirmish,mortain_skirmish_day,mortain_skirmish_overcast,SMDM_S_1944_Day_P_Skirmish,SMDM_S_1944_Night_P_Skirmish,SMDM_S_1944_Rain_P_Skirmish,CAR_S_1944_Day_P_Skirmish,CAR_S_1944_Rain_P_Skirmish,CAR_S_1944_Dusk_P_Skirmish,SME_S_1944_Day_P_Skirmish,SME_S_1944_Morning_P_Skirmish,SME_S_1944_Night_P_Skirmish,mortain_skirmish_dusk,PHL_S_1944_Rain_P_Skirmish,PHL_S_1944_Morning_P_Skirmish,PHL_S_1944_Night_P_Skirmish,HIL_S_1944_Day_P_Skirmish,HIL_S_1944_Dusk_P_Skirmish,elsenbornridge_skirmish_day,elsenbornridge_skirmish_morning,elsenbornridge_skirmish_night,tobruk_skirmish_day,tobruk_skirmish_dusk,tobruk_skirmish_morning,STA_S_1942_P_Skirmish_Dusk,STA_S_1942_P_Skirmish_Overcast",
-        "value_member": "foy_warfare,stmariedumont_warfare,hurtgenforest_warfare_V2,utahbeach_warfare,stmereeglise_warfare,hill400_warfare,carentan_warfare,kursk_warfare,remagen_warfare,foy_warfare_night,hurtgenforest_warfare_V2_night,kursk_warfare_night,remagen_warfare_night,omahabeach_warfare,kharkov_warfare,elalamein_warfare,driel_warfare,carentan_warfare_night,stmereeglise_warfare_night,driel_warfare_night,elalamein_warfare_night,kharkov_warfare_night,mortain_warfare_day,mortain_warfare_overcast,stmariedumont_warfare_night,utahbeach_warfare_night,omahabeach_warfare_night,mortain_warfare_dusk,PHL_L_1944_Warfare,PHL_L_1944_Warfare_Night,elsenbornridge_warfare_day,elsenbornridge_warfare_morning,elsenbornridge_warfare_night,tobruk_warfare_day,tobruk_warfare_dusk,tobruk_warfare_morning,STA_L_1942_Warfare,STA_L_1942_Warfare_Night,utahbeach_offensive_us,utahbeach_offensive_ger,omahabeach_offensive_us,stmereeglise_offensive_ger,foy_offensive_ger,hill400_offensive_US,stmereeglise_offensive_us,carentan_offensive_us,hurtgenforest_offensive_ger,hurtgenforest_offensive_US,kursk_offensive_ger,kursk_offensive_rus,stmariedumont_off_us,stmariedumont_off_ger,carentan_offensive_ger,foy_offensive_us,hill400_offensive_ger,remagen_offensive_ger,remagen_offensive_us,omahabeach_offensive_ger,kharkov_offensive_rus,kharkov_offensive_ger,elalamein_offensive_CW,elalamein_offensive_ger,driel_offensive_ger,driel_offensive_us,mortain_offensiveger_day,mortain_offensiveger_overcast,mortain_offensiveUS_day,mortain_offensiveUS_overcast,mortain_offensiveUS_dusk,mortain_offensiveger_dusk,PHL_L_1944_OffensiveGER,PHL_L_1944_OffensiveUS,elsenbornridge_offensiveUS_day,elsenbornridge_offensiveger_day,elsenbornridge_offensiveUS_morning,elsenbornridge_offensiveger_morning,elsenbornridge_offensiveUS_night,elsenbornridge_offensiveger_night,tobruk_offensivebritish_day,tobruk_offensiveger_day,tobruk_offensivebritish_dusk,tobruk_offensiveger_dusk,tobruk_offensivebritish_morning,tobruk_offensiveger_morning,STA_L_1942_OffensiveRUS,STA_L_1942_OffensiveGER,ELA_S_1942_P_Skirmish,ELA_S_1942_Night_P_Skirmish,DRL_S_1944_P_Skirmish,DRL_S_1944_Night_P_Skirmish,DRL_S_1944_Day_P_Skirmish,mortain_skirmish_day,mortain_skirmish_overcast,SMDM_S_1944_Day_P_Skirmish,SMDM_S_1944_Night_P_Skirmish,SMDM_S_1944_Rain_P_Skirmish,CAR_S_1944_Day_P_Skirmish,CAR_S_1944_Rain_P_Skirmish,CAR_S_1944_Dusk_P_Skirmish,SME_S_1944_Day_P_Skirmish,SME_S_1944_Morning_P_Skirmish,SME_S_1944_Night_P_Skirmish,mortain_skirmish_dusk,PHL_S_1944_Rain_P_Skirmish,PHL_S_1944_Morning_P_Skirmish,PHL_S_1944_Night_P_Skirmish,HIL_S_1944_Day_P_Skirmish,HIL_S_1944_Dusk_P_Skirmish,elsenbornridge_skirmish_day,elsenbornridge_skirmish_morning,elsenbornridge_skirmish_night,tobruk_skirmish_day,tobruk_skirmish_dusk,tobruk_skirmish_morning,STA_S_1942_P_Skirmish_Dusk,STA_S_1942_P_Skirmish_Overcast"
+        "display_member": [
+          "foy_warfare",
+          "stmariedumont_warfare",
+          "hurtgenforest_warfare_V2",
+          "utahbeach_warfare",
+          "stmereeglise_warfare",
+          "hill400_warfare",
+          "carentan_warfare",
+          "kursk_warfare",
+          "remagen_warfare",
+          "foy_warfare_night",
+          "hurtgenforest_warfare_V2_night",
+          "kursk_warfare_night",
+          "remagen_warfare_night",
+          "omahabeach_warfare",
+          "kharkov_warfare",
+          "elalamein_warfare",
+          "driel_warfare",
+          "carentan_warfare_night",
+          "stmereeglise_warfare_night",
+          "driel_warfare_night",
+          "elalamein_warfare_night",
+          "kharkov_warfare_night",
+          "mortain_warfare_day",
+          "mortain_warfare_overcast",
+          "stmariedumont_warfare_night",
+          "utahbeach_warfare_night",
+          "omahabeach_warfare_night",
+          "mortain_warfare_dusk",
+          "PHL_L_1944_Warfare",
+          "PHL_L_1944_Warfare_Night",
+          "elsenbornridge_warfare_day",
+          "elsenbornridge_warfare_morning",
+          "elsenbornridge_warfare_night",
+          "tobruk_warfare_day",
+          "tobruk_warfare_dusk",
+          "tobruk_warfare_morning",
+          "STA_L_1942_Warfare",
+          "STA_L_1942_Warfare_Night",
+          "utahbeach_offensive_us",
+          "utahbeach_offensive_ger",
+          "omahabeach_offensive_us",
+          "stmereeglise_offensive_ger",
+          "foy_offensive_ger",
+          "hill400_offensive_US",
+          "stmereeglise_offensive_us",
+          "carentan_offensive_us",
+          "hurtgenforest_offensive_ger",
+          "hurtgenforest_offensive_US",
+          "kursk_offensive_ger",
+          "kursk_offensive_rus",
+          "stmariedumont_off_us",
+          "stmariedumont_off_ger",
+          "carentan_offensive_ger",
+          "foy_offensive_us",
+          "hill400_offensive_ger",
+          "remagen_offensive_ger",
+          "remagen_offensive_us",
+          "omahabeach_offensive_ger",
+          "kharkov_offensive_rus",
+          "kharkov_offensive_ger",
+          "elalamein_offensive_CW",
+          "elalamein_offensive_ger",
+          "driel_offensive_ger",
+          "driel_offensive_us",
+          "mortain_offensiveger_day",
+          "mortain_offensiveger_overcast",
+          "mortain_offensiveUS_day",
+          "mortain_offensiveUS_overcast",
+          "mortain_offensiveUS_dusk",
+          "mortain_offensiveger_dusk",
+          "PHL_L_1944_OffensiveGER",
+          "PHL_L_1944_OffensiveUS",
+          "elsenbornridge_offensiveUS_day",
+          "elsenbornridge_offensiveger_day",
+          "elsenbornridge_offensiveUS_morning",
+          "elsenbornridge_offensiveger_morning",
+          "elsenbornridge_offensiveUS_night",
+          "elsenbornridge_offensiveger_night",
+          "tobruk_offensivebritish_day",
+          "tobruk_offensiveger_day",
+          "tobruk_offensivebritish_dusk",
+          "tobruk_offensiveger_dusk",
+          "tobruk_offensivebritish_morning",
+          "tobruk_offensiveger_morning",
+          "STA_L_1942_OffensiveRUS",
+          "STA_L_1942_OffensiveGER",
+          "ELA_S_1942_P_Skirmish",
+          "ELA_S_1942_Night_P_Skirmish",
+          "DRL_S_1944_P_Skirmish",
+          "DRL_S_1944_Night_P_Skirmish",
+          "DRL_S_1944_Day_P_Skirmish",
+          "mortain_skirmish_day",
+          "mortain_skirmish_overcast",
+          "SMDM_S_1944_Day_P_Skirmish",
+          "SMDM_S_1944_Night_P_Skirmish",
+          "SMDM_S_1944_Rain_P_Skirmish",
+          "CAR_S_1944_Day_P_Skirmish",
+          "CAR_S_1944_Rain_P_Skirmish",
+          "CAR_S_1944_Dusk_P_Skirmish",
+          "SME_S_1944_Day_P_Skirmish",
+          "SME_S_1944_Morning_P_Skirmish",
+          "SME_S_1944_Night_P_Skirmish",
+          "mortain_skirmish_dusk",
+          "PHL_S_1944_Rain_P_Skirmish",
+          "PHL_S_1944_Morning_P_Skirmish",
+          "PHL_S_1944_Night_P_Skirmish",
+          "HIL_S_1944_Day_P_Skirmish",
+          "HIL_S_1944_Dusk_P_Skirmish",
+          "elsenbornridge_skirmish_day",
+          "elsenbornridge_skirmish_morning",
+          "elsenbornridge_skirmish_night",
+          "tobruk_skirmish_day",
+          "tobruk_skirmish_dusk",
+          "tobruk_skirmish_morning",
+          "STA_S_1942_P_Skirmish_Dusk",
+          "STA_S_1942_P_Skirmish_Overcast"
+        ],
+        "value_member": [
+          "foy_warfare",
+          "stmariedumont_warfare",
+          "hurtgenforest_warfare_V2",
+          "utahbeach_warfare",
+          "stmereeglise_warfare",
+          "hill400_warfare",
+          "carentan_warfare",
+          "kursk_warfare",
+          "remagen_warfare",
+          "foy_warfare_night",
+          "hurtgenforest_warfare_V2_night",
+          "kursk_warfare_night",
+          "remagen_warfare_night",
+          "omahabeach_warfare",
+          "kharkov_warfare",
+          "elalamein_warfare",
+          "driel_warfare",
+          "carentan_warfare_night",
+          "stmereeglise_warfare_night",
+          "driel_warfare_night",
+          "elalamein_warfare_night",
+          "kharkov_warfare_night",
+          "mortain_warfare_day",
+          "mortain_warfare_overcast",
+          "stmariedumont_warfare_night",
+          "utahbeach_warfare_night",
+          "omahabeach_warfare_night",
+          "mortain_warfare_dusk",
+          "PHL_L_1944_Warfare",
+          "PHL_L_1944_Warfare_Night",
+          "elsenbornridge_warfare_day",
+          "elsenbornridge_warfare_morning",
+          "elsenbornridge_warfare_night",
+          "tobruk_warfare_day",
+          "tobruk_warfare_dusk",
+          "tobruk_warfare_morning",
+          "STA_L_1942_Warfare",
+          "STA_L_1942_Warfare_Night",
+          "utahbeach_offensive_us",
+          "utahbeach_offensive_ger",
+          "omahabeach_offensive_us",
+          "stmereeglise_offensive_ger",
+          "foy_offensive_ger",
+          "hill400_offensive_US",
+          "stmereeglise_offensive_us",
+          "carentan_offensive_us",
+          "hurtgenforest_offensive_ger",
+          "hurtgenforest_offensive_US",
+          "kursk_offensive_ger",
+          "kursk_offensive_rus",
+          "stmariedumont_off_us",
+          "stmariedumont_off_ger",
+          "carentan_offensive_ger",
+          "foy_offensive_us",
+          "hill400_offensive_ger",
+          "remagen_offensive_ger",
+          "remagen_offensive_us",
+          "omahabeach_offensive_ger",
+          "kharkov_offensive_rus",
+          "kharkov_offensive_ger",
+          "elalamein_offensive_CW",
+          "elalamein_offensive_ger",
+          "driel_offensive_ger",
+          "driel_offensive_us",
+          "mortain_offensiveger_day",
+          "mortain_offensiveger_overcast",
+          "mortain_offensiveUS_day",
+          "mortain_offensiveUS_overcast",
+          "mortain_offensiveUS_dusk",
+          "mortain_offensiveger_dusk",
+          "PHL_L_1944_OffensiveGER",
+          "PHL_L_1944_OffensiveUS",
+          "elsenbornridge_offensiveUS_day",
+          "elsenbornridge_offensiveger_day",
+          "elsenbornridge_offensiveUS_morning",
+          "elsenbornridge_offensiveger_morning",
+          "elsenbornridge_offensiveUS_night",
+          "elsenbornridge_offensiveger_night",
+          "tobruk_offensivebritish_day",
+          "tobruk_offensiveger_day",
+          "tobruk_offensivebritish_dusk",
+          "tobruk_offensiveger_dusk",
+          "tobruk_offensivebritish_morning",
+          "tobruk_offensiveger_morning",
+          "STA_L_1942_OffensiveRUS",
+          "STA_L_1942_OffensiveGER",
+          "ELA_S_1942_P_Skirmish",
+          "ELA_S_1942_Night_P_Skirmish",
+          "DRL_S_1944_P_Skirmish",
+          "DRL_S_1944_Night_P_Skirmish",
+          "DRL_S_1944_Day_P_Skirmish",
+          "mortain_skirmish_day",
+          "mortain_skirmish_overcast",
+          "SMDM_S_1944_Day_P_Skirmish",
+          "SMDM_S_1944_Night_P_Skirmish",
+          "SMDM_S_1944_Rain_P_Skirmish",
+          "CAR_S_1944_Day_P_Skirmish",
+          "CAR_S_1944_Rain_P_Skirmish",
+          "CAR_S_1944_Dusk_P_Skirmish",
+          "SME_S_1944_Day_P_Skirmish",
+          "SME_S_1944_Morning_P_Skirmish",
+          "SME_S_1944_Night_P_Skirmish",
+          "mortain_skirmish_dusk",
+          "PHL_S_1944_Rain_P_Skirmish",
+          "PHL_S_1944_Morning_P_Skirmish",
+          "PHL_S_1944_Night_P_Skirmish",
+          "HIL_S_1944_Day_P_Skirmish",
+          "HIL_S_1944_Dusk_P_Skirmish",
+          "elsenbornridge_skirmish_day",
+          "elsenbornridge_skirmish_morning",
+          "elsenbornridge_skirmish_night",
+          "tobruk_skirmish_day",
+          "tobruk_skirmish_dusk",
+          "tobruk_skirmish_morning",
+          "STA_S_1942_P_Skirmish_Dusk",
+          "STA_S_1942_P_Skirmish_Overcast"
+        ]
       },
       {
         "type": "Number",
         "name": "At Index",
         "id": "Index",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -71,15 +315,19 @@
         "type": "Combo",
         "name": "Map Name",
         "id": "MapName",
-        "display_member": "carentan_warfare,stmereeglise_warfare,foy_warfare",
-        "value_member": "carentan_warfare,stmereeglise_warfare,foy_warfare"
+        "display_member": [
+          "SMDM_S_1944_Day_P_Skirmish"
+        ],
+        "value_member": [
+          "SMDM_S_1944_Day_P_Skirmish"
+        ]
       },
       {
         "type": "Number",
         "name": "At Index",
         "id": "Index",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -92,15 +340,15 @@
         "type": "Text",
         "name": "Player ID",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Description",
         "id": "Description",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -113,8 +361,12 @@
         "type": "Combo",
         "name": "MapName",
         "id": "MapName",
-        "display_member": "carentan_warfare,stmereeglise_warfare,foy_warfare",
-        "value_member": "carentan_warfare,stmereeglise_warfare,foy_warfare"
+        "display_member": [
+          "SMDM_S_1944_Day_P_Skirmish"
+        ],
+        "value_member": [
+          "SMDM_S_1944_Day_P_Skirmish"
+        ]
       }
     ]
   },
@@ -127,22 +379,28 @@
         "type": "Combo",
         "name": "Team",
         "id": "TeamIndex",
-        "display_member": "Axis,Allies",
-        "value_member": "1,2"
+        "display_member": [
+          "Axis",
+          "Allies"
+        ],
+        "value_member": [
+          "1",
+          "2"
+        ]
       },
       {
         "type": "Number",
         "name": "Platoon Index",
         "id": "SquadIndex",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Reason",
         "id": "Reason",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -155,15 +413,21 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Combo",
         "name": "Force Mode",
         "id": "ForceMode",
-        "display_member": "OnDeath,Immediate",
-        "value_member": "0,1"
+        "display_member": [
+          "OnDeath",
+          "Immediate"
+        ],
+        "value_member": [
+          "0",
+          "1"
+        ]
       }
     ]
   },
@@ -230,15 +494,15 @@
         "type": "Text",
         "name": "Reason",
         "id": "Reason",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Combo",
         "name": "Player",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -257,15 +521,15 @@
         "type": "Text",
         "name": "Message",
         "id": "Message",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Combo",
         "name": "Player",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -278,15 +542,15 @@
         "type": "Number",
         "name": "From",
         "id": "CurrentIndex",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Number",
         "name": "To",
         "id": "NewIndex",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -299,22 +563,22 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Reason",
         "id": "Reason",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Admin Name",
         "id": "AdminName",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -327,15 +591,15 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Reason",
         "id": "Reason",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -348,8 +612,14 @@
         "type": "Combo",
         "name": "Player Id",
         "id": "PlayerId",
-        "display_member": "76561199023367826,76561198004895814",
-        "value_member": "76561199023367826,76561198004895814"
+        "display_member": [
+          "76561198178339671",
+          "76561199023367826"
+        ],
+        "value_member": [
+          "76561198178339671",
+          "76561199023367826"
+        ]
       }
     ]
   },
@@ -362,8 +632,8 @@
         "type": "Text",
         "name": "Banned Words",
         "id": "BannedWords",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -376,8 +646,8 @@
         "type": "Number",
         "name": "At Index",
         "id": "Index",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -390,8 +660,8 @@
         "type": "Number",
         "name": "At Index",
         "id": "Index",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -404,8 +674,16 @@
         "type": "Combo",
         "name": "Game Mode",
         "id": "GameMode",
-        "display_member": "Warfare,Offensive,Skirmish",
-        "value_member": "Warfare,Offensive,Skirmish"
+        "display_member": [
+          "Warfare",
+          "Offensive",
+          "Skirmish"
+        ],
+        "value_member": [
+          "Warfare",
+          "Offensive",
+          "Skirmish"
+        ]
       }
     ]
   },
@@ -418,8 +696,10 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": [
+          "playerId"
+        ]
       }
     ]
   },
@@ -432,15 +712,15 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Reason",
         "id": "Reason",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -453,8 +733,10 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": [
+          "playerId"
+        ]
       }
     ]
   },
@@ -467,8 +749,14 @@
         "type": "Combo",
         "name": "Player ID",
         "id": "PlayerId",
-        "display_member": "123,76561199023367826",
-        "value_member": "123,76561199023367826"
+        "display_member": [
+          "76561198178339671",
+          "76561199023367826"
+        ],
+        "value_member": [
+          "76561198178339671",
+          "76561199023367826"
+        ]
       }
     ]
   },
@@ -481,8 +769,14 @@
         "type": "Combo",
         "name": "Game Mode",
         "id": "GameMode",
-        "display_member": "Warfare,Skirmish",
-        "value_member": "Warfare,Skirmish"
+        "display_member": [
+          "Warfare",
+          "Skirmish"
+        ],
+        "value_member": [
+          "Warfare",
+          "Skirmish"
+        ]
       }
     ]
   },
@@ -501,8 +795,8 @@
         "type": "Text",
         "name": "Broadcast Message",
         "id": "Message",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -521,8 +815,14 @@
         "type": "Combo",
         "name": "Set Auto Balance",
         "id": "Enable",
-        "display_member": "On,Off",
-        "value_member": "true,false"
+        "display_member": [
+          "On",
+          "Off"
+        ],
+        "value_member": [
+          "true",
+          "false"
+        ]
       }
     ]
   },
@@ -535,8 +835,8 @@
         "type": "Number",
         "name": "SetAutoAutoBalance",
         "id": "AutoBalanceThreshold",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -549,15 +849,25 @@
         "type": "Combo",
         "name": "Map ID",
         "id": "MapId",
-        "display_member": "carentan_warfare,stmereeglise_warfare,foy_warfare",
-        "value_member": "carentan_warfare,stmereeglise_warfare,foy_warfare"
+        "display_member": [
+          "SMDM_S_1944_Day_P_Skirmish"
+        ],
+        "value_member": [
+          "SMDM_S_1944_Day_P_Skirmish"
+        ]
       },
       {
         "type": "Combo",
         "name": "Enable",
         "id": "Enable",
-        "display_member": "On,Off",
-        "value_member": "true,false"
+        "display_member": [
+          "On",
+          "Off"
+        ],
+        "value_member": [
+          "true",
+          "false"
+        ]
       }
     ]
   },
@@ -570,8 +880,8 @@
         "type": "Number",
         "name": "SetHighPingThreshold",
         "id": "HighPingThresholdMs",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -584,8 +894,8 @@
         "type": "Number",
         "name": "Set Idle Kick Duration in Minutes",
         "id": "IdleTimeoutMinutes",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -598,8 +908,14 @@
         "type": "Combo",
         "name": "Enable Map Shuffle",
         "id": "Enable",
-        "display_member": "On,Off",
-        "value_member": "true,false"
+        "display_member": [
+          "On",
+          "Off"
+        ],
+        "value_member": [
+          "true",
+          "false"
+        ]
       }
     ]
   },
@@ -612,15 +928,23 @@
         "type": "Combo",
         "name": "Game Mode",
         "id": "GameMode",
-        "display_member": "Warfare,Offensive,Skirmish",
-        "value_member": "Warfare,Offensive,Skirmish"
+        "display_member": [
+          "Warfare",
+          "Offensive",
+          "Skirmish"
+        ],
+        "value_member": [
+          "Warfare",
+          "Offensive",
+          "Skirmish"
+        ]
       },
       {
         "type": "Number",
         "name": "Match Length (Minutes)",
         "id": "MatchLength",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -633,8 +957,8 @@
         "type": "Number",
         "name": "Set Max Queued Players",
         "id": "MaxQueuedPlayers",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -647,36 +971,96 @@
         "type": "Combo",
         "name": "Sector 1",
         "id": "Sector_1",
-        "display_member": "FLAK POSITION,VAULAVILLE,LA PRAIRIE",
-        "value_member": "FLAK POSITION,VAULAVILLE,LA PRAIRIE"
+        "display_member": [
+          "US HQ #01",
+          "US HQ #01",
+          "",
+          "US HQ #02",
+          "US HQ #02"
+        ],
+        "value_member": [
+          "US HQ #01",
+          "US HQ #01",
+          "",
+          "US HQ #02",
+          "US HQ #02"
+        ]
       },
       {
         "type": "Combo",
         "name": "Sector 2",
         "id": "Sector_2",
-        "display_member": "ROUTE DU HARAS,WESTERN APPROACH,RUE DE GAMBOSVILLE",
-        "value_member": "ROUTE DU HARAS,WESTERN APPROACH,RUE DE GAMBOSVILLE"
+        "display_member": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "value_member": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
       },
       {
         "type": "Combo",
         "name": "Sector 3",
         "id": "Sector_3",
-        "display_member": "HOSPICE,SAINTE-MÈRE-ÉGLISE,CHECKPOINT",
-        "value_member": "HOSPICE,SAINTE-MÈRE-ÉGLISE,CHECKPOINT"
+        "display_member": [
+          "",
+          "",
+          "Cattlesheds",
+          "",
+          ""
+        ],
+        "value_member": [
+          "",
+          "",
+          "Cattlesheds",
+          "",
+          ""
+        ]
       },
       {
         "type": "Combo",
         "name": "Sector 4",
         "id": "Sector_4",
-        "display_member": "ARTILLERY BATTERY,THE CEMETERY,MAISON DU CRIQUE",
-        "value_member": "ARTILLERY BATTERY,THE CEMETERY,MAISON DU CRIQUE"
+        "display_member": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "value_member": [
+          "",
+          "",
+          "",
+          "",
+          ""
+        ]
       },
       {
         "type": "Combo",
         "name": "Sector 5",
         "id": "Sector_5",
-        "display_member": "LES VIEUX VERGERS,CROSS ROADS,RUISSEAU DE FERME",
-        "value_member": "LES VIEUX VERGERS,CROSS ROADS,RUISSEAU DE FERME"
+        "display_member": [
+          "German HQ #01",
+          "German HQ #01",
+          "",
+          "German HQ #02",
+          "German HQ #02"
+        ],
+        "value_member": [
+          "German HQ #01",
+          "German HQ #01",
+          "",
+          "German HQ #02",
+          "German HQ #02"
+        ]
       }
     ]
   },
@@ -689,8 +1073,8 @@
         "type": "Number",
         "name": "Team Switch Timer",
         "id": "TeamSwitchTimer",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -703,8 +1087,8 @@
         "type": "Number",
         "name": "VIP Slot Count",
         "id": "VipSlotCount",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -717,8 +1101,14 @@
         "type": "Combo",
         "name": "Enable",
         "id": "Enable",
-        "display_member": "On,Off",
-        "value_member": "true,false"
+        "display_member": [
+          "On",
+          "Off"
+        ],
+        "value_member": [
+          "true",
+          "false"
+        ]
       }
     ]
   },
@@ -731,8 +1121,8 @@
         "type": "Text",
         "name": "Threshold (Format: Player Count, Threshold ...)",
         "id": "ThresholdValue",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -745,15 +1135,21 @@
         "type": "Combo",
         "name": "Game Mode",
         "id": "GameMode",
-        "display_member": "Warfare,Skirmish",
-        "value_member": "Warfare,Skirmish"
+        "display_member": [
+          "Warfare",
+          "Skirmish"
+        ],
+        "value_member": [
+          "Warfare",
+          "Skirmish"
+        ]
       },
       {
         "type": "Number",
         "name": "Warmup Timer Length (Minutes)",
         "id": "WarmupLength",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -766,8 +1162,8 @@
         "type": "Text",
         "name": "Server Message",
         "id": "Message",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   },
@@ -780,29 +1176,29 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Number",
         "name": "Duration (Hours)",
         "id": "Duration",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Reason",
         "id": "Reason",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       },
       {
         "type": "Text",
         "name": "Admin Name",
         "id": "AdminName",
-        "display_member": "",
-        "value_member": ""
+        "display_member": [],
+        "value_member": []
       }
     ]
   }

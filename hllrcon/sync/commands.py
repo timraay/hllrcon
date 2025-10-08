@@ -213,11 +213,11 @@ class SyncRconCommands(ABC):
             msg = "Received unexpected response from server."
             raise HLLMessageError(msg)
         return (
-            parameters[0].value_member.split(","),
-            parameters[1].value_member.split(","),
-            parameters[2].value_member.split(","),
-            parameters[3].value_member.split(","),
-            parameters[4].value_member.split(","),
+            parameters[0].value_member,
+            parameters[1].value_member,
+            parameters[2].value_member,
+            parameters[3].value_member,
+            parameters[4].value_member,
         )
 
     def set_sector_layout(
@@ -389,7 +389,7 @@ class SyncRconCommands(ABC):
         if not parameters or parameters[0].id != "MapName":
             msg = "Received unexpected response from server."
             raise HLLMessageError(msg)
-        return parameters[0].value_member.split(",")
+        return parameters[0].value_member
 
     @cast_response_to_model(GetCommandsResponse)
     def get_commands(self) -> str:

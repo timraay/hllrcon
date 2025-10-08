@@ -145,6 +145,7 @@ class RconProtocol(asyncio.Protocol):
             )
 
         try:
+            self: Self
             _, self = await asyncio.wait_for(
                 loop.create_connection(protocol_factory, host=host, port=port),
                 timeout=15,
