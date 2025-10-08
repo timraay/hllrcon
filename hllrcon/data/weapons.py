@@ -2523,6 +2523,17 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def ARTILLERY_STRIKE(cls) -> "Weapon":
+        """*ARTILLERY STRIKE*"""
+        return cls(
+            id="ARTILLERY STRIKE",
+            name="Artillery Strike",
+            factions=set(Faction.all()),
+            type=WeaponType.COMMANDER_ABILITY,
+        )
+
+    @class_cached_property
+    @classmethod
     def FIRE_SPOT(cls) -> "Weapon":
         """*FireSpot*"""
         return cls(
