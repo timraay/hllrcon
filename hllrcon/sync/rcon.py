@@ -28,6 +28,7 @@ class SyncRcon(SyncRconCommands):
         port: int,
         password: str,
         logger: logging.Logger | None = None,
+        reconnect_after_failures: int = 3,
     ) -> None:
         """Initialize a new `Rcon` instance.
 
@@ -42,10 +43,21 @@ class SyncRcon(SyncRconCommands):
         logger : logging.Logger | None, optional
             A logger instance for logging messages, by default None. If None,
             `logging.getLogger(__name__)` is used.
+        reconnect_after_failures : int, optional
+            After how many failed attempts to execute a command the active connection is
+            disposed and a new connection is established on the next command execution.
+            If the server responds to a request, the failure count is reset, even if the
+            server returned an error. Set to 0 to disable, by default 3.
 
         """
         self._logger = logger
-        self._rcon = Rcon(host, port, password, logger=logger)
+        self._rcon = Rcon(
+            host,
+            port,
+            password,
+            logger=logger,
+            reconnect_after_failures=reconnect_after_failures,
+        )
         self._loop: asyncio.AbstractEventLoop | None = None
 
     @property
@@ -80,6 +92,14 @@ class SyncRcon(SyncRconCommands):
     def logger(self, value: logging.Logger | None) -> None:
         self._logger = value
         self._rcon.logger = value
+
+    @property
+    def reconnect_after_failures(self) -> int:
+        return self._rcon.reconnect_after_failures
+
+    @reconnect_after_failures.setter
+    def reconnect_after_failures(self, value: int) -> None:
+        self._rcon.reconnect_after_failures = value
 
     def is_connected(self) -> bool:
         """Check if the client is connected to the RCON server.

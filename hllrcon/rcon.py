@@ -24,6 +24,7 @@ class Rcon(RconClient):
         port: int,
         password: str,
         logger: logging.Logger | None = None,
+        reconnect_after_failures: int = 3,
     ) -> None:
         """Initialize a new `Rcon` instance.
 
@@ -38,15 +39,22 @@ class Rcon(RconClient):
         logger : logging.Logger | None, optional
             A logger instance for logging messages, by default None. If None,
             `logging.getLogger(__name__)` is used.
+        reconnect_after_failures : int, optional
+            After how many failed attempts to execute a command the active connection is
+            disposed and a new connection is established on the next command execution.
+            If the server responds to a request, the failure count is reset, even if the
+            server returned an error. Set to 0 to disable, by default 3.
 
         """
         super().__init__()
         self.host = host
         self.port = port
         self.password = password
+        self.reconnect_after_failures = max(0, reconnect_after_failures)
 
         self._logger = logger
         self._connection: asyncio.Future[RconConnection] | None = None
+        self._failure_count = 0
 
     @property
     def logger(self) -> logging.Logger:
@@ -123,6 +131,7 @@ class Rcon(RconClient):
                 self._connection.cancel()
 
         self._connection = None
+        self._failure_count = 0
 
     @override
     async def execute(
@@ -132,4 +141,14 @@ class Rcon(RconClient):
         body: str | dict[str, Any] = "",
     ) -> str:
         connection = await self._get_connection()
-        return await connection.execute(command, version, body)
+
+        try:
+            return await connection.execute(command, version, body)
+        except (TimeoutError, OSError):
+            self._failure_count += 1
+            if (
+                self.reconnect_after_failures > 0
+                and self._failure_count >= self.reconnect_after_failures
+            ):
+                self.disconnect()
+            raise

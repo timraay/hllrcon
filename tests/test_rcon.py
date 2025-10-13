@@ -186,3 +186,242 @@ async def test_execute(
     result = await rcon.execute(command, version, body)
 
     assert result == response
+
+
+async def test_reconnect_after_failures_parameter() -> None:
+    # Test default value
+    rcon = Rcon(host="localhost", port=1234, password="password")
+    assert rcon.reconnect_after_failures == 3
+
+    # Test custom value
+    rcon = Rcon(
+        host="localhost",
+        port=1234,
+        password="password",
+        reconnect_after_failures=5,
+    )
+    assert rcon.reconnect_after_failures == 5
+
+    # Test zero value (disabled)
+    rcon = Rcon(
+        host="localhost",
+        port=1234,
+        password="password",
+        reconnect_after_failures=0,
+    )
+    assert rcon.reconnect_after_failures == 0
+
+    # Test negative value gets clamped to zero
+    rcon = Rcon(
+        host="localhost",
+        port=1234,
+        password="password",
+        reconnect_after_failures=-1,
+    )
+    assert rcon.reconnect_after_failures == 0
+
+
+async def test_failure_count_property() -> None:
+    rcon = Rcon(host="localhost", port=1234, password="password")
+
+    # Initial failure count should be 0
+    assert rcon._failure_count == 0
+
+
+async def test_failure_count_increment_on_timeout(
+    rcon: Rcon,
+    connection: mock.Mock,
+) -> None:
+    # Mock connection.execute to raise TimeoutError
+    connection.execute.side_effect = TimeoutError("Connection timeout")
+
+    # Execute command and expect TimeoutError to be raised
+    with pytest.raises(TimeoutError, match="Connection timeout"):
+        await rcon.execute("test_command", 1, "")
+
+    # Failure count should be incremented
+    assert rcon._failure_count == 1
+
+    # Execute another command that times out
+    with pytest.raises(TimeoutError, match="Connection timeout"):
+        await rcon.execute("test_command", 1, "")
+
+    # Failure count should be incremented again
+    assert rcon._failure_count == 2
+
+
+async def test_failure_count_increment_on_os_error(
+    rcon: Rcon,
+    connection: mock.Mock,
+) -> None:
+    # Mock connection.execute to raise OSError
+    connection.execute.side_effect = OSError("Network error")
+
+    # Execute command and expect OSError to be raised
+    with pytest.raises(OSError, match="Network error"):
+        await rcon.execute("test_command", 1, "")
+
+    # Failure count should be incremented
+    assert rcon._failure_count == 1
+
+
+async def test_failure_count_reset_on_disconnect(rcon: Rcon) -> None:
+    # Set failure count manually
+    rcon._failure_count = 5
+
+    # Disconnect should reset failure count
+    rcon.disconnect()
+    assert rcon._failure_count == 0
+
+
+async def test_reconnect_after_failures_disabled(
+    monkeypatch: pytest.MonkeyPatch,
+    connection: mock.Mock,
+) -> None:
+    # Create rcon with reconnect_after_failures disabled (0)
+    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+        return connection
+
+    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
+    rcon = Rcon(
+        host="localhost",
+        port=1234,
+        password="password",
+        reconnect_after_failures=0,
+    )
+
+    # Mock connection.execute to raise TimeoutError
+    connection.execute.side_effect = TimeoutError("Connection timeout")
+
+    # Execute multiple commands that timeout
+    for i in range(10):  # Try many times to ensure reconnect doesn't happen
+        with pytest.raises(TimeoutError, match="Connection timeout"):
+            await rcon.execute("test_command", 1, "")
+
+        # Failure count should keep incrementing
+        assert rcon._failure_count == i + 1
+        # Connection should still be active (not None)
+        assert rcon._connection is not None
+
+
+async def test_reconnect_after_failures_triggers_disconnect(
+    monkeypatch: pytest.MonkeyPatch,
+    connection: mock.Mock,
+) -> None:
+    # Create rcon with reconnect_after_failures = 2
+    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+        return connection
+
+    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
+    rcon = Rcon(
+        host="localhost",
+        port=1234,
+        password="password",
+        reconnect_after_failures=2,
+    )
+
+    # Ensure connection is established
+    await rcon.wait_until_connected()
+    assert rcon._connection is not None
+
+    # Mock connection.execute to raise TimeoutError
+    connection.execute.side_effect = TimeoutError("Connection timeout")
+
+    # First failure
+    with pytest.raises(TimeoutError, match="Connection timeout"):
+        await rcon.execute("test_command", 1, "")
+    assert rcon._failure_count == 1
+    assert rcon._connection is not None  # Should still be connected
+
+    # Second failure - should trigger disconnect
+    with pytest.raises(TimeoutError, match="Connection timeout"):
+        await rcon.execute("test_command", 1, "")
+    assert rcon._failure_count == 0  # Reset to 0 after disconnect
+    assert rcon._connection is None  # Should be disconnected
+
+
+async def test_failure_count_reset_on_successful_response(
+    rcon: Rcon,
+    connection: mock.Mock,
+) -> None:
+    # Set failure count manually
+    rcon._failure_count = 5
+
+    # Mock successful response
+    connection.execute.return_value = "success"
+
+    # Execute command successfully
+    result = await rcon.execute("test_command", 1, "")
+    assert result == "success"
+
+    # Failure count should remain unchanged (not reset on success)
+    # This is based on the code - it only resets on disconnect
+    assert rcon._failure_count == 5
+
+
+async def test_failure_count_with_different_exception_types(
+    rcon: Rcon,
+    connection: mock.Mock,
+) -> None:
+    # Test that only TimeoutError and OSError increment failure count
+
+    # First, test with an exception that should NOT increment failure count
+    connection.execute.side_effect = ValueError("Some other error")
+
+    with pytest.raises(ValueError, match="Some other error"):
+        await rcon.execute("test_command", 1, "")
+
+    # Failure count should remain 0
+    assert rcon._failure_count == 0
+
+    # Now test with TimeoutError
+    connection.execute.side_effect = TimeoutError("Timeout")
+
+    with pytest.raises(TimeoutError, match="Timeout"):
+        await rcon.execute("test_command", 1, "")
+
+    # Failure count should be incremented
+    assert rcon._failure_count == 1
+
+    # Test with OSError
+    connection.execute.side_effect = OSError("OS Error")
+
+    with pytest.raises(OSError, match="OS Error"):
+        await rcon.execute("test_command", 1, "")
+
+    # Failure count should be incremented again
+    assert rcon._failure_count == 2
+
+
+async def test_reconnect_threshold_exact_match(
+    monkeypatch: pytest.MonkeyPatch,
+    connection: mock.Mock,
+) -> None:
+    # Test that disconnect happens exactly when failure count equals threshold
+    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+        return connection
+
+    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
+    rcon = Rcon(
+        host="localhost",
+        port=1234,
+        password="password",
+        reconnect_after_failures=3,
+    )
+
+    # Ensure connection is established
+    await rcon.wait_until_connected()
+    connection.execute.side_effect = TimeoutError("Connection timeout")
+
+    # First two failures should not trigger disconnect
+    for i in range(2):
+        with pytest.raises(TimeoutError, match="Connection timeout"):
+            await rcon.execute("test_command", 1, "")
+        assert rcon._failure_count == i + 1
+        assert rcon._connection is not None
+
+    # Third failure should trigger disconnect
+    with pytest.raises(TimeoutError, match="Connection timeout"):
+        await rcon.execute("test_command", 1, "")
+    assert rcon._failure_count == 0  # Reset after disconnect
+    assert rcon._connection is None

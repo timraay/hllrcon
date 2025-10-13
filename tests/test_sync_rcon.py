@@ -39,21 +39,25 @@ def test_properties(rcon: SyncRcon) -> None:
     assert rcon.port == 1234
     assert rcon.password == "password"
     assert rcon.logger.name == "hllrcon.sync.rcon"
+    assert rcon.reconnect_after_failures == 3
 
     rcon.host = "new_host"
     rcon.port = 4321
     rcon.password = "new_password"
     rcon.logger = logging.getLogger("test")
+    rcon.reconnect_after_failures = 5
 
     assert rcon.host == "new_host"
     assert rcon.port == 4321
     assert rcon.password == "new_password"
     assert rcon.logger.name == "test"
+    assert rcon.reconnect_after_failures == 5
 
     assert rcon._rcon.host == "new_host"
     assert rcon._rcon.port == 4321
     assert rcon._rcon.password == "new_password"
     assert rcon._rcon.logger.name == "test"
+    assert rcon._rcon.reconnect_after_failures == 5
 
 
 def test_is_connected(rcon: SyncRcon, connection: mock.Mock) -> None:
