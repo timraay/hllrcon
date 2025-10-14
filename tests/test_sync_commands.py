@@ -560,7 +560,7 @@ class TestCommands:
             {"IdleTimeoutMinutes": minutes},
         ).set_idle_kick_duration(minutes)
 
-    def test_commands_message_all_players(self) -> None:
+    def test_commands_set_welcome_message(self) -> None:
         message = "Hello all!"
         SyncRconCommandsStub(
             "SetWelcomeMessage",
@@ -824,6 +824,14 @@ class TestCommands:
             2,
             {"Message": message, "PlayerId": player_id},
         ).message_player(player_id, message)
+
+    def test_commands_message_all_players(self) -> None:
+        message = "Hello all!"
+        SyncRconCommandsStub(
+            "MessageAllPlayers",
+            2,
+            {"Message": message},
+        ).message_all_players(message)
 
     def test_commands_kill_player(self) -> None:
         player_id = "pid"

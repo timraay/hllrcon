@@ -801,6 +801,26 @@ class SyncRconCommands(ABC):
             },
         )
 
+    def message_all_players(self, message: str) -> None:
+        """Send a message to all players on the server.
+
+        The message will be displayed in a box in the top right corner of the player's
+        screen.
+
+        Parameters
+        ----------
+        message : str
+            The message to send to all players.
+
+        """
+        self.execute(
+            "MessageAllPlayers",
+            2,
+            {
+                "Message": message,
+            },
+        )
+
     @cast_response_to_bool({500})
     def kill_player(self, player_id: str, message: str | None = None) -> None:
         """Kill a specific player on the server.

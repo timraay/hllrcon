@@ -553,7 +553,7 @@ class TestCommands:
             {"IdleTimeoutMinutes": minutes},
         ).set_idle_kick_duration(minutes)
 
-    async def test_commands_message_all_players(self) -> None:
+    async def test_commands_set_welcome_message(self) -> None:
         message = "Hello all!"
         await RconCommandsStub(
             "SetWelcomeMessage",
@@ -817,6 +817,14 @@ class TestCommands:
             2,
             {"Message": message, "PlayerId": player_id},
         ).message_player(player_id, message)
+
+    async def test_commands_message_all_players(self) -> None:
+        message = "Hello all!"
+        await RconCommandsStub(
+            "MessageAllPlayers",
+            2,
+            {"Message": message},
+        ).message_all_players(message)
 
     async def test_commands_kill_player(self) -> None:
         player_id = "pid"
