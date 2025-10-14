@@ -2512,25 +2512,20 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def KATYUSHA_BARRAGE(cls) -> "Weapon":
+    def ARTILLERY_STRIKE(cls) -> "Weapon":
         """*Unknown*"""
         return cls(
             id="Unknown",
-            name="Katyusha Barrage",
-            factions={Faction.SOV},
+            name="Artillery Strike",
+            factions=set(Faction.all()),
             type=WeaponType.COMMANDER_ABILITY,
         )
 
     @class_cached_property
     @classmethod
-    def ARTILLERY_STRIKE(cls) -> "Weapon":
-        """*ARTILLERY STRIKE*"""
-        return cls(
-            id="ARTILLERY STRIKE",
-            name="Artillery Strike",
-            factions=set(Faction.all()),
-            type=WeaponType.COMMANDER_ABILITY,
-        )
+    def KATYUSHA_BARRAGE(cls) -> "Weapon":
+        """*Unknown*"""
+        return cls.ARTILLERY_STRIKE
 
     @class_cached_property
     @classmethod
