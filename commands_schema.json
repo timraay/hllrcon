@@ -61,240 +61,16 @@
         "name": "Map Name",
         "id": "MapName",
         "display_member": [
-          "foy_warfare",
-          "stmariedumont_warfare",
-          "hurtgenforest_warfare_V2",
-          "utahbeach_warfare",
-          "stmereeglise_warfare",
-          "hill400_warfare",
-          "carentan_warfare",
-          "kursk_warfare",
-          "remagen_warfare",
-          "foy_warfare_night",
-          "hurtgenforest_warfare_V2_night",
-          "kursk_warfare_night",
-          "remagen_warfare_night",
-          "omahabeach_warfare",
-          "kharkov_warfare",
-          "elalamein_warfare",
-          "driel_warfare",
-          "carentan_warfare_night",
-          "stmereeglise_warfare_night",
-          "driel_warfare_night",
-          "elalamein_warfare_night",
-          "kharkov_warfare_night",
-          "mortain_warfare_day",
-          "mortain_warfare_overcast",
-          "stmariedumont_warfare_night",
-          "utahbeach_warfare_night",
-          "omahabeach_warfare_night",
-          "mortain_warfare_dusk",
-          "PHL_L_1944_Warfare",
-          "PHL_L_1944_Warfare_Night",
-          "elsenbornridge_warfare_day",
-          "elsenbornridge_warfare_morning",
-          "elsenbornridge_warfare_night",
-          "tobruk_warfare_day",
-          "tobruk_warfare_dusk",
-          "tobruk_warfare_morning",
-          "STA_L_1942_Warfare",
-          "STA_L_1942_Warfare_Night",
-          "utahbeach_offensive_us",
-          "utahbeach_offensive_ger",
-          "omahabeach_offensive_us",
-          "stmereeglise_offensive_ger",
-          "foy_offensive_ger",
-          "hill400_offensive_US",
-          "stmereeglise_offensive_us",
-          "carentan_offensive_us",
-          "hurtgenforest_offensive_ger",
-          "hurtgenforest_offensive_US",
-          "kursk_offensive_ger",
-          "kursk_offensive_rus",
-          "stmariedumont_off_us",
-          "stmariedumont_off_ger",
-          "carentan_offensive_ger",
-          "foy_offensive_us",
-          "hill400_offensive_ger",
-          "remagen_offensive_ger",
-          "remagen_offensive_us",
-          "omahabeach_offensive_ger",
-          "kharkov_offensive_rus",
-          "kharkov_offensive_ger",
-          "elalamein_offensive_CW",
-          "elalamein_offensive_ger",
-          "driel_offensive_ger",
-          "driel_offensive_us",
-          "mortain_offensiveger_day",
-          "mortain_offensiveger_overcast",
-          "mortain_offensiveUS_day",
-          "mortain_offensiveUS_overcast",
-          "mortain_offensiveUS_dusk",
-          "mortain_offensiveger_dusk",
-          "PHL_L_1944_OffensiveGER",
-          "PHL_L_1944_OffensiveUS",
-          "elsenbornridge_offensiveUS_day",
-          "elsenbornridge_offensiveger_day",
-          "elsenbornridge_offensiveUS_morning",
-          "elsenbornridge_offensiveger_morning",
-          "elsenbornridge_offensiveUS_night",
-          "elsenbornridge_offensiveger_night",
-          "tobruk_offensivebritish_day",
-          "tobruk_offensiveger_day",
-          "tobruk_offensivebritish_dusk",
-          "tobruk_offensiveger_dusk",
-          "tobruk_offensivebritish_morning",
-          "tobruk_offensiveger_morning",
-          "STA_L_1942_OffensiveRUS",
-          "STA_L_1942_OffensiveGER",
-          "ELA_S_1942_P_Skirmish",
-          "ELA_S_1942_Night_P_Skirmish",
-          "DRL_S_1944_P_Skirmish",
-          "DRL_S_1944_Night_P_Skirmish",
-          "DRL_S_1944_Day_P_Skirmish",
-          "mortain_skirmish_day",
-          "mortain_skirmish_overcast",
-          "SMDM_S_1944_Day_P_Skirmish",
-          "SMDM_S_1944_Night_P_Skirmish",
-          "SMDM_S_1944_Rain_P_Skirmish",
-          "CAR_S_1944_Day_P_Skirmish",
-          "CAR_S_1944_Rain_P_Skirmish",
-          "CAR_S_1944_Dusk_P_Skirmish",
-          "SME_S_1944_Day_P_Skirmish",
-          "SME_S_1944_Morning_P_Skirmish",
-          "SME_S_1944_Night_P_Skirmish",
-          "mortain_skirmish_dusk",
-          "PHL_S_1944_Rain_P_Skirmish",
-          "PHL_S_1944_Morning_P_Skirmish",
-          "PHL_S_1944_Night_P_Skirmish",
-          "HIL_S_1944_Day_P_Skirmish",
-          "HIL_S_1944_Dusk_P_Skirmish",
-          "elsenbornridge_skirmish_day",
-          "elsenbornridge_skirmish_morning",
-          "elsenbornridge_skirmish_night",
-          "tobruk_skirmish_day",
-          "tobruk_skirmish_dusk",
-          "tobruk_skirmish_morning",
-          "STA_S_1942_P_Skirmish_Dusk",
-          "STA_S_1942_P_Skirmish_Overcast"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ],
         "value_member": [
-          "foy_warfare",
-          "stmariedumont_warfare",
-          "hurtgenforest_warfare_V2",
-          "utahbeach_warfare",
-          "stmereeglise_warfare",
-          "hill400_warfare",
-          "carentan_warfare",
-          "kursk_warfare",
-          "remagen_warfare",
-          "foy_warfare_night",
-          "hurtgenforest_warfare_V2_night",
-          "kursk_warfare_night",
-          "remagen_warfare_night",
-          "omahabeach_warfare",
-          "kharkov_warfare",
-          "elalamein_warfare",
-          "driel_warfare",
-          "carentan_warfare_night",
-          "stmereeglise_warfare_night",
-          "driel_warfare_night",
-          "elalamein_warfare_night",
-          "kharkov_warfare_night",
-          "mortain_warfare_day",
-          "mortain_warfare_overcast",
-          "stmariedumont_warfare_night",
-          "utahbeach_warfare_night",
-          "omahabeach_warfare_night",
-          "mortain_warfare_dusk",
-          "PHL_L_1944_Warfare",
-          "PHL_L_1944_Warfare_Night",
-          "elsenbornridge_warfare_day",
-          "elsenbornridge_warfare_morning",
-          "elsenbornridge_warfare_night",
-          "tobruk_warfare_day",
-          "tobruk_warfare_dusk",
-          "tobruk_warfare_morning",
-          "STA_L_1942_Warfare",
-          "STA_L_1942_Warfare_Night",
-          "utahbeach_offensive_us",
-          "utahbeach_offensive_ger",
-          "omahabeach_offensive_us",
-          "stmereeglise_offensive_ger",
-          "foy_offensive_ger",
-          "hill400_offensive_US",
-          "stmereeglise_offensive_us",
-          "carentan_offensive_us",
-          "hurtgenforest_offensive_ger",
-          "hurtgenforest_offensive_US",
-          "kursk_offensive_ger",
-          "kursk_offensive_rus",
-          "stmariedumont_off_us",
-          "stmariedumont_off_ger",
-          "carentan_offensive_ger",
-          "foy_offensive_us",
-          "hill400_offensive_ger",
-          "remagen_offensive_ger",
-          "remagen_offensive_us",
-          "omahabeach_offensive_ger",
-          "kharkov_offensive_rus",
-          "kharkov_offensive_ger",
-          "elalamein_offensive_CW",
-          "elalamein_offensive_ger",
-          "driel_offensive_ger",
-          "driel_offensive_us",
-          "mortain_offensiveger_day",
-          "mortain_offensiveger_overcast",
-          "mortain_offensiveUS_day",
-          "mortain_offensiveUS_overcast",
-          "mortain_offensiveUS_dusk",
-          "mortain_offensiveger_dusk",
-          "PHL_L_1944_OffensiveGER",
-          "PHL_L_1944_OffensiveUS",
-          "elsenbornridge_offensiveUS_day",
-          "elsenbornridge_offensiveger_day",
-          "elsenbornridge_offensiveUS_morning",
-          "elsenbornridge_offensiveger_morning",
-          "elsenbornridge_offensiveUS_night",
-          "elsenbornridge_offensiveger_night",
-          "tobruk_offensivebritish_day",
-          "tobruk_offensiveger_day",
-          "tobruk_offensivebritish_dusk",
-          "tobruk_offensiveger_dusk",
-          "tobruk_offensivebritish_morning",
-          "tobruk_offensiveger_morning",
-          "STA_L_1942_OffensiveRUS",
-          "STA_L_1942_OffensiveGER",
-          "ELA_S_1942_P_Skirmish",
-          "ELA_S_1942_Night_P_Skirmish",
-          "DRL_S_1944_P_Skirmish",
-          "DRL_S_1944_Night_P_Skirmish",
-          "DRL_S_1944_Day_P_Skirmish",
-          "mortain_skirmish_day",
-          "mortain_skirmish_overcast",
-          "SMDM_S_1944_Day_P_Skirmish",
-          "SMDM_S_1944_Night_P_Skirmish",
-          "SMDM_S_1944_Rain_P_Skirmish",
-          "CAR_S_1944_Day_P_Skirmish",
-          "CAR_S_1944_Rain_P_Skirmish",
-          "CAR_S_1944_Dusk_P_Skirmish",
-          "SME_S_1944_Day_P_Skirmish",
-          "SME_S_1944_Morning_P_Skirmish",
-          "SME_S_1944_Night_P_Skirmish",
-          "mortain_skirmish_dusk",
-          "PHL_S_1944_Rain_P_Skirmish",
-          "PHL_S_1944_Morning_P_Skirmish",
-          "PHL_S_1944_Night_P_Skirmish",
-          "HIL_S_1944_Day_P_Skirmish",
-          "HIL_S_1944_Dusk_P_Skirmish",
-          "elsenbornridge_skirmish_day",
-          "elsenbornridge_skirmish_morning",
-          "elsenbornridge_skirmish_night",
-          "tobruk_skirmish_day",
-          "tobruk_skirmish_dusk",
-          "tobruk_skirmish_morning",
-          "STA_S_1942_P_Skirmish_Dusk",
-          "STA_S_1942_P_Skirmish_Overcast"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ]
       },
       {
@@ -316,10 +92,16 @@
         "name": "Map Name",
         "id": "MapName",
         "display_member": [
-          "SMDM_S_1944_Day_P_Skirmish"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ],
         "value_member": [
-          "SMDM_S_1944_Day_P_Skirmish"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ]
       },
       {
@@ -362,10 +144,16 @@
         "name": "MapName",
         "id": "MapName",
         "display_member": [
-          "SMDM_S_1944_Day_P_Skirmish"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ],
         "value_member": [
-          "SMDM_S_1944_Day_P_Skirmish"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ]
       }
     ]
@@ -413,8 +201,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       },
       {
         "type": "Combo",
@@ -450,6 +242,18 @@
     "dialogue_parameters": []
   },
   {
+    "name": "GetAutoBalanceEnabled",
+    "text": "Get Auto Balance Enabled",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetAutoBalanceThreshold",
+    "text": "Get Auto Balance Threshold",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
     "name": "GetClientReferenceData",
     "text": "None",
     "description": "None",
@@ -458,6 +262,18 @@
   {
     "name": "GetDisplayableCommands",
     "text": "None",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetHighPingThreshold",
+    "text": "Get High Ping Threshold",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetKickIdleTime",
+    "text": "Get Kick Idle Time",
     "description": "None",
     "dialogue_parameters": []
   },
@@ -480,9 +296,27 @@
     "dialogue_parameters": []
   },
   {
+    "name": "GetTeamSwitchCooldown",
+    "text": "Get Team Switch Cooldown",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
     "name": "GetTemporaryBans",
     "text": "Get Temporary Bans",
     "description": "Retrieve a list of players who have temporary bans.",
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetVoteKickEnabled",
+    "text": "Get Vote Kick Enabled",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
+    "name": "GetVoteKickThreshold",
+    "text": "Get Vote Kick Threshold",
+    "description": "None",
     "dialogue_parameters": []
   },
   {
@@ -501,8 +335,12 @@
         "type": "Combo",
         "name": "Player",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       }
     ]
   },
@@ -511,6 +349,20 @@
     "text": "Connect",
     "description": "None",
     "dialogue_parameters": []
+  },
+  {
+    "name": "MessageAllPlayers",
+    "text": "Message All Players",
+    "description": "Create a message to send to all players in game.",
+    "dialogue_parameters": [
+      {
+        "type": "Text",
+        "name": "Message",
+        "id": "Message",
+        "display_member": [],
+        "value_member": []
+      }
+    ]
   },
   {
     "name": "MessagePlayer",
@@ -528,8 +380,12 @@
         "type": "Combo",
         "name": "Player",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       }
     ]
   },
@@ -563,8 +419,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       },
       {
         "type": "Text",
@@ -591,8 +451,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       },
       {
         "type": "Text",
@@ -614,11 +478,13 @@
         "id": "PlayerId",
         "display_member": [
           "76561198178339671",
-          "76561199023367826"
+          "76561199023367826",
+          "76561198847157834"
         ],
         "value_member": [
           "76561198178339671",
-          "76561199023367826"
+          "76561199023367826",
+          "76561198847157834"
         ]
       }
     ]
@@ -712,8 +578,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       },
       {
         "type": "Text",
@@ -734,9 +604,7 @@
         "name": "Players",
         "id": "PlayerId",
         "display_member": [],
-        "value_member": [
-          "playerId"
-        ]
+        "value_member": []
       }
     ]
   },
@@ -850,10 +718,16 @@
         "name": "Map ID",
         "id": "MapId",
         "display_member": [
-          "SMDM_S_1944_Day_P_Skirmish"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ],
         "value_member": [
-          "SMDM_S_1944_Day_P_Skirmish"
+          "smolensk_warfare_day",
+          "smolensk_warfare_night",
+          "smolensk_offensiveGer_Day",
+          "smolensk_offensiveRus_dusk"
         ]
       },
       {
@@ -972,18 +846,14 @@
         "name": "Sector 1",
         "id": "Sector_1",
         "display_member": [
-          "US HQ #01",
-          "US HQ #01",
-          "",
-          "US HQ #02",
-          "US HQ #02"
+          "PANZER LOADING STATION",
+          "TRAM DEPOT",
+          "SMOLENSK OUTSKIRTS"
         ],
         "value_member": [
-          "US HQ #01",
-          "US HQ #01",
-          "",
-          "US HQ #02",
-          "US HQ #02"
+          "PANZER LOADING STATION",
+          "TRAM DEPOT",
+          "SMOLENSK OUTSKIRTS"
         ]
       },
       {
@@ -991,18 +861,14 @@
         "name": "Sector 2",
         "id": "Sector_2",
         "display_member": [
-          "",
-          "",
-          "",
-          "",
-          ""
+          "SMOLENSK HAUPTBAHNHOF",
+          "LUMBER YARD",
+          "DNIEPER WEST CROSSING"
         ],
         "value_member": [
-          "",
-          "",
-          "",
-          "",
-          ""
+          "SMOLENSK HAUPTBAHNHOF",
+          "LUMBER YARD",
+          "DNIEPER WEST CROSSING"
         ]
       },
       {
@@ -1010,18 +876,14 @@
         "name": "Sector 3",
         "id": "Sector_3",
         "display_member": [
-          "",
-          "",
-          "Cattlesheds",
-          "",
-          ""
+          "PYATNITSKII OVERPASS",
+          "ZHELYABOVA SQUARE",
+          "84TH BATTALION BRIDGE"
         ],
         "value_member": [
-          "",
-          "",
-          "Cattlesheds",
-          "",
-          ""
+          "PYATNITSKII OVERPASS",
+          "ZHELYABOVA SQUARE",
+          "84TH BATTALION BRIDGE"
         ]
       },
       {
@@ -1029,18 +891,14 @@
         "name": "Sector 4",
         "id": "Sector_4",
         "display_member": [
-          "",
-          "",
-          "",
-          "",
-          ""
+          "ZADNEPROVIE DISTRICT",
+          "MOSKOVSKAYA STREET",
+          "SMOLENSK CITADEL"
         ],
         "value_member": [
-          "",
-          "",
-          "",
-          "",
-          ""
+          "ZADNEPROVIE DISTRICT",
+          "MOSKOVSKAYA STREET",
+          "SMOLENSK CITADEL"
         ]
       },
       {
@@ -1048,18 +906,14 @@
         "name": "Sector 5",
         "id": "Sector_5",
         "display_member": [
-          "German HQ #01",
-          "German HQ #01",
-          "",
-          "German HQ #02",
-          "German HQ #02"
+          "RAILYARD STORAGE",
+          "APARTMENT BLOCK",
+          "BOMBARDED RIVERFRONT"
         ],
         "value_member": [
-          "German HQ #01",
-          "German HQ #01",
-          "",
-          "German HQ #02",
-          "German HQ #02"
+          "RAILYARD STORAGE",
+          "APARTMENT BLOCK",
+          "BOMBARDED RIVERFRONT"
         ]
       }
     ]
@@ -1176,8 +1030,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Womb Raider™"
+        ],
+        "value_member": [
+          "76561199179259861"
+        ]
       },
       {
         "type": "Number",
