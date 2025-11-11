@@ -12,7 +12,7 @@ from .exceptions import (
 from .rcon import Rcon
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 __all__ = (
     "HLLAuthError",
