@@ -470,7 +470,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.MACHINE_GUNNER,
             requires_level=3,
             items=[
-                LoadoutItem(name="M1918A2 BAR Bipod", amount=14),
+                LoadoutItem(name="M1918A2 BAR", amount=14),
                 LoadoutItem(name="HAMMER"),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="M3 KNIFE"),
@@ -3385,7 +3385,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ASSAULT,
             requires_level=1,
             items=[
-                LoadoutItem(name="Sten Gun", amount=8),
+                LoadoutItem(name="Sten Gun Mk.II", amount=8),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
@@ -3729,7 +3729,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ENGINEER,
             requires_level=6,
             items=[
-                LoadoutItem(name="Sten Gun", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Wrench"),
@@ -3749,7 +3749,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.TANK_COMMANDER,
             requires_level=1,
             items=[
-                LoadoutItem(name="Sten Gun", amount=4),
+                LoadoutItem(name="Sten Gun Mk.II", amount=4),
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6"),
