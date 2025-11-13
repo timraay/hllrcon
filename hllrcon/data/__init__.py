@@ -6,7 +6,7 @@ from .maps import Map, Orientation
 from .roles import Role, RoleType
 from .sectors import CaptureZone, Grid, Sector, Strongpoint
 from .teams import Team
-from .vehicles import Vehicle, VehicleSeat, VehicleType
+from .vehicles import Vehicle, VehicleSeat, VehicleSeatType, VehicleType
 from .weapons import Weapon, WeaponType
 
 __all__ = (
@@ -31,6 +31,7 @@ __all__ = (
     "TimeOfDay",
     "Vehicle",
     "VehicleSeat",
+    "VehicleSeatType",
     "VehicleType",
     "Weapon",
     "WeaponType",

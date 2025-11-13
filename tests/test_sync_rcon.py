@@ -105,7 +105,7 @@ def test_disconnect(rcon: SyncRcon) -> None:
 
 
 def test_thread_start_failure(monkeypatch: pytest.MonkeyPatch, rcon: SyncRcon) -> None:
-    loop_type = type(asyncio.get_event_loop())
+    loop_type = type(asyncio.new_event_loop())
     monkeypatch.setattr(loop_type, "run_forever", lambda _: None)
     with pytest.raises(RuntimeError, match="Thread never signalled back"):
         rcon.wait_until_connected()
