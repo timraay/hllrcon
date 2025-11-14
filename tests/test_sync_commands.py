@@ -12,6 +12,8 @@ import pytest
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     ForceMode,
+    GetVoteKickThresholdsResponse,
+    GetVoteKickThresholdsResponseEntry,
 )
 from hllrcon.sync.commands import (
     SyncRconCommands,
@@ -536,6 +538,15 @@ class TestCommands:
         ).force_team_switch(player_id, force_mode)
         assert response is True
 
+    def test_commands_get_team_switch_cooldown(self) -> None:
+        minutes = 15
+        result = SyncRconCommandsStub(
+            "GetTeamSwitchCooldown",
+            2,
+            response=json.dumps({"teamSwitchCooldown": minutes}),
+        ).get_team_switch_cooldown()
+        assert result == minutes
+
     def test_commands_set_team_switch_cooldown(self) -> None:
         minutes = 10
         SyncRconCommandsStub(
@@ -551,6 +562,15 @@ class TestCommands:
             2,
             {"MaxQueuedPlayers": num},
         ).set_max_queued_players(num)
+
+    def test_commands_get_idle_kick_duration(self) -> None:
+        minutes = 15
+        result = SyncRconCommandsStub(
+            "GetKickIdleTime",
+            2,
+            response=json.dumps({"idleTimeoutMinutes": minutes}),
+        ).get_idle_kick_duration()
+        assert result == minutes
 
     def test_commands_set_idle_kick_duration(self) -> None:
         minutes = 15
@@ -587,8 +607,13 @@ class TestCommands:
                     "role": 1,
                     "platoon": "ABLE",
                     "loadout": "Combat Medic",
-                    "kills": 150,
-                    "deaths": 50,
+                    "stats": {
+                        "deaths": 50,
+                        "infantryKills": 150,
+                        "vehicleKills": 20,
+                        "teamKills": 5,
+                        "vehiclesDestroyed": 3,
+                    },
                     "scoreData": {
                         "cOMBAT": 100,
                         "offense": 50,
@@ -623,8 +648,13 @@ class TestCommands:
                             "role": 1,
                             "platoon": "ABLE",
                             "loadout": "Combat Medic",
-                            "kills": 150,
-                            "deaths": 50,
+                            "stats": {
+                                "deaths": 50,
+                                "infantryKills": 150,
+                                "vehicleKills": 20,
+                                "teamKills": 5,
+                                "vehiclesDestroyed": 3,
+                            },
                             "scoreData": {
                                 "cOMBAT": 100,
                                 "offense": 50,
@@ -649,6 +679,7 @@ class TestCommands:
             {"Name": "maprotation", "Value": ""},
             json.dumps(
                 {
+                    "currentIndex": 1,
                     "mAPS": [
                         {
                             "name": "Map1",
@@ -676,6 +707,7 @@ class TestCommands:
             {"Name": "mapsequence", "Value": ""},
             json.dumps(
                 {
+                    "currentIndex": 1,
                     "mAPS": [
                         {
                             "name": "Map1",
@@ -705,6 +737,7 @@ class TestCommands:
                 {
                     "serverName": "My Server",
                     "mapName": "Map1",
+                    "mapId": "map1",
                     "gameMode": "Warfare",
                     "remainingMatchTime": 0,
                     "matchTime": 6000,
@@ -757,7 +790,16 @@ class TestCommands:
             {"Name": "vipplayers", "Value": ""},
             json.dumps(
                 {
-                    "vipPlayerIds": ["123", "456"],
+                    "vipPlayers": [
+                        {
+                            "iD": "123",
+                            "comment": "VIP Player 1",
+                        },
+                        {
+                            "iD": "456",
+                            "comment": "VIP Player 2",
+                        },
+                    ],
                 },
             ),
         ).get_vip_users()
@@ -769,6 +811,15 @@ class TestCommands:
             2,
             {"Message": message},
         ).broadcast(message)
+
+    def test_commands_get_high_ping_threshold(self) -> None:
+        ms = 150
+        result = SyncRconCommandsStub(
+            "GetHighPingThreshold",
+            2,
+            response=json.dumps({"highPingThresholdMs": ms}),
+        ).get_high_ping_threshold()
+        assert result == ms
 
     def test_commands_set_high_ping_threshold(self) -> None:
         ms = 150
@@ -926,12 +977,28 @@ class TestCommands:
             },
         ).remove_player_from_squad(player_id, reason)
 
+    def test_commands_get_auto_balance_enabled(self) -> None:
+        result = SyncRconCommandsStub(
+            "GetAutoBalanceEnabled",
+            2,
+            response=json.dumps({"enable": True}),
+        ).get_auto_balance_enabled()
+        assert result is True
+
     def test_commands_set_auto_balance_enabled(self) -> None:
         SyncRconCommandsStub(
             "SetAutoBalanceEnabled",
             2,
             {"Enable": True},
         ).set_auto_balance_enabled(enabled=True)
+
+    def test_commands_get_auto_balance_threshold(self) -> None:
+        result = SyncRconCommandsStub(
+            "GetAutoBalanceThreshold",
+            2,
+            response=json.dumps({"autoBalanceThreshold": 3}),
+        ).get_auto_balance_threshold()
+        assert result == 3
 
     def test_commands_set_auto_balance_threshold(self) -> None:
         threshold = 5
@@ -941,12 +1008,33 @@ class TestCommands:
             {"AutoBalanceThreshold": threshold},
         ).set_auto_balance_threshold(threshold)
 
+    def test_commands_get_vote_kick_enabled(self) -> None:
+        result = SyncRconCommandsStub(
+            "GetVoteKickEnabled",
+            2,
+            response=json.dumps({"enable": True}),
+        ).get_vote_kick_enabled()
+        assert result is True
+
     def test_commands_set_vote_kick_enabled(self) -> None:
         SyncRconCommandsStub(
             "SetVoteKickEnabled",
             2,
             {"Enable": True},
         ).set_vote_kick_enabled(enabled=True)
+
+    def test_commands_get_vote_kick_thresholds(self) -> None:
+        result = SyncRconCommandsStub(
+            "GetVoteKickThreshold",
+            2,
+            response=json.dumps({"entries": [{"playerCount": 10, "voteThreshold": 2}]}),
+        ).get_vote_kick_thresholds()
+
+        assert result == GetVoteKickThresholdsResponse(
+            entries=[
+                GetVoteKickThresholdsResponseEntry(player_count=10, vote_threshold=2),
+            ],
+        )
 
     def test_commands_reset_vote_kick_thresholds(self) -> None:
         SyncRconCommandsStub(

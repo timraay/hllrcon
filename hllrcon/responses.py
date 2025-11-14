@@ -123,6 +123,39 @@ class GetAdminUsersResponse(Response):
     admin_users: list[GetAdminUsersResponseEntry]
 
 
+class GetAutoBalanceEnabledResponse(Response):
+    enabled: bool = Field(validation_alias="enable")
+
+
+class GetAutoBalanceThresholdResponse(Response):
+    threshold: int = Field(validation_alias="autoBalanceThreshold")
+
+
+class GetTeamSwitchCooldownResponse(Response):
+    minutes: int = Field(validation_alias="teamSwitchCooldown")
+
+
+class GetIdleKickDurationResponse(Response):
+    minutes: int = Field(validation_alias="idleTimeoutMinutes")
+
+
+class GetHighPingThresholdResponse(Response):
+    threshold: int = Field(validation_alias="highPingThresholdMs")
+
+
+class GetVoteKickEnabledResponse(Response):
+    enabled: bool = Field(validation_alias="enable")
+
+
+class GetVoteKickThresholdsResponseEntry(Response):
+    player_count: int
+    vote_threshold: int
+
+
+class GetVoteKickThresholdsResponse(Response):
+    entries: list[GetVoteKickThresholdsResponseEntry]
+
+
 class GetBansResponseEntry(Response):
     user_id: str
     user_name: str
@@ -141,6 +174,14 @@ class GetPlayerResponseScoreData(Response):
     offense: int
     defense: int
     support: int
+
+
+class GetPlayerResponseStats(Response):
+    deaths: int
+    infantry_kills: int
+    vehicle_kills: int
+    team_kills: int
+    vehicles_destroyed: int
 
 
 class GetPlayerResponseWorldPosition(NamedTuple):
@@ -185,11 +226,8 @@ class GetPlayerResponse(Response):
     loadout: str
     """The player's current loadout. Might not be accurate if not spawned in."""
 
-    kills: int
-    """The player's kills"""
-
-    deaths: int
-    """The player's deaths"""
+    stats: GetPlayerResponseStats
+    """The player's current game statistics"""
 
     score_data: GetPlayerResponseScoreData
     """The player's score"""
@@ -253,12 +291,14 @@ class GetMapRotationResponseEntry(Response):
 
 
 class GetMapRotationResponse(Response):
+    current_index: int
     maps: list[GetMapRotationResponseEntry] = Field(validation_alias="mAPS")
 
 
 class GetServerSessionResponse(Response):
     server_name: str
     map_name: str
+    map_id: str
     game_mode_id: str = Field(validation_alias="gameMode")
     remaining_match_time: Annotated[
         timedelta,
@@ -295,8 +335,13 @@ class GetBannedWordsResponse(Response):
     banned_words: list[str]
 
 
+class GetVipsResponseEntry(Response):
+    id: str = Field(validation_alias="iD")
+    comment: str
+
+
 class GetVipsResponse(Response):
-    vips: list[str] = Field(validation_alias="vipPlayerIds")
+    vips: list[GetVipsResponseEntry] = Field(validation_alias="vipPlayers")
 
 
 class GetCommandDetailsResponseParameter(Response):
