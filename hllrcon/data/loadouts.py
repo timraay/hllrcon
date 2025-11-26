@@ -776,8 +776,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.OFFICER,
             requires_level=1,
             items=[
-                LoadoutItem(name="MP40", amount=6),
-                LoadoutItem(name="LUGER P08", amount=4),
+                LoadoutItem(name="MP40", amount=8),
+                LoadoutItem(name="LUGER P08", amount=6),
                 LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
                 LoadoutItem(name="BANDAGE", amount=2),
@@ -2656,8 +2656,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.OFFICER,
             requires_level=1,
             items=[
-                LoadoutItem(name="MP40", amount=6),
-                LoadoutItem(name="LUGER P08", amount=4),
+                LoadoutItem(name="MP40", amount=8),
+                LoadoutItem(name="LUGER P08", amount=6),
                 LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
                 LoadoutItem(name="BANDAGE", amount=2),
@@ -2676,7 +2676,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.OFFICER,
             requires_level=3,
             items=[
-                LoadoutItem(name="KARABINER 98K", amount=10),
+                LoadoutItem(name="KARABINER 98K", amount=12),
                 LoadoutItem(name="WALTHER P38", amount=4),
                 LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
@@ -2696,7 +2696,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.OFFICER,
             requires_level=6,
             items=[
-                LoadoutItem(name="KARABINER 98K", amount=13),
+                LoadoutItem(name="MP40", amount=8),
                 LoadoutItem(name="M43 STIELHANDGRANATE", amount=3),
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=3),
                 LoadoutItem(name="BANDAGE", amount=2),
@@ -3216,7 +3216,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.SNIPER,
             requires_level=3,
             items=[
-                LoadoutItem(name="KARABINER 98K x*", amount=12),
+                LoadoutItem(name="KARABINER 98K x8", amount=12),
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
                 LoadoutItem(name="S-MINE"),
                 LoadoutItem(name="BANDAGE", amount=2),
