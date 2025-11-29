@@ -78,6 +78,9 @@ class PlayerRoleId(IntEnum):
     CREWMAN = 11
     TANK_COMMANDER = 12
     COMMANDER = 13
+    ARTILLERY_OBSERVER = 14
+    ARTILLERY_ENGINEER = 15
+    ARTILLERY_SUPPORT = 16
 
 
 class ForceMode(IntEnum):
