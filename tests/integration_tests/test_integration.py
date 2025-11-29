@@ -9,7 +9,7 @@ from hllrcon.rcon import Rcon
 from hllrcon.responses import (
     GetCommandDetailsResponse,
     GetCommandsResponse,
-    GetMapRotationResponseEntry,
+    GetMapRotationResponse,
     GetPlayerResponse,
     GetServerConfigResponse,
     GetServerSessionResponse,
@@ -49,15 +49,13 @@ async def players(rcon: Rcon) -> list[GetPlayerResponse]:
 
 
 @pytest_asyncio.fixture
-async def rotation(rcon: Rcon) -> list[GetMapRotationResponseEntry]:
-    rotation = await rcon.get_map_rotation()
-    return rotation.maps
+async def rotation(rcon: Rcon) -> GetMapRotationResponse:
+    return await rcon.get_map_rotation()
 
 
 @pytest_asyncio.fixture
-async def sequence(rcon: Rcon) -> list[GetMapRotationResponseEntry]:
-    rotation = await rcon.get_map_sequence()
-    return rotation.maps
+async def sequence(rcon: Rcon) -> GetMapRotationResponse:
+    return await rcon.get_map_sequence()
 
 
 @pytest_asyncio.fixture
@@ -80,7 +78,8 @@ class TestIntegratedServer:
 
     async def test_validate_rotation_data(
         self,
-        rotation: list[GetMapRotationResponseEntry],
+        rotation: GetMapRotationResponse,
+        sequence: GetMapRotationResponse,
     ) -> None:
         pass
 
@@ -125,25 +124,63 @@ class TestIntegratedServer:
     async def test_modify_sequence(
         self,
         rcon: Rcon,
-        sequence: list[GetMapRotationResponseEntry],
+        sequence: GetMapRotationResponse,
     ) -> None:
-        index = len(sequence)
-
-        await rcon.add_map_to_sequence("foy_warfare", index)
-
+        # Add new map to start of sequence
+        new_map_id = "foy_warfare"
+        await rcon.add_map_to_sequence(new_map_id, 0)
         new_sequence = await rcon.get_map_sequence()
-        assert new_sequence.maps == [
-            *sequence,
-            GetMapRotationResponseEntry(
-                name="FOY",
-                game_mode_name="Warfare",
-                time_of_day="Day",
-                id="/Game/Maps/foy_warfare",
-                position=index,
-            ),
-        ]
 
-        await rcon.remove_map_from_sequence(index)
+        # Assert that map was successfully added
+        old_map_ids = [entry.id for entry in sequence.maps]
+        new_map_ids = [entry.id for entry in new_sequence.maps]
+        assert new_map_ids[0] == new_map_id
+        assert new_map_ids[1:] == old_map_ids
 
+        # Assert that current index does not change
+        assert new_sequence.current_index == sequence.current_index
+
+        # Remove the map we just added
+        await rcon.remove_map_from_sequence(0)
+
+        # Assert that sequence is restored to original state
         new_sequence = await rcon.get_map_sequence()
-        assert new_sequence.maps == sequence
+        assert sequence == new_sequence
+
+    async def test_modify_rotation(
+        self,
+        rcon: Rcon,
+        rotation: GetMapRotationResponse,
+        sequence: GetMapRotationResponse,
+    ) -> None:
+        # Add new map to start of rotation
+        new_map_id = "foy_warfare"
+        await rcon.add_map_to_rotation(new_map_id, 0)
+        new_rotation = await rcon.get_map_rotation()
+        new_sequence = await rcon.get_map_sequence()
+
+        # Assert that map was successfully added to rotation
+        old_map_ids = [entry.id for entry in rotation.maps]
+        new_map_ids = [entry.id for entry in new_rotation.maps]
+        assert new_map_ids[0] == new_map_id
+        assert new_map_ids[1:] == old_map_ids
+
+        # Assert that map was successfully added to sequence
+        old_map_ids = [entry.id for entry in sequence.maps]
+        new_map_ids = [entry.id for entry in new_sequence.maps]
+        assert new_map_ids[0] == new_map_id
+        assert new_map_ids[1:] == old_map_ids
+
+        # Assert that current index does not change
+        assert rotation.current_index == 0
+        assert new_rotation.current_index == 0
+        assert new_sequence.current_index == sequence.current_index
+
+        # Remove the map we just added
+        await rcon.remove_map_from_rotation(0)
+
+        # Assert that rotation is restored to original state
+        new_rotation = await rcon.get_map_rotation()
+        new_sequence = await rcon.get_map_sequence()
+        assert rotation == new_rotation
+        assert sequence == new_sequence
