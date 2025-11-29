@@ -8,6 +8,7 @@ from hllrcon.data._utils import IndexedBaseModel, class_cached_property
 class RoleType(StrEnum):
     INFANTRY = "Infantry"
     ARMOR = "Armor"
+    ARTILLERY = "Artillery"
     RECON = "Recon"
     COMMANDER = "Commander"
 
@@ -58,6 +59,17 @@ class Role(IndexedBaseModel[int]):
         - Crewman
         """
         return self.type == RoleType.ARMOR
+
+    @property
+    def is_artillery(self) -> bool:
+        """Whether the role is associated with artillery units.
+
+        Roles included are:
+        - Artillery Observer
+        - Artillery Engineer
+        - Artillery Support
+        """
+        return self.type == RoleType.ARTILLERY
 
     @property
     def is_recon(self) -> bool:
@@ -249,4 +261,43 @@ class Role(IndexedBaseModel[int]):
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ARTILLERY_OBSERVER(cls) -> "Role":
+        return cls(
+            id=14,
+            name="ArtilleryObserver",
+            pretty_name="Artillery Observer",
+            type=RoleType.ARTILLERY,
+            is_squad_leader=True,
+            kill_combat_score=9,
+            assist_combat_score=6,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ARTILLERY_ENGINEER(cls) -> "Role":
+        return cls(
+            id=15,
+            name="ArtilleryEngineer",
+            pretty_name="Artillery Engineer",
+            type=RoleType.ARTILLERY,
+            is_squad_leader=False,
+            kill_combat_score=9,
+            assist_combat_score=6,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ARTILLERY_SUPPORT(cls) -> "Role":
+        return cls(
+            id=16,
+            name="ArtillerySupport",
+            pretty_name="Artillery Support",
+            type=RoleType.ARTILLERY,
+            is_squad_leader=False,
+            kill_combat_score=6,
+            assist_combat_score=4,
         )

@@ -1450,6 +1450,107 @@ SECTORS_REMAGEN_LARGE = Sector.large_layout(
     ),
 )
 
+SECTORS_SMOLENSK_LARGE = Sector.large_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                name="Panzer Loading Station",
+                center=(-68850.08, -40044.953, 512.03125),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                name="Tram Depot",
+                center=(-67850.08, -5084.953, 512.03125),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                name="Smolensk Outskirts",
+                center=(-68850.08, 40680.047, 512.03125),
+                radius=6500.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                name="Smolensk Hauptbahnhof",
+                center=(-38450.08, -40044.953, 512.03125),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                name="Lumber Yard",
+                center=(-36050.08, 8915.047, 512.03125),
+                radius=9000.0,
+            ),
+            Strongpoint(
+                name="Dnieper West Crossing",
+                center=(-40450.08, 39680.047, 512.03125),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                name="Pyatnitskii Overpass",
+                center=(1000.0, -38544.953, 512.03125),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                name="Zhelyabova Square",
+                center=(1000.0, 0.0, 0.0),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                name="84th Battalion Bridge",
+                center=(1000.0, 40680.047, 512.03125),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                name="Zadneprovie District",
+                center=(39264.92, -40444.953, 512.03125),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                name="Moskovskaya Street",
+                center=(39764.92, -1084.9531, 512.03125),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                name="Smolensk Citadel",
+                center=(39264.92, 40680.047, 512.03125),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                name="Railyard Storage",
+                center=(68709.92, -40044.953, 512.03125),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                name="Apartment Block",
+                center=(69209.92, -1084.9531, 512.03125),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                name="Bombarded Riverfront",
+                center=(69209.92, 40080.047, 512.03125),
+                radius=7000.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_SMOLENSK_SMALL = Sector.skirmish_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoint=Strongpoint(
+        name="Zhelyabova Square",
+        center=(1770.0, 0.0, -1735.0),
+        radius=8000.0,
+    ),
+)
+
+
 SECTORS_STALINGRAD_LARGE = Sector.large_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(

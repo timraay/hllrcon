@@ -10,6 +10,7 @@ from hllrcon.data.roles import Role, RoleType
 from hllrcon.data.weapons import Weapon
 
 _TANK_CREW_ROLES = {role for role in Role.all() if role.type == RoleType.ARMOR}
+_ARTY_CREW_ROLES = {role for role in Role.all() if role.type == RoleType.ARTILLERY}
 
 
 class VehicleType(StrEnum):
@@ -21,6 +22,7 @@ class VehicleType(StrEnum):
     TRANSPORT_TRUCK = "Transport Truck"
     SUPPLY_TRUCK = "Supply Truck"
     JEEP = "Jeep"
+    SELF_PROPELLED_ARTILLERY = "Self-Propelled Artillery"
     ARTILLERY = "Artillery"
     ANTI_TANK_GUN = "Anti-Tank Gun"
 
@@ -86,11 +88,13 @@ class Vehicle(IndexedBaseModel[str]):
                     index=0,
                     type=VehicleSeatType.GUNNER,
                     weapons=[Weapon.V_57MM_CANNON__M1_57],
+                    requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
             ],
@@ -477,6 +481,48 @@ class Vehicle(IndexedBaseModel[str]):
             ],
         )
 
+    # The CW SPA is named the same as the US one; bug
+    # Temporarily merged the two instances
+    @class_cached_property
+    @classmethod
+    def SHERMAN_SPA_105MM(cls) -> "Vehicle":
+        """*Sherman SPA 105mm*"""
+        return cls(
+            id="Sherman SPA 105mm",
+            name="Sherman M4(105)",
+            type=VehicleType.SELF_PROPELLED_ARTILLERY,
+            factions={Faction.US, Faction.CW},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[
+                        Weapon.V_HULL_M1919__SHERMAN_SPA_105MM,
+                        Weapon.V_HULL_BESA_7_92MM__CHURCHILL_AVRE,
+                    ],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        Weapon.V_OQF_57MM__SHERMAN_SPA_105MM,
+                        Weapon.V_COAXIAL_M1919__SHERMAN_SPA_105MM,
+                        Weapon.V_COAXIAL_BESA_7_92MM__CHURCHILL_AVRE,
+                    ],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.SPOTTER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
     @class_cached_property
     @classmethod
     def PAK_40(cls) -> "Vehicle":
@@ -515,11 +561,13 @@ class Vehicle(IndexedBaseModel[str]):
                     index=0,
                     type=VehicleSeatType.GUNNER,
                     weapons=[Weapon.V_150MM_HOWITZER__SFH_18],
+                    requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
             ],
@@ -605,6 +653,8 @@ class Vehicle(IndexedBaseModel[str]):
             ],
         )
 
+    # The Panzer III uses the same name as the Panzer IV; bug
+    # The two definitions have been merged for the time being
     @class_cached_property
     @classmethod
     def SD_KFZ_161_PANZER_IV(cls) -> "Vehicle":
@@ -621,7 +671,7 @@ class Vehicle(IndexedBaseModel[str]):
                     weapons=[
                         Weapon.V_HULL_MG34__SD_KFZ_161_PANZER_IV,
                     ],
-                    requires_roles=_TANK_CREW_ROLES,
+                    requires_roles=_TANK_CREW_ROLES | _ARTY_CREW_ROLES,
                     exposed=False,
                 ),
                 VehicleSeat(
@@ -630,14 +680,16 @@ class Vehicle(IndexedBaseModel[str]):
                     weapons=[
                         Weapon.V_75MM_CANNON__SD_KFZ_161_PANZER_IV,
                         Weapon.V_COAXIAL_MG34__SD_KFZ_161_PANZER_IV,
+                        # The GER SPA is currently named the same as the P4.
+                        Weapon.V_7_5CM_KWK_37__SD_KFZ_141_PANZER_III,
                     ],
-                    requires_roles=_TANK_CREW_ROLES,
+                    requires_roles=_TANK_CREW_ROLES | _ARTY_CREW_ROLES,
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
-                    requires_roles=_TANK_CREW_ROLES,
+                    requires_roles=_TANK_CREW_ROLES | _ARTY_CREW_ROLES,
                     exposed=False,
                 ),
             ],
@@ -906,6 +958,78 @@ class Vehicle(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def STURMPANZER_IV_BRUMMBAR(cls) -> "Vehicle":
+        """*Strumpanzer IV Brummbar*"""
+        return cls(
+            id="Strumpanzer IV Brummbar",
+            name="Sturmpanzer IV Brummbär",
+            type=VehicleType.SELF_PROPELLED_ARTILLERY,
+            factions={Faction.GER},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        Weapon.V_OQF_57MM__STURMPANZER_IV_BRUMMBAR,
+                    ],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.SPOTTER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    '''
+    @class_cached_property
+    @classmethod
+    def SD_KFZ_141_PANZER_III(cls) -> "Vehicle":
+        """*Sd.Kfz.141 Panzer III*"""
+        return cls(
+            id="Sd.Kfz.141 Panzer III",
+            name="Panzer III",
+            type=VehicleType.SELF_PROPELLED_ARTILLERY,
+            factions={Faction.DAK},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[Weapon.V_HULL_MG34__SD_KFZ_141_PANZER_III],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        Weapon.V_OQF_57MM__SD_KFZ_141_PANZER_III,
+                        Weapon.V_COAXIAL_MG34__SD_KFZ_141_PANZER_III,
+                    ],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.SPOTTER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+    '''
+
+    @class_cached_property
+    @classmethod
     def ZIS_2(cls) -> "Vehicle":
         """*ZiS-2*"""
         return cls(
@@ -942,11 +1066,13 @@ class Vehicle(IndexedBaseModel[str]):
                     index=0,
                     type=VehicleSeatType.GUNNER,
                     weapons=[Weapon.V_122MM_HOWITZER__M1938_M_30],
+                    requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
             ],
@@ -1233,6 +1359,39 @@ class Vehicle(IndexedBaseModel[str]):
                     index=3,
                     type=VehicleSeatType.PASSENGER,
                     exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def KV_2(cls) -> "Vehicle":
+        """*KV-2*"""
+        return cls(
+            id="KV-2",
+            name="KV-2",
+            type=VehicleType.SELF_PROPELLED_ARTILLERY,
+            factions={Faction.SOV},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[Weapon.V_HULL_DT__KV_2],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[Weapon.V_152MM_M_10T__KV_2],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.SPOTTER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
                 ),
             ],
         )
@@ -1679,6 +1838,77 @@ class Vehicle(IndexedBaseModel[str]):
                     index=11,
                     type=VehicleSeatType.PASSENGER,
                     exposed=True,
+                ),
+            ],
+        )
+
+    # Uses the same name as the Sherman SPA; bug
+    '''
+    @class_cached_property
+    @classmethod
+    def CHURCHILL_AVRE(cls) -> "Vehicle":
+        """*Churchill A.V.R.E.*"""
+        return cls(
+            id="Churchill A.V.R.E.",
+            name="Churchill AVRE",
+            type=VehicleType.SELF_PROPELLED_ARTILLERY,
+            factions={Faction.CW},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    weapons=[Weapon.V_HULL_BESA_7_92MM__CHURCHILL_AVRE],
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        Weapon.V_OQF_57MM__CHURCHILL_AVRE,
+                        Weapon.V_COAXIAL_BESA_7_92MM__CHURCHILL_AVRE,
+                    ],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.SPOTTER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+    '''
+
+    @class_cached_property
+    @classmethod
+    def BISHOP(cls) -> "Vehicle":
+        """*Bishop*"""
+        return cls(
+            id="Bishop",
+            name="Bishop",
+            type=VehicleType.SELF_PROPELLED_ARTILLERY,
+            factions={Faction.B8A},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[Weapon.V_QF_25_POUNDER__BISHOP],
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.SPOTTER,
+                    requires_roles=_ARTY_CREW_ROLES,
+                    exposed=False,
                 ),
             ],
         )

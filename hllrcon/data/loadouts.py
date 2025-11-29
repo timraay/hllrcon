@@ -604,6 +604,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="WESTINGHOUSE M3 6×30"),
                 LoadoutItem(name="M3 KNIFE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -621,6 +622,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="WESTINGHOUSE M3 6×30"),
                 LoadoutItem(name="M3 KNIFE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -636,6 +638,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="COLT M1911", amount=4),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="M3 KNIFE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -652,6 +655,143 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="M18 SMOKE GRENADE", amount=2),
                 LoadoutItem(name="TORCH"),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M3 KNIFE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.US,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="COLT M1911", amount=4),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="M3 KNIFE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.US,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="M1A1 THOMPSON", amount=6),
+                LoadoutItem(name="COLT M1911", amount=4),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="MK2 GRENADE", amount=2),
+                LoadoutItem(name="M2 AP MINE", amount=1),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="WESTINGHOUSE M3 6×30"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="M3 KNIFE"),
+                LoadoutItem(name="FLARE GUN", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_ARTILLERY_OBSERVER_NCO(cls) -> "Loadout":
+        return cls(
+            name="NCO",
+            faction=Faction.US,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="M1 CARBINE", amount=12),
+                LoadoutItem(name="COLT M1911", amount=4),
+                LoadoutItem(name="M18 SMOKE GRENADE", amount=2),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="WESTINGHOUSE M3 6×30"),
+                LoadoutItem(name="FLARE GUN"),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M3 KNIFE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.US,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="M1 CARBINE", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="M2 AP MINE", amount=1),
+                LoadoutItem(name="M1A1 AT MINE", amount=1),
+                LoadoutItem(name="M3 KNIFE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.US,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="M97 TRENCH GUN", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M2 AP MINE", amount=2),
+                LoadoutItem(name="M18 SMOKE GRENADE", amount=2),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="M3 KNIFE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.US,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="M1 GARAND", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="MK2 GRENADE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="M3 KNIFE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.US,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="M3 GREASE GUN", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="SMALL AMMUNITION BOX"),
+                LoadoutItem(name="EXPLOSIVE AMMO BOX"),
+                LoadoutItem(name="HAMMER"),
                 LoadoutItem(name="M3 KNIFE"),
             ],
         )
@@ -1236,6 +1376,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="DIENSTGLAS 6×30"),
                 LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -1253,6 +1394,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="DIENSTGLAS 6×30"),
                 LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -1268,6 +1410,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="WALTHER P38", amount=6),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -1284,6 +1427,143 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
                 LoadoutItem(name="TORCH"),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.GER,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="WALTHER P38", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.GER,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="MP40", amount=8),
+                LoadoutItem(name="LUGER P08", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
+                LoadoutItem(name="S-MINE"),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="DIENSTGLAS 6×30"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="FLARE GUN", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_ARTILLERY_OBSERVER_NCO(cls) -> "Loadout":
+        return cls(
+            name="NCO",
+            faction=Faction.GER,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="KARABINER 98K", amount=10),
+                LoadoutItem(name="WALTHER P38", amount=4),
+                LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="DIENSTGLAS 6×30"),
+                LoadoutItem(name="FLARE GUN"),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.GER,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="KARABINER 98K", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="S-MINE"),
+                LoadoutItem(name="TELLERMINE 43"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.GER,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="MP40", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="S-MINE", amount=2),
+                LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.GER,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="KARABINER 98K", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.GER,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="MP40", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="SMALL AMMUNITION BOX"),
+                LoadoutItem(name="EXPLOSIVE AMMO BOX"),
+                LoadoutItem(name="HAMMER"),
                 LoadoutItem(name="FELDSPATEN"),
             ],
         )
@@ -1832,6 +2112,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="RKKA 8×40"),
                 LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -1849,6 +2130,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="RKKA 8×40"),
                 LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -1864,6 +2146,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="NAGANT M1895", amount=4),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -1880,6 +2163,143 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="RDG-2 SMOKE", amount=2),
                 LoadoutItem(name="TORCH"),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.SOV,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="NAGANT M1895", amount=4),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.SOV,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="PPSH 41", amount=8),
+                LoadoutItem(name="TOKAREV TT33", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="RG-42 GRENADE", amount=2),
+                LoadoutItem(name="POMZ AP MINE"),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="RKKA 8×40"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="FLARE GUN", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_ARTILLERY_OBSERVER_NCO(cls) -> "Loadout":
+        return cls(
+            name="NCO",
+            faction=Faction.SOV,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SVT40", amount=12),
+                LoadoutItem(name="TOKAREV TT33", amount=12),
+                LoadoutItem(name="RDG-2 SMOKE", amount=2),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="RKKA 8×40"),
+                LoadoutItem(name="FLARE GUN"),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="MPL-50 SPADE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.SOV,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="MOSIN NAGANT 91/30", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="POMZ AP MINE"),
+                LoadoutItem(name="TM-35 AT MINE"),
+                LoadoutItem(name="MPL-50 SPADE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.SOV,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="MOSIN NAGANT 91/30", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="POMZ AP MINE", amount=2),
+                LoadoutItem(name="RDG-2 SMOKE", amount=2),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="MPL-50 SPADE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.SOV,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="MOSIN NAGANT 1891", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="RG-42 GRENADE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="MPL-50 SPADE"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.SOV,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SVT40", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="SMALL AMMUNITION BOX"),
+                LoadoutItem(name="EXPLOSIVE AMMO BOX"),
+                LoadoutItem(name="HAMMER"),
                 LoadoutItem(name="MPL-50 SPADE"),
             ],
         )
@@ -2538,6 +2958,141 @@ class Loadout(IndexedBaseModel[LoadoutId]):
 
     @class_cached_property
     @classmethod
+    def CW_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.CW,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="Webley MK VI", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Wrench"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CW,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
+                LoadoutItem(name="Webley MK VI", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
+                LoadoutItem(name="Watch"),
+                LoadoutItem(name="Prism No.2 Mk II x6"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ARTILLERY_OBSERVER_JUNIOR_SERGEANT(cls) -> "Loadout":
+        return cls(
+            name="Junior Sergeant",
+            faction=Faction.CW,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Webley MK VI", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Watch"),
+                LoadoutItem(name="Prism No.2 Mk II x6"),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CW,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Wrench"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Torch"),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II"),
+                LoadoutItem(name="A.T. Mine G.S. Mk V"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.CW,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Torch"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CW,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Supplies"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.CW,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Supplies"),
+                LoadoutItem(name="Small Ammunition Box"),
+                LoadoutItem(name="Explosive Ammo Box"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def CW_SPOTTER_STANDARD_ISSUE(cls) -> "Loadout":
         return cls(
             name="Standard Issue",
@@ -3153,6 +3708,141 @@ class Loadout(IndexedBaseModel[LoadoutId]):
 
     @class_cached_property
     @classmethod
+    def DAK_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.DAK,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="WALTHER P38", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.DAK,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="MP40", amount=8),
+                LoadoutItem(name="LUGER P08", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
+                LoadoutItem(name="S-MINE"),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="DIENSTGLAS 6×30"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="FLARE GUN", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_ARTILLERY_OBSERVER_NCO(cls) -> "Loadout":
+        return cls(
+            name="NCO",
+            faction=Faction.DAK,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="KARABINER 98K", amount=10),
+                LoadoutItem(name="WALTHER P38", amount=4),
+                LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
+                LoadoutItem(name="WATCH"),
+                LoadoutItem(name="DIENSTGLAS 6×30"),
+                LoadoutItem(name="FLARE GUN"),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.DAK,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="KARABINER 98K", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="WRENCH"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="S-MINE"),
+                LoadoutItem(name="TELLERMINE 43"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.DAK,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="MP40", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="S-MINE", amount=2),
+                LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="TORCH"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.DAK,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="KARABINER 98K", amount=12),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.DAK,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="MP40", amount=6),
+                LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="SUPPLIES"),
+                LoadoutItem(name="SMALL AMMUNITION BOX"),
+                LoadoutItem(name="EXPLOSIVE AMMO BOX"),
+                LoadoutItem(name="HAMMER"),
+                LoadoutItem(name="FELDSPATEN"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def DAK_SPOTTER_STANDARD_ISSUE(cls) -> "Loadout":
         return cls(
             name="Standard Issue",
@@ -3754,6 +4444,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6"),
                 LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -3771,6 +4462,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6"),
                 LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -3786,6 +4478,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
 
@@ -3802,6 +4495,142 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Torch"),
                 LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.B8A,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="Webley MK VI", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Wrench"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.B8A,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
+                LoadoutItem(name="Webley MK VI", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II"),
+                LoadoutItem(name="Watch"),
+                LoadoutItem(name="Prism No.2 Mk II x6"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ARTILLERY_OBSERVER_JUNIOR_SERGEANT(cls) -> "Loadout":
+        return cls(
+            name="Junior Sergeant",
+            faction=Faction.B8A,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Webley MK VI", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Watch"),
+                LoadoutItem(name="Prism No.2 Mk II x6"),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol"),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.B8A,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Wrench"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Torch"),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.B8A,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Bren Gun", amount=5),  # TODO: Verify amount
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Torch"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.B8A,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Supplies"),
+                LoadoutItem(name="Hammer"),
+                LoadoutItem(name="Fairbairn–Sykes"),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.B8A,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Supplies"),
+                LoadoutItem(name="Small Ammunition Box"),
+                LoadoutItem(name="Explosive Ammo Box"),
+                LoadoutItem(name="Hammer"),
                 LoadoutItem(name="Fairbairn–Sykes"),
             ],
         )

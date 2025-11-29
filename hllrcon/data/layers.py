@@ -29,6 +29,8 @@ from hllrcon.data.sectors import (
     SECTORS_PURPLEHEARTLANE_LARGE,
     SECTORS_PURPLEHEARTLANE_SMALL,
     SECTORS_REMAGEN_LARGE,
+    SECTORS_SMOLENSK_LARGE,
+    SECTORS_SMOLENSK_SMALL,
     SECTORS_STALINGRAD_LARGE,
     SECTORS_STALINGRAD_SMALL,
     SECTORS_STMARIEDUMONT_LARGE,
@@ -1707,6 +1709,168 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             ),
             sectors=SECTORS_REMAGEN_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="smolensk_warfare_day",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_WARFARE_DUSK(cls) -> "Layer":
+        return cls(
+            id="smolensk_warfare_dusk",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="smolensk_warfare_night",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_OFFENSIVE_SOV_DAY(cls) -> "Layer":
+        return cls(
+            id="smolensk_offensiveRus_day",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_OFFENSIVE_SOV_DUSK(cls) -> "Layer":
+        return cls(
+            id="smolensk_offensiveRus_dusk",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_OFFENSIVE_SOV_NIGHT(cls) -> "Layer":
+        return cls(
+            id="smolensk_offensiveRus_night",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="smolensk_offensiveGer_day",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_OFFENSIVE_GER_DUSK(cls) -> "Layer":
+        return cls(
+            id="smolensk_offensiveGer_dusk",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_OFFENSIVE_GER_NIGHT(cls) -> "Layer":
+        return cls(
+            id="smolensk_offensiveGer_night",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="smolensk_skirmish_day",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_SMOLENSK_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_SKIRMISH_DUSK(cls) -> "Layer":
+        return cls(
+            id="smolensk_skirmish_dusk",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DUSK,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_SMOLENSK_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="smolensk_skirmish_night",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_SMOLENSK_SMALL,
         )
 
     @class_cached_property

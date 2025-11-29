@@ -79,7 +79,7 @@ class TestDataUtils:
         assert MyModel.foo.id == 3
 
     def test_missing_id(self) -> None:
-        with pytest.raises(TypeError, match="must define an 'id' field."):
+        with pytest.raises(TypeError, match=r"must define an 'id' field."):
 
             class MyModel(IndexedBaseModel[int]):
                 name: str
@@ -451,31 +451,36 @@ class TestDataRoles:
         role: Role
         is_infantry: bool
         is_tanker: bool
+        is_artillery: bool
         is_recon: bool
         is_squad_leader: bool
 
     @pytest.mark.parametrize(
         "properties",
         [
-            RoleProperties(Role.RIFLEMAN, True, False, False, False),
-            RoleProperties(Role.ASSAULT, True, False, False, False),
-            RoleProperties(Role.AUTOMATIC_RIFLEMAN, True, False, False, False),
-            RoleProperties(Role.MEDIC, True, False, False, False),
-            RoleProperties(Role.SPOTTER, False, False, True, True),
-            RoleProperties(Role.SUPPORT, True, False, False, False),
-            RoleProperties(Role.MACHINE_GUNNER, True, False, False, False),
-            RoleProperties(Role.ANTI_TANK, True, False, False, False),
-            RoleProperties(Role.ENGINEER, True, False, False, False),
-            RoleProperties(Role.OFFICER, True, False, False, True),
-            RoleProperties(Role.SNIPER, False, False, True, False),
-            RoleProperties(Role.CREWMAN, False, True, False, False),
-            RoleProperties(Role.TANK_COMMANDER, False, True, False, True),
-            RoleProperties(Role.COMMANDER, False, False, False, True),
+            RoleProperties(Role.RIFLEMAN, True, False, False, False, False),
+            RoleProperties(Role.ASSAULT, True, False, False, False, False),
+            RoleProperties(Role.AUTOMATIC_RIFLEMAN, True, False, False, False, False),
+            RoleProperties(Role.MEDIC, True, False, False, False, False),
+            RoleProperties(Role.SPOTTER, False, False, False, True, True),
+            RoleProperties(Role.SUPPORT, True, False, False, False, False),
+            RoleProperties(Role.MACHINE_GUNNER, True, False, False, False, False),
+            RoleProperties(Role.ANTI_TANK, True, False, False, False, False),
+            RoleProperties(Role.ENGINEER, True, False, False, False, False),
+            RoleProperties(Role.OFFICER, True, False, False, False, True),
+            RoleProperties(Role.SNIPER, False, False, False, True, False),
+            RoleProperties(Role.CREWMAN, False, True, False, False, False),
+            RoleProperties(Role.TANK_COMMANDER, False, True, False, False, True),
+            RoleProperties(Role.COMMANDER, False, False, False, False, True),
+            RoleProperties(Role.ARTILLERY_OBSERVER, False, False, True, False, True),
+            RoleProperties(Role.ARTILLERY_ENGINEER, False, False, True, False, False),
+            RoleProperties(Role.ARTILLERY_SUPPORT, False, False, True, False, False),
         ],
     )
     def test_role_properties(self, properties: RoleProperties) -> None:
         assert properties.role.is_infantry is properties.is_infantry
         assert properties.role.is_tanker is properties.is_tanker
+        assert properties.role.is_artillery is properties.is_artillery
         assert properties.role.is_recon is properties.is_recon
         assert properties.role.is_squad_leader is properties.is_squad_leader
 
