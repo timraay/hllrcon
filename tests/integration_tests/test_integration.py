@@ -100,10 +100,19 @@ class TestIntegratedServer:
         commands = await rcon.get_commands()
         TypeAdapter(GetCommandsResponse).validate_python(commands)
 
-        details = await asyncio.gather(
-            *(rcon.get_command_details(command.id) for command in commands.entries),
-        )
-        TypeAdapter(list[GetCommandDetailsResponse]).validate_python(details)
+        tasks: list[asyncio.Task[GetCommandDetailsResponse]] = []
+        async with asyncio.TaskGroup() as tg:
+            for command in commands.entries:
+                tasks.append(
+                    tg.create_task(
+                        rcon.get_command_details(command.id),
+                    ),
+                )
+                # Introduce short delay to not overload the server
+                await asyncio.sleep(0.002)
+
+        for task in tasks:
+            TypeAdapter(GetCommandDetailsResponse).validate_python(task.result())
 
     async def test_kill_missing_player_returns_false(self, rcon: Rcon) -> None:
         result = await rcon.kill_player("1234567890", "Test reason")
