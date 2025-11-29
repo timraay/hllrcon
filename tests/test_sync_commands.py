@@ -566,7 +566,7 @@ class TestCommands:
     def test_commands_get_idle_kick_duration(self) -> None:
         minutes = 15
         result = SyncRconCommandsStub(
-            "GetKickIdleTime",
+            "GetKickIdleDuration",
             2,
             response=json.dumps({"idleTimeoutMinutes": minutes}),
         ).get_idle_kick_duration()

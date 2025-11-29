@@ -603,7 +603,7 @@ class SyncRconCommands(ABC):
             The idle kick duration in minutes.
 
         """
-        return self.execute("GetKickIdleTime", 2)
+        return self.execute("GetKickIdleDuration", 2)
 
     def set_idle_kick_duration(self, minutes: int) -> None:
         """Set the number of minutes a player can be idle for before being kicked.

@@ -340,10 +340,10 @@
         "name": "Map Name",
         "id": "MapName",
         "display_member": [
-          "driel_warfare"
+          "smolensk_warfare_dusk"
         ],
         "value_member": [
-          "driel_warfare"
+          "smolensk_warfare_dusk"
         ]
       },
       {
@@ -386,10 +386,10 @@
         "name": "MapName",
         "id": "MapName",
         "display_member": [
-          "driel_warfare"
+          "smolensk_warfare_dusk"
         ],
         "value_member": [
-          "driel_warfare"
+          "smolensk_warfare_dusk"
         ]
       }
     ]
@@ -504,8 +504,8 @@
     "dialogue_parameters": []
   },
   {
-    "name": "GetKickIdleTime",
-    "text": "Get Kick Idle Time",
+    "name": "GetKickIdleDuration",
+    "text": "Get Kick Idle Duration",
     "description": "None",
     "dialogue_parameters": []
   },
@@ -695,12 +695,20 @@
         "display_member": [
           "76561198178339671",
           "76561199023367826",
-          "76561198847157834"
+          "76561198847157834",
+          "76561198018439914",
+          "76561198057967914",
+          "76561199819346915",
+          "76561198809620303"
         ],
         "value_member": [
           "76561198178339671",
           "76561199023367826",
-          "76561198847157834"
+          "76561198847157834",
+          "76561198018439914",
+          "76561198057967914",
+          "76561199819346915",
+          "76561198809620303"
         ]
       }
     ]
@@ -930,10 +938,10 @@
         "name": "Map ID",
         "id": "MapId",
         "display_member": [
-          "driel_warfare"
+          "smolensk_warfare_dusk"
         ],
         "value_member": [
-          "driel_warfare"
+          "smolensk_warfare_dusk"
         ]
       },
       {

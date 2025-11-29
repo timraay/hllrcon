@@ -599,7 +599,7 @@ class RconCommands(ABC):
             The idle kick duration in minutes.
 
         """
-        return await self.execute("GetKickIdleTime", 2)
+        return await self.execute("GetKickIdleDuration", 2)
 
     async def set_idle_kick_duration(self, minutes: int) -> None:
         """Set the number of minutes a player can be idle for before being kicked.

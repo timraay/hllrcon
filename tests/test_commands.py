@@ -559,7 +559,7 @@ class TestCommands:
     async def test_commands_get_idle_kick_duration(self) -> None:
         minutes = 15
         result = await RconCommandsStub(
-            "GetKickIdleTime",
+            "GetKickIdleDuration",
             2,
             response=json.dumps({"idleTimeoutMinutes": minutes}),
         ).get_idle_kick_duration()
