@@ -86,8 +86,14 @@ class Rcon(RconClient):
                 )
                 self._connection.set_result(connection)
             except Exception as e:
-                self._connection.set_exception(e)
+                old_connection = self._connection
                 self._connection = None
+
+                # Set the result, in case anyone is awaiting it
+                old_connection.set_exception(e)
+                # We grab the result in case noone is awaiting it, to avoid "Future
+                # exception was never retrieved" warnings
+                old_connection.result()
                 raise
             else:
                 return connection
