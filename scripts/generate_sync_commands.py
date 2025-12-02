@@ -12,7 +12,7 @@ REPLACE_MAP = {
     r"async def": "def",
     r"await ": "",
     r"asyncio.gather": "",
-    r"Coroutine\[Any, Any, (\w+)\]": r"\g<1>",
+    r"Coroutine\[Any, Any, ([\w| ]+)\]": r"\g<1>",
     r"pytestmark = pytest\.mark\.asyncio": "",
 }
 

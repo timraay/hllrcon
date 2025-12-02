@@ -245,6 +245,21 @@ class Map(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
+    def SMOLENSK(cls) -> "Map":
+        return cls(
+            id="smolensk",
+            name="SMOLENSK",
+            tag="SMO",
+            pretty_name="Smolensk",
+            short_name="Smolensk",
+            allies=Faction.SOV,
+            axis=Faction.GER,
+            orientation=Orientation.HORIZONTAL,
+            mirror_factions=True,
+        )
+
+    @class_cached_property
+    @classmethod
     def ST_MARIE_DU_MONT(cls) -> "Map":
         return cls(
             id="stmariedumont",

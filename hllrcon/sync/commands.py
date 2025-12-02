@@ -6,7 +6,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, Literal, ParamSpec, TypeVar
+from typing import Any, Literal, ParamSpec, TypeVar, overload
 
 from pydantic import BaseModel
 
@@ -18,38 +18,69 @@ from hllrcon.responses import (
     GetAdminGroupsResponse,
     GetAdminLogResponse,
     GetAdminUsersResponse,
+    GetAutoBalanceEnabledResponse,
+    GetAutoBalanceThresholdResponse,
     GetBannedWordsResponse,
     GetBansResponse,
     GetCommandDetailsResponse,
     GetCommandsResponse,
+    GetHighPingThresholdResponse,
+    GetIdleKickDurationResponse,
     GetMapRotationResponse,
     GetPlayerResponse,
     GetPlayersResponse,
     GetServerConfigResponse,
     GetServerSessionResponse,
+    GetTeamSwitchCooldownResponse,
     GetVipsResponse,
+    GetVoteKickEnabledResponse,
+    GetVoteKickThresholdsResponse,
     PlayerFactionId,
 )
 
 P = ParamSpec("P")
+T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=BaseModel)
 
 GameMode = Literal["Warfare", "Offensive", "Skirmish"]
 
 
+@overload
 def cast_response_to_model(
     model_type: type[ModelT],
 ) -> Callable[
     [Callable[P, str]],
     Callable[P, ModelT],
+]: ...
+
+
+@overload
+def cast_response_to_model(
+    model_type: type[ModelT],
+    return_fn: Callable[[ModelT], T],
+) -> Callable[
+    [Callable[P, str]],
+    Callable[P, T],
+]: ...
+
+
+def cast_response_to_model(
+    model_type: type[ModelT],
+    return_fn: Callable[[ModelT], T] | None = None,
+) -> Callable[
+    [Callable[P, str]],
+    Callable[P, ModelT | T],
 ]:
     def decorator(
         func: Callable[P, str],
-    ) -> Callable[P, ModelT]:
+    ) -> Callable[P, ModelT | T]:
         @wraps(func)
-        def wrapper(*args: P.args, **kwargs: P.kwargs) -> ModelT:
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> ModelT | T:
             result = func(*args, **kwargs)
-            return model_type.model_validate_json(result)
+            model = model_type.model_validate_json(result)
+            if return_fn:
+                return return_fn(model)
+            return model
 
         return wrapper
 
@@ -516,6 +547,18 @@ class SyncRconCommands(ABC):
             },
         )
 
+    @cast_response_to_model(GetTeamSwitchCooldownResponse, lambda r: r.minutes)
+    def get_team_switch_cooldown(self) -> str:
+        """Retrieve the team switch cooldown.
+
+        Returns
+        -------
+        int
+            The team switch cooldown in minutes.
+
+        """
+        return self.execute("GetTeamSwitchCooldown", 2)
+
     def set_team_switch_cooldown(self, minutes: int) -> None:
         """Set the cooldown for switching teams.
 
@@ -549,6 +592,18 @@ class SyncRconCommands(ABC):
                 "MaxQueuedPlayers": num,
             },
         )
+
+    @cast_response_to_model(GetIdleKickDurationResponse, lambda r: r.minutes)
+    def get_idle_kick_duration(self) -> str:
+        """Retrieve the idle kick duration.
+
+        Returns
+        -------
+        int
+            The idle kick duration in minutes.
+
+        """
+        return self.execute("GetKickIdleDuration", 2)
 
     def set_idle_kick_duration(self, minutes: int) -> None:
         """Set the number of minutes a player can be idle for before being kicked.
@@ -742,6 +797,18 @@ class SyncRconCommands(ABC):
             },
         )
 
+    @cast_response_to_model(GetHighPingThresholdResponse, lambda r: r.threshold)
+    def get_high_ping_threshold(self) -> str:
+        """Retrieve the high ping threshold.
+
+        Returns
+        -------
+        int
+            The high ping threshold in milliseconds.
+
+        """
+        return self.execute("GetHighPingThreshold", 2)
+
     def set_high_ping_threshold(self, ms: int) -> None:
         """Set the ping threshold for players.
 
@@ -798,6 +865,26 @@ class SyncRconCommands(ABC):
             {
                 "Message": message,
                 "PlayerId": player_id,
+            },
+        )
+
+    def message_all_players(self, message: str) -> None:
+        """Send a message to all players on the server.
+
+        The message will be displayed in a box in the top right corner of the player's
+        screen.
+
+        Parameters
+        ----------
+        message : str
+            The message to send to all players.
+
+        """
+        self.execute(
+            "MessageAllPlayers",
+            2,
+            {
+                "Message": message,
             },
         )
 
@@ -994,6 +1081,18 @@ class SyncRconCommands(ABC):
             },
         )
 
+    @cast_response_to_model(GetAutoBalanceEnabledResponse, lambda r: r.enabled)
+    def get_auto_balance_enabled(self) -> str:
+        """Retrieve whether team balancing is enabled.
+
+        Returns
+        -------
+        bool
+            Whether team balancing is enabled.
+
+        """
+        return self.execute("GetAutoBalanceEnabled", 2)
+
     def set_auto_balance_enabled(self, *, enabled: bool) -> None:
         """Enable or disable team balancing.
 
@@ -1014,6 +1113,18 @@ class SyncRconCommands(ABC):
                 "Enable": enabled,
             },
         )
+
+    @cast_response_to_model(GetAutoBalanceThresholdResponse, lambda r: r.threshold)
+    def get_auto_balance_threshold(self) -> str:
+        """Retrieve the team balancing threshold.
+
+        Returns
+        -------
+        int
+            The team balancing threshold.
+
+        """
+        return self.execute("GetAutoBalanceThreshold", 2)
 
     def set_auto_balance_threshold(self, player_threshold: int) -> None:
         """Set the player threshold for auto balancing.
@@ -1039,6 +1150,18 @@ class SyncRconCommands(ABC):
             },
         )
 
+    @cast_response_to_model(GetVoteKickEnabledResponse, lambda r: r.enabled)
+    def get_vote_kick_enabled(self) -> str:
+        """Retrieve whether vote kicking is enabled.
+
+        Returns
+        -------
+        bool
+            Whether vote kicking is enabled.
+
+        """
+        return self.execute("GetVoteKickEnabled", 2)
+
     def set_vote_kick_enabled(self, *, enabled: bool) -> None:
         """Enable or disable vote kicking.
 
@@ -1055,6 +1178,18 @@ class SyncRconCommands(ABC):
                 "Enable": enabled,
             },
         )
+
+    @cast_response_to_model(GetVoteKickThresholdsResponse)
+    def get_vote_kick_thresholds(self) -> str:
+        """Retrieve the vote kick thresholds.
+
+        Returns
+        -------
+        GetVoteKickThresholdsResponse
+            The vote kick thresholds.
+
+        """
+        return self.execute("GetVoteKickThreshold", 2)
 
     def reset_vote_kick_thresholds(self) -> None:
         """Reset the vote kick thresholds to the default values."""

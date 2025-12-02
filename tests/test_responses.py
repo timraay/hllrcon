@@ -54,8 +54,13 @@ def test_get_player_response_team_unassigned() -> None:
             "role": PlayerRoleId.RIFLEMAN.value,
             "platoon": "",
             "loadout": "Standard Issue",
-            "kills": 5,
-            "deaths": 2,
+            "stats": {
+                "deaths": 50,
+                "infantryKills": 150,
+                "vehicleKills": 20,
+                "teamKills": 5,
+                "vehiclesDestroyed": 3,
+            },
             "scoreData": {
                 "cOMBAT": 100,
                 "offense": 50,
@@ -82,6 +87,7 @@ def test_get_server_session_game_mode() -> None:
     response = GetServerSessionResponse(
         server_name="Test Server",
         map_name="FOY",
+        map_id="Foy",
         game_mode_id="Warfare",
         remaining_match_time=timedelta(seconds=300),
         match_time=600,
