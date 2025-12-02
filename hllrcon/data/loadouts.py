@@ -657,6 +657,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="M3 KNIFE"),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+                LoadoutItem(name="SUPPLIES"),
             ],
         )
 
@@ -1429,6 +1430,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="FELDSPATEN"),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+                LoadoutItem(name="SUPPLIES"),
             ],
         )
 
@@ -2164,6 +2166,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="TORCH"),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="MPL-50 SPADE"),
+                LoadoutItem(name="SUPPLIES"),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
             ],
         )
@@ -2953,6 +2956,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Torch"),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Fairbairn–Sykes"),
+                LoadoutItem(name="Supplies"),
             ],
         )
 
@@ -3703,6 +3707,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="TORCH"),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="FELDSPATEN"),
+                LoadoutItem(name="SUPPLIES"),
             ],
         )
 
@@ -4497,6 +4502,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Fairbairn–Sykes"),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION"),
+                LoadoutItem(name="Supplies"),
             ],
         )
 
