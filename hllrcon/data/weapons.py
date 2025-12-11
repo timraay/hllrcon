@@ -575,13 +575,13 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_OQF_57MM__SHERMAN_SPA_105MM(cls) -> "Weapon":
-        """*OQF 57MM [Sherman SPA 105mm]*"""
+    def V_105MM_HOWITZER__SHERMAN_SPA_105MM(cls) -> "Weapon":
+        """*105MM HOWITZER [Sherman SPA 105mm]*"""
         return cls(
-            id="OQF 57MM [Sherman SPA 105mm]",
+            id="105MM HOWITZER [Sherman SPA 105mm]",
             name="105mm Howitzer",
             vehicle_id="Sherman SPA 105mm",
-            factions={Faction.US, Faction.CW},
+            factions={Faction.US},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -1251,11 +1251,11 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_OQF_57MM__STURMPANZER_IV_BRUMMBAR(cls) -> "Weapon":
-        """*OQF 57MM [Strumpanzer IV Brummbar]*"""
+    def V_STUH_43_L_12__STURMPANZER_IV_BRUMMBAR(cls) -> "Weapon":
+        """*StuH 43 L/12 [Strumpanzer IV Brummbar]*"""
         return cls(
-            id="OQF 57MM [Strumpanzer IV Brummbar]",
-            name="OQF 57mm",
+            id="StuH 43 L/12 [Strumpanzer IV Brummbar]",
+            name="StuH 43 L/12",
             vehicle_id="Strumpanzer IV Brummbar",
             factions={Faction.GER},
             type=WeaponType.TANK_CANNON,
@@ -2591,6 +2591,18 @@ class Weapon(IndexedBaseModel[str]):
         )
 
     # M2 Browning [M3 Half-track]
+
+    @class_cached_property
+    @classmethod
+    def V_PETARD_230MM__CHURCHILL_AVRE(cls) -> "Weapon":
+        """*PETARD 230MM [Sherman SPA 105mm]*"""
+        return cls(
+            id="PETARD 230MM [Sherman SPA 105mm]",
+            name="230mm Petard",
+            vehicle_id="Sherman SPA 105mm",
+            factions={Faction.CW},
+            type=WeaponType.TANK_CANNON,
+        )
 
     @class_cached_property
     @classmethod
