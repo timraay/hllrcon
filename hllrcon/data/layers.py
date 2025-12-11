@@ -2337,7 +2337,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def UTAH_WARFARE_DAY(cls) -> "Layer":
+    def UTAHBEACH_WARFARE_DAY(cls) -> "Layer":
         return cls(
             id="utahbeach_warfare",
             map=Map.UTAH_BEACH,
@@ -2352,7 +2352,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def UTAH_WARFARE_NIGHT(cls) -> "Layer":
+    def UTAHBEACH_WARFARE_NIGHT(cls) -> "Layer":
         return cls(
             id="utahbeach_warfare_night",
             map=Map.UTAH_BEACH,
@@ -2367,7 +2367,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def UTAH_OFFENSIVE_US_DAY(cls) -> "Layer":
+    def UTAHBEACH_OFFENSIVE_US_DAY(cls) -> "Layer":
         return cls(
             id="utahbeach_offensive_us",
             map=Map.UTAH_BEACH,
@@ -2383,7 +2383,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def UTAH_OFFENSIVE_GER_DAY(cls) -> "Layer":
+    def UTAHBEACH_OFFENSIVE_GER_DAY(cls) -> "Layer":
         return cls(
             id="utahbeach_offensive_ger",
             map=Map.UTAH_BEACH,
