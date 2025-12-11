@@ -55,6 +55,21 @@ class TestDataUtils:
 
         assert MyModel.all() == [foo, bar]
 
+    def test_indexed_model_hashable(self) -> None:
+        class MyModel(IndexedBaseModel[int]):
+            id: int
+            name: str
+
+        foo = MyModel(id=1, name="Foo")
+        bar = MyModel(id=2, name="Bar")
+
+        model_set = {foo, bar}
+        assert foo in model_set
+        assert bar in model_set
+        assert MyModel.by_id(1) in model_set
+        assert MyModel.by_id(2) in model_set
+        assert MyModel(id=3, name="Baz") not in model_set
+
     def test_indexed_model_resolves_properties(self) -> None:
         class MyModel(IndexedBaseModel[int]):
             id: int
