@@ -94,7 +94,7 @@ class Rcon(RconClient):
                 # We grab the result in case noone is awaiting it, to avoid "Future
                 # exception was never retrieved" warnings
                 old_connection.result()
-                raise
+                raise  # pragma: no cover
             else:
                 return connection
 
