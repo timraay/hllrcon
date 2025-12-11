@@ -29,7 +29,7 @@
 
 ---
 
-**hllrcon** is an asynchronous Python implementation of the Hell Let Loose RCON protocol.  
+**hllrcon** is an asynchronous Python implementation of the [Hell Let Loose](https://www.hellletloose.com/game/hll) RCON protocol.  
 It allows you to interact with your HLL servers programmatically, supporting modern Python async features and robust error handling.
 
 ## Features
@@ -49,8 +49,7 @@ pip install hllrcon
 ## Usage
 ```py
 import asyncio
-from hllrcon import Rcon
-from hllrcon.data import Layer
+from hllrcon import Rcon, Layer
 
 
 async def main():
@@ -101,7 +100,7 @@ with rcon.connect():
 The library contains a swathe of details about in-game maps, factions, weapons, vehicles, and more. Below is just an example of what it might be used for.
 
 ```py
-from hllron.data import Weapon
+from hllron import Weapon
 
 # Find a weapon by its ID
 weapon_id = "COAXIAL M1919 [Stuart M5A1]"
@@ -115,8 +114,7 @@ if weapon.vehicle:
             break
 ```
 ```py
-from hllrcon import Rcon
-from hllrcon.data import Map, Team
+from hllrcon import Rcon, Map, Team
 
 # Get the AA Network capture zone (SMDM, 3rd sector, 2nd capture zone)
 sector = Layer.STMARIEDUMONT_WARFARE_DAY.sectors[2]
@@ -149,6 +147,17 @@ for player in players.players:
 print("Allied cap weight:", strength[Team.ALLIES])
 print("Axis cap weight:", strength[Team.AXIS])
 ```
+
+# Versioning
+
+This project largely follows [Semantic Versioning principles](https://semver.org/), i.e. `MAJOR.MINOR.PATCH`, with one notable difference in what can be guaranteed.
+
+The SemVer specification states that breaking changes must only be implemented in major versions, whereas this library will have breaking changes in minor versions. Therefore, backwards compatibility cannot be guaranteed for minor releases.
+
+- **MAJOR** - Reserved for when sweeping changes need to happen to the library.
+- **MINOR** - Incremented whenever significant or breaking changes have to be made to the library, including adding support for major Hell Let Loose updates.
+- **PATCH** - Incremented for bug fixes and small game updates, generally guaranteeing backwards compatibility.
+
 
 # License
 

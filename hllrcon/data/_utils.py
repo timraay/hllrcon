@@ -71,6 +71,9 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
     def model_post_init(self, context: Any) -> None:  # noqa: ANN401, ARG002
         self._lookup_register(self.id, self)
 
+    def __hash__(self) -> int:
+        return hash(self.id)
+
     @classmethod
     def by_id(cls, id_: H) -> Self | R:
         """Look up a model by its identifier.
