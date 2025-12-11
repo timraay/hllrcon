@@ -24,8 +24,6 @@ __all__ = (
     "Role",
     "RoleType",
     "Sector",
-    "SectorRow",
-    "Sectors",
     "Strongpoint",
     "Team",
     "TimeOfDay",

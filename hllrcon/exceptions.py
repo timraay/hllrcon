@@ -1,3 +1,14 @@
+__all__ = (
+    "HLLAuthError",
+    "HLLCommandError",
+    "HLLConnectionError",
+    "HLLConnectionLostError",
+    "HLLConnectionRefusedError",
+    "HLLError",
+    "HLLMessageError",
+)
+
+
 class HLLError(Exception):
     """Base exception for all HLL-related errors."""
 
