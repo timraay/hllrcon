@@ -8,4 +8,4 @@ from .responses import *
 from .sync import *
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "0.4.0"
+__version__ = "1.0.0"

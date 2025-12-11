@@ -1,6 +1,6 @@
 [project]
 name = "hllrcon"
-version = "0.4.0" # Don't forget to also bump `hllrcon.__version__`
+version = "1.0.0" # Don't forget to also bump `hllrcon.__version__`
 description = "Asynchronous implementation of the Hell Let Loose RCON protocol"
 readme = "README.md"
 authors = [
@@ -10,7 +10,7 @@ requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
-    "Development Status :: 4 - Beta",
+    "Development Status :: 5 - Production/Stable",
     "Framework :: AsyncIO",
     "Framework :: Pydantic :: 2",
     "License :: OSI Approved :: MIT License",
