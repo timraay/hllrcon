@@ -49,8 +49,7 @@ pip install hllrcon
 ## Usage
 ```py
 import asyncio
-from hllrcon import Rcon
-from hllrcon.data import Layer
+from hllrcon import Rcon, Layer
 
 
 async def main():
@@ -101,7 +100,7 @@ with rcon.connect():
 The library contains a swathe of details about in-game maps, factions, weapons, vehicles, and more. Below is just an example of what it might be used for.
 
 ```py
-from hllron.data import Weapon
+from hllron import Weapon
 
 # Find a weapon by its ID
 weapon_id = "COAXIAL M1919 [Stuart M5A1]"
@@ -115,8 +114,7 @@ if weapon.vehicle:
             break
 ```
 ```py
-from hllrcon import Rcon
-from hllrcon.data import Map, Team
+from hllrcon import Rcon, Map, Team
 
 # Get the AA Network capture zone (SMDM, 3rd sector, 2nd capture zone)
 sector = Layer.STMARIEDUMONT_WARFARE_DAY.sectors[2]
