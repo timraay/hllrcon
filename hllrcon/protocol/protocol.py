@@ -16,7 +16,11 @@ from hllrcon.exceptions import (
     HLLConnectionRefusedError,
     HLLMessageError,
 )
-from hllrcon.protocol.constants import MAGIC_HEADER_VALUE, RESPONSE_HEADER_FORMAT
+from hllrcon.protocol.constants import (
+    MAGIC_HEADER_BYTES,
+    MAGIC_HEADER_VALUE,
+    RESPONSE_HEADER_FORMAT,
+)
 from hllrcon.protocol.request import RconRequest
 from hllrcon.protocol.response import RconResponse
 
@@ -216,7 +220,7 @@ class RconProtocol(asyncio.Protocol):
             )
             return
 
-        magic_idx = self._buffer.find(MAGIC_HEADER_VALUE)
+        magic_idx = self._buffer.find(MAGIC_HEADER_BYTES)
         if magic_idx > 0:
             self.logger.warning(
                 "Magic header not at start of buffer, skipping %s bytes",
