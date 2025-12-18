@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "matangover.mypy",
-    "charliermarsh.ruff"
+    "charliermarsh.ruff",
+    "charliermarsh.ty"
   ]
 }

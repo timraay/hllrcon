@@ -6,9 +6,9 @@
   // Enable auto import completions
   "python.analysis.autoImportCompletions": true,
 
-  // Configure type checking
+  // Configure type checking & LSP
   "python.analysis.typeCheckingMode": "off",
-  "mypy.dmypyExecutable": "${workspaceFolder}/.venv/Scripts/dmypy.exe",
+  "python.languageServer": "None",
 
   "[python]": {
     // Configure formatter

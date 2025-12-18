@@ -120,5 +120,5 @@ class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
         return super().by_id(id_.lower())
 
     @classmethod
-    def _lookup_register(cls, id_: str, instance: Self) -> None:
+    def _lookup_register(cls, id_: str, instance: Self) -> None:  # ty:ignore[invalid-method-override]
         return super()._lookup_register(id_.lower(), instance)

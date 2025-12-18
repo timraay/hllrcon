@@ -93,9 +93,6 @@ omit = [
     "tmp.py",
 ]
 
-[tool.mypy]
-strict = true
-
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
 
