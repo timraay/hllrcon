@@ -14,10 +14,13 @@ from hllrcon.exceptions import (
     HLLConnectionRefusedError,
     HLLMessageError,
 )
+from hllrcon.protocol.constants import MAGIC_HEADER_BYTES
 from hllrcon.protocol.protocol import RconProtocol
 from hllrcon.protocol.request import RconRequest
 from hllrcon.protocol.response import RconResponse, RconResponseStatus
 from pytest_mock import MockerFixture
+
+magic = MAGIC_HEADER_BYTES
 
 
 @pytest.fixture
@@ -135,7 +138,7 @@ def test_disconnect(protocol: RconProtocol, transport: Mock) -> None:
 def test_connection_made(protocol: RconProtocol) -> None:
     with pytest.raises(
         TypeError,
-        match="Transport must be an instance of asyncio.Transport",
+        match=r"Transport must be an instance of asyncio.Transport",
     ):
         protocol.connection_made(Mock(spec=asyncio.BaseTransport))
 
@@ -158,7 +161,7 @@ def test_data_received(
 def test_read_from_buffer_too_small(
     protocol: RconProtocol,
 ) -> None:
-    data = b"\x01\x02\x03\x04\x05\x06\x07"
+    data = magic + b"\x01\x02\x03\x04\x05\x06\x07"
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -168,7 +171,7 @@ def test_read_from_buffer_too_small(
 def test_read_from_buffer_incomplete_packet(
     protocol: RconProtocol,
 ) -> None:
-    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hell"
+    data = magic + b"\x01\x00\x00\x00\x05\x00\x00\x00Hell"
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -183,7 +186,7 @@ def test_read_from_buffer_exactly_one_packet(
         "hllrcon.protocol.protocol.RconResponse.unpack",
         autospec=True,
     )
-    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
+    data = magic + b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     waiter: asyncio.Future[RconResponse] = asyncio.Future()
     protocol._waiters[1] = waiter
@@ -203,7 +206,7 @@ def test_read_from_buffer_exactly_one_packet_missing_waiter(
         "hllrcon.protocol.protocol.RconResponse.unpack",
         autospec=True,
     )
-    data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
+    data = magic + b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -220,9 +223,12 @@ def test_read_from_buffer_more_than_one_packet(
         autospec=True,
     )
     data = (
-        b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
-        b"\x02\x00\x00\x00\x05\x00\x00\x00World"
-        b"\x00\x00"
+        magic
+        + b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
+        + magic
+        + b"\x02\x00\x00\x00\x05\x00\x00\x00World"
+        + magic
+        + b"\x00\x00"
     )
 
     waiter1: asyncio.Future[RconResponse] = asyncio.Future()
@@ -232,12 +238,55 @@ def test_read_from_buffer_more_than_one_packet(
 
     protocol._buffer = data
     protocol._read_from_buffer()
-    assert protocol._buffer == b"\x00\x00"
+    assert protocol._buffer == magic + b"\x00\x00"
     assert waiter1.result()
     assert waiter2.result()
     assert mock_unpack.call_count == 2
     mock_unpack.assert_any_call(1, b"Hello")
     mock_unpack.assert_called_with(2, b"World")
+
+
+def test_read_from_buffer_magic_value_missing(
+    mocker: MockerFixture,
+    protocol: RconProtocol,
+) -> None:
+    mock_logger = mocker.patch.object(protocol.logger, "warning")
+    data = b"\x00\x00\x00\x00\x01\x00\x00\x00\x05\x00\x00\x00Hello"
+
+    protocol._buffer = data
+    protocol._read_from_buffer()
+    assert protocol._buffer == b""
+    mock_logger.assert_called_once_with(
+        "Magic header not found in buffer, discarding %s bytes",
+        len(data),
+    )
+
+
+def test_read_from_buffer_magic_value_is_offset(
+    mocker: MockerFixture,
+    protocol: RconProtocol,
+) -> None:
+    mock_unpack = mocker.patch(
+        "hllrcon.protocol.protocol.RconResponse.unpack",
+        autospec=True,
+    )
+    mock_logger = mocker.patch.object(protocol.logger, "warning")
+    data = (
+        b"\x00\x05\x00\x00\x01\x00\x00"
+        + magic
+        + b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
+    )
+    waiter: asyncio.Future[RconResponse] = asyncio.Future()
+    protocol._buffer = data
+    protocol._waiters[1] = waiter
+    protocol._read_from_buffer()
+    assert protocol._buffer == b""
+    assert waiter.result()
+    mock_unpack.assert_called_once_with(1, b"Hello")
+    mock_logger.assert_called_once_with(
+        "Magic header not at start of buffer, skipping %s bytes",
+        7,
+    )
 
 
 def test_connection_lost_use_request_headers(
@@ -409,7 +458,8 @@ def make_response(request_id: int, message: str) -> bytes:
     }
     body_encoded = json.dumps(body).encode("utf-8")
     return (
-        request_id.to_bytes(4, "little")
+        magic
+        + request_id.to_bytes(4, "little")
         + len(body_encoded).to_bytes(4, "little")
         + body_encoded
     )
