@@ -50,7 +50,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
         )
 
     @classmethod
-    def _lookup_register(cls, id_: LoadoutId, instance: Self) -> None:
+    def _lookup_register(cls, id_: LoadoutId, instance: Self) -> None:  # ty:ignore[invalid-method-override]
         new_id = LoadoutId(*id_[:2], name=id_[2].lower())
         return super()._lookup_register(new_id, instance)
 

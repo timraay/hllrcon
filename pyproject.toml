@@ -93,9 +93,6 @@ omit = [
     "tmp.py",
 ]
 
-[tool.mypy]
-strict = true
-
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
 
@@ -109,5 +106,6 @@ dev = [
     "pytest-mock>=3.14.1",
     "python-dotenv>=1.1.1",
     "ruff>=0.12.0",
+    "ty>=0.0.3",
     "types-aiofiles>=24.1.0.20250606",
 ]
