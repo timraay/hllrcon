@@ -76,7 +76,7 @@ class RconProtocol(asyncio.Protocol):
         self._transport: asyncio.Transport | None = None
         self._buffer: bytes = b""
 
-        self._waiters: dict[int, asyncio.Future[RconResponse]] = {}
+        self._waiters: list[tuple[int, asyncio.Future[RconResponse]]] = []
 
         self.loop = loop
         self.timeout = timeout
@@ -202,10 +202,18 @@ class RconProtocol(asyncio.Protocol):
         self._buffer += data
         self._read_from_buffer()
 
-    def _read_from_buffer(self) -> None:
-        pkt_id: int
-        pkt_len: int
+    def _pop_waiter(self, pkt_id: int) -> asyncio.Future[RconResponse] | None:
+        # Responses should be returned in order
+        # Therefore older waiters can be cancelled
+        while self._waiters:
+            waiter_id, waiter = self._waiters.pop(0)
 
+            if waiter_id == pkt_id:
+                return waiter
+            waiter.set_exception(HLLMessageError("Request was never acknowledged"))
+        return None
+
+    def _read_from_buffer(self) -> None:
         # Read header
         header_len = struct.calcsize(RESPONSE_HEADER_FORMAT)
         if len(self._buffer) < header_len:
@@ -219,6 +227,8 @@ class RconProtocol(asyncio.Protocol):
             RESPONSE_HEADER_FORMAT,
             self._buffer[:header_len],
         )
+        pkt_id: int
+        pkt_len: int
         pkt_size = header_len + pkt_len
         self.logger.debug("pkt_id = %s, pkt_len = %s", pkt_id, pkt_len)
 
@@ -231,12 +241,11 @@ class RconProtocol(asyncio.Protocol):
             self._buffer = self._buffer[pkt_size:]
 
             # Respond to waiter
-            waiter = self._waiters.pop(pkt_id, None)
+            waiter = self._pop_waiter(pkt_id)
             if not waiter:
                 self.logger.warning(
-                    "No waiter for packet with ID %s, %s",
+                    "No waiter for packet with ID %s",
                     pkt_id,
-                    self._waiters,
                 )
             else:
                 waiter.set_result(pkt)
@@ -249,18 +258,18 @@ class RconProtocol(asyncio.Protocol):
     def connection_lost(self, exc: Exception | None) -> None:
         self._transport = None
 
-        waiters = list(self._waiters.values())
+        waiters = list(self._waiters)
         self._waiters.clear()
 
         if exc:
             self.logger.warning("Connection lost: %s", exc)
-            for waiter in waiters:
+            for _, waiter in waiters:
                 if not waiter.done():
                     waiter.set_exception(HLLConnectionLostError(str(exc)))
 
         else:
             self.logger.info("Connection closed")
-            for waiter in waiters:
+            for _, waiter in waiters:
                 waiter.cancel()
 
         if self.on_connection_lost:
@@ -358,7 +367,7 @@ class RconProtocol(asyncio.Protocol):
         try:
             # Create waiter for response
             waiter: asyncio.Future[RconResponse] = self.loop.create_future()
-            self._waiters[request.request_id] = waiter
+            self._waiters.append((request.request_id, waiter))
 
             # Wait for response
             response = await asyncio.wait_for(waiter, timeout=self.timeout)
@@ -367,11 +376,15 @@ class RconProtocol(asyncio.Protocol):
                 response.name,
                 response.content_body,
             )
-            return response
         finally:
             # Cleanup waiter
             waiter.cancel()
-            self._waiters.pop(request.request_id, None)
+            for i, (req_id, _) in enumerate(self._waiters):
+                if req_id == request.request_id:  # pragma: no cover
+                    self._waiters.pop(i)
+                    break
+
+        return response
 
     async def authenticate(self, password: str) -> None:
         """Authenticate with the Hell Let Loose server.
