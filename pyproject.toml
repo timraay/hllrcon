@@ -33,6 +33,14 @@ Repository = "https://github.com/timraay/hllrcon"
 Issues = "https://github.com/timraay/hllrcon/issues"
 # Changelog = "https://hllrcon.readthedocs.io/en/latest/changelog.html"
 
+[project.optional-dependencies]
+cli = [
+    "typer>=0.20.0",
+]
+
+[project.scripts]
+hllrcon = "hllrcon.cli:main"
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
