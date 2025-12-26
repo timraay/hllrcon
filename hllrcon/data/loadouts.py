@@ -40,6 +40,12 @@ class Loadout(IndexedBaseModel[LoadoutId]):
     requires_level: int = Field(ge=1, le=10)
     items: list[LoadoutItem]
 
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(faction_id={self.faction.id!r},"
+            f" role_id={self.role.id!r}, name={self.name!r})"
+        )
+
     # @computed_field
     @cached_property  # type: ignore[misc]
     def id(self) -> LoadoutId:  # type: ignore[override]
