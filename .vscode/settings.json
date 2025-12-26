@@ -9,6 +9,7 @@
   // Configure type checking & LSP
   "python.analysis.typeCheckingMode": "off",
   "python.languageServer": "None",
+  "ty.diagnosticMode": "workspace",
 
   "[python]": {
     // Configure formatter
