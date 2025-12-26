@@ -531,6 +531,29 @@ class TestDataVehicles:
         with pytest.raises(ValueError, match="not found"):
             Vehicle.by_id("sherman m4a3e2")
 
+    class VehicleProperties(NamedTuple):
+        vehicle: Vehicle
+        is_truck: bool
+        is_tank: bool
+        is_artilerry: bool
+        is_emplacement: bool
+
+    @pytest.mark.parametrize(
+        "properties",
+        [
+            VehicleProperties(Vehicle.BA_10, False, True, False, False),
+            VehicleProperties(Vehicle.BEDFORD_OYD_SUPPLY, True, False, False, False),
+            VehicleProperties(Vehicle.BEDFORD_OYD_TRANSPORT, True, False, False, False),
+            VehicleProperties(Vehicle.M1938_M_30, False, False, True, True),
+            VehicleProperties(Vehicle.KV_2, False, False, True, False),
+        ],
+    )
+    def test_vehicle_properties(self, properties: VehicleProperties) -> None:
+        assert properties.vehicle.is_truck is properties.is_truck
+        assert properties.vehicle.is_tank is properties.is_tank
+        assert properties.vehicle.is_artillery is properties.is_artilerry
+        assert properties.vehicle.is_emplacement is properties.is_emplacement
+
 
 class TestDataLoadouts:
     def test_loadout_by_id(self) -> None:

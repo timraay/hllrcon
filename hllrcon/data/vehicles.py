@@ -50,6 +50,68 @@ class Vehicle(IndexedBaseModel[str]):
     type: VehicleType
     seats: list[VehicleSeat]
 
+    @property
+    def is_truck(self) -> bool:
+        """Whether the vehicle is a truck.
+
+        Vehicle types included are:
+        - Transport Truck
+        - Supply Truck
+        """
+        return self.type in {
+            VehicleType.TRANSPORT_TRUCK,
+            VehicleType.SUPPLY_TRUCK,
+        }
+
+    @property
+    def is_tank(self) -> bool:
+        """Whether the vehicle is a tank.
+
+        Tanks are vehicles that are exclusively operated by armor units.
+
+        Vehicle types included are:
+        - Heavy Tank
+        - Medium Tank
+        - Light Tank
+        - Recon Vehicle
+        """
+        return self.type in {
+            VehicleType.HEAVY_TANK,
+            VehicleType.MEDIUM_TANK,
+            VehicleType.LIGHT_TANK,
+            VehicleType.RECON_VEHICLE,
+        }
+
+    @property
+    def is_artillery(self) -> bool:
+        """Whether the vehicle is an artillery piece.
+
+        Artillery vehicles are exclusively operated by artillery units.
+
+        Vehicle types included are:
+        - Artillery
+        - Self-Propelled Artillery
+        """
+        return self.type in {
+            VehicleType.SELF_PROPELLED_ARTILLERY,
+            VehicleType.ARTILLERY,
+        }
+
+    @property
+    def is_emplacement(self) -> bool:
+        """Whether the vehicle is an emplacement.
+
+        Emplacements are static and cannot be driven around.
+
+        Vehicle types included are:
+        - Artillery
+        - Anti-Tank Gun
+        """
+        return self.type in {
+            VehicleType.ARTILLERY,
+            VehicleType.ANTI_TANK_GUN,
+        }
+
     @class_cached_property
     @classmethod
     def M1_57MM(cls) -> "Vehicle":
