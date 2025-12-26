@@ -24,6 +24,7 @@ license = "MIT"
 license-files = ["LICENSE*"]
 dependencies = [
     "pydantic>=2.11.5",
+    "ty>=0.0.7",
     "typing-extensions>=4.13.2",
 ]
 
