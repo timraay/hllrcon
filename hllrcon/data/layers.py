@@ -131,6 +131,7 @@ LAYER_ENVIRONMENT_MAP: dict[str, tuple[TimeOfDay, Weather]] = {
 
 
 class Layer(CaseInsensitiveIndexedBaseModel):
+    id: str
     map: Map
     game_mode: GameMode
     time_of_day: TimeOfDay
@@ -167,21 +168,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     def __str__(self) -> str:
         return self.id
-
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}(id={self.id!r}, map={self.map!r},"
-            f" attackers={self.attacking_team!r}, time_of_day={self.time_of_day!r},"
-            f" weather={self.weather!r})"
-        )
-
-    def __hash__(self) -> int:
-        return hash(self.id.lower())
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, (Layer, str)):
-            return str(self).lower() == str(other).lower()
-        return NotImplemented
 
     @classmethod
     def _parse_id(cls, id_: str) -> "Layer":

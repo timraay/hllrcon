@@ -71,8 +71,21 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
     def model_post_init(self, context: Any) -> None:  # noqa: ANN401, ARG002
         self._lookup_register(self.id, self)
 
+    def __eq__(self, other: object) -> bool:
+        if type(other) is type(self):
+            return self.id == cast("IndexedBaseModel[H, R]", other).id
+        if isinstance(other, (int, str)):
+            return self.id == other
+        return NotImplemented
+
     def __hash__(self) -> int:
         return hash(self.id)
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(id={self.id!r})"
 
     @classmethod
     def by_id(cls, id_: H) -> Self | R:
@@ -114,6 +127,16 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
 
 class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
     id: str
+
+    def __eq__(self, other: object) -> bool:
+        if type(other) is type(self):
+            return self.id == cast("IndexedBaseModel[H, R]", other).id
+        if isinstance(other, str):
+            return self.id.lower() == other.lower()
+        return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.id.lower())
 
     @classmethod
     def by_id(cls, id_: str) -> Self | R:
