@@ -135,7 +135,7 @@ def test_disconnect(protocol: RconProtocol, transport: Mock) -> None:
 def test_connection_made(protocol: RconProtocol) -> None:
     with pytest.raises(
         TypeError,
-        match="Transport must be an instance of asyncio.Transport",
+        match=r"Transport must be an instance of asyncio.Transport",
     ):
         protocol.connection_made(Mock(spec=asyncio.BaseTransport))
 
@@ -186,7 +186,7 @@ def test_read_from_buffer_exactly_one_packet(
     data = b"\x01\x00\x00\x00\x05\x00\x00\x00Hello"
 
     waiter: asyncio.Future[RconResponse] = asyncio.Future()
-    protocol._waiters[1] = waiter
+    protocol._waiters.append((1, waiter))
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -227,8 +227,8 @@ def test_read_from_buffer_more_than_one_packet(
 
     waiter1: asyncio.Future[RconResponse] = asyncio.Future()
     waiter2: asyncio.Future[RconResponse] = asyncio.Future()
-    protocol._waiters[1] = waiter1
-    protocol._waiters[2] = waiter2
+    protocol._waiters.append((1, waiter1))
+    protocol._waiters.append((2, waiter2))
 
     protocol._buffer = data
     protocol._read_from_buffer()
@@ -243,27 +243,27 @@ def test_read_from_buffer_more_than_one_packet(
 def test_connection_lost_use_request_headers(
     protocol: RconProtocol,
 ) -> None:
-    waiters: dict[int, asyncio.Future[RconResponse]] = {
-        1: asyncio.Future(),
-        2: asyncio.Future(),
-    }
+    waiters: list[tuple[int, asyncio.Future[RconResponse]]] = [
+        (1, asyncio.Future()),
+        (2, asyncio.Future()),
+    ]
     protocol._waiters = waiters.copy()
 
     protocol.connection_lost(None)
 
     assert not protocol.is_connected()
     assert not protocol._waiters
-    assert waiters[1].cancelled()
-    assert waiters[2].cancelled()
+    assert waiters[0][1].cancelled()
+    assert waiters[1][1].cancelled()
 
 
 def test_connection_lost_with_exception(
     protocol: RconProtocol,
 ) -> None:
-    waiters: dict[int, asyncio.Future[RconResponse]] = {
-        1: asyncio.Future(),
-        2: asyncio.Future(),
-    }
+    waiters: list[tuple[int, asyncio.Future[RconResponse]]] = [
+        (1, asyncio.Future()),
+        (2, asyncio.Future()),
+    ]
     protocol._waiters = waiters.copy()
 
     response = RconResponse(
@@ -274,14 +274,14 @@ def test_connection_lost_with_exception(
         status_message="OK",
         content_body="foo",
     )
-    waiters[1].set_result(response)
+    waiters[0][1].set_result(response)
 
     protocol.connection_lost(OSError("Connection error"))
 
     assert not protocol.is_connected()
     assert not protocol._waiters
-    assert waiters[1].result() == response
-    assert isinstance(waiters[2].exception(), HLLConnectionLostError)
+    assert waiters[0][1].result() == response
+    assert isinstance(waiters[1][1].exception(), HLLConnectionLostError)
 
 
 def test_connection_lost_invokes_callback(
@@ -451,7 +451,7 @@ async def test_execute_concurrently(
     asyncio.get_running_loop().call_later(
         0.5,
         protocol.data_received,
-        make_response(1, "response2") + make_response(0, "response1"),
+        make_response(0, "response1") + make_response(1, "response2"),
     )
     responses = await asyncio.gather(
         protocol.execute("command1", 1, "body1"),
@@ -460,6 +460,26 @@ async def test_execute_concurrently(
     assert responses[0].content_body == "response1"
     assert responses[1].content_body == "response2"
     assert transport.write.call_count == 2
+
+
+@pytest.mark.asyncio
+async def test_execute_cancel_older_requests(
+    protocol: RconProtocol,
+) -> None:
+    waiter1 = asyncio.Future()
+    waiter2 = asyncio.Future()
+    protocol._waiters.append((1, waiter1))
+    protocol._waiters.append((2, waiter2))
+
+    protocol.data_received(make_response(2, "response"))
+
+    with pytest.raises(
+        HLLMessageError,
+        match=r"Request was never acknowledged",
+    ):
+        waiter1.result()
+
+    assert waiter2.result().content_body == "response"
 
 
 @pytest.mark.asyncio
