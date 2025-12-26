@@ -84,4 +84,4 @@ __all__ = (
 )
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "1.0.0"
+__version__ = "1.0.1"
