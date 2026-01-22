@@ -130,7 +130,7 @@ class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
 
     def __eq__(self, other: object) -> bool:
         if type(other) is type(self):
-            return self.id == cast("IndexedBaseModel[H, R]", other).id
+            return self.id == cast("IndexedBaseModel[Any, R]", other).id
         if isinstance(other, str):
             return self.id.lower() == other.lower()
         return NotImplemented
