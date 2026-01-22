@@ -70,7 +70,6 @@ __all__ = (
     "Strongpoint",
     "SupportedPlatform",
     "SyncRcon",
-    "SyncRconCommands",
     "Team",
     "TimeOfDay",
     "Vehicle",
