@@ -571,7 +571,7 @@ class Vehicle(IndexedBaseModel[str]):
                     weapons=[
                         Weapon.V_105MM_HOWITZER__SHERMAN_SPA_105MM,
                         Weapon.V_COAXIAL_M1919__SHERMAN_SPA_105MM,
-                        Weapon.V_PETARD_230MM__CHURCHILL_AVRE,
+                        Weapon.V_230MM_PETARD__CHURCHILL_AVRE,
                         Weapon.V_COAXIAL_BESA_7_92MM__CHURCHILL_AVRE,
                     ],
                     requires_roles=_ARTY_CREW_ROLES,

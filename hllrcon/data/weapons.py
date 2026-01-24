@@ -50,7 +50,7 @@ class Weapon(IndexedBaseModel[str]):
     factions: set[Faction] = Field(min_length=1)
     magnification: int | None = None
 
-    # @computed_field(repr=False)  # type: ignore[prop-decorator]
+    # @computed_field(repr=False)
     @cached_property
     def vehicle(self) -> "Vehicle | None":
         from hllrcon.data.vehicles import Vehicle  # noqa: PLC0415
@@ -2594,10 +2594,10 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_PETARD_230MM__CHURCHILL_AVRE(cls) -> "Weapon":
-        """*PETARD 230MM [Sherman SPA 105mm]*"""
+    def V_230MM_PETARD__CHURCHILL_AVRE(cls) -> "Weapon":
+        """*230MM PETARD [Sherman SPA 105mm]*"""
         return cls(
-            id="PETARD 230MM [Sherman SPA 105mm]",
+            id="230MM PETARD [Sherman SPA 105mm]",
             name="230mm Petard",
             vehicle_id="Sherman SPA 105mm",
             factions={Faction.CW},
