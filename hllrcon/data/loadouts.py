@@ -47,8 +47,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
         )
 
     # @computed_field
-    @cached_property  # type: ignore[misc]
-    def id(self) -> LoadoutId:  # type: ignore[override]
+    @cached_property
+    def id(self) -> LoadoutId:
         return LoadoutId(
             faction_id=self.faction.id,
             role_id=self.role.id,
@@ -2635,7 +2635,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer"),
                 LoadoutItem(name="Fairbairn–Sykes"),
@@ -4177,7 +4177,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer"),
                 LoadoutItem(name="Fairbairn–Sykes"),
