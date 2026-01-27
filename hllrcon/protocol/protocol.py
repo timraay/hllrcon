@@ -16,7 +16,11 @@ from hllrcon.exceptions import (
     HLLConnectionRefusedError,
     HLLMessageError,
 )
-from hllrcon.protocol.constants import RESPONSE_HEADER_FORMAT
+from hllrcon.protocol.constants import (
+    MAGIC_HEADER_BYTES,
+    MAGIC_HEADER_VALUE,
+    RESPONSE_HEADER_FORMAT,
+)
 from hllrcon.protocol.request import RconRequest
 from hllrcon.protocol.response import RconResponse
 
@@ -215,10 +219,27 @@ class RconProtocol(asyncio.Protocol):
                 header_len,
             )
             return
-        pkt_id, pkt_len = struct.unpack(
+
+        magic_idx = self._buffer.find(MAGIC_HEADER_BYTES)
+        if magic_idx > 0:
+            self.logger.warning(
+                "Magic header not at start of buffer, skipping %s bytes",
+                magic_idx,
+            )
+            self._buffer = self._buffer[magic_idx:]
+        elif magic_idx == -1:
+            self.logger.warning(
+                "Magic header not found in buffer, discarding %s bytes",
+                len(self._buffer),
+            )
+            self._buffer = b""
+            return
+
+        magic, pkt_id, pkt_len = struct.unpack(
             RESPONSE_HEADER_FORMAT,
             self._buffer[:header_len],
         )
+        assert magic == MAGIC_HEADER_VALUE  # noqa: S101
         pkt_size = header_len + pkt_len
         self.logger.debug("pkt_id = %s, pkt_len = %s", pkt_id, pkt_len)
 
