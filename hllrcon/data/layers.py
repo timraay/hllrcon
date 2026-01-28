@@ -236,6 +236,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             )
 
         strongpoint = Strongpoint(
+            id="SECTOR",
             name="Sector",
             center=(0.0, -9999.0, 0.0),
             radius=0.0,

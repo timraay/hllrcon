@@ -379,6 +379,7 @@ class TestSectors:
 
     def test_strongpoint_is_inside(self) -> None:
         sp = Strongpoint(
+            id="FOO",
             name="Foo",
             center=(10, 0, 0),
             radius=10,
