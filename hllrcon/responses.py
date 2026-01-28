@@ -365,6 +365,29 @@ class GetServerSessionResponse(Response):
     def game_mode(self) -> GameMode:
         return GameMode.by_id(self.game_mode_id)
 
+    def find_layer(self, *, strict: bool = True) -> Layer:
+        """Attempt to find the layer associated with this map rotation entry.
+
+        Parameters
+        ----------
+        strict : bool, optional
+            Whether to raise an exception if no such layer is known. If set to `False`,
+            will attempt to generate a fallback value based on the ID. By default
+            `True`.
+
+        Returns
+        -------
+        Layer
+            The layer associated with this map rotation entry.
+
+        Raises
+        ------
+        ValueError
+            No layer information is known about this entry.
+
+        """
+        return Layer.by_id(self.map_id, strict=strict)
+
 
 class GetServerConfigResponse(Response):
     server_name: str

@@ -83,11 +83,11 @@ def test_get_player_response_team_unassigned() -> None:
     assert response.platoon is None
 
 
-def test_get_server_session_game_mode() -> None:
+def test_get_server_session_game_mode_and_layer() -> None:
     response = GetServerSessionResponse(
         server_name="Test Server",
         map_name="FOY",
-        map_id="Foy",
+        map_id="foy_warfare",
         game_mode_id="Warfare",
         remaining_match_time=timedelta(seconds=300),
         match_time=600,
@@ -103,6 +103,7 @@ def test_get_server_session_game_mode() -> None:
         max_vip_queue_count=6,
     )
     assert response.game_mode == GameMode.WARFARE
+    assert response.find_layer() == Layer.FOY_WARFARE_DAY
 
 
 def test_map_rotation_entry_find_layer() -> None:
