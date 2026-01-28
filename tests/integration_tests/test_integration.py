@@ -5,6 +5,7 @@ from collections.abc import AsyncGenerator
 
 import pytest
 import pytest_asyncio
+from hllrcon import Layer
 from hllrcon.rcon import Rcon
 from hllrcon.responses import (
     GetCommandDetailsResponse,
@@ -184,3 +185,8 @@ class TestIntegratedServer:
         new_sequence = await rcon.get_map_sequence()
         assert rotation == new_rotation
         assert sequence == new_sequence
+
+    async def test_data_layers_all_exist(self, rcon: Rcon) -> None:
+        live_layer_ids = set(await rcon.get_available_maps())
+        mapped_layer_ids = {layer.id for layer in Layer.all()}
+        assert live_layer_ids == mapped_layer_ids
