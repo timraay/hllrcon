@@ -328,7 +328,7 @@ class RconProtocol(asyncio.Protocol):
 
         Raises
         ------
-        HLLConnectionError
+        HLLConnectionClosedError
             The connection was closed
         HLLCommandError
             The server failed to execute the command
@@ -338,7 +338,7 @@ class RconProtocol(asyncio.Protocol):
         """
         if not self._transport:
             msg = "Connection is closed"
-            raise HLLConnectionError(msg)
+            raise HLLConnectionClosedError(msg)
 
         # Create request
         request = RconRequest(

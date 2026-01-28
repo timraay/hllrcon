@@ -396,7 +396,7 @@ async def test_execute_no_connection(
     protocol: RconProtocol,
 ) -> None:
     protocol.connection_lost(None)
-    with pytest.raises(HLLConnectionError, match="Connection is closed"):
+    with pytest.raises(HLLConnectionClosedError, match=r"Connection is closed"):
         await protocol.execute("command", 1, "body")
 
 
