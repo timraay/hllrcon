@@ -1,6 +1,7 @@
 __all__ = (
     "HLLAuthError",
     "HLLCommandError",
+    "HLLConnectionClosedError",
     "HLLConnectionError",
     "HLLConnectionLostError",
     "HLLConnectionRefusedError",
@@ -53,8 +54,12 @@ class HLLAuthError(HLLConnectionError):
     """Raised for failed authentication."""
 
 
-class HLLConnectionLostError(HLLConnectionError):
-    """Raised when the connection to the server is lost."""
+class HLLConnectionClosedError(HLLConnectionError):
+    """Raised when the connection is closed."""
+
+
+class HLLConnectionLostError(HLLConnectionClosedError):
+    """Raised when the connection to the server is unexpectedly lost."""
 
 
 class HLLRconWarning(UserWarning):

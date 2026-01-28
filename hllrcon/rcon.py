@@ -8,6 +8,7 @@ from typing_extensions import override
 
 from hllrcon.client import RconClient
 from hllrcon.connection import RconConnection
+from hllrcon.exceptions import HLLConnectionClosedError
 
 
 class Rcon(RconClient):
@@ -134,7 +135,7 @@ class Rcon(RconClient):
                 if not self._connection.exception():
                     self._connection.result().disconnect()
             else:
-                self._connection.cancel()
+                self._connection.set_exception(HLLConnectionClosedError())
 
         self._connection = None
         self._failure_count = 0
