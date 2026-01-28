@@ -47,6 +47,7 @@ __all__ = (
     "Grid",
     "HLLAuthError",
     "HLLCommandError",
+    "HLLConnectionClosedError",
     "HLLConnectionError",
     "HLLConnectionLostError",
     "HLLConnectionRefusedError",

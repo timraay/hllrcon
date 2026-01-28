@@ -11,6 +11,7 @@ from typing_extensions import override
 
 from hllrcon.exceptions import (
     HLLAuthError,
+    HLLConnectionClosedError,
     HLLConnectionError,
     HLLConnectionLostError,
     HLLConnectionRefusedError,
@@ -136,7 +137,7 @@ class RconProtocol(asyncio.Protocol):
         """
         loop = loop or asyncio.get_running_loop()
 
-        def protocol_factory() -> Self:  # type: ignore[type-var, misc]
+        def protocol_factory() -> Self:
             return cls(  # pragma: no cover
                 loop=loop,
                 timeout=timeout,
@@ -261,7 +262,7 @@ class RconProtocol(asyncio.Protocol):
         else:
             self.logger.info("Connection closed")
             for waiter in waiters:
-                waiter.cancel()
+                waiter.set_exception(HLLConnectionClosedError())
 
         if self.on_connection_lost:
             try:
@@ -355,9 +356,9 @@ class RconProtocol(asyncio.Protocol):
         self.logger.debug("Writing: %s", header + body)
         self._transport.write(message)
 
+        waiter: asyncio.Future[RconResponse] = self.loop.create_future()
         try:
             # Create waiter for response
-            waiter: asyncio.Future[RconResponse] = self.loop.create_future()
             self._waiters[request.request_id] = waiter
 
             # Wait for response
@@ -367,10 +368,14 @@ class RconProtocol(asyncio.Protocol):
                 response.name,
                 response.content_body,
             )
+        except Exception as e:
+            if not waiter.done():
+                waiter.set_exception(e)
+            raise
+        else:
             return response
         finally:
             # Cleanup waiter
-            waiter.cancel()
             self._waiters.pop(request.request_id, None)
 
     async def authenticate(self, password: str) -> None:

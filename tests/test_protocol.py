@@ -9,6 +9,7 @@ import pytest
 import pytest_asyncio
 from hllrcon.exceptions import (
     HLLAuthError,
+    HLLConnectionClosedError,
     HLLConnectionError,
     HLLConnectionLostError,
     HLLConnectionRefusedError,
@@ -135,7 +136,7 @@ def test_disconnect(protocol: RconProtocol, transport: Mock) -> None:
 def test_connection_made(protocol: RconProtocol) -> None:
     with pytest.raises(
         TypeError,
-        match="Transport must be an instance of asyncio.Transport",
+        match=r"Transport must be an instance of asyncio\.Transport",
     ):
         protocol.connection_made(Mock(spec=asyncio.BaseTransport))
 
@@ -253,8 +254,8 @@ def test_connection_lost_use_request_headers(
 
     assert not protocol.is_connected()
     assert not protocol._waiters
-    assert waiters[1].cancelled()
-    assert waiters[2].cancelled()
+    assert type(waiters[1].exception()) is HLLConnectionClosedError
+    assert type(waiters[2].exception()) is HLLConnectionClosedError
 
 
 def test_connection_lost_with_exception(
