@@ -369,7 +369,7 @@ class RconProtocol(asyncio.Protocol):
                 response.content_body,
             )
         except Exception as e:
-            if not waiter.done():
+            if not waiter.done():  # pragma: no cover
                 waiter.set_exception(e)
             raise
         else:
