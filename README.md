@@ -150,14 +150,22 @@ print("Axis cap weight:", strength[Team.AXIS])
 
 # Versioning
 
-This project largely follows [Semantic Versioning principles](https://semver.org/), i.e. `MAJOR.MINOR.PATCH`, with one notable difference in what can be guaranteed.
+Hell Let Loose (referred to as "the game") is a constantly evolving game, and game updates might alter its RCON interfaces in ways that are not backward-compatible.
+This affects any tools and libraries that depend on it, including this library and any software utilizing it.
 
-The SemVer specification states that breaking changes must only be implemented in major versions, whereas this library will have breaking changes in minor versions. Therefore, backwards compatibility cannot be guaranteed for minor releases.
+Releases of `hllrcon` only guarantee compatibility with the latest version of the game at the time of release. See the release notes of a given version for more
+information on what version this is.
 
-- **MAJOR** - Reserved for when sweeping changes need to happen to the library.
-- **MINOR** - Incremented whenever significant or breaking changes have to be made to the library, including adding support for major Hell Let Loose updates.
-- **PATCH** - Incremented for bug fixes and small game updates, generally guaranteeing backwards compatibility.
+This project uses its own versioning system similar to [Pragmatic Versioning principles](https://pragver.github.io/spec/) (i.e. `GRADE`.`MAJOR`.`MINOR`.`PATCH`).
+However, there are differences in the way each of the four components are defined and what they guarantee:
 
+- **`GRADE`** - Reserved for structural changes. Likely to increase only with the release of [Hell Let Loose: Vietnam](https://www.hellletloose.com/game/hll-vietnam).
+- **`MAJOR`** - Incremented when backward-incompatible changes are released.
+- **`MINOR`** - Incremented when support for the previously supported game version is dropped.
+- **`PATCH`** - Incremented when backward-compatible changes are released.
+
+When specifying `hllrcon` as a dependency, it is recommended to pin the `MINOR` version but not the `PATCH` version. `MINOR` versions are still backwards-incompatible
+in that they require the game server to be updated. `MINOR` versions may depend on upcoming, unreleased game version.
 
 # License
 
