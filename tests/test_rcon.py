@@ -6,7 +6,7 @@ from unittest import mock
 
 import pytest
 from hllrcon.connection import RconConnection
-from hllrcon.exceptions import HLLError
+from hllrcon.exceptions import HLLConnectionClosedError, HLLError
 from hllrcon.rcon import Rcon
 
 pytestmark = pytest.mark.asyncio
@@ -160,7 +160,7 @@ async def test_aexit_reconnecting(rcon: Rcon) -> None:
         rcon._connection = fut
 
     assert rcon._connection is None
-    assert fut.cancelled() is True
+    assert type(fut.exception()) is HLLConnectionClosedError
 
 
 async def test_aexit_connection_failure(rcon: Rcon) -> None:

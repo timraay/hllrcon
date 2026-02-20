@@ -2,49 +2,18 @@ import asyncio
 import logging
 
 import pytest
-import pytest_asyncio
-from hllrcon.rcon import Rcon
-from hllrcon.responses import (
+from hllrcon import (
     GetCommandDetailsResponse,
     GetCommandsResponse,
     GetMapRotationResponse,
     GetPlayerResponse,
     GetServerConfigResponse,
     GetServerSessionResponse,
+    Rcon,
 )
 from pydantic import TypeAdapter
 
 pytestmark = pytest.mark.asyncio
-
-
-@pytest_asyncio.fixture
-async def players(rcon: Rcon) -> list[GetPlayerResponse]:
-    players = await rcon.get_players()
-
-    if not players.players:
-        pytest.skip("No players found on the server")
-
-    return players.players
-
-
-@pytest_asyncio.fixture
-async def rotation(rcon: Rcon) -> GetMapRotationResponse:
-    return await rcon.get_map_rotation()
-
-
-@pytest_asyncio.fixture
-async def sequence(rcon: Rcon) -> GetMapRotationResponse:
-    return await rcon.get_map_sequence()
-
-
-@pytest_asyncio.fixture
-async def server_config(rcon: Rcon) -> GetServerConfigResponse:
-    return await rcon.get_server_config()
-
-
-@pytest_asyncio.fixture
-async def server_session(rcon: Rcon) -> GetServerSessionResponse:
-    return await rcon.get_server_session()
 
 
 class TestIntegratedServer:

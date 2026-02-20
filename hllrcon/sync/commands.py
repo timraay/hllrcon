@@ -6,12 +6,14 @@
 from abc import ABC, abstractmethod
 from collections.abc import Callable
 from functools import wraps
-from typing import Any, Literal, ParamSpec, TypeVar, overload
+from typing import Any, Literal, ParamSpec, TypeAlias, TypeVar, overload
 
 from pydantic import BaseModel
 
 from hllrcon.data import layers
 from hllrcon.data.factions import Faction
+from hllrcon.data.game_modes import GameMode
+from hllrcon.data.layers import Layer
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     ForceMode,
@@ -42,7 +44,7 @@ P = ParamSpec("P")
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=BaseModel)
 
-GameMode = Literal["Warfare", "Offensive", "Skirmish"]
+GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Skirmish"]
 
 
 @overload
@@ -109,6 +111,12 @@ def cast_response_to_bool(
         return wrapper
 
     return decorator
+
+
+def get_game_mode_id(game_mode: GameMode | GameModeLiteral) -> str:
+    if isinstance(game_mode, str):
+        return game_mode
+    return game_mode.id
 
 
 class SyncRconCommands(ABC):
@@ -1311,7 +1319,11 @@ class SyncRconCommands(ABC):
             },
         )
 
-    def set_match_timer(self, game_mode: GameMode, minutes: int) -> None:
+    def set_match_timer(
+        self,
+        game_mode: GameMode | GameModeLiteral,
+        minutes: int,
+    ) -> None:
         """Set the match timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1319,9 +1331,8 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode
-            The game mode to set the match timer for. One of "Warfare", "Offensive",
-            or "Skirmish".
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+            The game mode to set the match timer for.
         minutes : int
             The number of minutes to set the match timer to.
 
@@ -1330,12 +1341,12 @@ class SyncRconCommands(ABC):
             "SetMatchTimer",
             2,
             {
-                "GameMode": game_mode,
+                "GameMode": get_game_mode_id(game_mode),
                 "MatchLength": minutes,
             },
         )
 
-    def reset_match_timer(self, game_mode: GameMode) -> None:
+    def reset_match_timer(self, game_mode: GameMode | GameModeLiteral) -> None:
         """Reset the match timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1343,30 +1354,33 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode
-            The game mode to reset the match timer for. One of "Warfare", "Offensive",
-            or "Skirmish".
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+            The game mode to reset the match timer for.
 
         """
         self.execute(
             "RemoveMatchTimer",
             2,
             {
-                "GameMode": game_mode,
+                "GameMode": get_game_mode_id(game_mode),
             },
         )
 
-    def set_warmup_timer(self, game_mode: GameMode, minutes: int) -> None:
+    def set_warmup_timer(
+        self,
+        game_mode: GameMode | GameModeLiteral,
+        minutes: int,
+    ) -> None:
         """Set the warmup timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
-        of the specified game mode. Limits apply, depending on the game mode.
+        of the specified game mode. This command has no effect if the game mode is
+        Offensive.
 
         Parameters
         ----------
-        game_mode : GameMode
-            The game mode to set the warmup timer for. One of "Warfare", "Offensive",
-            or "Skirmish".
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+            The game mode to set the warmup timer for.
         minutes : int
             The number of minutes to set the warmup timer to.
 
@@ -1375,12 +1389,12 @@ class SyncRconCommands(ABC):
             "SetWarmupTimer",
             2,
             {
-                "GameMode": game_mode,
+                "GameMode": get_game_mode_id(game_mode),
                 "WarmupLength": minutes,
             },
         )
 
-    def remove_warmup_timer(self, game_mode: GameMode) -> None:
+    def remove_warmup_timer(self, game_mode: GameMode | GameModeLiteral) -> None:
         """Reset the warmup timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1388,41 +1402,46 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode
-            The game mode to reset the warmup timer for. One of "Warfare", "Offensive",
-            or "Skirmish".
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+            The game mode to reset the warmup timer for.
 
         """
         self.execute(
             "RemoveWarmupTimer",
             2,
             {
-                "GameMode": game_mode,
+                "GameMode": get_game_mode_id(game_mode),
             },
         )
 
-    def set_dynamic_weather_enabled(self, map_id: str, *, enabled: bool) -> None:
-        """Enable or disable dynamic weather for a specific map.
+    def set_dynamic_weather_enabled(
+        self,
+        layer: Layer | str,
+        *,
+        enabled: bool,
+    ) -> None:
+        """Enable or disable dynamic weather for a specific layer.
 
-        Not all maps have dynamic weather. Maps that do not support dynamic weather
+        Not all layers have dynamic weather. Layers that do not support dynamic weather
         will ignore this command.
 
         This does not affect the current match, but will apply to all future
-        matches on the specified map.
+        matches on the specified layer.
 
         Parameters
         ----------
-        map_id : str
-            The ID of the map to enable or disable dynamic weather for.
+        layer : Layer | str
+            The layer to enable or disable dynamic weather for. Can be just the ID of
+            the layer.
         enabled : bool
-            Whether to enable or disable dynamic weather for the map.
+            Whether to enable or disable dynamic weather for the layer.
 
         """
         self.execute(
             "SetDynamicWeatherEnabled",
             2,
             {
-                "MapId": map_id,
+                "MapId": str(layer),
                 "Enable": enabled,
             },
         )

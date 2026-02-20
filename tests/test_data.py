@@ -55,6 +55,31 @@ class TestDataUtils:
 
         assert MyModel.all() == [foo, bar]
 
+    def test_indexed_model_str_and_repr(self) -> None:
+        class MyModel(IndexedBaseModel[str]):
+            id: str
+            foo: str
+
+        foo = MyModel(id="bar", foo="baz")
+
+        expected = "MyModel(id='bar')"
+        assert str(foo) == expected
+        assert repr(foo) == expected
+
+    def test_indexed_model_equality(self) -> None:
+        class MyModel(IndexedBaseModel[int]):
+            id: int
+            name: str
+
+        foo = MyModel(id=1, name="Foo")
+        bar = MyModel(id=2, name="Bar")
+
+        assert foo == foo  # noqa: PLR0124
+        assert foo == 1
+        assert foo != bar
+        assert foo != 2
+        assert foo != "Some other type"
+
     def test_indexed_model_hashable(self) -> None:
         class MyModel(IndexedBaseModel[int]):
             id: int
@@ -175,17 +200,13 @@ class TestDataLayers:
 
     def test_layer_repr(self) -> None:
         layer = Layer.DRIEL_SKIRMISH_DAY
-        expected_repr = (
-            f"Layer(id='DRL_S_1944_Day_P_Skirmish', map={layer.map!r}, "
-            f"attackers={layer.attacking_team!r}, time_of_day={layer.time_of_day!r}, "
-            f"weather={layer.weather!r})"
-        )
+        expected_repr = "Layer(id='DRL_S_1944_Day_P_Skirmish')"
         assert repr(layer) == expected_repr
 
     def test_layer_equality(self) -> None:
         layer = Layer.DRIEL_SKIRMISH_DAY
         assert layer == layer  # noqa: PLR0124
-        assert layer == layer.id.lower()
+        assert layer == layer.id.upper()
         assert layer != Layer.DRIEL_SKIRMISH_DAWN
         assert layer != "Some other layer"
         assert layer != 12345
@@ -358,6 +379,7 @@ class TestSectors:
 
     def test_strongpoint_is_inside(self) -> None:
         sp = Strongpoint(
+            id="FOO",
             name="Foo",
             center=(10, 0, 0),
             radius=10,
@@ -410,13 +432,7 @@ class TestDataMaps:
 
     def test_map_repr(self) -> None:
         map_ = Map.KHARKOV
-        expected_repr = (
-            f"Map(id='kharkov', name='Kharkov', tag='KHA', "
-            f"pretty_name='Kharkov', short_name='Kharkov', "
-            f"allies={map_.allies!r}, axis={map_.axis!r}, "
-            f"orientation={map_.orientation!r}, "
-            f"mirror_factions={map_.mirror_factions!r})"
-        )
+        expected_repr = "Map(id='kharkov')"
         assert repr(map_) == expected_repr
 
     def test_map_equality(self) -> None:
@@ -530,6 +546,29 @@ class TestDataVehicles:
 
         with pytest.raises(ValueError, match="not found"):
             Vehicle.by_id("sherman m4a3e2")
+
+    class VehicleProperties(NamedTuple):
+        vehicle: Vehicle
+        is_truck: bool
+        is_tank: bool
+        is_artilerry: bool
+        is_emplacement: bool
+
+    @pytest.mark.parametrize(
+        "properties",
+        [
+            VehicleProperties(Vehicle.BA_10, False, True, False, False),
+            VehicleProperties(Vehicle.BEDFORD_OYD_SUPPLY, True, False, False, False),
+            VehicleProperties(Vehicle.BEDFORD_OYD_TRANSPORT, True, False, False, False),
+            VehicleProperties(Vehicle.M1938_M_30, False, False, True, True),
+            VehicleProperties(Vehicle.KV_2, False, False, True, False),
+        ],
+    )
+    def test_vehicle_properties(self, properties: VehicleProperties) -> None:
+        assert properties.vehicle.is_truck is properties.is_truck
+        assert properties.vehicle.is_tank is properties.is_tank
+        assert properties.vehicle.is_artillery is properties.is_artilerry
+        assert properties.vehicle.is_emplacement is properties.is_emplacement
 
 
 class TestDataLoadouts:

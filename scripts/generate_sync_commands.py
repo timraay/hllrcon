@@ -1,4 +1,5 @@
 import re
+import subprocess
 from pathlib import Path
 
 TARGET_MAP: dict[Path, Path] = {
@@ -33,6 +34,12 @@ def main() -> None:
 
         src = ASCII_HEADER + src
         out_path.write_text(src, encoding="utf-8")
+
+    # Run ruff to format the generated files
+    subprocess.run(  # noqa: S603
+        ["ruff", "check", "--fix"] + [str(p) for p in TARGET_MAP.values()],
+        check=True,
+    )
 
 
 if __name__ == "__main__":

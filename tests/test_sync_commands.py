@@ -9,6 +9,8 @@ from typing import Any, Literal
 from unittest import mock
 
 import pytest
+from hllrcon.data.game_modes import GameMode
+from hllrcon.data.layers import Layer
 from hllrcon.exceptions import HLLCommandError, HLLMessageError
 from hllrcon.responses import (
     ForceMode,
@@ -19,6 +21,7 @@ from hllrcon.sync.commands import (
     SyncRconCommands,
     cast_response_to_bool,
     cast_response_to_model,
+    get_game_mode_id,
 )
 from pydantic import BaseModel, ValidationError
 
@@ -1126,10 +1129,19 @@ class TestCommands:
         ).remove_warmup_timer(game_mode)
 
     def test_commands_set_dynamic_weather_enabled(self) -> None:
-        map_id = "map123"
+        layer = Layer.CARENTAN_WARFARE_NIGHT
         enabled = True
         SyncRconCommandsStub(
             "SetDynamicWeatherEnabled",
             2,
-            {"MapId": map_id, "Enable": enabled},
-        ).set_dynamic_weather_enabled(map_id, enabled=enabled)
+            {"MapId": "carentan_warfare_night", "Enable": enabled},
+        ).set_dynamic_weather_enabled(layer, enabled=enabled)
+
+
+def test_get_game_mode_id() -> None:
+    assert get_game_mode_id(GameMode.WARFARE) == "warfare"
+    assert get_game_mode_id(GameMode.OFFENSIVE) == "offensive"
+    assert get_game_mode_id(GameMode.SKIRMISH) == "skirmish"
+    assert get_game_mode_id("Warfare") == "Warfare"
+    assert get_game_mode_id("Offensive") == "Offensive"
+    assert get_game_mode_id("Skirmish") == "Skirmish"

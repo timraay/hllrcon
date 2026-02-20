@@ -31,23 +31,6 @@ class Map(CaseInsensitiveIndexedBaseModel):
     def __str__(self) -> str:
         return self.id
 
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}(id={self.id!r}, name={self.name!r}, "
-            f"tag={self.tag!r}, pretty_name={self.pretty_name!r}, "
-            f"short_name={self.short_name!r}, allies={self.allies!r}, "
-            f"axis={self.axis!r}, orientation={self.orientation!r}, "
-            f"mirror_factions={self.mirror_factions!r})"
-        )
-
-    def __hash__(self) -> int:
-        return hash(self.id)
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, (Map, str)):
-            return str(self).lower() == str(other).lower()
-        return NotImplemented
-
     @class_cached_property
     @classmethod
     def CARENTAN(cls) -> "Map":

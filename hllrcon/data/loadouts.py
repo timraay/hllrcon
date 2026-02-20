@@ -40,9 +40,15 @@ class Loadout(IndexedBaseModel[LoadoutId]):
     requires_level: int = Field(ge=1, le=10)
     items: list[LoadoutItem]
 
+    def __repr__(self) -> str:
+        return (
+            f"{self.__class__.__name__}(faction_id={self.faction.id!r},"
+            f" role_id={self.role.id!r}, name={self.name!r})"
+        )
+
     # @computed_field
-    @cached_property  # type: ignore[misc]
-    def id(self) -> LoadoutId:  # type: ignore[override]
+    @cached_property
+    def id(self) -> LoadoutId:
         return LoadoutId(
             faction_id=self.faction.id,
             role_id=self.role.id,
@@ -50,7 +56,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
         )
 
     @classmethod
-    def _lookup_register(cls, id_: LoadoutId, instance: Self) -> None:
+    def _lookup_register(cls, id_: LoadoutId, instance: Self) -> None:  # ty:ignore[invalid-method-override]
         new_id = LoadoutId(*id_[:2], name=id_[2].lower())
         return super()._lookup_register(new_id, instance)
 
@@ -2629,7 +2635,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer"),
                 LoadoutItem(name="Fairbairn–Sykes"),
@@ -4171,7 +4177,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer"),
                 LoadoutItem(name="Fairbairn–Sykes"),

@@ -131,6 +131,7 @@ LAYER_ENVIRONMENT_MAP: dict[str, tuple[TimeOfDay, Weather]] = {
 
 
 class Layer(CaseInsensitiveIndexedBaseModel):
+    id: str
     map: Map
     game_mode: GameMode
     time_of_day: TimeOfDay
@@ -167,21 +168,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     def __str__(self) -> str:
         return self.id
-
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}(id={self.id!r}, map={self.map!r},"
-            f" attackers={self.attacking_team!r}, time_of_day={self.time_of_day!r},"
-            f" weather={self.weather!r})"
-        )
-
-    def __hash__(self) -> int:
-        return hash(self.id.lower())
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, (Layer, str)):
-            return str(self).lower() == str(other).lower()
-        return NotImplemented
 
     @classmethod
     def _parse_id(cls, id_: str) -> "Layer":
@@ -250,6 +236,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             )
 
         strongpoint = Strongpoint(
+            id="SECTOR",
             name="Sector",
             center=(0.0, -9999.0, 0.0),
             radius=0.0,
@@ -725,19 +712,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def ELSENBORNRIDGE_WARFARE_DUSK(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_warfare_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.SNOW,
-            grid=Grid.large(),
-            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
-        )
-
-    @class_cached_property
-    @classmethod
     def ELSENBORNRIDGE_WARFARE_NIGHT(cls) -> "Layer":
         return cls(
             id="elsenbornridge_warfare_night",
@@ -771,20 +745,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             map=Map.ELSENBORN_RIDGE,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAWN,
-            weather=Weather.SNOW,
-            grid=Grid.large(),
-            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORNRIDGE_OFFENSIVE_US_DUSK(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveUS_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DUSK,
             weather=Weather.SNOW,
             grid=Grid.large(),
             sectors=SECTORS_ELSENBORNRIDGE_LARGE,
@@ -835,20 +795,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def ELSENBORNRIDGE_OFFENSIVE_GER_DUSK(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_offensiveger_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.DUSK,
-            weather=Weather.SNOW,
-            grid=Grid.large(),
-            sectors=SECTORS_ELSENBORNRIDGE_LARGE,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
     def ELSENBORNRIDGE_OFFENSIVE_GER_NIGHT(cls) -> "Layer":
         return cls(
             id="elsenbornridge_offensiveger_night",
@@ -882,19 +828,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             map=Map.ELSENBORN_RIDGE,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAWN,
-            weather=Weather.SNOW,
-            grid=Grid.small(),
-            sectors=SECTORS_ELSENBORNRIDGE_SMALL,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ELSENBORNRIDGE_SKIRMISH_DUSK(cls) -> "Layer":
-        return cls(
-            id="elsenbornridge_skirmish_evening",
-            map=Map.ELSENBORN_RIDGE,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.DUSK,
             weather=Weather.SNOW,
             grid=Grid.small(),
             sectors=SECTORS_ELSENBORNRIDGE_SMALL,
@@ -1054,21 +987,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def HILL400_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="hill400_warfare_night",
-            map=Map.HILL_400,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-            grid=Grid.large(
-                scale=19840,
-            ),
-            sectors=SECTORS_HILL400_LARGE,
-        )
-
-    @class_cached_property
-    @classmethod
     def HILL400_OFFENSIVE_US_DAY(cls) -> "Layer":
         return cls(
             id="hill400_offensive_US",
@@ -1120,19 +1038,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             map=Map.HILL_400,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
-            weather=Weather.CLEAR,
-            grid=Grid.small(),
-            sectors=SECTORS_HILL400_SMALL,
-        )
-
-    @class_cached_property
-    @classmethod
-    def HILL400_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="HIL_S_1944_Night_P_Skirmish",
-            map=Map.HILL_400,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
             grid=Grid.small(),
             sectors=SECTORS_HILL400_SMALL,
@@ -1303,19 +1208,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def MORTAIN_WARFARE_NIGHT(cls) -> "Layer":
-        return cls(
-            id="mortain_warfare_night",
-            map=Map.MORTAIN,
-            game_mode=GameMode.WARFARE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-            grid=Grid.large(),
-            sectors=SECTORS_MORTAIN_LARGE,
-        )
-
-    @class_cached_property
-    @classmethod
     def MORTAIN_OFFENSIVE_US_DAY(cls) -> "Layer":
         return cls(
             id="mortain_offensiveUS_day",
@@ -1350,20 +1242,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             map=Map.MORTAIN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DUSK,
-            weather=Weather.CLEAR,
-            grid=Grid.large(),
-            sectors=SECTORS_MORTAIN_LARGE,
-            attacking_team=Team.ALLIES,
-        )
-
-    @class_cached_property
-    @classmethod
-    def MORTAIN_OFFENSIVE_US_NIGHT(cls) -> "Layer":
-        return cls(
-            id="mortain_offensiveUS_night",
-            map=Map.MORTAIN,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
             grid=Grid.large(),
             sectors=SECTORS_MORTAIN_LARGE,
@@ -1414,20 +1292,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
-    def MORTAIN_OFFENSIVE_GER_NIGHT(cls) -> "Layer":
-        return cls(
-            id="mortain_offensiveger_night",
-            map=Map.MORTAIN,
-            game_mode=GameMode.OFFENSIVE,
-            time_of_day=TimeOfDay.NIGHT,
-            weather=Weather.CLEAR,
-            grid=Grid.large(),
-            sectors=SECTORS_MORTAIN_LARGE,
-            attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
     def MORTAIN_SKIRMISH_DAY(cls) -> "Layer":
         return cls(
             id="mortain_skirmish_day",
@@ -1464,21 +1328,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             map=Map.MORTAIN,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DUSK,
-            weather=Weather.CLEAR,
-            grid=Grid.small(
-                offset=(100.0, 0.0),
-            ),
-            sectors=SECTORS_MORTAIN_SMALL,
-        )
-
-    @class_cached_property
-    @classmethod
-    def MORTAIN_SKIRMISH_NIGHT(cls) -> "Layer":
-        return cls(
-            id="mortain_skirmish_night",
-            map=Map.MORTAIN,
-            game_mode=GameMode.SKIRMISH,
-            time_of_day=TimeOfDay.NIGHT,
             weather=Weather.CLEAR,
             grid=Grid.small(
                 offset=(100.0, 0.0),
@@ -1796,7 +1645,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def SMOLENSK_OFFENSIVE_GER_DAY(cls) -> "Layer":
         return cls(
-            id="smolensk_offensiveGer_day",
+            id="smolensk_offensiveGer_Day",
             map=Map.SMOLENSK,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
