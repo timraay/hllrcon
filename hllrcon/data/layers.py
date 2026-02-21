@@ -1552,7 +1552,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_WARFARE_NIGHT(cls) -> "Layer":
         return cls(
-            id="REM_L_1945_Warfare_Night",
+            id="REM_L_1945_WarfareNight",
             map=Map.REMAGEN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
@@ -1599,7 +1599,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_SKIRMISH_DAY(cls) -> "Layer":
         return cls(
-            id="REM_S_1945_Day_P_Skirmish",
+            id="REM_S_1945_P_Skirmish_Day",
             map=Map.REMAGEN,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.DAY,
@@ -1612,7 +1612,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_SKIRMISH_NIGHT(cls) -> "Layer":
         return cls(
-            id="REM_S_1945_Night_P_Skirmish",
+            id="REM_S_1945_P_Skirmish_Night",
             map=Map.REMAGEN,
             game_mode=GameMode.SKIRMISH,
             time_of_day=TimeOfDay.NIGHT,
@@ -2217,19 +2217,6 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             grid=Grid.large(),
             sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.AXIS,
-        )
-
-    @class_cached_property
-    @classmethod
-    def TOBRUK_CONQUEST_DAY(cls) -> "Layer":
-        return cls(
-            id="tobruk_conquest_day",
-            map=Map.TOBRUK,
-            game_mode=GameMode.CONQUEST,
-            time_of_day=TimeOfDay.DAY,
-            weather=Weather.CLEAR,
-            grid=Grid.large(),
-            sectors=SECTORS_TOBRUK_LARGE,
         )
 
     @class_cached_property
