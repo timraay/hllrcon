@@ -1,13 +1,22 @@
 import pytest
 from hllrcon import (
+    GetServerConfigResponse,
     Layer,
     Rcon,
+    __min_server_version__,
 )
 
 pytestmark = pytest.mark.asyncio
 
 
 class TestIntegratedServer:
+    async def test_min_server_version_satisfied(
+        self,
+        server_config: GetServerConfigResponse,
+    ) -> None:
+        version = int(server_config.build_revision)
+        assert version >= __min_server_version__
+
     async def test_data_layers_all_exist(self, rcon: Rcon) -> None:
         live_layer_ids = set(await rcon.get_available_maps())
         mapped_layer_ids = {layer.id for layer in Layer.all()}
