@@ -31,6 +31,7 @@ __all__ = (
     "GetIdleKickDurationResponse",
     "GetMapRotationResponse",
     "GetMapRotationResponseEntry",
+    "GetMapShuffleEnabledResponse",
     "GetPlayerResponse",
     "GetPlayerResponseScoreData",
     "GetPlayerResponseStats",

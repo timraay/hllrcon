@@ -29,6 +29,7 @@ from hllrcon.responses import (
     GetHighPingThresholdResponse,
     GetIdleKickDurationResponse,
     GetMapRotationResponse,
+    GetMapShuffleEnabledResponse,
     GetPlayerResponse,
     GetPlayersResponse,
     GetServerConfigResponse,
@@ -376,6 +377,18 @@ class SyncRconCommands(ABC):
                 "Index": index,
             },
         )
+
+    @cast_response_to_model(GetMapShuffleEnabledResponse, lambda r: r.enabled)
+    def get_map_shuffle_enabled(self) -> str:
+        """Retrieve whether map shuffling of the map sequence is enabled.
+
+        Returns
+        -------
+        bool
+            Whether map shuffling of the map sequence is enabled.
+
+        """
+        return self.execute("GetMapShuffleEnabled", 2)
 
     def set_map_shuffle_enabled(self, *, enabled: bool) -> None:
         """Enable or disable map shuffling of the map sequence.
