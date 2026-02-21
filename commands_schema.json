@@ -102,6 +102,8 @@
           "smolensk_warfare_day",
           "smolensk_warfare_dusk",
           "smolensk_warfare_night",
+          "REM_L_1945_Warfare",
+          "REM_L_1945_WarfareNight",
           "utahbeach_offensive_us",
           "utahbeach_offensive_ger",
           "omahabeach_offensive_us",
@@ -156,6 +158,8 @@
           "smolensk_offensiveRus_dusk",
           "smolensk_offensiveGer_night",
           "smolensk_offensiveRus_night",
+          "REM_L_1945_OffensiveUS",
+          "REM_L_1945_OffensiveGER",
           "ELA_S_1942_P_Skirmish",
           "ELA_S_1942_Night_P_Skirmish",
           "DRL_S_1944_P_Skirmish",
@@ -188,7 +192,12 @@
           "STA_S_1942_P_Skirmish_Overcast",
           "smolensk_skirmish_day",
           "smolensk_skirmish_dusk",
-          "smolensk_skirmish_night"
+          "smolensk_skirmish_night",
+          "REM_S_1945_P_Skirmish_Day",
+          "REM_S_1945_P_Skirmish_Night",
+          "smolensk_conquest_day",
+          "FOY_L_1944_Conquest",
+          "CAR_L_1944_Conquest"
         ],
         "value_member": [
           "foy_warfare",
@@ -232,6 +241,8 @@
           "smolensk_warfare_day",
           "smolensk_warfare_dusk",
           "smolensk_warfare_night",
+          "REM_L_1945_Warfare",
+          "REM_L_1945_WarfareNight",
           "utahbeach_offensive_us",
           "utahbeach_offensive_ger",
           "omahabeach_offensive_us",
@@ -286,6 +297,8 @@
           "smolensk_offensiveRus_dusk",
           "smolensk_offensiveGer_night",
           "smolensk_offensiveRus_night",
+          "REM_L_1945_OffensiveUS",
+          "REM_L_1945_OffensiveGER",
           "ELA_S_1942_P_Skirmish",
           "ELA_S_1942_Night_P_Skirmish",
           "DRL_S_1944_P_Skirmish",
@@ -318,7 +331,12 @@
           "STA_S_1942_P_Skirmish_Overcast",
           "smolensk_skirmish_day",
           "smolensk_skirmish_dusk",
-          "smolensk_skirmish_night"
+          "smolensk_skirmish_night",
+          "REM_S_1945_P_Skirmish_Day",
+          "REM_S_1945_P_Skirmish_Night",
+          "smolensk_conquest_day",
+          "FOY_L_1944_Conquest",
+          "CAR_L_1944_Conquest"
         ]
       },
       {
@@ -340,10 +358,12 @@
         "name": "Map Name",
         "id": "MapName",
         "display_member": [
-          "smolensk_warfare_dusk"
+          "foy_warfare",
+          "remagen_warfare"
         ],
         "value_member": [
-          "smolensk_warfare_dusk"
+          "foy_warfare",
+          "remagen_warfare"
         ]
       },
       {
@@ -386,10 +406,12 @@
         "name": "MapName",
         "id": "MapName",
         "display_member": [
-          "smolensk_warfare_dusk"
+          "foy_warfare",
+          "remagen_warfare"
         ],
         "value_member": [
-          "smolensk_warfare_dusk"
+          "foy_warfare",
+          "remagen_warfare"
         ]
       }
     ]
@@ -437,8 +459,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       },
       {
         "type": "Combo",
@@ -510,6 +536,12 @@
     "dialogue_parameters": []
   },
   {
+    "name": "GetMapShuffleEnabled",
+    "text": "Get Map Shuffle Enabled",
+    "description": "None",
+    "dialogue_parameters": []
+  },
+  {
     "name": "GetPermanentBans",
     "text": "Get Permanent Bans",
     "description": "Retrieve a list of players who have a permanent ban.",
@@ -567,8 +599,12 @@
         "type": "Combo",
         "name": "Player",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       }
     ]
   },
@@ -608,8 +644,12 @@
         "type": "Combo",
         "name": "Player",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       }
     ]
   },
@@ -643,8 +683,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       },
       {
         "type": "Text",
@@ -671,8 +715,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       },
       {
         "type": "Text",
@@ -699,7 +747,8 @@
           "76561198018439914",
           "76561198057967914",
           "76561199819346915",
-          "76561198809620303"
+          "76561198809620303",
+          "76561197990026485"
         ],
         "value_member": [
           "76561198178339671",
@@ -708,7 +757,8 @@
           "76561198018439914",
           "76561198057967914",
           "76561199819346915",
-          "76561198809620303"
+          "76561198809620303",
+          "76561197990026485"
         ]
       }
     ]
@@ -767,12 +817,14 @@
         "display_member": [
           "Warfare",
           "Offensive",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ],
         "value_member": [
           "Warfare",
           "Offensive",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ]
       }
     ]
@@ -802,8 +854,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       },
       {
         "type": "Text",
@@ -859,11 +915,13 @@
         "id": "GameMode",
         "display_member": [
           "Warfare",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ],
         "value_member": [
           "Warfare",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ]
       }
     ]
@@ -938,10 +996,12 @@
         "name": "Map ID",
         "id": "MapId",
         "display_member": [
-          "smolensk_warfare_dusk"
+          "foy_warfare",
+          "remagen_warfare"
         ],
         "value_member": [
-          "smolensk_warfare_dusk"
+          "foy_warfare",
+          "remagen_warfare"
         ]
       },
       {
@@ -1019,12 +1079,14 @@
         "display_member": [
           "Warfare",
           "Offensive",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ],
         "value_member": [
           "Warfare",
           "Offensive",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ]
       },
       {
@@ -1060,14 +1122,14 @@
         "name": "Sector 1",
         "id": "Sector_1",
         "display_member": [
-          "PANZER LOADING STATION",
-          "TRAM DEPOT",
-          "SMOLENSK OUTSKIRTS"
+          "ROAD TO RECOGNE",
+          "COBRU APPROACH",
+          "ROAD TO NOVILLE"
         ],
         "value_member": [
-          "PANZER LOADING STATION",
-          "TRAM DEPOT",
-          "SMOLENSK OUTSKIRTS"
+          "ROAD TO RECOGNE",
+          "COBRU APPROACH",
+          "ROAD TO NOVILLE"
         ]
       },
       {
@@ -1075,14 +1137,14 @@
         "name": "Sector 2",
         "id": "Sector_2",
         "display_member": [
-          "SMOLENSK HAUPTBAHNHOF",
-          "LUMBER YARD",
-          "DNIEPER WEST CROSSING"
+          "COBRU FACTORY",
+          "FOY",
+          "FLAK BATTERY"
         ],
         "value_member": [
-          "SMOLENSK HAUPTBAHNHOF",
-          "LUMBER YARD",
-          "DNIEPER WEST CROSSING"
+          "COBRU FACTORY",
+          "FOY",
+          "FLAK BATTERY"
         ]
       },
       {
@@ -1090,14 +1152,14 @@
         "name": "Sector 3",
         "id": "Sector_3",
         "display_member": [
-          "PYATNITSKII OVERPASS",
-          "ZHELYABOVA SQUARE",
-          "84TH BATTALION BRIDGE"
+          "WEST BEND",
+          "SOUTHERN EDGE",
+          "DUGOUT BARN"
         ],
         "value_member": [
-          "PYATNITSKII OVERPASS",
-          "ZHELYABOVA SQUARE",
-          "84TH BATTALION BRIDGE"
+          "WEST BEND",
+          "SOUTHERN EDGE",
+          "DUGOUT BARN"
         ]
       },
       {
@@ -1105,14 +1167,14 @@
         "name": "Sector 4",
         "id": "Sector_4",
         "display_member": [
-          "ZADNEPROVIE DISTRICT",
-          "MOSKOVSKAYA STREET",
-          "SMOLENSK CITADEL"
+          "N30 HIGHWAY",
+          "BIZORY-FOY ROAD",
+          "EASTERN OURTHE"
         ],
         "value_member": [
-          "ZADNEPROVIE DISTRICT",
-          "MOSKOVSKAYA STREET",
-          "SMOLENSK CITADEL"
+          "N30 HIGHWAY",
+          "BIZORY-FOY ROAD",
+          "EASTERN OURTHE"
         ]
       },
       {
@@ -1120,14 +1182,14 @@
         "name": "Sector 5",
         "id": "Sector_5",
         "display_member": [
-          "RAILYARD STORAGE",
-          "APARTMENT BLOCK",
-          "BOMBARDED RIVERFRONT"
+          "ROAD TO BASTOGNE",
+          "BOIS JACQUES",
+          "FOREST OUTSKIRTS"
         ],
         "value_member": [
-          "RAILYARD STORAGE",
-          "APARTMENT BLOCK",
-          "BOMBARDED RIVERFRONT"
+          "ROAD TO BASTOGNE",
+          "BOIS JACQUES",
+          "FOREST OUTSKIRTS"
         ]
       }
     ]
@@ -1205,11 +1267,13 @@
         "id": "GameMode",
         "display_member": [
           "Warfare",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ],
         "value_member": [
           "Warfare",
-          "Skirmish"
+          "Skirmish",
+          "Conquest"
         ]
       },
       {
@@ -1244,8 +1308,12 @@
         "type": "Combo",
         "name": "Players",
         "id": "PlayerId",
-        "display_member": [],
-        "value_member": []
+        "display_member": [
+          "Abu"
+        ],
+        "value_member": [
+          "76561199023367826"
+        ]
       },
       {
         "type": "Number",
