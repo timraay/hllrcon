@@ -44,7 +44,7 @@ P = ParamSpec("P")
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=BaseModel)
 
-GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Skirmish"]
+GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
 
 
 @overload
@@ -1331,7 +1331,7 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to set the match timer for.
         minutes : int
             The number of minutes to set the match timer to.
@@ -1354,7 +1354,7 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to reset the match timer for.
 
         """
@@ -1379,7 +1379,7 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to set the warmup timer for.
         minutes : int
             The number of minutes to set the warmup timer to.
@@ -1402,7 +1402,7 @@ class SyncRconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to reset the warmup timer for.
 
         """

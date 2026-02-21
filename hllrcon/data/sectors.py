@@ -205,6 +205,30 @@ class Sector(GridPositionalModel, frozen=True):
         ]
 
 
+def convert_large_layout_to_conquest(sectors: list[Sector]) -> list[Sector]:
+    """Create a copy of a large sector layout suitable for Conquest mode.
+
+    Conquest layouts are similar to standard large layouts, but the second and fourth
+    sectors only have one capture zone, namely the second (middle) one. The other two
+    capture zones are removed.
+    """
+    return [
+        sectors[0],
+        Sector(
+            grid_from=sectors[1].grid_from,
+            grid_to=sectors[1].grid_to,
+            capture_zones=[sectors[1].capture_zones[1]],
+        ),
+        sectors[2],
+        Sector(
+            grid_from=sectors[3].grid_from,
+            grid_to=sectors[3].grid_to,
+            capture_zones=[sectors[3].capture_zones[1]],
+        ),
+        sectors[4],
+    ]
+
+
 SECTORS_CARENTAN_LARGE = Sector.large_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
@@ -310,6 +334,7 @@ SECTORS_CARENTAN_LARGE = Sector.large_layout(
         ),
     ),
 )
+SECTORS_CARENTAN_CONQUEST = convert_large_layout_to_conquest(SECTORS_CARENTAN_LARGE)
 
 SECTORS_CARENTAN_SMALL = Sector.skirmish_layout(
     orientation=Orientation.HORIZONTAL,
@@ -774,6 +799,8 @@ SECTORS_FOY_LARGE = Sector.large_layout(
         ),
     ),
 )
+
+SECTORS_FOY_CONQUEST = convert_large_layout_to_conquest(SECTORS_FOY_LARGE)
 
 SECTORS_HILL400_LARGE = Sector.large_layout(
     orientation=Orientation.HORIZONTAL,
@@ -1653,6 +1680,16 @@ SECTORS_REMAGEN_LARGE = Sector.large_layout(
     ),
 )
 
+SECTORS_REMAGEN_SMALL = Sector.skirmish_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoint=Strongpoint(
+        id="LUDENDORFF BRIDGE",
+        name="LUDENDORFF BRIDGE",
+        center=(3228.9722, -570.1361, -315.0),
+        radius=6000.0,
+    ),
+)
+
 SECTORS_SMOLENSK_LARGE = Sector.large_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
@@ -1758,6 +1795,8 @@ SECTORS_SMOLENSK_LARGE = Sector.large_layout(
         ),
     ),
 )
+
+SECTORS_SMOLENSK_CONQUEST = convert_large_layout_to_conquest(SECTORS_SMOLENSK_LARGE)
 
 SECTORS_SMOLENSK_SMALL = Sector.skirmish_layout(
     orientation=Orientation.HORIZONTAL,

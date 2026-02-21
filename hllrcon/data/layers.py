@@ -9,6 +9,7 @@ from typing import Self
 from pydantic import computed_field, model_validator
 
 from hllrcon.data.sectors import (
+    SECTORS_CARENTAN_CONQUEST,
     SECTORS_CARENTAN_LARGE,
     SECTORS_CARENTAN_SMALL,
     SECTORS_DRIEL_LARGE,
@@ -17,6 +18,7 @@ from hllrcon.data.sectors import (
     SECTORS_ELALAMEIN_SMALL,
     SECTORS_ELSENBORNRIDGE_LARGE,
     SECTORS_ELSENBORNRIDGE_SMALL,
+    SECTORS_FOY_CONQUEST,
     SECTORS_FOY_LARGE,
     SECTORS_HILL400_LARGE,
     SECTORS_HILL400_SMALL,
@@ -29,6 +31,8 @@ from hllrcon.data.sectors import (
     SECTORS_PURPLEHEARTLANE_LARGE,
     SECTORS_PURPLEHEARTLANE_SMALL,
     SECTORS_REMAGEN_LARGE,
+    SECTORS_REMAGEN_SMALL,
+    SECTORS_SMOLENSK_CONQUEST,
     SECTORS_SMOLENSK_LARGE,
     SECTORS_SMOLENSK_SMALL,
     SECTORS_STALINGRAD_LARGE,
@@ -438,6 +442,21 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             ),
             sectors=SECTORS_CARENTAN_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CARENTAN_CONQUEST_DAY(cls) -> "Layer":
+        return cls(
+            id="CAR_L_1944_Conquest",
+            map=Map.CARENTAN,
+            game_mode=GameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=20160,
+            ),
+            sectors=SECTORS_CARENTAN_CONQUEST,
         )
 
     @class_cached_property
@@ -906,6 +925,21 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             ),
             sectors=SECTORS_FOY_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FOY_CONQUEST_DAY(cls) -> "Layer":
+        return cls(
+            id="FOY_L_1944_Conquest",
+            map=Map.FOY,
+            game_mode=GameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_FOY_CONQUEST,
         )
 
     @class_cached_property
@@ -1502,7 +1536,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_WARFARE_DAY(cls) -> "Layer":
         return cls(
-            id="remagen_warfare",
+            id="REM_L_1945_Warfare",
             map=Map.REMAGEN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -1517,7 +1551,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_WARFARE_NIGHT(cls) -> "Layer":
         return cls(
-            id="remagen_warfare_night",
+            id="REM_L_1945_Warfare_Night",
             map=Map.REMAGEN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
@@ -1532,7 +1566,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_OFFENSIVE_US_DAY(cls) -> "Layer":
         return cls(
-            id="remagen_offensive_us",
+            id="REM_L_1945_OffensiveUS",
             map=Map.REMAGEN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -1548,7 +1582,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_OFFENSIVE_GER_DAY(cls) -> "Layer":
         return cls(
-            id="remagen_offensive_ger",
+            id="REM_L_1945_OffensiveGER",
             map=Map.REMAGEN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -1558,6 +1592,32 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             ),
             sectors=SECTORS_REMAGEN_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="REM_S_1945_Day_P_Skirmish",
+            map=Map.REMAGEN,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_REMAGEN_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="REM_S_1945_Night_P_Skirmish",
+            map=Map.REMAGEN,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_REMAGEN_SMALL,
         )
 
     @class_cached_property
@@ -1681,6 +1741,19 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             grid=Grid.large(),
             sectors=SECTORS_SMOLENSK_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMOLENSK_CONQUEST_DAY(cls) -> "Layer":
+        return cls(
+            id="smolensk_conquest_day",
+            map=Map.SMOLENSK,
+            game_mode=GameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_SMOLENSK_CONQUEST,
         )
 
     @class_cached_property
@@ -2143,6 +2216,19 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             grid=Grid.large(),
             sectors=SECTORS_TOBRUK_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TOBRUK_CONQUEST_DAY(cls) -> "Layer":
+        return cls(
+            id="tobruk_conquest_day",
+            map=Map.TOBRUK,
+            game_mode=GameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_TOBRUK_LARGE,
         )
 
     @class_cached_property
