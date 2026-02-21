@@ -256,12 +256,17 @@ class Role(IndexedBaseModel[int]):
         return cls(
             id=13,
             name="ArmyCommander",
-            pretty_name="Army Commander",
+            pretty_name="Commander",
             type=RoleType.COMMANDER,
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,
         )
+
+    @class_cached_property
+    @classmethod
+    def ARMY_COMMANDER(cls) -> "Role":
+        return cls.COMMANDER
 
     @class_cached_property
     @classmethod
