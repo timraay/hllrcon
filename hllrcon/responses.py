@@ -392,8 +392,8 @@ class GetServerSessionResponse(Response):
 
 class GetServerConfigResponse(Response):
     server_name: str
-    build_number: str
-    build_revision: str
+    build_number: int
+    build_revision: int
     supported_platforms: list[SupportedPlatform]
     password_protected: bool
 

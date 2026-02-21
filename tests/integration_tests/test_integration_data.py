@@ -14,8 +14,7 @@ class TestIntegratedServer:
         self,
         server_config: GetServerConfigResponse,
     ) -> None:
-        version = int(server_config.build_revision)
-        assert version >= __min_server_version__
+        assert server_config.build_revision >= __min_server_version__
 
     async def test_data_layers_all_exist(self, rcon: Rcon) -> None:
         live_layer_ids = set(await rcon.get_available_maps())
