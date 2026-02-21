@@ -101,6 +101,7 @@ LAYER_GAME_MODE_MAP: dict[str, GameMode] = {
     "offensive": GameMode.OFFENSIVE,
     "off": GameMode.OFFENSIVE,
     "skirmish": GameMode.SKIRMISH,
+    "conquest": GameMode.CONQUEST,
 }
 
 LAYER_ATTACKERS_MAP: dict[str, Faction] = {
