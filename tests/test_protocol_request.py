@@ -1,3 +1,4 @@
+from hllrcon.protocol.constants import MAGIC_HEADER_BYTES
 from hllrcon.protocol.request import RconRequest
 
 
@@ -23,8 +24,12 @@ def test_pack_with_header() -> None:
     expected_body = (
         b'{"authToken":"tok","version":1,"name":"cmd","contentBody":"{\\"z\\":9}"}'
     )
-    expected_header = req.request_id.to_bytes(4, byteorder="little") + len(
-        expected_body,
-    ).to_bytes(4, byteorder="little")
+    expected_header = (
+        MAGIC_HEADER_BYTES
+        + req.request_id.to_bytes(4, byteorder="little")
+        + len(
+            expected_body,
+        ).to_bytes(4, byteorder="little")
+    )
     assert packed[0] == expected_header
     assert packed[1] == expected_body

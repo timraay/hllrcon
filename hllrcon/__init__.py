@@ -31,6 +31,7 @@ __all__ = (
     "GetIdleKickDurationResponse",
     "GetMapRotationResponse",
     "GetMapRotationResponseEntry",
+    "GetMapShuffleEnabledResponse",
     "GetPlayerResponse",
     "GetPlayerResponseScoreData",
     "GetPlayerResponseStats",
@@ -84,4 +85,12 @@ __all__ = (
 )
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "1.1.0.0"
+__version__ = "1.2.0.0-beta.1088607-0"
+
+__min_server_version__ = 1088607
+"""The minimum supported game server version (build revision). This is the minimum
+version that is required for the library to be fully functional. No guarantees can be
+made about future versions.
+
+The server's current build revision can be obtained using `Rcon.get_server_config()`.
+"""
