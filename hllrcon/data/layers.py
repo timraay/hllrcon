@@ -140,8 +140,14 @@ LAYER_ENVIRONMENT_MAP: dict[str, tuple[TimeOfDay, Weather]] = {
 
 class Layer(CaseInsensitiveIndexedBaseModel):
     id: str
-    map: Map
-    game_mode: GameMode
+    map: Annotated[
+        Map,
+        model_serializer(str),
+    ]
+    game_mode: Annotated[
+        GameMode,
+        model_serializer(str),
+    ]
     time_of_day: TimeOfDay
     weather: Weather
     grid: Grid

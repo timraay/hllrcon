@@ -1,5 +1,6 @@
+import json
 from collections.abc import Generator
-from typing import NamedTuple
+from typing import Annotated, NamedTuple
 
 import pytest
 from hllrcon.data import (
@@ -19,7 +20,13 @@ from hllrcon.data import (
     Weapon,
     Weather,
 )
-from hllrcon.data._utils import IndexedBaseModel, class_cached_property
+from hllrcon.data._utils import (
+    IndexedBaseModel,
+    IndexedBaseModelProxy,
+    class_cached_property,
+    model_sequence_serializer,
+    model_serializer,
+)
 from hllrcon.data.sectors import GridPositionalModel
 from pydantic import BaseModel, ValidationError
 
@@ -123,6 +130,60 @@ class TestDataUtils:
 
             class MyModel(IndexedBaseModel[int]):
                 name: str
+
+    def test_indexed_model_proxy_ordering(self) -> None:
+        class Foo(IndexedBaseModel[int]):
+            id: int
+
+        class Bar(IndexedBaseModel[int]):
+            id: int
+
+        foo1 = IndexedBaseModelProxy.from_model(Foo(id=1))
+        foo2 = IndexedBaseModelProxy.from_model(Foo(id=2))
+        bar1 = IndexedBaseModelProxy.from_model(Bar(id=1))
+        bar2 = IndexedBaseModelProxy.from_model(Bar(id=2))
+
+        assert sorted([foo1, foo2, bar1, bar2]) == [bar1, bar2, foo1, foo2]
+
+    def test_json_serialization(self) -> None:
+        class Foo(IndexedBaseModel[int]):
+            id: int
+
+        class Bar(IndexedBaseModel[int]):
+            id: int
+            foo: Annotated[
+                Foo | None,
+                model_serializer(int, optional=True),
+            ]
+            foos: Annotated[
+                set[Foo] | None,
+                model_sequence_serializer(int, optional=True),
+            ]
+            foo_n: Annotated[
+                Foo | None,
+                model_serializer(int, optional=True),
+            ] = None
+            foos_n: Annotated[
+                set[Foo] | None,
+                model_sequence_serializer(int, optional=True),
+            ] = None
+
+        foo1 = Foo(id=1)
+        foo2 = Foo(id=2)
+        bar1 = Bar(id=1, foo=foo1, foos={foo2, foo1})
+
+        json_data = bar1.model_dump_json()
+
+        assert json.loads(json_data) == {
+            "id": 1,
+            "foo": {"type": "foo", "id": 1, "key": "1"},
+            "foos": [
+                {"type": "foo", "id": 1, "key": "1"},
+                {"type": "foo", "id": 2, "key": "2"},
+            ],
+            "foo_n": None,
+            "foos_n": None,
+        }
 
 
 class TestDataFactions:
@@ -316,6 +377,32 @@ class TestDataLayers:
         for layer in all_layers:
             Map._lookup_map.clear()
             Layer._parse_id(layer.id)
+
+    def test_layer_field_serializers(self) -> None:
+        layer = Layer.KURSK_OFFENSIVE_GER_DAY
+        exclude = {
+            "sectors",
+            "grid",
+        }
+        assert json.loads(layer.model_dump_json(exclude=exclude)) == {
+            **layer.model_dump(exclude=exclude),
+            "map": {
+                "type": "map",
+                "id": "kursk",
+                "key": "kursk",
+            },
+            "game_mode": {
+                "type": "game_mode",
+                "id": "offensive",
+                "key": "offensive",
+            },
+            "time_of_day": "Day",
+            "weather": "Clear",
+            "attacking_team": {"type": "team", "id": 2, "key": "2"},
+            "attacking_faction": {"type": "faction", "id": 0, "key": "0"},
+            "defending_team": {"type": "team", "id": 1, "key": "1"},
+            "defending_faction": {"type": "faction", "id": 2, "key": "2"},
+        }
 
 
 class TestSectors:

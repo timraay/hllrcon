@@ -12,7 +12,7 @@ R = TypeVar("R", default=Never)
 
 
 class class_cached_property(Generic[T]):  # noqa: N801
-    def __init__(self, func: Callable[[type], T]) -> None:
+    def __init__(self, func: Callable[[Any], T]) -> None:
         if TYPE_CHECKING or not isinstance(func, classmethod):  # pragma: no cover
             self.func = func
         else:
@@ -164,7 +164,7 @@ class IndexedBaseModelProxy(BaseModel, Generic[H]):
 
     def __lt__(self, other: "IndexedBaseModelProxy[H]") -> bool:
         if not isinstance(other, IndexedBaseModelProxy):
-            return NotImplemented
+            return NotImplemented  # pragma: no cover
 
         if self.type != other.type:
             return self.type < other.type
