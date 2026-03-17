@@ -283,11 +283,11 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ARTILLERY_ENGINEER(cls) -> "Role":
+    def OPERATOR(cls) -> "Role":
         return cls(
             id=15,
-            name="ArtilleryEngineer",
-            pretty_name="Artillery Engineer",
+            name="Operator",
+            pretty_name="Operator",
             type=RoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=9,
@@ -296,13 +296,23 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ARTILLERY_SUPPORT(cls) -> "Role":
+    def ARTILLERY_ENGINEER(cls) -> "Role":
+        return cls.OPERATOR
+
+    @class_cached_property
+    @classmethod
+    def GUNNER(cls) -> "Role":
         return cls(
             id=16,
-            name="ArtillerySupport",
-            pretty_name="Artillery Support",
+            name="Gunner",
+            pretty_name="Gunner",
             type=RoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
         )
+
+    @class_cached_property
+    @classmethod
+    def ARTILLERY_SUPPORT(cls) -> "Role":
+        return cls.GUNNER
