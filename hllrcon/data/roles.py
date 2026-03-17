@@ -295,9 +295,9 @@ class Role(IndexedBaseModel[int]):
             assist_combat_score=6,
         )
 
-    @deprecated("Use Role.OPERATOR instead.")
     @class_cached_property
     @classmethod
+    @deprecated("Use Role.OPERATOR instead.")
     def ARTILLERY_ENGINEER(cls) -> "Role":
         return cls.OPERATOR
 
@@ -314,8 +314,8 @@ class Role(IndexedBaseModel[int]):
             assist_combat_score=4,
         )
 
-    @deprecated("Use Role.GUNNER instead.")
     @class_cached_property
     @classmethod
+    @deprecated("Use Role.GUNNER instead.")
     def ARTILLERY_SUPPORT(cls) -> "Role":
         return cls.GUNNER
