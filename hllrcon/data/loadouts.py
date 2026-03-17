@@ -998,24 +998,6 @@ class Loadout(IndexedBaseModel[LoadoutId]):
 
     @class_cached_property
     @classmethod
-    def GER_RIFLEMAN_CUSTOM_SKIN_TEST(cls) -> "Loadout":
-        return cls(
-            name="Custom Skin Test",
-            faction=Faction.GER,
-            role=Role.RIFLEMAN,
-            requires_level=1,
-            items=[
-                LoadoutItem(name="KARABINER 98K", amount=13),
-                LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                LoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                LoadoutItem(name="HAMMER", amount=1),
-                LoadoutItem(name="BANDAGE", amount=2),
-                LoadoutItem(name="FELDSPATEN", amount=1),
-            ],
-        )
-
-    @class_cached_property
-    @classmethod
     def GER_RIFLEMAN_STURMTRUPPEN(cls) -> "Loadout":
         return cls(
             name="Sturmtruppen",
