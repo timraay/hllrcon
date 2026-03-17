@@ -65,14 +65,14 @@ def main() -> None:
         f.write(
             TypeAdapter(output_type_with_schema).dump_json(
                 {"$schema": SCHEMA_URL, **output},
-                indent=2,
+                indent=None,
             ),
         )
 
     with SCHEMA_OUTPUT_PATH.open("w", encoding="utf-8") as f:
         f.truncate(0)
         schema = TypeAdapter(output_type).json_schema(mode="serialization")
-        json.dump(schema, f, indent=2)
+        json.dump(schema, f, indent=None)
 
 
 if __name__ == "__main__":
