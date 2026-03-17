@@ -4,9 +4,9 @@
 import re
 from enum import StrEnum
 from functools import cached_property
-from typing import Self
+from typing import Annotated, Self
 
-from pydantic import computed_field, model_validator
+from pydantic import computed_field, field_serializer, model_validator
 
 from hllrcon.data.sectors import (
     SECTORS_CARENTAN_CONQUEST,
@@ -51,7 +51,10 @@ from hllrcon.data.sectors import (
 
 from ._utils import (
     CaseInsensitiveIndexedBaseModel,
+    IndexedBaseModelProxy,
     class_cached_property,
+    model_serializer,
+    serialize_model,
 )
 from .factions import Faction
 from .game_modes import GameMode
@@ -143,10 +146,27 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     weather: Weather
     grid: Grid
     sectors: list[Sector]
-    attacking_team: Team | None = None
+    attacking_team: Annotated[
+        Team | None,
+        model_serializer(int, optional=True),
+    ] = None
+
+    @field_serializer(
+        "defending_team",
+        "attacking_faction",
+        "defending_faction",
+        mode="plain",
+        when_used="json",
+    )
+    def _serialize_computed_fields(
+        self,
+        value: Team | Faction | None,
+    ) -> IndexedBaseModelProxy[int] | None:
+        return serialize_model(value)
 
     @model_validator(mode="after")
     def _set_sectors_layer_backref(self) -> Self:
+        # TODO: Deepcopy. More difficult than it looks because the models are frozen :(
         for sector in self.sectors:
             sector._layer = self  # type: ignore[misc] # noqa: SLF001
 

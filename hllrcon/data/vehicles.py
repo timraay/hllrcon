@@ -1,10 +1,14 @@
 # ruff: noqa: N802, D400, D415
-
 from enum import StrEnum
+from typing import Annotated
 
 from pydantic import BaseModel, Field
 
-from hllrcon.data._utils import IndexedBaseModel, class_cached_property
+from hllrcon.data._utils import (
+    IndexedBaseModel,
+    class_cached_property,
+    model_sequence_serializer,
+)
 from hllrcon.data.factions import Faction
 from hllrcon.data.roles import Role, RoleType
 from hllrcon.data.weapons import Weapon
@@ -38,15 +42,26 @@ class VehicleSeatType(StrEnum):
 class VehicleSeat(BaseModel, frozen=True):
     index: int
     type: VehicleSeatType
-    weapons: list[Weapon] = Field(default_factory=list)
-    requires_roles: set[Role] | None = None
+    weapons: Annotated[
+        list[Weapon],
+        Field(default_factory=list),
+        model_sequence_serializer(str),
+    ]
+    requires_roles: Annotated[
+        set[Role] | None,
+        model_sequence_serializer(int, optional=True),
+    ] = None
     exposed: bool
 
 
 class Vehicle(IndexedBaseModel[str]):
     id: str
     name: str
-    factions: set[Faction] = Field(min_length=1)
+    factions: Annotated[
+        set[Faction],
+        Field(min_length=1),
+        model_sequence_serializer(int),
+    ]
     type: VehicleType
     seats: list[VehicleSeat]
 

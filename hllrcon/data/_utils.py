@@ -1,7 +1,9 @@
+import functools
 from collections.abc import Callable, Hashable
-from typing import TYPE_CHECKING, Any, ClassVar, Generic, Never, Self, cast
+from typing import TYPE_CHECKING, Annotated, Any, ClassVar, Generic, Never, Self, cast
 
-from pydantic import BaseModel, ConfigDict, PrivateAttr
+from pydantic import BaseModel, ConfigDict, PlainSerializer, PrivateAttr, computed_field
+from pydantic.alias_generators import to_snake
 from typing_extensions import TypeVar
 
 T = TypeVar("T")
@@ -145,3 +147,77 @@ class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
     @classmethod
     def _lookup_register(cls, id_: str, instance: Self) -> None:  # ty:ignore[invalid-method-override]
         return super()._lookup_register(id_.lower(), instance)
+
+
+@functools.total_ordering
+class IndexedBaseModelProxy(BaseModel, Generic[H]):
+    type: Annotated[
+        str,
+        PlainSerializer(to_snake, return_type=str),
+    ]
+    id: H
+
+    @computed_field(return_type=str)
+    @property
+    def key(self) -> str:
+        return str(self.id)
+
+    def __lt__(self, other: "IndexedBaseModelProxy[H]") -> bool:
+        if not isinstance(other, IndexedBaseModelProxy):
+            return NotImplemented
+
+        if self.type != other.type:
+            return self.type < other.type
+
+        return self.id < other.id
+
+    @classmethod
+    def from_model(cls, model: IndexedBaseModel[H, Any]) -> "IndexedBaseModelProxy[H]":
+        return cls(type=model.__class__.__name__, id=model.id)
+
+
+def serialize_model(
+    model: IndexedBaseModel[H, Any] | None,
+) -> IndexedBaseModelProxy[H] | None:
+    if model is None:
+        return None
+    return IndexedBaseModelProxy.from_model(model)
+
+
+def serialize_model_sequence(
+    models: set[IndexedBaseModel[H, Any]] | list[IndexedBaseModel[H, Any]] | None,
+) -> list[IndexedBaseModelProxy[H]] | None:
+    if models is None:
+        return None
+    proxies = [IndexedBaseModelProxy.from_model(model) for model in models]
+    if isinstance(models, set):
+        proxies.sort()
+    return proxies
+
+
+def model_serializer(hash_type: Hashable, *, optional: bool = False) -> PlainSerializer:
+    return_type = IndexedBaseModelProxy[hash_type]
+    if optional:
+        return_type = return_type | None
+
+    return PlainSerializer(
+        lambda x: serialize_model(x),  # noqa: PLW0108
+        # return_type=return_type,
+        when_used="json",
+    )
+
+
+def model_sequence_serializer(
+    hash_type: Hashable,
+    *,
+    optional: bool = False,
+) -> PlainSerializer:
+    return_type = list[IndexedBaseModelProxy[hash_type]]
+    if optional:
+        return_type = return_type | None
+
+    return PlainSerializer(
+        serialize_model_sequence,
+        return_type=return_type,
+        when_used="json",
+    )

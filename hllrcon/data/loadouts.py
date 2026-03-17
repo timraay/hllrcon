@@ -2,11 +2,15 @@
 # ruff: noqa: N802, RUF001
 
 from functools import cached_property
-from typing import NamedTuple, Self
+from typing import Annotated, NamedTuple, Self
 
 from pydantic import BaseModel, Field
 
-from hllrcon.data._utils import IndexedBaseModel, class_cached_property
+from hllrcon.data._utils import (
+    IndexedBaseModel,
+    class_cached_property,
+    model_serializer,
+)
 from hllrcon.data.factions import Faction
 from hllrcon.data.roles import Role
 from hllrcon.data.weapons import Weapon
@@ -35,7 +39,10 @@ class LoadoutItem(BaseModel, frozen=True):
 
 class Loadout(IndexedBaseModel[LoadoutId]):
     name: str
-    faction: Faction
+    faction: Annotated[
+        Faction,
+        model_serializer(int),
+    ]
     role: Role
     requires_level: int = Field(ge=1, le=10)
     items: list[LoadoutItem]

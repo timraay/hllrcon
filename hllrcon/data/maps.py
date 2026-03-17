@@ -1,10 +1,11 @@
 # ruff: noqa: N802
-
 from enum import StrEnum
+from typing import Annotated
 
 from ._utils import (
     CaseInsensitiveIndexedBaseModel,
     class_cached_property,
+    model_serializer,
 )
 from .factions import Faction
 
@@ -19,8 +20,14 @@ class Map(CaseInsensitiveIndexedBaseModel):
     tag: str
     pretty_name: str
     short_name: str
-    allies: Faction
-    axis: Faction
+    allies: Annotated[
+        Faction,
+        model_serializer(int),
+    ]
+    axis: Annotated[
+        Faction,
+        model_serializer(int),
+    ]
     orientation: Orientation
     """Whether the sectors on this map are stacked horizontally (left-to-right) or
     vertically (top-to-bottom)."""

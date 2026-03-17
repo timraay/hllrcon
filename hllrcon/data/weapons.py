@@ -2,11 +2,15 @@
 
 from enum import StrEnum
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
 from pydantic import Field
 
-from hllrcon.data._utils import IndexedBaseModel, class_cached_property
+from hllrcon.data._utils import (
+    IndexedBaseModel,
+    class_cached_property,
+    model_sequence_serializer,
+)
 from hllrcon.data.factions import Faction
 
 if TYPE_CHECKING:
@@ -47,7 +51,11 @@ class Weapon(IndexedBaseModel[str]):
     name: str
     type: WeaponType
     vehicle_id: str | None = None
-    factions: set[Faction] = Field(min_length=1)
+    factions: Annotated[
+        set[Faction],
+        Field(min_length=1),
+        model_sequence_serializer(int),
+    ]
     magnification: int | None = None
 
     # @computed_field(repr=False)
