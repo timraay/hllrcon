@@ -314,6 +314,14 @@ class TestCommands:
             {"Index": index},
         ).remove_map_from_sequence(index)
 
+    def test_commands_get_map_shuffle_enabled(self) -> None:
+        result = SyncRconCommandsStub(
+            "GetMapShuffleEnabled",
+            2,
+            response=json.dumps({"enable": True}),
+        ).get_map_shuffle_enabled()
+        assert result is True
+
     def test_commands_set_map_shuffle_enabled(self) -> None:
         SyncRconCommandsStub(
             "SetMapShuffleEnabled",

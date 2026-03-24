@@ -4,9 +4,9 @@
 import re
 from enum import StrEnum
 from functools import cached_property
-from typing import Self
+from typing import Annotated, Self
 
-from pydantic import computed_field, model_validator
+from pydantic import computed_field, field_serializer, model_validator
 
 from hllrcon.data.sectors import (
     SECTORS_CARENTAN_LARGE,
@@ -29,6 +29,7 @@ from hllrcon.data.sectors import (
     SECTORS_PURPLEHEARTLANE_LARGE,
     SECTORS_PURPLEHEARTLANE_SMALL,
     SECTORS_REMAGEN_LARGE,
+    SECTORS_REMAGEN_SMALL,
     SECTORS_SMOLENSK_LARGE,
     SECTORS_SMOLENSK_SMALL,
     SECTORS_STALINGRAD_LARGE,
@@ -47,7 +48,10 @@ from hllrcon.data.sectors import (
 
 from ._utils import (
     CaseInsensitiveIndexedBaseModel,
+    IndexedBaseModelProxy,
     class_cached_property,
+    model_serializer,
+    serialize_model,
 )
 from .factions import Faction
 from .game_modes import GameMode
@@ -97,6 +101,7 @@ LAYER_GAME_MODE_MAP: dict[str, GameMode] = {
     "offensive": GameMode.OFFENSIVE,
     "off": GameMode.OFFENSIVE,
     "skirmish": GameMode.SKIRMISH,
+    "conquest": GameMode.CONQUEST,
 }
 
 LAYER_ATTACKERS_MAP: dict[str, Faction] = {
@@ -132,16 +137,39 @@ LAYER_ENVIRONMENT_MAP: dict[str, tuple[TimeOfDay, Weather]] = {
 
 class Layer(CaseInsensitiveIndexedBaseModel):
     id: str
-    map: Map
-    game_mode: GameMode
+    map: Annotated[
+        Map,
+        model_serializer(str),
+    ]
+    game_mode: Annotated[
+        GameMode,
+        model_serializer(str),
+    ]
     time_of_day: TimeOfDay
     weather: Weather
     grid: Grid
     sectors: list[Sector]
-    attacking_team: Team | None = None
+    attacking_team: Annotated[
+        Team | None,
+        model_serializer(int, optional=True),
+    ] = None
+
+    @field_serializer(
+        "defending_team",
+        "attacking_faction",
+        "defending_faction",
+        mode="plain",
+        when_used="json",
+    )
+    def _serialize_computed_fields(
+        self,
+        value: Team | Faction | None,
+    ) -> IndexedBaseModelProxy[int] | None:
+        return serialize_model(value)
 
     @model_validator(mode="after")
     def _set_sectors_layer_backref(self) -> Self:
+        # TODO: Deepcopy. More difficult than it looks because the models are frozen :(
         for sector in self.sectors:
             sector._layer = self  # type: ignore[misc] # noqa: SLF001
 
@@ -1502,7 +1530,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_WARFARE_DAY(cls) -> "Layer":
         return cls(
-            id="remagen_warfare",
+            id="REM_L_1945_Warfare",
             map=Map.REMAGEN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -1517,7 +1545,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_WARFARE_NIGHT(cls) -> "Layer":
         return cls(
-            id="remagen_warfare_night",
+            id="REM_L_1945_WarfareNight",
             map=Map.REMAGEN,
             game_mode=GameMode.WARFARE,
             time_of_day=TimeOfDay.NIGHT,
@@ -1532,7 +1560,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_OFFENSIVE_US_DAY(cls) -> "Layer":
         return cls(
-            id="remagen_offensive_us",
+            id="REM_L_1945_OffensiveUS",
             map=Map.REMAGEN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -1548,7 +1576,7 @@ class Layer(CaseInsensitiveIndexedBaseModel):
     @classmethod
     def REMAGEN_OFFENSIVE_GER_DAY(cls) -> "Layer":
         return cls(
-            id="remagen_offensive_ger",
+            id="REM_L_1945_OffensiveGER",
             map=Map.REMAGEN,
             game_mode=GameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -1558,6 +1586,32 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             ),
             sectors=SECTORS_REMAGEN_LARGE,
             attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="REM_S_1945_P_Skirmish_Day",
+            map=Map.REMAGEN,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_REMAGEN_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REMAGEN_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="REM_S_1945_P_Skirmish_Night",
+            map=Map.REMAGEN,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_REMAGEN_SMALL,
         )
 
     @class_cached_property

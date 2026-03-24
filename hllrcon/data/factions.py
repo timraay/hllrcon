@@ -1,8 +1,8 @@
 # ruff: noqa: N802
 
-from typing import TYPE_CHECKING, ClassVar
+from typing import TYPE_CHECKING, Annotated, ClassVar
 
-from ._utils import IndexedBaseModel, class_cached_property
+from ._utils import IndexedBaseModel, class_cached_property, model_serializer
 from .teams import Team
 
 
@@ -12,7 +12,10 @@ class Faction(IndexedBaseModel[int, None]):
     id: int
     name: str
     short_name: str
-    team: Team
+    team: Annotated[
+        Team,
+        model_serializer(int),
+    ]
 
     @classmethod
     def _lookup_fallback(cls, id_: int) -> "Faction | None":

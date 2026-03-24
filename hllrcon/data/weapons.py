@@ -2,11 +2,15 @@
 
 from enum import StrEnum
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Annotated
 
 from pydantic import Field
 
-from hllrcon.data._utils import IndexedBaseModel, class_cached_property
+from hllrcon.data._utils import (
+    IndexedBaseModel,
+    class_cached_property,
+    model_sequence_serializer,
+)
 from hllrcon.data.factions import Faction
 
 if TYPE_CHECKING:
@@ -47,7 +51,11 @@ class Weapon(IndexedBaseModel[str]):
     name: str
     type: WeaponType
     vehicle_id: str | None = None
-    factions: set[Faction] = Field(min_length=1)
+    factions: Annotated[
+        set[Faction],
+        Field(min_length=1),
+        model_sequence_serializer(int),
+    ]
     magnification: int | None = None
 
     # @computed_field(repr=False)
@@ -383,12 +391,12 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__SHERMAN_SPA_105MM(cls) -> "Weapon":
-        """*Sherman SPA 105mm*"""
+    def V_ROADKILL__M4A3_105MM(cls) -> "Weapon":
+        """*M4A3 (105mm)*"""
         return cls(
-            id="Sherman SPA 105mm",
+            id="M4A3 (105mm)",
             name="Roadkill",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="M4A3 (105mm)",
             factions={Faction.US, Faction.CW},  # Churchill AVRE has same name; bug
             type=WeaponType.ROADKILL,
         )
@@ -575,36 +583,36 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_105MM_HOWITZER__SHERMAN_SPA_105MM(cls) -> "Weapon":
-        """*105MM HOWITZER [Sherman SPA 105mm]*"""
+    def V_105MM_HOWITZER__M4A3_105MM(cls) -> "Weapon":
+        """*105MM HOWITZER [M4A3 (105mm)]*"""
         return cls(
-            id="105MM HOWITZER [Sherman SPA 105mm]",
+            id="105MM HOWITZER [M4A3 (105mm)]",
             name="105mm Howitzer",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="M4A3 (105mm)",
             factions={Faction.US},
             type=WeaponType.TANK_CANNON,
         )
 
     @class_cached_property
     @classmethod
-    def V_COAXIAL_M1919__SHERMAN_SPA_105MM(cls) -> "Weapon":
-        """*COAXIAL M1919 [Sherman SPA 105mm]*"""
+    def V_COAXIAL_M1919__M4A3_105MM(cls) -> "Weapon":
+        """*COAXIAL M1919 [M4A3 (105mm)]*"""
         return cls(
-            id="COAXIAL M1919 [Sherman SPA 105mm]",
+            id="COAXIAL M1919 [M4A3 (105mm)]",
             name="M1919 Browning",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="M4A3 (105mm)",
             factions={Faction.US},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
     @class_cached_property
     @classmethod
-    def V_HULL_M1919__SHERMAN_SPA_105MM(cls) -> "Weapon":
-        """*HULL M1919 [Sherman SPA 105mm]*"""
+    def V_HULL_M1919__M4A3_105MM(cls) -> "Weapon":
+        """*HULL M1919 [M4A3 (105mm)]*"""
         return cls(
-            id="HULL M1919 [Sherman SPA 105mm]",
+            id="HULL M1919 [M4A3 (105mm)]",
             name="M1919 Browning",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="M4A3 (105mm)",
             factions={Faction.US},
             type=WeaponType.TANK_HULL_MG,
         )
@@ -1069,17 +1077,27 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__STURMPANZER_IV_BRUMMBAR(cls) -> "Weapon":
-        """*Strumpanzer IV Brummbar*"""
+    def V_ROADKILL__STURMPANZER_IV(cls) -> "Weapon":
+        """*Sturmpanzer IV*"""
         return cls(
-            id="Strumpanzer IV Brummbar",
+            id="Sturmpanzer IV",
             name="Roadkill",
-            vehicle_id="Strumpanzer IV Brummbar",
+            vehicle_id="Sturmpanzer IV",
             factions={Faction.GER},
             type=WeaponType.ROADKILL,
         )
 
-    # Panzer III (currently uses same name as Panzer IV; bug)
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__PANZER_III_AUSF_N(cls) -> "Weapon":
+        """*Panzer III Ausf.N*"""
+        return cls(
+            id="Panzer III Ausf.N",
+            name="Roadkill",
+            vehicle_id="Panzer III Ausf.N",
+            factions={Faction.GER},
+            type=WeaponType.ROADKILL,
+        )
 
     @class_cached_property
     @classmethod
@@ -1251,55 +1269,51 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_STUH_43_L_12__STURMPANZER_IV_BRUMMBAR(cls) -> "Weapon":
-        """*StuH 43 L/12 [Strumpanzer IV Brummbar]*"""
+    def V_STUH_43_L_12__STURMPANZER_IV(cls) -> "Weapon":
+        """*StuH 43 L/12 [Sturmpanzer IV]*"""
         return cls(
-            id="StuH 43 L/12 [Strumpanzer IV Brummbar]",
+            id="StuH 43 L/12 [Sturmpanzer IV]",
             name="StuH 43 L/12",
-            vehicle_id="Strumpanzer IV Brummbar",
+            vehicle_id="Sturmpanzer IV",
             factions={Faction.GER},
             type=WeaponType.TANK_CANNON,
         )
 
-    # The Panzer III currently uses the same name as the Panzer IV; bug
     @class_cached_property
     @classmethod
-    def V_7_5CM_KWK_37__SD_KFZ_141_PANZER_III(cls) -> "Weapon":
-        """*7.5CM KwK 37 [Sd.Kfz.161 Panzer IV]*"""
+    def V_7_5CM_KWK_37__PANZER_III_AUSF_N(cls) -> "Weapon":
+        """*7.5CM KwK 37 [Panzer III Ausf.N]*"""
         return cls(
-            id="7.5CM KwK 37 [Sd.Kfz.161 Panzer IV]",
+            id="7.5CM KwK 37 [Panzer III Ausf.N]",
             name="75mm KwK 37",
-            vehicle_id="Sd.Kfz.161 Panzer IV",
+            vehicle_id="Panzer III Ausf.N",
             factions={Faction.DAK},
             type=WeaponType.TANK_CANNON,
         )
 
-    # The Panzer III currently uses the same name as the Panzer IV; bug
-    '''
     @class_cached_property
     @classmethod
-    def V_COAXIAL_MG34__PANZER_III(cls) -> "Weapon":
-        """*COAXIAL MG34 [Sd.Kfz.161 Panzer IV]*"""
+    def V_COAXIAL_MG34__PANZER_III_AUSF_N(cls) -> "Weapon":
+        """*COAXIAL MG34 [Panzer III Ausf.N]*"""
         return cls(
-            id="COAXIAL MG34 [Sd.Kfz.161 Panzer IV]",
+            id="COAXIAL MG34 [Panzer III Ausf.N]",
             name="MG34",
-            vehicle_id="Sd.Kfz.161 Panzer IV",
+            vehicle_id="Panzer III Ausf.N",
             factions={Faction.DAK},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
     @class_cached_property
     @classmethod
-    def V_HULL_MG34__PANZER_III(cls) -> "Weapon":
-        """*HULL MG34 [Sd.Kfz.161 Panzer IV]*"""
+    def V_HULL_MG34__PANZER_III_AUSF_N(cls) -> "Weapon":
+        """*HULL MG34 [Panzer III Ausf.N]*"""
         return cls(
-            id="HULL MG34 [Sd.Kfz.161 Panzer IV]",
+            id="HULL MG34 [Panzer III Ausf.N]",
             name="MG34",
-            vehicle_id="Sd.Kfz.161 Panzer IV",
+            vehicle_id="Panzer III Ausf.N",
             factions={Faction.DAK},
             type=WeaponType.TANK_HULL_MG,
         )
-    '''
 
     @class_cached_property
     @classmethod
@@ -2336,12 +2350,24 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__BISHOP(cls) -> "Weapon":
-        """*Bishop*"""
+    def V_ROADKILL__CHURCHILL_MK_III_AVRE(cls) -> "Weapon":
+        """*Churchill Mk III A.V.R.E.*"""
         return cls(
-            id="Bishop",
+            id="Churchill Mk III A.V.R.E.",
             name="Roadkill",
-            vehicle_id="Bishop",
+            vehicle_id="Churchill Mk III A.V.R.E.",
+            factions={Faction.CW},
+            type=WeaponType.ROADKILL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__BISHOP_SP_25PDR(cls) -> "Weapon":
+        """*Bishop SP 25pdr*"""
+        return cls(
+            id="Bishop SP 25pdr",
+            name="Roadkill",
+            vehicle_id="Bishop SP 25pdr",
             factions={Faction.B8A},
             type=WeaponType.ROADKILL,
         )
@@ -2594,48 +2620,48 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_230MM_PETARD__CHURCHILL_AVRE(cls) -> "Weapon":
-        """*230MM PETARD [Sherman SPA 105mm]*"""
+    def V_230MM_PETARD__CHURCHILL_MK_III_AVRE(cls) -> "Weapon":
+        """*230MM PETARD [Churchill Mk III A.V.R.E.]*"""
         return cls(
-            id="230MM PETARD [Sherman SPA 105mm]",
+            id="230MM PETARD [Churchill Mk III A.V.R.E.]",
             name="230mm Petard",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="Churchill Mk III A.V.R.E.",
             factions={Faction.CW},
             type=WeaponType.TANK_CANNON,
         )
 
     @class_cached_property
     @classmethod
-    def V_COAXIAL_BESA_7_92MM__CHURCHILL_AVRE(cls) -> "Weapon":
-        """*COAXIAL BESA 7.92mm [Sherman SPA 105mm]*"""
+    def V_COAXIAL_BESA_7_92MM__CHURCHILL_MK_III_AVRE(cls) -> "Weapon":
+        """*COAXIAL BESA 7.92mm [Churchill Mk III A.V.R.E.]*"""
         return cls(
-            id="COAXIAL BESA 7.92mm [Sherman SPA 105mm]",
+            id="COAXIAL BESA 7.92mm [Churchill Mk III A.V.R.E.]",
             name="BESA",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="Churchill Mk III A.V.R.E.",
             factions={Faction.CW},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
     @class_cached_property
     @classmethod
-    def V_HULL_BESA_7_92MM__CHURCHILL_AVRE(cls) -> "Weapon":
-        """*HULL BESA 7.92mm [Sherman SPA 105mm]*"""
+    def V_HULL_BESA_7_92MM__CHURCHILL_MK_III_AVRE(cls) -> "Weapon":
+        """*HULL BESA 7.92mm [Churchill Mk III A.V.R.E.]*"""
         return cls(
-            id="HULL BESA 7.92mm [Sherman SPA 105mm]",
+            id="HULL BESA 7.92mm [Churchill Mk III A.V.R.E.]",
             name="BESA",
-            vehicle_id="Sherman SPA 105mm",
+            vehicle_id="Churchill Mk III A.V.R.E.",
             factions={Faction.CW},
             type=WeaponType.TANK_HULL_MG,
         )
 
     @class_cached_property
     @classmethod
-    def V_QF_25_POUNDER__BISHOP(cls) -> "Weapon":
-        """*QF 25 POUNDER [Bishop]*"""
+    def V_QF_25_POUNDER__BISHOP_SP_25PDR(cls) -> "Weapon":
+        """*QF 25 POUNDER [Bishop SP 25pdr]*"""
         return cls(
-            id="QF 25 POUNDER [Bishop]",
+            id="QF 25 POUNDER [Bishop SP 25pdr]",
             name="88mm Howitzer",
-            vehicle_id="Bishop",
+            vehicle_id="Bishop SP 25pdr",
             factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )

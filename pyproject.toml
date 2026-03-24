@@ -1,6 +1,6 @@
 [project]
 name = "hllrcon"
-version = "1.1.0.0" # Don't forget to also bump `hllrcon.__version__`
+version = "1.2.0.0" # Don't forget to also bump `hllrcon.__version__`
 description = "Asynchronous implementation of the Hell Let Loose RCON protocol"
 readme = "README.md"
 authors = [
@@ -106,6 +106,6 @@ dev = [
     "pytest-mock>=3.14.1",
     "python-dotenv>=1.1.1",
     "ruff>=0.12.0",
-    "ty>=0.0.12",
+    "ty>=0.0.23",
     "types-aiofiles>=24.1.0.20250606",
 ]

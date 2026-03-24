@@ -311,6 +311,14 @@ class TestCommands:
             {"Index": index},
         ).remove_map_from_sequence(index)
 
+    async def test_commands_get_map_shuffle_enabled(self) -> None:
+        result = await RconCommandsStub(
+            "GetMapShuffleEnabled",
+            2,
+            response=json.dumps({"enable": True}),
+        ).get_map_shuffle_enabled()
+        assert result is True
+
     async def test_commands_set_map_shuffle_enabled(self) -> None:
         await RconCommandsStub(
             "SetMapShuffleEnabled",

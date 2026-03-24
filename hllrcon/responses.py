@@ -37,6 +37,7 @@ __all__ = (
     "GetIdleKickDurationResponse",
     "GetMapRotationResponse",
     "GetMapRotationResponseEntry",
+    "GetMapShuffleEnabledResponse",
     "GetPlayerResponse",
     "GetPlayerResponseScoreData",
     "GetPlayerResponseStats",
@@ -391,8 +392,8 @@ class GetServerSessionResponse(Response):
 
 class GetServerConfigResponse(Response):
     server_name: str
-    build_number: str
-    build_revision: str
+    build_number: int
+    build_revision: int
     supported_platforms: list[SupportedPlatform]
     password_protected: bool
 
@@ -440,3 +441,7 @@ class GetCommandDetailsResponse(Response):
 
     dialogue_parameters: list[GetCommandDetailsResponseParameter]
     """A list of parameters for this command"""
+
+
+class GetMapShuffleEnabledResponse(Response):
+    enabled: bool = Field(validation_alias="enable")

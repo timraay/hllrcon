@@ -25,6 +25,7 @@ from hllrcon.responses import (
     GetHighPingThresholdResponse,
     GetIdleKickDurationResponse,
     GetMapRotationResponse,
+    GetMapShuffleEnabledResponse,
     GetPlayerResponse,
     GetPlayersResponse,
     GetServerConfigResponse,
@@ -40,7 +41,7 @@ P = ParamSpec("P")
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=BaseModel)
 
-GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Skirmish"]
+GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
 
 
 @overload
@@ -372,6 +373,18 @@ class RconCommands(ABC):
                 "Index": index,
             },
         )
+
+    @cast_response_to_model(GetMapShuffleEnabledResponse, lambda r: r.enabled)
+    async def get_map_shuffle_enabled(self) -> str:
+        """Retrieve whether map shuffling of the map sequence is enabled.
+
+        Returns
+        -------
+        bool
+            Whether map shuffling of the map sequence is enabled.
+
+        """
+        return await self.execute("GetMapShuffleEnabled", 2)
 
     async def set_map_shuffle_enabled(self, *, enabled: bool) -> None:
         """Enable or disable map shuffling of the map sequence.
@@ -1327,7 +1340,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to set the match timer for.
         minutes : int
             The number of minutes to set the match timer to.
@@ -1350,7 +1363,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to reset the match timer for.
 
         """
@@ -1375,7 +1388,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to set the warmup timer for.
         minutes : int
             The number of minutes to set the warmup timer to.
@@ -1398,7 +1411,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Skirmish"]
+        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
             The game mode to reset the warmup timer for.
 
         """

@@ -1,5 +1,4 @@
 # ruff: noqa: N802
-
 from enum import StrEnum
 
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
@@ -256,12 +255,17 @@ class Role(IndexedBaseModel[int]):
         return cls(
             id=13,
             name="ArmyCommander",
-            pretty_name="Army Commander",
+            pretty_name="Commander",
             type=RoleType.COMMANDER,
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,
         )
+
+    @class_cached_property
+    @classmethod
+    def ARMY_COMMANDER(cls) -> "Role":
+        return cls.COMMANDER
 
     @class_cached_property
     @classmethod
@@ -278,11 +282,11 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ARTILLERY_ENGINEER(cls) -> "Role":
+    def OPERATOR(cls) -> "Role":
         return cls(
             id=15,
-            name="ArtilleryEngineer",
-            pretty_name="Artillery Engineer",
+            name="Operator",
+            pretty_name="Operator",
             type=RoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=9,
@@ -291,13 +295,25 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ARTILLERY_SUPPORT(cls) -> "Role":
+    # @deprecated("Use Role.OPERATOR instead.")
+    def ARTILLERY_ENGINEER(cls) -> "Role":
+        return cls.OPERATOR
+
+    @class_cached_property
+    @classmethod
+    def GUNNER(cls) -> "Role":
         return cls(
             id=16,
-            name="ArtillerySupport",
-            pretty_name="Artillery Support",
+            name="Gunner",
+            pretty_name="Gunner",
             type=RoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
         )
+
+    @class_cached_property
+    @classmethod
+    # @deprecated("Use Role.GUNNER instead.")
+    def ARTILLERY_SUPPORT(cls) -> "Role":
+        return cls.GUNNER

@@ -34,5 +34,10 @@ class GameMode(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
+    def CONQUEST(cls) -> "GameMode":
+        return cls(id="conquest", scale=GameModeScale.LARGE)
+
+    @class_cached_property
+    @classmethod
     def SKIRMISH(cls) -> "GameMode":
         return cls(id="skirmish", scale=GameModeScale.SMALL)

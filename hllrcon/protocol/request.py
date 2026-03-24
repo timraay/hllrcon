@@ -3,7 +3,7 @@ import json
 import struct
 from typing import Any, ClassVar
 
-from hllrcon.protocol.constants import REQUEST_HEADER_FORMAT
+from hllrcon.protocol.constants import MAGIC_HEADER_VALUE, REQUEST_HEADER_FORMAT
 
 
 class RconRequest:
@@ -61,6 +61,7 @@ class RconRequest:
         body_encoded = json.dumps(body, separators=(",", ":")).encode()
         header = struct.pack(
             REQUEST_HEADER_FORMAT,
+            MAGIC_HEADER_VALUE,
             self.request_id,
             len(body_encoded),
         )
