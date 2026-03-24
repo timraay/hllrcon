@@ -159,6 +159,10 @@ class TestDataUtils:
                 set[Foo] | None,
                 model_sequence_serializer(int, optional=True),
             ]
+            foos2: Annotated[
+                list[Foo] | None,
+                model_sequence_serializer(int, optional=True),
+            ]
             foo_n: Annotated[
                 Foo | None,
                 model_serializer(int, optional=True),
@@ -170,7 +174,7 @@ class TestDataUtils:
 
         foo1 = Foo(id=1)
         foo2 = Foo(id=2)
-        bar1 = Bar(id=1, foo=foo1, foos={foo2, foo1})
+        bar1 = Bar(id=1, foo=foo1, foos={foo2, foo1}, foos2=[foo2, foo1])
 
         json_data = bar1.model_dump_json()
 
@@ -180,6 +184,10 @@ class TestDataUtils:
             "foos": [
                 {"type": "foo", "id": 1, "key": "1"},
                 {"type": "foo", "id": 2, "key": "2"},
+            ],
+            "foos2": [
+                {"type": "foo", "id": 2, "key": "2"},
+                {"type": "foo", "id": 1, "key": "1"},
             ],
             "foo_n": None,
             "foos_n": None,
