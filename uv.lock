@@ -135,7 +135,7 @@ toml = [
 
 [[package]]
 name = "hllrcon"
-version = "1.2.0.0b1100372.post0"
+version = "1.2.0.0"
 source = { editable = "." }
 dependencies = [
     { name = "pydantic" },

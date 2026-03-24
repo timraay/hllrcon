@@ -196,7 +196,7 @@ def serialize_model_sequence(
 
 
 def model_serializer(hash_type: Hashable, *, optional: bool = False) -> PlainSerializer:
-    return_type = IndexedBaseModelProxy[hash_type]
+    return_type = IndexedBaseModelProxy[hash_type]  # ty:ignore[invalid-type-form]
     if optional:
         return_type = return_type | None
 
@@ -211,7 +211,7 @@ def model_sequence_serializer(
     *,
     optional: bool = False,
 ) -> PlainSerializer:
-    return_type = list[IndexedBaseModelProxy[hash_type]]
+    return_type = list[IndexedBaseModelProxy[hash_type]]  # ty:ignore[invalid-type-form]
     if optional:
         return_type = return_type | None
 
