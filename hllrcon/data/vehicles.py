@@ -146,6 +146,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -171,6 +172,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
@@ -190,6 +192,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -206,17 +209,20 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
             ],
@@ -254,6 +260,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -291,6 +298,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -329,6 +337,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -367,6 +376,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -386,11 +396,13 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -409,61 +421,73 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=5,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=6,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=7,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=8,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=9,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=10,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=11,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -482,6 +506,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
@@ -495,31 +520,37 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=5,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=6,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=7,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -538,21 +569,25 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -590,6 +625,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -615,6 +651,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -640,6 +677,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
@@ -659,6 +697,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -675,17 +714,20 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
             ],
@@ -704,6 +746,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -720,6 +763,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -758,6 +802,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES | _ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -796,6 +841,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -834,6 +880,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -853,11 +900,13 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -876,61 +925,73 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=5,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=6,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=7,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=8,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=9,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=10,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=11,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -949,6 +1010,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
@@ -962,31 +1024,37 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=5,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=6,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=7,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1005,21 +1073,25 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1038,6 +1110,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1053,6 +1126,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1089,6 +1163,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1114,6 +1189,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1139,6 +1215,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=True,
                 ),
@@ -1158,6 +1235,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1174,17 +1252,20 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
             ],
@@ -1203,6 +1284,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1219,6 +1301,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1257,6 +1340,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1295,6 +1379,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1314,11 +1399,13 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1337,61 +1424,73 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=5,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=6,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=7,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=8,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=9,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=10,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=11,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1410,21 +1509,25 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1457,6 +1560,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1482,6 +1586,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1506,6 +1611,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.LOADER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1524,6 +1630,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1540,17 +1647,20 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=False,
                 ),
             ],
@@ -1569,6 +1679,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1585,6 +1696,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1623,6 +1735,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1661,6 +1774,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1680,6 +1794,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1696,6 +1811,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1715,6 +1831,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1731,6 +1848,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1769,6 +1887,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1807,6 +1926,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1826,11 +1946,13 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1849,61 +1971,73 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=1,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=3,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=4,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=5,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=6,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=7,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=8,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=9,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=10,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
                 VehicleSeat(
                     index=11,
                     type=VehicleSeatType.PASSENGER,
+                    weapons=[],
                     exposed=True,
                 ),
             ],
@@ -1939,6 +2073,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1958,6 +2093,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=0,
                     type=VehicleSeatType.DRIVER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1971,6 +2107,7 @@ class Vehicle(IndexedBaseModel[str]):
                 VehicleSeat(
                     index=2,
                     type=VehicleSeatType.SPOTTER,
+                    weapons=[],
                     requires_roles=_ARTY_CREW_ROLES,
                     exposed=False,
                 ),

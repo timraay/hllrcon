@@ -202,7 +202,6 @@ def model_serializer(hash_type: Hashable, *, optional: bool = False) -> PlainSer
 
     return PlainSerializer(
         lambda x: serialize_model(x),  # noqa: PLW0108
-        # return_type=return_type,
         when_used="json",
     )
 

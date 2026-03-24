@@ -38,7 +38,7 @@ def main() -> None:
     for model_cls in model_classes:
         model_name = to_snake(model_cls.__name__)
 
-        output_types[model_name] = dict[Any, model_cls]
+        output_types[model_name] = dict[Any, model_cls]  # ty:ignore[invalid-type-form]
 
         models: Models = {}
         output[model_name] = models
