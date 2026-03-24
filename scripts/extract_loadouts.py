@@ -223,8 +223,8 @@ class HLLTeamLoadouts(Model):
             (Role.TANK_COMMANDER, self.tank_commander),
             (Role.CREWMAN, self.crewman),
             (Role.ARTILLERY_OBSERVER, self.artillery_observer),
-            (Role.ARTILLERY_ENGINEER, self.artillery_engineer),
-            (Role.ARTILLERY_SUPPORT, self.artillery_support),
+            (Role.OPERATOR, self.artillery_engineer),
+            (Role.GUNNER, self.artillery_support),
             (Role.SPOTTER, self.spotter),
             (Role.SNIPER, self.sniper),
         ]

@@ -1,8 +1,6 @@
 # ruff: noqa: N802
 from enum import StrEnum
 
-from typing_extensions import deprecated
-
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
 
 
@@ -297,7 +295,7 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    @deprecated("Use Role.OPERATOR instead.")
+    # @deprecated("Use Role.OPERATOR instead.")
     def ARTILLERY_ENGINEER(cls) -> "Role":
         return cls.OPERATOR
 
@@ -316,6 +314,6 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    @deprecated("Use Role.GUNNER instead.")
+    # @deprecated("Use Role.GUNNER instead.")
     def ARTILLERY_SUPPORT(cls) -> "Role":
         return cls.GUNNER
