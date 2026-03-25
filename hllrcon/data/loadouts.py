@@ -4110,7 +4110,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ASSAULT,
             requires_level=1,
             items=[
-                LoadoutItem(name="Sten Gun", amount=8),
+                LoadoutItem(name="Sten Gun Mk.II", amount=8),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
@@ -4454,7 +4454,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ENGINEER,
             requires_level=6,
             items=[
-                LoadoutItem(name="Sten Gun", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Wrench", amount=1),
@@ -4474,7 +4474,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.TANK_COMMANDER,
             requires_level=1,
             items=[
-                LoadoutItem(name="Sten Gun", amount=4),
+                LoadoutItem(name="Sten Gun Mk.II", amount=4),
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
@@ -4563,7 +4563,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                LoadoutItem(name="Sten Gun", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Watch", amount=1),
@@ -4661,7 +4661,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ARTILLERY_SUPPORT,
             requires_level=3,
             items=[
-                LoadoutItem(name="Sten Gun", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Supplies", amount=1),

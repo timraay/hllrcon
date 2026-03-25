@@ -2005,25 +2005,20 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def STEN_GUN(cls) -> "Weapon":
-        """*Sten Gun*"""
-        return cls(
-            id="Sten Gun",
-            name="Sten Mk II",
-            factions={Faction.B8A},
-            type=WeaponType.SUBMACHINE_GUN,
-        )
-
-    @class_cached_property
-    @classmethod
     def STEN_GUN_MK_II(cls) -> "Weapon":
         """*Sten Gun Mk.II*"""
         return cls(
             id="Sten Gun Mk.II",
             name="Sten Mk II",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A},
             type=WeaponType.SUBMACHINE_GUN,
         )
+
+    @class_cached_property
+    @classmethod
+    def STEN_GUN(cls) -> "Weapon":
+        """*Sten Gun Mk.II*"""
+        return cls.STEN_GUN_MK_II
 
     @class_cached_property
     @classmethod
