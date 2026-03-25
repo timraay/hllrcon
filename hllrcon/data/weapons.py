@@ -2005,12 +2005,6 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def STEN_GUN(cls) -> "Weapon":
-        """*Sten Gun Mk.II*"""
-        return cls.STEN_GUN_MK_II
-
-    @class_cached_property
-    @classmethod
     def STEN_GUN_MK_II(cls) -> "Weapon":
         """*Sten Gun Mk.II*"""
         return cls(
@@ -2019,6 +2013,12 @@ class Weapon(IndexedBaseModel[str]):
             factions={Faction.CW, Faction.B8A},
             type=WeaponType.SUBMACHINE_GUN,
         )
+
+    @class_cached_property
+    @classmethod
+    def STEN_GUN(cls) -> "Weapon":
+        """*Sten Gun Mk.II*"""
+        return cls.STEN_GUN_MK_II
 
     @class_cached_property
     @classmethod
