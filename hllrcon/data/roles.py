@@ -1,10 +1,13 @@
 # ruff: noqa: N802
 from enum import StrEnum
+from typing import Generic, TypeAlias, TypeVar
 
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
 
+RoleTypeT = TypeVar("RoleTypeT", bound=StrEnum)
 
-class RoleType(StrEnum):
+
+class HLLRoleType(StrEnum):
     INFANTRY = "Infantry"
     ARMOR = "Armor"
     ARTILLERY = "Artillery"
@@ -12,11 +15,23 @@ class RoleType(StrEnum):
     COMMANDER = "Commander"
 
 
-class Role(IndexedBaseModel[int]):
+class HLLVRoleType(StrEnum):
+    INFANTRY = "Infantry"
+    ARMOR = "Armor"
+    MORTAR = "Mortar"
+    RECON = "Recon"
+    HELICOPTER = "Helicopter"
+    COMMANDER = "Commander"
+
+
+RoleType: TypeAlias = HLLRoleType | HLLVRoleType
+
+
+class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
     id: int
     name: str
     pretty_name: str
-    type: RoleType
+    type: RoleTypeT
     is_squad_leader: bool
     """Whether this role is exclusive to the squad leader.
 
@@ -47,7 +62,7 @@ class Role(IndexedBaseModel[int]):
         - Anti-Tank
         - Engineer
         """
-        return self.type == RoleType.INFANTRY
+        return self.type in (HLLRoleType.INFANTRY, HLLVRoleType.INFANTRY)
 
     @property
     def is_tanker(self) -> bool:
@@ -57,7 +72,7 @@ class Role(IndexedBaseModel[int]):
         - Tank Commander
         - Crewman
         """
-        return self.type == RoleType.ARMOR
+        return self.type in (HLLRoleType.ARMOR, HLLVRoleType.ARMOR)
 
     @property
     def is_artillery(self) -> bool:
@@ -65,10 +80,22 @@ class Role(IndexedBaseModel[int]):
 
         Roles included are:
         - Artillery Observer
-        - Artillery Engineer
-        - Artillery Support
+        - Operator
+        - Gunner
         """
-        return self.type == RoleType.ARTILLERY
+        return self.type == HLLRoleType.ARTILLERY
+
+    @property
+    def is_mortar(self) -> bool:
+        """Whether the role is associated with mortar units.
+
+        Roles included are:
+        - Mortar Observer
+        - Operator
+        - Gunner
+        """
+        # TODO: Update docstring
+        return self.type == HLLVRoleType.MORTAR
 
     @property
     def is_recon(self) -> bool:
@@ -78,16 +105,18 @@ class Role(IndexedBaseModel[int]):
         - Spotter
         - Sniper
         """
-        return self.type == RoleType.RECON
+        return self.type in (HLLRoleType.RECON, HLLVRoleType.RECON)
 
+
+class HLLRole(_Role[HLLRoleType]):
     @class_cached_property
     @classmethod
-    def RIFLEMAN(cls) -> "Role":
+    def RIFLEMAN(cls) -> "HLLRole":
         return cls(
             id=0,
             name="Rifleman",
             pretty_name="Rifleman",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
@@ -95,12 +124,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ASSAULT(cls) -> "Role":
+    def ASSAULT(cls) -> "HLLRole":
         return cls(
             id=1,
             name="Assault",
             pretty_name="Assault",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -108,12 +137,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def AUTOMATIC_RIFLEMAN(cls) -> "Role":
+    def AUTOMATIC_RIFLEMAN(cls) -> "HLLRole":
         return cls(
             id=2,
             name="AutomaticRifleman",
             pretty_name="Automatic Rifleman",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -121,12 +150,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def MEDIC(cls) -> "Role":
+    def MEDIC(cls) -> "HLLRole":
         return cls(
             id=3,
             name="Medic",
             pretty_name="Medic",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -134,12 +163,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def SPOTTER(cls) -> "Role":
+    def SPOTTER(cls) -> "HLLRole":
         return cls(
             id=4,
             name="Spotter",
             pretty_name="Spotter",
-            type=RoleType.RECON,
+            type=HLLRoleType.RECON,
             is_squad_leader=True,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -147,12 +176,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def SUPPORT(cls) -> "Role":
+    def SUPPORT(cls) -> "HLLRole":
         return cls(
             id=5,
             name="Support",
             pretty_name="Support",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -160,12 +189,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def MACHINE_GUNNER(cls) -> "Role":
+    def MACHINE_GUNNER(cls) -> "HLLRole":
         return cls(
             id=6,
             name="HeavyMachineGunner",
             pretty_name="Machine Gunner",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -173,12 +202,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ANTI_TANK(cls) -> "Role":
+    def ANTI_TANK(cls) -> "HLLRole":
         return cls(
             id=7,
             name="AntiTank",
             pretty_name="Anti-Tank",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -186,12 +215,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ENGINEER(cls) -> "Role":
+    def ENGINEER(cls) -> "HLLRole":
         return cls(
             id=8,
             name="Engineer",
             pretty_name="Engineer",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -199,12 +228,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def OFFICER(cls) -> "Role":
+    def OFFICER(cls) -> "HLLRole":
         return cls(
             id=9,
             name="Officer",
             pretty_name="Officer",
-            type=RoleType.INFANTRY,
+            type=HLLRoleType.INFANTRY,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -212,12 +241,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def SNIPER(cls) -> "Role":
+    def SNIPER(cls) -> "HLLRole":
         return cls(
             id=10,
             name="Sniper",
             pretty_name="Sniper",
-            type=RoleType.RECON,
+            type=HLLRoleType.RECON,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -225,12 +254,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def CREWMAN(cls) -> "Role":
+    def CREWMAN(cls) -> "HLLRole":
         return cls(
             id=11,
             name="Crewman",
             pretty_name="Crewman",
-            type=RoleType.ARMOR,
+            type=HLLRoleType.ARMOR,
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
@@ -238,12 +267,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def TANK_COMMANDER(cls) -> "Role":
+    def TANK_COMMANDER(cls) -> "HLLRole":
         return cls(
             id=12,
             name="TankCommander",
             pretty_name="Tank Commander",
-            type=RoleType.ARMOR,
+            type=HLLRoleType.ARMOR,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -251,12 +280,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def COMMANDER(cls) -> "Role":
+    def COMMANDER(cls) -> "HLLRole":
         return cls(
             id=13,
             name="ArmyCommander",
             pretty_name="Commander",
-            type=RoleType.COMMANDER,
+            type=HLLRoleType.COMMANDER,
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,
@@ -264,17 +293,17 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def ARMY_COMMANDER(cls) -> "Role":
+    def ARMY_COMMANDER(cls) -> "HLLRole":
         return cls.COMMANDER
 
     @class_cached_property
     @classmethod
-    def ARTILLERY_OBSERVER(cls) -> "Role":
+    def ARTILLERY_OBSERVER(cls) -> "HLLRole":
         return cls(
             id=14,
             name="ArtilleryObserver",
             pretty_name="Artillery Observer",
-            type=RoleType.ARTILLERY,
+            type=HLLRoleType.ARTILLERY,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -282,12 +311,12 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    def OPERATOR(cls) -> "Role":
+    def OPERATOR(cls) -> "HLLRole":
         return cls(
             id=15,
             name="Operator",
             pretty_name="Operator",
-            type=RoleType.ARTILLERY,
+            type=HLLRoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -295,25 +324,21 @@ class Role(IndexedBaseModel[int]):
 
     @class_cached_property
     @classmethod
-    # @deprecated("Use Role.OPERATOR instead.")
-    def ARTILLERY_ENGINEER(cls) -> "Role":
-        return cls.OPERATOR
-
-    @class_cached_property
-    @classmethod
-    def GUNNER(cls) -> "Role":
+    def GUNNER(cls) -> "HLLRole":
         return cls(
             id=16,
             name="Gunner",
             pretty_name="Gunner",
-            type=RoleType.ARTILLERY,
+            type=HLLRoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
         )
 
-    @class_cached_property
-    @classmethod
-    # @deprecated("Use Role.GUNNER instead.")
-    def ARTILLERY_SUPPORT(cls) -> "Role":
-        return cls.GUNNER
+
+class HLLVRole(_Role):
+    # TODO: Add roles
+    pass
+
+
+Role: TypeAlias = HLLRole | HLLVRole

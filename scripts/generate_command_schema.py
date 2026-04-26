@@ -12,14 +12,13 @@ import logging
 import aiofiles
 from pydantic import RootModel
 
-from hllrcon.connection import RconConnection
-from hllrcon.responses import GetCommandDetailsResponse
+from hllrcon import HLLGetCommandDetailsResponse, HLLRcon
 from scripts import HLL_SERVER_CREDENTIALS
 
 logging.basicConfig(level=logging.INFO)
 
 
-AllCommandDetails = RootModel[list[GetCommandDetailsResponse]]
+AllCommandDetails = RootModel[list[HLLGetCommandDetailsResponse]]
 
 
 async def main() -> None:
@@ -27,12 +26,13 @@ async def main() -> None:
         msg = "Server credentials must be set in the environment variables."
         raise ValueError(msg)
 
-    conn = await RconConnection.connect(**HLL_SERVER_CREDENTIALS)
+    rcon = HLLRcon(**HLL_SERVER_CREDENTIALS)
+    await rcon.wait_until_connected()
 
-    all_commands = await conn.get_commands()
+    all_commands = await rcon.get_commands()
     all_command_details = AllCommandDetails(
         await asyncio.gather(
-            *(conn.get_command_details(entry.id) for entry in all_commands.entries),
+            *(rcon.get_command_details(entry.id) for entry in all_commands.entries),
         ),
     )
 

@@ -7,34 +7,37 @@ from typing import Any
 from unittest import mock
 
 import pytest
-from hllrcon.connection import RconConnection
-from hllrcon.sync.rcon import SyncRcon
+from hllrcon.connection import HLLRconConnection
+from hllrcon.sync.rcon import HLLSyncRcon
 
 
 @pytest.fixture
-def connection() -> RconConnection:
-    mock_connection = mock.Mock(spec=RconConnection)
+def connection() -> HLLRconConnection:
+    mock_connection = mock.Mock(spec=HLLRconConnection)
     mock_connection.is_connected.return_value = True
     return mock_connection
 
 
 @pytest.fixture
-def rcon(monkeypatch: pytest.MonkeyPatch, connection: mock.Mock) -> SyncRcon:
-    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+def rcon(monkeypatch: pytest.MonkeyPatch, connection: mock.Mock) -> HLLSyncRcon:
+    async def get_connection(
+        *_args: Any,  # noqa: ANN401
+        **_kwargs: dict[str, Any],
+    ) -> HLLRconConnection:
         return connection
 
-    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
-    return SyncRcon(host="localhost", port=1234, password="password")
+    monkeypatch.setattr("hllrcon.rcon.HLLRconConnection.connect", get_connection)
+    return HLLSyncRcon(host="localhost", port=1234, password="password")
 
 
-def test_basic_usage(rcon: SyncRcon, connection: mock.Mock) -> None:
+def test_basic_usage(rcon: HLLSyncRcon, connection: mock.Mock) -> None:
     with rcon.connect():
         connection.execute.return_value = "pong"
         result = rcon.execute("ping", 1)
         assert result == "pong"
 
 
-def test_properties(rcon: SyncRcon) -> None:
+def test_properties(rcon: HLLSyncRcon) -> None:
     assert rcon.host == "localhost"
     assert rcon.port == 1234
     assert rcon.password == "password"
@@ -60,7 +63,7 @@ def test_properties(rcon: SyncRcon) -> None:
     assert rcon._rcon.reconnect_after_failures == 5
 
 
-def test_is_connected(rcon: SyncRcon, connection: mock.Mock) -> None:
+def test_is_connected(rcon: HLLSyncRcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected initially"
 
     rcon.wait_until_connected()
@@ -70,7 +73,7 @@ def test_is_connected(rcon: SyncRcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected after connection loss"
 
 
-def test_enter_exit(rcon: SyncRcon, connection: mock.Mock) -> None:
+def test_enter_exit(rcon: HLLSyncRcon, connection: mock.Mock) -> None:
     assert rcon._loop is None, "Initial connection should be None"
 
     with rcon.connect():
@@ -93,7 +96,7 @@ def test_enter_exit(rcon: SyncRcon, connection: mock.Mock) -> None:
     assert rcon._loop is None, "Loop should be reset to None after error"
 
 
-def test_disconnect(rcon: SyncRcon) -> None:
+def test_disconnect(rcon: HLLSyncRcon) -> None:
     rcon.wait_until_connected()
     assert rcon.is_connected()
 
@@ -104,7 +107,10 @@ def test_disconnect(rcon: SyncRcon) -> None:
     assert not rcon.is_connected()
 
 
-def test_thread_start_failure(monkeypatch: pytest.MonkeyPatch, rcon: SyncRcon) -> None:
+def test_thread_start_failure(
+    monkeypatch: pytest.MonkeyPatch,
+    rcon: HLLSyncRcon,
+) -> None:
     loop_type = type(asyncio.new_event_loop())
     monkeypatch.setattr(loop_type, "run_forever", lambda _: None)
     with pytest.raises(RuntimeError, match="Thread never signalled back"):
@@ -120,7 +126,7 @@ def test_thread_start_failure(monkeypatch: pytest.MonkeyPatch, rcon: SyncRcon) -
     assert rcon._loop is None, "Loop should be None after failure"
 
 
-def test_execute_concurrently(rcon: SyncRcon, connection: mock.Mock) -> None:
+def test_execute_concurrently(rcon: HLLSyncRcon, connection: mock.Mock) -> None:
     with rcon.connect():
         connection.execute.side_effect = lambda x, *_: {"ping": "pong", "foo": "bar"}[x]
         results = concurrent.futures.wait(

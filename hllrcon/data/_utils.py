@@ -1,13 +1,34 @@
+# mypy: disable-error-code="prop-decorator"
+
+
 import functools
 from collections.abc import Callable, Hashable
-from typing import TYPE_CHECKING, Annotated, Any, ClassVar, Generic, Never, Self, cast
+from typing import (
+    TYPE_CHECKING,
+    Annotated,
+    Any,
+    ClassVar,
+    Generic,
+    Never,
+    Protocol,
+    Self,
+    cast,
+)
 
 from pydantic import BaseModel, ConfigDict, PlainSerializer, PrivateAttr, computed_field
 from pydantic.alias_generators import to_snake
 from typing_extensions import TypeVar
 
+
+class IndexedBaseModelKey(Protocol, Hashable):
+    def __lt__(self, other: Any) -> bool: ...  # noqa: ANN401
+
+
 T = TypeVar("T")
-H = TypeVar("H", bound=Hashable)
+if TYPE_CHECKING:
+    H = TypeVar("H", bound=IndexedBaseModelKey)
+else:
+    H = TypeVar("H", bound=Hashable)
 R = TypeVar("R", default=Never)
 
 
@@ -42,14 +63,20 @@ class IndexedBaseModel(BaseModel, Generic[H, R]):
 
     @classmethod
     def __pydantic_init_subclass__(cls, **kwargs: Any) -> None:  # noqa: ANN401
-        if (
-            cls.model_fields
-            and "id" not in cls.model_fields
-            and "id" not in cls.model_computed_fields
-            and "id" not in cls.__dict__
-        ):
-            msg = f"{cls.__name__} must define an 'id' field."
-            raise TypeError(msg)
+        if cls.model_fields:
+            for base in cls.__mro__:
+                if not issubclass(base, IndexedBaseModel):
+                    continue
+
+                if (
+                    "id" in base.model_fields
+                    or "id" in base.model_computed_fields
+                    or "id" in base.__dict__
+                ):
+                    break
+            else:
+                msg = f"{cls.__name__} must define an 'id' field."
+                raise TypeError(msg)
 
         cls._lookup_map = {}
 
@@ -196,9 +223,9 @@ def serialize_model_sequence(
 
 
 def model_serializer(hash_type: Hashable, *, optional: bool = False) -> PlainSerializer:
-    return_type = IndexedBaseModelProxy[hash_type]  # ty:ignore[invalid-type-form]
+    return_type = list[IndexedBaseModelProxy[hash_type]]  # type: ignore[valid-type] # ty:ignore[invalid-type-form]
     if optional:
-        return_type = return_type | None
+        return_type = return_type | None  # type: ignore[misc, assignment]
 
     return PlainSerializer(
         lambda x: serialize_model(x),  # noqa: PLW0108
@@ -211,9 +238,9 @@ def model_sequence_serializer(
     *,
     optional: bool = False,
 ) -> PlainSerializer:
-    return_type = list[IndexedBaseModelProxy[hash_type]]  # ty:ignore[invalid-type-form]
+    return_type = list[IndexedBaseModelProxy[hash_type]]  # type: ignore[valid-type] # ty:ignore[invalid-type-form]
     if optional:
-        return_type = return_type | None
+        return_type = return_type | None  # type: ignore[misc, assignment]
 
     return PlainSerializer(
         serialize_model_sequence,

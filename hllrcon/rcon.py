@@ -1,17 +1,26 @@
 import asyncio
 import logging
+from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Any
+from typing import Any, Generic, TypeAlias, TypeVar
 
 from typing_extensions import override
 
-from hllrcon.client import RconClient
-from hllrcon.connection import RconConnection
-from hllrcon.exceptions import HLLConnectionClosedError
+from hllrcon.client import HLLRconClient, HLLVRconClient, _RconClient
+from hllrcon.connection import HLLRconConnection, HLLVRconConnection, _RconConnection
+from hllrcon.exceptions import RconConnectionClosedError
+
+__all__ = (
+    "HLLRcon",
+    "HLLVRcon",
+    "Rcon",
+)
+
+RconConnectionT = TypeVar("RconConnectionT", bound=_RconConnection)
 
 
-class Rcon(RconClient):
+class _Rcon(_RconClient, ABC, Generic[RconConnectionT]):
     """An inferface for connecting to an RCON server.
 
     This class will (re)connect to the RCON server on-demand. Only when no connection is
@@ -54,7 +63,7 @@ class Rcon(RconClient):
         self.reconnect_after_failures = max(0, reconnect_after_failures)
 
         self._logger = logger
-        self._connection: asyncio.Future[RconConnection] | None = None
+        self._connection: asyncio.Future[RconConnectionT] | None = None
         self._failure_count = 0
 
     @property
@@ -65,7 +74,10 @@ class Rcon(RconClient):
     def logger(self, value: logging.Logger | None) -> None:
         self._logger = value
 
-    async def _get_connection(self) -> RconConnection:
+    @abstractmethod
+    async def _create_connection(self) -> RconConnectionT: ...
+
+    async def _get_connection(self) -> RconConnectionT:
         if (
             self._connection
             and self._connection.done()
@@ -79,12 +91,7 @@ class Rcon(RconClient):
         if self._connection is None:
             self._connection = asyncio.Future()
             try:
-                connection = await RconConnection.connect(
-                    host=self.host,
-                    port=self.port,
-                    password=self.password,
-                    logger=self._logger,
-                )
+                connection = await self._create_connection()
                 self._connection.set_result(connection)
             except Exception as e:
                 old_connection = self._connection
@@ -135,7 +142,7 @@ class Rcon(RconClient):
                 if not self._connection.exception():
                     self._connection.result().disconnect()
             else:
-                self._connection.set_exception(HLLConnectionClosedError())
+                self._connection.set_exception(RconConnectionClosedError())
 
         self._connection = None
         self._failure_count = 0
@@ -159,3 +166,26 @@ class Rcon(RconClient):
             ):
                 self.disconnect()
             raise
+
+
+class HLLRcon(HLLRconClient, _Rcon[HLLRconConnection]):
+    async def _create_connection(self) -> HLLRconConnection:
+        return await HLLRconConnection.connect(
+            host=self.host,
+            port=self.port,
+            password=self.password,
+            logger=self.logger,
+        )
+
+
+class HLLVRcon(HLLVRconClient, _Rcon[HLLVRconConnection]):
+    async def _create_connection(self) -> HLLVRconConnection:
+        return await HLLVRconConnection.connect(
+            host=self.host,
+            port=self.port,
+            password=self.password,
+            logger=self.logger,
+        )
+
+
+Rcon: TypeAlias = HLLRcon | HLLVRcon

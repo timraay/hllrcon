@@ -1,11 +1,18 @@
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
+from typing import TypeAlias
 
-from hllrcon.commands import RconCommands
+from hllrcon.commands import HLLRconCommands, HLLVRconCommands, _RconCommands
+
+__all__ = (
+    "HLLRconClient",
+    "HLLVRconClient",
+    "RconClient",
+)
 
 
-class RconClient(RconCommands, ABC):
+class _RconClient(_RconCommands, ABC):
     """Abstract base class for RCON clients.
 
     This class defines the interface for RCON clients, including methods for
@@ -40,3 +47,14 @@ class RconClient(RconCommands, ABC):
     @abstractmethod
     def disconnect(self) -> None:
         """Disconnect from the RCON server."""
+
+
+class HLLRconClient(HLLRconCommands, _RconClient):
+    pass
+
+
+class HLLVRconClient(HLLVRconCommands, _RconClient):
+    pass
+
+
+RconClient: TypeAlias = HLLRconClient | HLLVRconClient

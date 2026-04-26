@@ -69,6 +69,7 @@ class TestIntegratedServer:
         result = await rcon.kick_player("1234567890", "Test reason")
         assert result is False
 
+    @pytest.mark.skip("Disabled for Vietnam closed beta")
     async def test_modify_sequence(
         self,
         rcon: Rcon,
@@ -95,6 +96,7 @@ class TestIntegratedServer:
         new_sequence = await rcon.get_map_sequence()
         assert sequence == new_sequence
 
+    @pytest.mark.skip("Disabled for Vietnam closed beta")
     async def test_modify_rotation(
         self,
         rcon: Rcon,

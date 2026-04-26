@@ -1,18 +1,21 @@
 import asyncio
 import logging
 import threading
+from abc import ABC, abstractmethod
 from collections.abc import Generator
 from concurrent.futures import Future
 from contextlib import contextmanager
-from typing import Any
+from typing import Any, Generic, TypeAlias, TypeVar
 
 from typing_extensions import override
 
-from hllrcon.rcon import Rcon
-from hllrcon.sync.commands import SyncRconCommands
+from hllrcon.rcon import HLLRcon, HLLVRcon, _Rcon
+from hllrcon.sync.commands import HLLSyncRconCommands, _SyncRconCommands
+
+RconT = TypeVar("RconT", bound="_Rcon")
 
 
-class SyncRcon(SyncRconCommands):
+class _SyncRcon(_SyncRconCommands, ABC, Generic[RconT]):
     """A synchronous interface for connecting to an RCON server.
 
     This is a wrapper for the asynchronous `Rcon` class, which is being run in a
@@ -21,6 +24,15 @@ class SyncRcon(SyncRconCommands):
     To execute commands concurrently, a new `execute_concurrently` method is provided,
     which returns a `concurrent.futures.Future` object.
     """
+
+    @abstractmethod
+    def _create_rcon(
+        self,
+        host: str,
+        port: int,
+        password: str,
+        logger: logging.Logger | None,
+    ) -> RconT: ...
 
     def __init__(
         self,
@@ -51,13 +63,13 @@ class SyncRcon(SyncRconCommands):
 
         """
         self._logger = logger
-        self._rcon = Rcon(
-            host,
-            port,
-            password,
+        self._rcon = self._create_rcon(
+            host=host,
+            port=port,
+            password=password,
             logger=logger,
-            reconnect_after_failures=reconnect_after_failures,
         )
+        self._rcon.reconnect_after_failures = reconnect_after_failures
         self._loop: asyncio.AbstractEventLoop | None = None
 
     @property
@@ -217,3 +229,38 @@ class SyncRcon(SyncRconCommands):
             version=version,
             body=body,
         ).result()
+
+
+class HLLSyncRcon(HLLSyncRconCommands, _SyncRcon[HLLRcon]):
+    def _create_rcon(
+        self,
+        host: str,
+        port: int,
+        password: str,
+        logger: logging.Logger | None,
+    ) -> HLLRcon:
+        return HLLRcon(
+            host=host,
+            port=port,
+            password=password,
+            logger=logger,
+        )
+
+
+class HLLVSyncRcon(_SyncRcon[HLLVRcon]):
+    def _create_rcon(
+        self,
+        host: str,
+        port: int,
+        password: str,
+        logger: logging.Logger | None,
+    ) -> HLLVRcon:
+        return HLLVRcon(
+            host=host,
+            port=port,
+            password=password,
+            logger=logger,
+        )
+
+
+SyncRcon: TypeAlias = HLLSyncRcon | HLLVSyncRcon

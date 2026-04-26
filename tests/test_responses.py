@@ -2,16 +2,16 @@ from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING, Any, cast
 
 import pytest
-from hllrcon.data import GameMode, Layer, Role
+from hllrcon.data import HLLGameMode, HLLLayer, HLLRole
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
-    GetAdminLogResponseEntry,
-    GetMapRotationResponseEntry,
-    GetPlayerResponse,
-    GetServerSessionResponse,
-    PlayerFactionId,
-    PlayerPlatform,
-    PlayerRoleId,
+    HLLGetAdminLogResponseEntry,
+    HLLGetMapRotationResponseEntry,
+    HLLGetPlayerResponse,
+    HLLGetServerSessionResponse,
+    HLLPlayerFactionId,
+    HLLPlayerPlatform,
+    HLLPlayerRoleId,
 )
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ def test_empty_string_to_none_validator() -> None:
 
 
 def test_get_admin_log_response_convert_isoformat_to_datetime() -> None:
-    entry = GetAdminLogResponseEntry.model_validate(
+    entry = HLLGetAdminLogResponseEntry.model_validate(
         {
             "timestamp": "2023-03-15T12:34:56.789Z",
             "message": "Test log entry",
@@ -42,16 +42,16 @@ def test_get_admin_log_response_convert_isoformat_to_datetime() -> None:
 
 
 def test_get_player_response_team_unassigned() -> None:
-    response = GetPlayerResponse.model_validate(
+    response = HLLGetPlayerResponse.model_validate(
         {
             "name": "TestPlayer",
             "clanTag": "",
             "iD": "12345",
-            "platform": PlayerPlatform.STEAM.value,
+            "platform": HLLPlayerPlatform.STEAM.value,
             "eosId": "eos-12345",
             "level": 10,
-            "team": PlayerFactionId.UNASSIGNED.value,
-            "role": PlayerRoleId.RIFLEMAN.value,
+            "team": HLLPlayerFactionId.UNASSIGNED.value,
+            "role": HLLPlayerRoleId.RIFLEMAN.value,
             "platoon": "",
             "loadout": "Standard Issue",
             "stats": {
@@ -76,7 +76,7 @@ def test_get_player_response_team_unassigned() -> None:
     )
 
     assert response.faction is None
-    assert response.role is Role.RIFLEMAN
+    assert response.role is HLLRole.RIFLEMAN
 
     # Test other validators just for the sake of it
     assert response.clan_tag is None
@@ -84,7 +84,7 @@ def test_get_player_response_team_unassigned() -> None:
 
 
 def test_get_server_session_game_mode_and_layer() -> None:
-    response = GetServerSessionResponse(
+    response = HLLGetServerSessionResponse(
         server_name="Test Server",
         map_name="FOY",
         map_id="foy_warfare",
@@ -102,31 +102,31 @@ def test_get_server_session_game_mode_and_layer() -> None:
         vip_queue_count=0,
         max_vip_queue_count=6,
     )
-    assert response.game_mode == GameMode.WARFARE
-    assert response.find_layer() == Layer.FOY_WARFARE_DAY
+    assert response.game_mode == HLLGameMode.WARFARE
+    assert response.find_layer() == HLLLayer.FOY_WARFARE_DAY
 
 
 def test_map_rotation_entry_find_layer() -> None:
-    entry = GetMapRotationResponseEntry(
+    entry = HLLGetMapRotationResponseEntry(
         name="FOY",
         game_mode_name="Warfare",
         time_of_day="DAY",
         id="foy_warfare",
         position=0,
     )
-    assert entry.game_mode == GameMode.WARFARE
-    assert entry.find_layer() == Layer.FOY_WARFARE_DAY
+    assert entry.game_mode == HLLGameMode.WARFARE
+    assert entry.find_layer() == HLLLayer.FOY_WARFARE_DAY
 
     entry.game_mode_name = "Control Skirmish - La Petite Chapelle"
-    assert entry.game_mode == GameMode.SKIRMISH
+    assert entry.game_mode == HLLGameMode.SKIRMISH
 
-    unknown_entry = GetMapRotationResponseEntry(
+    unknown_entry = HLLGetMapRotationResponseEntry(
         name="SOY",
         game_mode_name="Offensive",
         time_of_day="DAY",
         id="not_foy_warfare",
         position=1,
     )
-    assert unknown_entry.game_mode == GameMode.OFFENSIVE
+    assert unknown_entry.game_mode == HLLGameMode.OFFENSIVE
     with pytest.raises(ValueError, match="not found"):
         unknown_entry.find_layer()

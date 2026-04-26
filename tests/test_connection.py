@@ -3,8 +3,8 @@ from unittest import mock
 
 import pytest
 import pytest_asyncio
-from hllrcon.connection import RconConnection
-from hllrcon.exceptions import HLLConnectionLostError
+from hllrcon.connection import HLLRconConnection
+from hllrcon.exceptions import RconConnectionLostError
 from hllrcon.protocol.protocol import RconProtocol
 from hllrcon.protocol.response import RconResponse, RconResponseStatus
 
@@ -28,14 +28,17 @@ def protocol() -> RconProtocol:
 async def connection(
     monkeypatch: pytest.MonkeyPatch,
     protocol: RconProtocol,
-) -> RconConnection:
+) -> HLLRconConnection:
     """Fixture to create a mock RconProtocol."""
     monkeypatch.setattr(RconProtocol, "connect", mock.AsyncMock(return_value=protocol))
-    return await RconConnection.connect("localhost", 1234, "password")
+    return await HLLRconConnection.connect("localhost", 1234, "password")
 
 
 @pytest.mark.asyncio
-async def test_is_connected(connection: RconConnection, protocol: RconProtocol) -> None:
+async def test_is_connected(
+    connection: HLLRconConnection,
+    protocol: RconProtocol,
+) -> None:
     assert connection.is_connected() is True
 
     protocol.connection_lost(None)
@@ -43,7 +46,7 @@ async def test_is_connected(connection: RconConnection, protocol: RconProtocol) 
 
 
 @pytest.mark.asyncio
-async def test_disconnect(connection: RconConnection, protocol: mock.Mock) -> None:
+async def test_disconnect(connection: HLLRconConnection, protocol: mock.Mock) -> None:
     with pytest.raises(asyncio.TimeoutError):
         async with asyncio.timeout(0.1):
             await connection.wait_until_disconnected()
@@ -59,7 +62,7 @@ async def test_disconnect(connection: RconConnection, protocol: mock.Mock) -> No
 
 @pytest.mark.asyncio
 async def test_execute(
-    connection: RconConnection,
+    connection: HLLRconConnection,
     protocol: mock.Mock,
 ) -> None:
     command = "test_command"
@@ -80,5 +83,5 @@ async def test_execute(
     assert result == response
 
     protocol.connection_lost(None)
-    with pytest.raises(HLLConnectionLostError):
+    with pytest.raises(RconConnectionLostError):
         await connection.execute(command, version, body)

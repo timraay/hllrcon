@@ -1,6 +1,6 @@
 import asyncio
 import os
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Sequence
 
 import pytest
 import pytest_asyncio
@@ -9,12 +9,15 @@ from hllrcon import (
     GetPlayerResponse,
     GetServerConfigResponse,
     GetServerSessionResponse,
+    HLLRcon,
+    HLLVRcon,
     Rcon,
 )
 
 HLL_HOST = os.getenv("HLL_HOST")
 HLL_PORT = os.getenv("HLL_PORT")
 HLL_PASSWORD = os.getenv("HLL_PASSWORD")
+HLL_GAME = os.getenv("HLL_GAME", "hll").lower()
 
 if not HLL_HOST or not HLL_PORT or not HLL_PASSWORD:
     pytest.skip("HLL environment variables are not set", allow_module_level=True)
@@ -24,7 +27,9 @@ pytestmark = pytest.mark.asyncio
 
 @pytest_asyncio.fixture(scope="function")
 async def rcon() -> AsyncGenerator[Rcon]:
-    rcon = Rcon(
+    hll_rcon_cls = HLLRcon if HLL_GAME == "hll" else HLLVRcon
+
+    rcon = hll_rcon_cls(
         host=str(HLL_HOST),
         port=int(HLL_PORT or ""),
         password=str(HLL_PASSWORD),
@@ -35,7 +40,7 @@ async def rcon() -> AsyncGenerator[Rcon]:
 
 
 @pytest_asyncio.fixture
-async def players(rcon: Rcon) -> list[GetPlayerResponse]:
+async def players(rcon: Rcon) -> Sequence[GetPlayerResponse]:
     players = await rcon.get_players()
 
     if not players.players:

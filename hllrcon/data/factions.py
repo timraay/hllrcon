@@ -1,24 +1,26 @@
 # ruff: noqa: N802
 
-from typing import TYPE_CHECKING, Annotated, ClassVar
+from typing import TYPE_CHECKING, Annotated, ClassVar, Generic, Self, TypeAlias, TypeVar
 
 from ._utils import IndexedBaseModel, class_cached_property, model_serializer
-from .teams import Team
+from .teams import HLLTeam, HLLVTeam, _Team
+
+TeamT = TypeVar("TeamT", bound=_Team)
 
 
-class Faction(IndexedBaseModel[int, None]):
-    UNASSIGNED_ID: ClassVar[int] = 6
+class _Faction(IndexedBaseModel[int, None], Generic[TeamT]):
+    UNASSIGNED_ID: ClassVar[int] = -1
 
     id: int
     name: str
     short_name: str
     team: Annotated[
-        Team,
+        TeamT,
         model_serializer(int),
     ]
 
     @classmethod
-    def _lookup_fallback(cls, id_: int) -> "Faction | None":
+    def _lookup_fallback(cls, id_: int) -> "Self | None":
         if id_ == cls.UNASSIGNED_ID:
             return None
 
@@ -27,7 +29,7 @@ class Faction(IndexedBaseModel[int, None]):
     if TYPE_CHECKING:
 
         @classmethod
-        def by_id(cls, id_: int) -> "Faction | None":
+        def by_id(cls, id_: int) -> "Self | None":
             """Look up a faction by its identifier.
 
             Parameters
@@ -48,6 +50,10 @@ class Faction(IndexedBaseModel[int, None]):
 
             """
 
+
+class HLLFaction(_Faction[HLLTeam]):
+    UNASSIGNED_ID: ClassVar[int] = 6
+
     @property
     def is_allied(self) -> bool:
         """Whether the faction is part of the allied forces.
@@ -58,7 +64,7 @@ class Faction(IndexedBaseModel[int, None]):
         - Commonwealth (`CW`)
         - British 8th Army (`B8A`)
         """
-        return self.team == Team.ALLIES
+        return self.team == HLLTeam.ALLIES
 
     @property
     def is_axis(self) -> bool:
@@ -68,74 +74,122 @@ class Faction(IndexedBaseModel[int, None]):
         - Germany (`GER`)
         - German Africa Corps (`DAK`)
         """
-        return self.team == Team.AXIS
+        return self.team == HLLTeam.AXIS
 
     @class_cached_property
     @classmethod
-    def GER(cls) -> "Faction":
+    def GER(cls) -> "HLLFaction":
         return cls(
             id=0,
             name="Germany",
             short_name="GER",
-            team=Team.AXIS,
+            team=HLLTeam.AXIS,
         )
 
     @class_cached_property
     @classmethod
-    def US(cls) -> "Faction":
+    def US(cls) -> "HLLFaction":
         return cls(
             id=1,
             name="United States",
             short_name="US",
-            team=Team.ALLIES,
+            team=HLLTeam.ALLIES,
         )
 
     @class_cached_property
     @classmethod
-    def SOV(cls) -> "Faction":
+    def SOV(cls) -> "HLLFaction":
         return cls(
             id=2,
             name="Soviet Union",
             short_name="SOV",
-            team=Team.ALLIES,
+            team=HLLTeam.ALLIES,
         )
 
     @class_cached_property
     @classmethod
-    def RUS(cls) -> "Faction":
+    def RUS(cls) -> "HLLFaction":
         return cls.SOV
 
     @class_cached_property
     @classmethod
-    def CW(cls) -> "Faction":
+    def CW(cls) -> "HLLFaction":
         return cls(
             id=3,
             name="Allies",
             short_name="CW",
-            team=Team.ALLIES,
+            team=HLLTeam.ALLIES,
         )
 
     @class_cached_property
     @classmethod
-    def GB(cls) -> "Faction":
+    def GB(cls) -> "HLLFaction":
         return cls.CW
 
     @class_cached_property
     @classmethod
-    def DAK(cls) -> "Faction":
+    def DAK(cls) -> "HLLFaction":
         return cls(
             id=4,
             name="German Africa Corps",
             short_name="DAK",
-            team=Team.AXIS,
+            team=HLLTeam.AXIS,
         )
 
     @class_cached_property
     @classmethod
-    def B8A(cls) -> "Faction":
+    def B8A(cls) -> "HLLFaction":
         return cls(
             id=5,
             name="British Eighth Army",
             short_name="B8A",
-            team=Team.ALLIES,
+            team=HLLTeam.ALLIES,
         )
+
+
+class HLLVFaction(_Faction[HLLVTeam]):
+    UNASSIGNED_ID: ClassVar[int] = 8
+
+    @property
+    def is_southern(self) -> bool:
+        """Whether the faction is part of the southern ("allied") forces.
+
+        Southern factions are:
+        - United States (`US`)
+        """
+        return self.team == HLLVTeam.SOUTH
+
+    @property
+    def is_northern(self) -> bool:
+        """Whether the faction is part of the northern ("axis") forces.
+
+        Northern factions are:
+        - North-Vietnamese Army (`NVA`)
+        """
+        return self.team == HLLVTeam.NORTH
+
+    is_allied = is_southern
+    is_axis = is_northern
+
+    @class_cached_property
+    @classmethod
+    def US(cls) -> "HLLVFaction":
+        return cls(
+            id=1,
+            name="United States",
+            short_name="US",
+            team=HLLVTeam.SOUTH,
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVA(cls) -> "HLLVFaction":
+        return cls(
+            id=6,
+            name="NVA",
+            short_name="NVA",
+            team=HLLVTeam.NORTH,
+        )
+
+
+Faction: TypeAlias = HLLFaction | HLLVFaction

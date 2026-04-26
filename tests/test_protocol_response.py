@@ -1,7 +1,7 @@
 import json
 
 import pytest
-from hllrcon.exceptions import HLLCommandError
+from hllrcon.exceptions import RconCommandError
 from hllrcon.protocol.response import RconResponse, RconResponseStatus
 
 
@@ -96,7 +96,7 @@ def test_raise_for_status_ok_does_not_raise() -> None:
 )
 def test_raise_for_status_raises(code: RconResponseStatus) -> None:
     resp = make_response(status_code=code, status_message="fail")
-    with pytest.raises(HLLCommandError) as excinfo:
+    with pytest.raises(RconCommandError) as excinfo:
         resp.raise_for_status()
     assert excinfo.value.status_code == code
     assert str(excinfo.value) == f"({code}) fail"

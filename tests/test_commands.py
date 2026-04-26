@@ -5,31 +5,31 @@ from unittest import mock
 
 import pytest
 from hllrcon.commands import (
-    RconCommands,
+    _RconCommands,
     cast_response_to_bool,
     cast_response_to_model,
     get_game_mode_id,
 )
-from hllrcon.data.game_modes import GameMode
-from hllrcon.data.layers import Layer
-from hllrcon.exceptions import HLLCommandError, HLLMessageError
+from hllrcon.data.game_modes import HLLGameMode
+from hllrcon.data.layers import HLLLayer
+from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
     ForceMode,
-    GetVoteKickThresholdsResponse,
-    GetVoteKickThresholdsResponseEntry,
+    _GetVoteKickThresholdsResponse,
+    _GetVoteKickThresholdsResponseEntry,
 )
 from pydantic import BaseModel, ValidationError
 
 pytestmark = pytest.mark.asyncio
 
 
-class RconCommandsStub(RconCommands):
+class RconCommandsStub(_RconCommands):
     def __init__(
         self,
         command: str,
         version: int,
         body: str | dict[str, Any] = "",
-        response: str | HLLCommandError = "",
+        response: str | RconCommandError = "",
     ) -> None:
         super().__init__()
         self.command = command
@@ -47,7 +47,7 @@ class RconCommandsStub(RconCommands):
         assert version == self.version
         assert body == self.body
 
-        if isinstance(self.response, HLLCommandError):
+        if isinstance(self.response, RconCommandError):
             raise self.response
         return self.response
 
@@ -117,7 +117,7 @@ class TestCastResponseToBool:
         async def dummy_func() -> None:
             called["called"] = True
             msg = "Command failed"
-            raise HLLCommandError(400, msg)
+            raise RconCommandError(400, msg)
 
         result = await dummy_func()
         assert result is False
@@ -130,9 +130,9 @@ class TestCastResponseToBool:
         @cast_response_to_bool({400})
         async def dummy_func() -> None:
             called["called"] = True
-            raise HLLCommandError(500, msg)
+            raise RconCommandError(500, msg)
 
-        with pytest.raises(HLLCommandError, match=msg):
+        with pytest.raises(RconCommandError, match=msg):
             await dummy_func()
         assert called == {"called": True}
 
@@ -255,7 +255,7 @@ class TestCommands:
             ),
         )
 
-        with pytest.raises(HLLMessageError):
+        with pytest.raises(RconMessageError):
             await stub.get_available_sector_names()
 
     async def test_commands_change_sector_layout(self) -> None:
@@ -400,7 +400,7 @@ class TestCommands:
             ),
         )
 
-        with pytest.raises(HLLMessageError):
+        with pytest.raises(RconMessageError):
             await stub.get_available_maps()
 
     async def test_commands_get_commands(self) -> None:
@@ -909,7 +909,7 @@ class TestCommands:
             "PunishPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason},
-            response=HLLCommandError(500, "Unable to perform request."),
+            response=RconCommandError(500, "Unable to perform request."),
         )
 
         result = await stub.kill_player(player_id, reason)
@@ -967,8 +967,8 @@ class TestCommands:
         ).remove_permanent_ban(player_id)
 
     async def test_commands_remove_ban(self) -> None:
-        commands = mock.Mock(spec=RconCommands)
-        commands.remove_ban = partial(RconCommands.unban_player, commands)
+        commands = mock.Mock(spec=_RconCommands)
+        commands.remove_ban = partial(_RconCommands.unban_player, commands)
         await commands.remove_ban("pid")
         commands.remove_temporary_ban.assert_called_once_with("pid")
         commands.remove_permanent_ban.assert_called_once_with("pid")
@@ -1038,9 +1038,9 @@ class TestCommands:
             response=json.dumps({"entries": [{"playerCount": 10, "voteThreshold": 2}]}),
         ).get_vote_kick_thresholds()
 
-        assert result == GetVoteKickThresholdsResponse(
+        assert result == _GetVoteKickThresholdsResponse(
             entries=[
-                GetVoteKickThresholdsResponseEntry(player_count=10, vote_threshold=2),
+                _GetVoteKickThresholdsResponseEntry(player_count=10, vote_threshold=2),
             ],
         )
 
@@ -1131,10 +1131,10 @@ class TestCommands:
             "RemoveWarmupTimer",
             2,
             {"GameMode": game_mode},
-        ).remove_warmup_timer(game_mode)
+        ).reset_warmup_timer(game_mode)
 
     async def test_commands_set_dynamic_weather_enabled(self) -> None:
-        layer = Layer.CARENTAN_WARFARE_NIGHT
+        layer = HLLLayer.CARENTAN_WARFARE_NIGHT
         enabled = True
         await RconCommandsStub(
             "SetDynamicWeatherEnabled",
@@ -1144,9 +1144,9 @@ class TestCommands:
 
 
 async def test_get_game_mode_id() -> None:
-    assert get_game_mode_id(GameMode.WARFARE) == "warfare"
-    assert get_game_mode_id(GameMode.OFFENSIVE) == "offensive"
-    assert get_game_mode_id(GameMode.SKIRMISH) == "skirmish"
+    assert get_game_mode_id(HLLGameMode.WARFARE) == "warfare"
+    assert get_game_mode_id(HLLGameMode.OFFENSIVE) == "offensive"
+    assert get_game_mode_id(HLLGameMode.SKIRMISH) == "skirmish"
     assert get_game_mode_id("Warfare") == "Warfare"
     assert get_game_mode_id("Offensive") == "Offensive"
     assert get_game_mode_id("Skirmish") == "Skirmish"

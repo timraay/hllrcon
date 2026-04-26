@@ -1,10 +1,13 @@
 import pytest
 from hllrcon import (
     GetServerConfigResponse,
-    Layer,
+    HLLLayer,
+    HLLVLayer,
     Rcon,
     __min_server_version__,
 )
+
+from tests.integration_tests.conftest import HLL_GAME
 
 pytestmark = pytest.mark.asyncio
 
@@ -18,7 +21,10 @@ class TestIntegratedServer:
 
     async def test_data_layers_all_exist(self, rcon: Rcon) -> None:
         live_layer_ids = set(await rcon.get_available_maps())
-        mapped_layer_ids = {layer.id for layer in Layer.all()}
+        mapped_layer_ids = {
+            layer.id
+            for layer in (HLLLayer.all() if HLL_GAME == "hll" else HLLVLayer.all())
+        }
         assert live_layer_ids == mapped_layer_ids
 
     async def test_data_valid_strongpoints(self, rcon: Rcon) -> None:

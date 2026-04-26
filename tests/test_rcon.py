@@ -1,3 +1,4 @@
+# ruff: noqa: ANN401
 import asyncio
 import contextlib
 import logging
@@ -5,37 +6,40 @@ from typing import Any
 from unittest import mock
 
 import pytest
-from hllrcon.connection import RconConnection
-from hllrcon.exceptions import HLLConnectionClosedError, HLLError
-from hllrcon.rcon import Rcon
+from hllrcon.connection import HLLRconConnection
+from hllrcon.exceptions import RconConnectionClosedError, RconError
+from hllrcon.rcon import HLLRcon
 
 pytestmark = pytest.mark.asyncio
 
 
 @pytest.fixture
-def connection() -> RconConnection:
-    mock_connection = mock.Mock(spec=RconConnection)
+def connection() -> HLLRconConnection:
+    mock_connection = mock.Mock(spec=HLLRconConnection)
     mock_connection.is_connected.return_value = True
     return mock_connection
 
 
 @pytest.fixture
-def connection2() -> RconConnection:
-    mock_connection = mock.Mock(spec=RconConnection)
+def connection2() -> HLLRconConnection:
+    mock_connection = mock.Mock(spec=HLLRconConnection)
     mock_connection.is_connected.return_value = True
     return mock_connection
 
 
 @pytest.fixture
-def rcon(monkeypatch: pytest.MonkeyPatch, connection: mock.Mock) -> Rcon:
-    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+def rcon(monkeypatch: pytest.MonkeyPatch, connection: mock.Mock) -> HLLRcon:
+    async def get_connection(
+        *_args: Any,
+        **_kwargs: dict[str, Any],
+    ) -> HLLRconConnection:
         return connection
 
-    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
-    return Rcon(host="localhost", port=1234, password="password")
+    monkeypatch.setattr("hllrcon.rcon.HLLRconConnection.connect", get_connection)
+    return HLLRcon(host="localhost", port=1234, password="password")
 
 
-async def test_logger(rcon: Rcon) -> None:
+async def test_logger(rcon: HLLRcon) -> None:
     assert rcon.logger.name == "hllrcon.rcon"
     rcon.logger = logging.getLogger("test")
     assert rcon.logger.name == "test"
@@ -43,12 +47,12 @@ async def test_logger(rcon: Rcon) -> None:
     assert rcon.logger.name == "hllrcon.rcon"
 
 
-async def test_get_connection_new(rcon: Rcon, connection: mock.Mock) -> None:
+async def test_get_connection_new(rcon: HLLRcon, connection: mock.Mock) -> None:
     assert await rcon._get_connection() == connection
 
 
 async def test_get_connection_reuse(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection2: mock.Mock,
 ) -> None:
     rcon._connection = asyncio.Future()
@@ -57,7 +61,7 @@ async def test_get_connection_reuse(
 
 
 async def test_get_connection_disconnected(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
     connection2: mock.Mock,
 ) -> None:
@@ -69,7 +73,7 @@ async def test_get_connection_disconnected(
 
 
 async def test_get_connection_wait(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection2: mock.Mock,
 ) -> None:
     rcon._connection = asyncio.Future()
@@ -84,27 +88,27 @@ async def test_get_connection_wait(
 
 async def test_get_connection_failure(
     monkeypatch: pytest.MonkeyPatch,
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
 ) -> None:
     with monkeypatch.context() as m:
 
         async def get_connection(
-            *_args: Any,  # noqa: ANN401
+            *_args: Any,
             **_kwargs: dict[str, Any],
-        ) -> RconConnection:
+        ) -> HLLRconConnection:
             msg = "Connection failed"
-            raise HLLError(msg)
+            raise RconError(msg)
 
-        m.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
+        m.setattr("hllrcon.rcon.HLLRconConnection.connect", get_connection)
 
-        with pytest.raises(HLLError, match="Connection failed"):
+        with pytest.raises(RconError, match="Connection failed"):
             await rcon._get_connection()
 
     assert await rcon._get_connection() == connection
 
 
-async def test_is_connected(rcon: Rcon, connection: mock.Mock) -> None:
+async def test_is_connected(rcon: HLLRcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected initially"
 
     await rcon.wait_until_connected()
@@ -114,7 +118,7 @@ async def test_is_connected(rcon: Rcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected after connection loss"
 
     rcon._connection = asyncio.Future()
-    rcon._connection.set_exception(HLLError("Connection lost"))
+    rcon._connection.set_exception(RconError("Connection lost"))
     assert rcon.is_connected() is False, "Should be disconnected after exception"
 
     rcon._connection = asyncio.Future()
@@ -122,7 +126,7 @@ async def test_is_connected(rcon: Rcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected after cancelling"
 
 
-async def test_enter_exit(rcon: Rcon, connection: mock.Mock) -> None:
+async def test_enter_exit(rcon: HLLRcon, connection: mock.Mock) -> None:
     assert rcon._connection is None, "Initial connection should be None"
 
     async with rcon.connect():
@@ -146,26 +150,26 @@ async def test_enter_exit(rcon: Rcon, connection: mock.Mock) -> None:
     assert rcon._connection is None, "Connection should be reset to None after error"
 
 
-async def test_aexit_no_connection(rcon: Rcon) -> None:
+async def test_aexit_no_connection(rcon: HLLRcon) -> None:
     async with rcon.connect():
         rcon._connection = None
 
     assert rcon._connection is None
 
 
-async def test_aexit_reconnecting(rcon: Rcon) -> None:
-    fut: asyncio.Future[RconConnection] = asyncio.Future()
+async def test_aexit_reconnecting(rcon: HLLRcon) -> None:
+    fut: asyncio.Future[HLLRconConnection] = asyncio.Future()
 
     async with rcon.connect():
         rcon._connection = fut
 
     assert rcon._connection is None
-    assert type(fut.exception()) is HLLConnectionClosedError
+    assert type(fut.exception()) is RconConnectionClosedError
 
 
-async def test_aexit_connection_failure(rcon: Rcon) -> None:
-    fut: asyncio.Future[RconConnection] = asyncio.Future()
-    fut.set_exception(HLLError("Connection failed"))
+async def test_aexit_connection_failure(rcon: HLLRcon) -> None:
+    fut: asyncio.Future[HLLRconConnection] = asyncio.Future()
+    fut.set_exception(RconError("Connection failed"))
 
     async with rcon.connect():
         rcon._connection = fut
@@ -174,7 +178,7 @@ async def test_aexit_connection_failure(rcon: Rcon) -> None:
 
 
 async def test_execute(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
 ) -> None:
     command = "command"
@@ -190,11 +194,11 @@ async def test_execute(
 
 async def test_reconnect_after_failures_parameter() -> None:
     # Test default value
-    rcon = Rcon(host="localhost", port=1234, password="password")
+    rcon = HLLRcon(host="localhost", port=1234, password="password")
     assert rcon.reconnect_after_failures == 3
 
     # Test custom value
-    rcon = Rcon(
+    rcon = HLLRcon(
         host="localhost",
         port=1234,
         password="password",
@@ -203,7 +207,7 @@ async def test_reconnect_after_failures_parameter() -> None:
     assert rcon.reconnect_after_failures == 5
 
     # Test zero value (disabled)
-    rcon = Rcon(
+    rcon = HLLRcon(
         host="localhost",
         port=1234,
         password="password",
@@ -212,7 +216,7 @@ async def test_reconnect_after_failures_parameter() -> None:
     assert rcon.reconnect_after_failures == 0
 
     # Test negative value gets clamped to zero
-    rcon = Rcon(
+    rcon = HLLRcon(
         host="localhost",
         port=1234,
         password="password",
@@ -222,14 +226,14 @@ async def test_reconnect_after_failures_parameter() -> None:
 
 
 async def test_failure_count_property() -> None:
-    rcon = Rcon(host="localhost", port=1234, password="password")
+    rcon = HLLRcon(host="localhost", port=1234, password="password")
 
     # Initial failure count should be 0
     assert rcon._failure_count == 0
 
 
 async def test_failure_count_increment_on_timeout(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
 ) -> None:
     # Mock connection.execute to raise TimeoutError
@@ -251,7 +255,7 @@ async def test_failure_count_increment_on_timeout(
 
 
 async def test_failure_count_increment_on_os_error(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
 ) -> None:
     # Mock connection.execute to raise OSError
@@ -265,7 +269,7 @@ async def test_failure_count_increment_on_os_error(
     assert rcon._failure_count == 1
 
 
-async def test_failure_count_reset_on_disconnect(rcon: Rcon) -> None:
+async def test_failure_count_reset_on_disconnect(rcon: HLLRcon) -> None:
     # Set failure count manually
     rcon._failure_count = 5
 
@@ -279,11 +283,14 @@ async def test_reconnect_after_failures_disabled(
     connection: mock.Mock,
 ) -> None:
     # Create rcon with reconnect_after_failures disabled (0)
-    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+    async def get_connection(
+        *_args: Any,
+        **_kwargs: dict[str, Any],
+    ) -> HLLRconConnection:
         return connection
 
-    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
-    rcon = Rcon(
+    monkeypatch.setattr("hllrcon.rcon.HLLRconConnection.connect", get_connection)
+    rcon = HLLRcon(
         host="localhost",
         port=1234,
         password="password",
@@ -309,11 +316,14 @@ async def test_reconnect_after_failures_triggers_disconnect(
     connection: mock.Mock,
 ) -> None:
     # Create rcon with reconnect_after_failures = 2
-    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+    async def get_connection(
+        *_args: Any,
+        **_kwargs: dict[str, Any],
+    ) -> HLLRconConnection:
         return connection
 
-    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
-    rcon = Rcon(
+    monkeypatch.setattr("hllrcon.rcon.HLLRconConnection.connect", get_connection)
+    rcon = HLLRcon(
         host="localhost",
         port=1234,
         password="password",
@@ -341,7 +351,7 @@ async def test_reconnect_after_failures_triggers_disconnect(
 
 
 async def test_failure_count_reset_on_successful_response(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
 ) -> None:
     # Set failure count manually
@@ -360,7 +370,7 @@ async def test_failure_count_reset_on_successful_response(
 
 
 async def test_failure_count_with_different_exception_types(
-    rcon: Rcon,
+    rcon: HLLRcon,
     connection: mock.Mock,
 ) -> None:
     # Test that only TimeoutError and OSError increment failure count
@@ -398,11 +408,14 @@ async def test_reconnect_threshold_exact_match(
     connection: mock.Mock,
 ) -> None:
     # Test that disconnect happens exactly when failure count equals threshold
-    async def get_connection(*_args: Any, **_kwargs: dict[str, Any]) -> RconConnection:  # noqa: ANN401
+    async def get_connection(
+        *_args: Any,
+        **_kwargs: dict[str, Any],
+    ) -> HLLRconConnection:
         return connection
 
-    monkeypatch.setattr("hllrcon.rcon.RconConnection.connect", get_connection)
-    rcon = Rcon(
+    monkeypatch.setattr("hllrcon.rcon.HLLRconConnection.connect", get_connection)
+    rcon = HLLRcon(
         host="localhost",
         port=1234,
         password="password",

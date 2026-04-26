@@ -18,6 +18,8 @@ from pydantic import (
 from pydantic.alias_generators import to_pascal
 
 from hllrcon import Faction, Role
+from hllrcon.data.factions import HLLFaction
+from hllrcon.data.roles import HLLRole
 from scripts import HLL_METADATA_PATH
 
 T = TypeVar("T")
@@ -61,27 +63,27 @@ class LoadoutLocation(BaseModel):
 
 LOADOUT_LOCATIONS = [
     LoadoutLocation(
-        faction=Faction.US,
+        faction=HLLFaction.US,
         filepath=Path("HLL/Content/Blueprints/Loadouts/USLoadouts"),
     ),
     LoadoutLocation(
-        faction=Faction.GER,
+        faction=HLLFaction.GER,
         filepath=Path("HLL/Content/Blueprints/Loadouts/GERLoadouts"),
     ),
     LoadoutLocation(
-        faction=Faction.RUS,
+        faction=HLLFaction.RUS,
         filepath=Path("HLL/Content/Blueprints/Loadouts/RUSLoadouts"),
     ),
     LoadoutLocation(
-        faction=Faction.CW,
+        faction=HLLFaction.CW,
         filepath=Path("HLL/Content/Blueprints/Loadouts/COMLoadouts"),
     ),
     LoadoutLocation(
-        faction=Faction.DAK,
+        faction=HLLFaction.DAK,
         filepath=Path("HLL/Content/Blueprints/Loadouts/GerDAKLoadouts"),
     ),
     LoadoutLocation(
-        faction=Faction.B8A,
+        faction=HLLFaction.B8A,
         filepath=Path("HLL/Content/Blueprints/Loadouts/BritEighthLoadouts"),
     ),
 ]
@@ -173,7 +175,7 @@ class DataTableEntry(Model):
     row_name: str
 
     def get(self, model_type: type[ModelT]) -> ModelT:
-        data_table = self.data_table.resolve(DataTable[model_type])  # ty:ignore[invalid-type-form]
+        data_table = self.data_table.resolve(DataTable[model_type])  # type: ignore[valid-type] # ty:ignore[invalid-type-form]
         row = data_table.rows.get(self.row_name)
         if not row:
             msg = (
@@ -285,23 +287,23 @@ class HLLTeamLoadouts(Model):
 
     def items(self) -> list[tuple[Role, list[HLLTeamLoadout]]]:
         return [
-            (Role.ARMY_COMMANDER, self.army_commander),
-            (Role.OFFICER, self.officer),
-            (Role.RIFLEMAN, self.rifleman),
-            (Role.ASSAULT, self.assault),
-            (Role.AUTOMATIC_RIFLEMAN, self.automatic_rifleman),
-            (Role.MEDIC, self.medic),
-            (Role.SUPPORT, self.support),
-            (Role.MACHINE_GUNNER, self.machine_gunner),
-            (Role.ANTI_TANK, self.anti_tank),
-            (Role.ENGINEER, self.engineer),
-            (Role.TANK_COMMANDER, self.tank_commander),
-            (Role.CREWMAN, self.crewman),
-            (Role.ARTILLERY_OBSERVER, self.artillery_observer),
-            (Role.OPERATOR, self.artillery_engineer),
-            (Role.GUNNER, self.artillery_support),
-            (Role.SPOTTER, self.spotter),
-            (Role.SNIPER, self.sniper),
+            (HLLRole.ARMY_COMMANDER, self.army_commander),
+            (HLLRole.OFFICER, self.officer),
+            (HLLRole.RIFLEMAN, self.rifleman),
+            (HLLRole.ASSAULT, self.assault),
+            (HLLRole.AUTOMATIC_RIFLEMAN, self.automatic_rifleman),
+            (HLLRole.MEDIC, self.medic),
+            (HLLRole.SUPPORT, self.support),
+            (HLLRole.MACHINE_GUNNER, self.machine_gunner),
+            (HLLRole.ANTI_TANK, self.anti_tank),
+            (HLLRole.ENGINEER, self.engineer),
+            (HLLRole.TANK_COMMANDER, self.tank_commander),
+            (HLLRole.CREWMAN, self.crewman),
+            (HLLRole.ARTILLERY_OBSERVER, self.artillery_observer),
+            (HLLRole.OPERATOR, self.artillery_engineer),
+            (HLLRole.GUNNER, self.artillery_support),
+            (HLLRole.SPOTTER, self.spotter),
+            (HLLRole.SNIPER, self.sniper),
         ]
 
 
@@ -309,10 +311,10 @@ def autogenerate_loadouts(loadouts: HLLTeamLoadouts, faction: Faction) -> str:
     content = ""
     for role, loadouts_for_role in loadouts.items():
         for loadout in loadouts_for_role:
-            if role is Role.OPERATOR:
-                role_name = "ARTILLERY_ENGINEER"
-            elif role is Role.GUNNER:
-                role_name = "ARTILLERY_SUPPORT"
+            if role is HLLRole.OPERATOR:
+                role_name = "OPERATOR"
+            elif role is HLLRole.GUNNER:
+                role_name = "GUNNER"
             else:
                 role_name = role.pretty_name.replace(" ", "_").replace("-", "_").upper()
             loadout_id = (

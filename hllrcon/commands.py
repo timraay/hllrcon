@@ -2,46 +2,110 @@ import asyncio
 from abc import ABC, abstractmethod
 from collections.abc import Callable, Coroutine
 from functools import wraps
-from typing import Any, Literal, ParamSpec, TypeAlias, TypeVar, overload
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Literal,
+    ParamSpec,
+    TypeAlias,
+    TypeVar,
+    overload,
+)
 
 from pydantic import BaseModel
+from typing_extensions import override
 
-from hllrcon.data import layers
 from hllrcon.data.factions import Faction
 from hllrcon.data.game_modes import GameMode
 from hllrcon.data.layers import Layer
-from hllrcon.exceptions import HLLCommandError, HLLMessageError
+from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
     ForceMode,
-    GetAdminGroupsResponse,
-    GetAdminLogResponse,
-    GetAdminUsersResponse,
-    GetAutoBalanceEnabledResponse,
-    GetAutoBalanceThresholdResponse,
-    GetBannedWordsResponse,
-    GetBansResponse,
-    GetCommandDetailsResponse,
-    GetCommandsResponse,
-    GetHighPingThresholdResponse,
-    GetIdleKickDurationResponse,
-    GetMapRotationResponse,
-    GetMapShuffleEnabledResponse,
-    GetPlayerResponse,
-    GetPlayersResponse,
-    GetServerConfigResponse,
-    GetServerSessionResponse,
-    GetTeamSwitchCooldownResponse,
-    GetVipsResponse,
-    GetVoteKickEnabledResponse,
-    GetVoteKickThresholdsResponse,
+    HLLGetAdminGroupsResponse,
+    HLLGetAdminLogResponse,
+    HLLGetAdminUsersResponse,
+    HLLGetAutoBalanceEnabledResponse,
+    HLLGetAutoBalanceThresholdResponse,
+    HLLGetBannedWordsResponse,
+    HLLGetBansResponse,
+    HLLGetCommandDetailsResponse,
+    HLLGetCommandsResponse,
+    HLLGetHighPingThresholdResponse,
+    HLLGetIdleKickDurationResponse,
+    HLLGetMapRotationResponse,
+    HLLGetMapShuffleEnabledResponse,
+    HLLGetPlayerResponse,
+    HLLGetPlayersResponse,
+    HLLGetServerConfigResponse,
+    HLLGetServerSessionResponse,
+    HLLGetTeamSwitchCooldownResponse,
+    HLLGetVipsResponse,
+    HLLGetVoteKickEnabledResponse,
+    HLLGetVoteKickThresholdsResponse,
+    HLLPlayerFactionId,
+    HLLVGetAdminGroupsResponse,
+    HLLVGetAdminLogResponse,
+    HLLVGetAdminUsersResponse,
+    HLLVGetAutoBalanceEnabledResponse,
+    HLLVGetAutoBalanceThresholdResponse,
+    HLLVGetBannedWordsResponse,
+    HLLVGetBansResponse,
+    HLLVGetCommandDetailsResponse,
+    HLLVGetCommandsResponse,
+    HLLVGetHighPingThresholdResponse,
+    HLLVGetIdleKickDurationResponse,
+    HLLVGetMapRotationResponse,
+    HLLVGetMapShuffleEnabledResponse,
+    HLLVGetPlayerResponse,
+    HLLVGetPlayersResponse,
+    HLLVGetServerConfigResponse,
+    HLLVGetServerSessionResponse,
+    HLLVGetTeamSwitchCooldownResponse,
+    HLLVGetVipsResponse,
+    HLLVGetVoteKickEnabledResponse,
+    HLLVGetVoteKickThresholdsResponse,
+    HLLVPlayerFactionId,
     PlayerFactionId,
+    _GetAdminGroupsResponse,
+    _GetAdminLogResponse,
+    _GetAdminUsersResponse,
+    _GetAutoBalanceEnabledResponse,
+    _GetAutoBalanceThresholdResponse,
+    _GetBannedWordsResponse,
+    _GetBansResponse,
+    _GetCommandDetailsResponse,
+    _GetCommandsResponse,
+    _GetHighPingThresholdResponse,
+    _GetIdleKickDurationResponse,
+    _GetMapRotationResponse,
+    _GetMapShuffleEnabledResponse,
+    _GetPlayerResponse,
+    _GetPlayersResponse,
+    _GetServerConfigResponse,
+    _GetServerSessionResponse,
+    _GetTeamSwitchCooldownResponse,
+    _GetVipsResponse,
+    _GetVoteKickEnabledResponse,
+    _GetVoteKickThresholdsResponse,
+)
+
+__all__ = (
+    "GameModeLiteral",
+    "HLLGameModeLiteral",
+    "HLLRconCommands",
+    "HLLVGameModeLiteral",
+    "HLLVRconCommands",
+    "RconCommands",
 )
 
 P = ParamSpec("P")
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=BaseModel)
 
-GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
+_GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
+HLLGameModeLiteral: TypeAlias = _GameModeLiteral
+HLLVGameModeLiteral: TypeAlias = _GameModeLiteral | Literal["Domination"]
+GameModeLiteral: TypeAlias = HLLGameModeLiteral | HLLVGameModeLiteral
 
 
 @overload
@@ -99,7 +163,7 @@ def cast_response_to_bool(
         async def wrapper(*args: P.args, **kwargs: P.kwargs) -> bool:
             try:
                 await func(*args, **kwargs)
-            except HLLCommandError as e:
+            except RconCommandError as e:
                 if e.status_code in status_codes:
                     return False
                 raise
@@ -116,7 +180,7 @@ def get_game_mode_id(game_mode: GameMode | GameModeLiteral) -> str:
     return game_mode.id
 
 
-class RconCommands(ABC):
+class _RconCommands(ABC):
     @abstractmethod
     async def execute(
         self,
@@ -181,7 +245,25 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetAdminLogResponse)
+    async def _get_admin_log(
+        self,
+        seconds_span: int,
+        filter_: str | None = None,
+    ) -> str:
+        if seconds_span < 0:
+            msg = "seconds_span must be a non-negative integer"
+            raise ValueError(msg)
+
+        return await self.execute(
+            "GetAdminLog",
+            2,
+            {
+                "LogBackTrackTime": seconds_span,
+                "Filters": filter_ or "",
+            },
+        )
+
+    @cast_response_to_model(_GetAdminLogResponse)
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
         """Retrieve admin logs from the server.
 
@@ -198,20 +280,9 @@ class RconCommands(ABC):
             A response containing the admin logs.
 
         """
-        if seconds_span < 0:
-            msg = "seconds_span must be a non-negative integer"
-            raise ValueError(msg)
+        return await self._get_admin_log(seconds_span, filter_)
 
-        return await self.execute(
-            "GetAdminLog",
-            2,
-            {
-                "LogBackTrackTime": seconds_span,
-                "Filters": filter_ or "",
-            },
-        )
-
-    async def change_map(self, map_name: str | layers.Layer) -> None:
+    async def change_map(self, map_name: str | Layer) -> None:
         """Change the current map to the specified map.
 
         Map changes are not immediate. Instead, a 60 second countdown is started.
@@ -247,7 +318,7 @@ class RconCommands(ABC):
             p.id.startswith("Sector_") for p in parameters[:5]
         ):
             msg = "Received unexpected response from server."
-            raise HLLMessageError(msg)
+            raise RconMessageError(msg)
         return (
             parameters[0].value_member,
             parameters[1].value_member,
@@ -294,7 +365,7 @@ class RconCommands(ABC):
 
     async def add_map_to_rotation(
         self,
-        map_name: str | layers.Layer,
+        map_name: str | Layer,
         index: int,
     ) -> None:
         """Add a map to the map rotation.
@@ -335,7 +406,7 @@ class RconCommands(ABC):
 
     async def add_map_to_sequence(
         self,
-        map_name: str | layers.Layer,
+        map_name: str | Layer,
         index: int,
     ) -> None:
         """Add a map to the map sequence.
@@ -374,7 +445,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetMapShuffleEnabledResponse, lambda r: r.enabled)
+    async def _get_map_shuffle_enabled(self) -> str:
+        return await self.execute("GetMapShuffleEnabled", 2)
+
+    @cast_response_to_model(_GetMapShuffleEnabledResponse, lambda r: r.enabled)
     async def get_map_shuffle_enabled(self) -> str:
         """Retrieve whether map shuffling of the map sequence is enabled.
 
@@ -384,7 +458,7 @@ class RconCommands(ABC):
             Whether map shuffling of the map sequence is enabled.
 
         """
-        return await self.execute("GetMapShuffleEnabled", 2)
+        return await self._get_map_shuffle_enabled()
 
     async def set_map_shuffle_enabled(self, *, enabled: bool) -> None:
         """Enable or disable map shuffling of the map sequence.
@@ -436,10 +510,13 @@ class RconCommands(ABC):
         parameters = details.dialogue_parameters
         if not parameters or parameters[0].id != "MapName":
             msg = "Received unexpected response from server."
-            raise HLLMessageError(msg)
+            raise RconMessageError(msg)
         return parameters[0].value_member
 
-    @cast_response_to_model(GetCommandsResponse)
+    async def _get_commands(self) -> str:
+        return await self.execute("GetDisplayableCommands", 2)
+
+    @cast_response_to_model(_GetCommandsResponse)
     async def get_commands(self) -> str:
         """Retrieve a description of all the commands available on the server.
 
@@ -449,9 +526,12 @@ class RconCommands(ABC):
             A response containing a list of all commands available on the server.
 
         """
-        return await self.execute("GetDisplayableCommands", 2)
+        return await self._get_commands()
 
-    @cast_response_to_model(GetAdminGroupsResponse)
+    async def _get_admin_groups(self) -> str:
+        return await self.execute("GetAdminGroups", 2)
+
+    @cast_response_to_model(_GetAdminGroupsResponse)
     async def get_admin_groups(self) -> str:
         """Retrieve a list of all admin groups available on the server.
 
@@ -465,9 +545,12 @@ class RconCommands(ABC):
             A list of all available admin groups.
 
         """
-        return await self.execute("GetAdminGroups", 2)
+        return await self._get_admin_groups()
 
-    @cast_response_to_model(GetAdminUsersResponse)
+    async def _get_admin_users(self) -> str:
+        return await self.execute("GetAdminUsers", 2)
+
+    @cast_response_to_model(_GetAdminUsersResponse)
     async def get_admin_users(self) -> str:
         """Retrieve a list of all users with admin permissions.
 
@@ -477,21 +560,27 @@ class RconCommands(ABC):
             A list of all admin users.
 
         """
-        return await self.execute("GetAdminUsers", 2)
+        return await self._get_admin_users()
 
-    @cast_response_to_model(GetBansResponse)
+    async def _get_permanent_bans(self) -> str:
+        return await self.execute("GetPermanentBans", 2)
+
+    @cast_response_to_model(_GetBansResponse)
     async def get_permanent_bans(self) -> str:
         """Retrieve a list of all permanently banned players.
 
         Returns
         -------
-        GetBansGesponse
+        GetBansResponse
             A list of all permanently banned players.
 
         """
-        return await self.execute("GetPermanentBans", 2)
+        return await self._get_permanent_bans()
 
-    @cast_response_to_model(GetBansResponse)
+    async def _get_temporary_bans(self) -> str:
+        return await self.execute("GetTemporaryBans", 2)
+
+    @cast_response_to_model(_GetBansResponse)
     async def get_temporary_bans(self) -> str:
         """Retrieve a list of all temporarily banned players.
 
@@ -501,7 +590,7 @@ class RconCommands(ABC):
             A list of all temporarily banned players.
 
         """
-        return await self.execute("GetTemporaryBans", 2)
+        return await self._get_temporary_bans()
 
     @cast_response_to_bool({400})
     async def disband_squad(
@@ -564,7 +653,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetTeamSwitchCooldownResponse, lambda r: r.minutes)
+    async def _get_team_switch_cooldown(self) -> str:
+        return await self.execute("GetTeamSwitchCooldown", 2)
+
+    @cast_response_to_model(_GetTeamSwitchCooldownResponse, lambda r: r.minutes)
     async def get_team_switch_cooldown(self) -> str:
         """Retrieve the team switch cooldown.
 
@@ -574,7 +666,7 @@ class RconCommands(ABC):
             The team switch cooldown in minutes.
 
         """
-        return await self.execute("GetTeamSwitchCooldown", 2)
+        return await self._get_team_switch_cooldown()
 
     async def set_team_switch_cooldown(self, minutes: int) -> None:
         """Set the cooldown for switching teams.
@@ -610,7 +702,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetIdleKickDurationResponse, lambda r: r.minutes)
+    async def _get_idle_kick_duration(self) -> str:
+        return await self.execute("GetKickIdleDuration", 2)
+
+    @cast_response_to_model(_GetIdleKickDurationResponse, lambda r: r.minutes)
     async def get_idle_kick_duration(self) -> str:
         """Retrieve the idle kick duration.
 
@@ -620,7 +715,7 @@ class RconCommands(ABC):
             The idle kick duration in minutes.
 
         """
-        return await self.execute("GetKickIdleDuration", 2)
+        return await self._get_idle_kick_duration()
 
     async def set_idle_kick_duration(self, minutes: int) -> None:
         """Set the number of minutes a player can be idle for before being kicked.
@@ -660,7 +755,14 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetPlayerResponse)
+    async def _get_player(self, player_id: str) -> str:
+        return await self.execute(
+            "GetServerInformation",
+            2,
+            {"Name": "player", "Value": player_id},
+        )
+
+    @cast_response_to_model(_GetPlayerResponse)
     async def get_player(self, player_id: str) -> str:
         """Retrieve detailed information about a player currently on the server.
 
@@ -675,13 +777,16 @@ class RconCommands(ABC):
             Information about the player.
 
         """
+        return await self._get_player(player_id)
+
+    async def _get_players(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "player", "Value": player_id},
+            {"Name": "players", "Value": ""},
         )
 
-    @cast_response_to_model(GetPlayersResponse)
+    @cast_response_to_model(_GetPlayersResponse)
     async def get_players(self) -> str:
         """Retrieve detailed information about all players currently on the server.
 
@@ -693,13 +798,16 @@ class RconCommands(ABC):
             Information about all players.
 
         """
+        return await self._get_players()
+
+    async def _get_map_rotation(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "players", "Value": ""},
+            {"Name": "maprotation", "Value": ""},
         )
 
-    @cast_response_to_model(GetMapRotationResponse)
+    @cast_response_to_model(_GetMapRotationResponse)
     async def get_map_rotation(self) -> str:
         """Retrieve the current map rotation of the server.
 
@@ -709,13 +817,16 @@ class RconCommands(ABC):
             The current map rotation of the server.
 
         """
+        return await self._get_map_rotation()
+
+    async def _get_map_sequence(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "maprotation", "Value": ""},
+            {"Name": "mapsequence", "Value": ""},
         )
 
-    @cast_response_to_model(GetMapRotationResponse)
+    @cast_response_to_model(_GetMapRotationResponse)
     async def get_map_sequence(self) -> str:
         """Retrieve the current map sequence of the server.
 
@@ -725,13 +836,16 @@ class RconCommands(ABC):
             The current map sequence of the server.
 
         """
+        return await self._get_map_sequence()
+
+    async def _get_server_session(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "mapsequence", "Value": ""},
+            {"Name": "session", "Value": ""},
         )
 
-    @cast_response_to_model(GetServerSessionResponse)
+    @cast_response_to_model(_GetServerSessionResponse)
     async def get_server_session(self) -> str:
         """Retrieve information abou the current server session.
 
@@ -741,13 +855,16 @@ class RconCommands(ABC):
             Information about the current server session.
 
         """
+        return await self._get_server_session()
+
+    async def _get_server_config(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "session", "Value": ""},
+            {"Name": "serverconfig", "Value": ""},
         )
 
-    @cast_response_to_model(GetServerConfigResponse)
+    @cast_response_to_model(_GetServerConfigResponse)
     async def get_server_config(self) -> str:
         """Retrieve the server configuration.
 
@@ -757,13 +874,16 @@ class RconCommands(ABC):
             The server configuration.
 
         """
+        return await self._get_server_config()
+
+    async def _get_banned_words(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "serverconfig", "Value": ""},
+            {"Name": "bannedwords", "Value": ""},
         )
 
-    @cast_response_to_model(GetBannedWordsResponse)
+    @cast_response_to_model(_GetBannedWordsResponse)
     async def get_banned_words(self) -> str:
         """Retrieve the list of banned words on the server.
 
@@ -773,13 +893,16 @@ class RconCommands(ABC):
             The list of banned words on the server.
 
         """
+        return await self._get_banned_words()
+
+    async def _get_vip_users(self) -> str:
         return await self.execute(
             "GetServerInformation",
             2,
-            {"Name": "bannedwords", "Value": ""},
+            {"Name": "vipplayers", "Value": ""},
         )
 
-    @cast_response_to_model(GetVipsResponse)
+    @cast_response_to_model(_GetVipsResponse)
     async def get_vip_users(self) -> str:
         """Retrieve the list of VIPs.
 
@@ -789,11 +912,7 @@ class RconCommands(ABC):
             The list of VIPs.
 
         """
-        return await self.execute(
-            "GetServerInformation",
-            2,
-            {"Name": "vipplayers", "Value": ""},
-        )
+        return await self._get_vip_users()
 
     async def broadcast(self, message: str) -> None:
         """Broadcast a message to all players on the server.
@@ -814,7 +933,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetHighPingThresholdResponse, lambda r: r.threshold)
+    async def _get_high_ping_threshold(self) -> str:
+        return await self.execute("GetHighPingThreshold", 2)
+
+    @cast_response_to_model(_GetHighPingThresholdResponse, lambda r: r.threshold)
     async def get_high_ping_threshold(self) -> str:
         """Retrieve the high ping threshold.
 
@@ -824,7 +946,7 @@ class RconCommands(ABC):
             The high ping threshold in milliseconds.
 
         """
-        return await self.execute("GetHighPingThreshold", 2)
+        return await self._get_high_ping_threshold()
 
     async def set_high_ping_threshold(self, ms: int) -> None:
         """Set the ping threshold for players.
@@ -845,7 +967,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetCommandDetailsResponse)
+    async def _get_command_details(self, command: str) -> str:
+        return await self.execute("GetClientReferenceData", 2, command)
+
+    @cast_response_to_model(_GetCommandDetailsResponse)
     async def get_command_details(self, command: str) -> str:
         """Retrieve detailed information about a specific command.
 
@@ -860,7 +985,7 @@ class RconCommands(ABC):
             Information about the command, including its parameters and description.
 
         """
-        return await self.execute("GetClientReferenceData", 2, command)
+        return await self._get_command_details(command)
 
     async def message_player(self, player_id: str, message: str) -> None:
         """Send a message to a specific player on the server.
@@ -1098,7 +1223,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetAutoBalanceEnabledResponse, lambda r: r.enabled)
+    async def _get_auto_balance_enabled(self) -> str:
+        return await self.execute("GetAutoBalanceEnabled", 2)
+
+    @cast_response_to_model(_GetAutoBalanceEnabledResponse, lambda r: r.enabled)
     async def get_auto_balance_enabled(self) -> str:
         """Retrieve whether team balancing is enabled.
 
@@ -1108,7 +1236,7 @@ class RconCommands(ABC):
             Whether team balancing is enabled.
 
         """
-        return await self.execute("GetAutoBalanceEnabled", 2)
+        return await self._get_auto_balance_enabled()
 
     async def set_auto_balance_enabled(self, *, enabled: bool) -> None:
         """Enable or disable team balancing.
@@ -1131,7 +1259,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetAutoBalanceThresholdResponse, lambda r: r.threshold)
+    async def _get_auto_balance_threshold(self) -> str:
+        return await self.execute("GetAutoBalanceThreshold", 2)
+
+    @cast_response_to_model(_GetAutoBalanceThresholdResponse, lambda r: r.threshold)
     async def get_auto_balance_threshold(self) -> str:
         """Retrieve the team balancing threshold.
 
@@ -1141,7 +1272,7 @@ class RconCommands(ABC):
             The team balancing threshold.
 
         """
-        return await self.execute("GetAutoBalanceThreshold", 2)
+        return await self._get_auto_balance_threshold()
 
     async def set_auto_balance_threshold(self, player_threshold: int) -> None:
         """Set the player threshold for auto balancing.
@@ -1167,7 +1298,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetVoteKickEnabledResponse, lambda r: r.enabled)
+    async def _get_vote_kick_enabled(self) -> str:
+        return await self.execute("GetVoteKickEnabled", 2)
+
+    @cast_response_to_model(_GetVoteKickEnabledResponse, lambda r: r.enabled)
     async def get_vote_kick_enabled(self) -> str:
         """Retrieve whether vote kicking is enabled.
 
@@ -1177,7 +1311,7 @@ class RconCommands(ABC):
             Whether vote kicking is enabled.
 
         """
-        return await self.execute("GetVoteKickEnabled", 2)
+        return await self._get_vote_kick_enabled()
 
     async def set_vote_kick_enabled(self, *, enabled: bool) -> None:
         """Enable or disable vote kicking.
@@ -1196,7 +1330,10 @@ class RconCommands(ABC):
             },
         )
 
-    @cast_response_to_model(GetVoteKickThresholdsResponse)
+    async def _get_vote_kick_thresholds(self) -> str:
+        return await self.execute("GetVoteKickThreshold", 2)
+
+    @cast_response_to_model(_GetVoteKickThresholdsResponse)
     async def get_vote_kick_thresholds(self) -> str:
         """Retrieve the vote kick thresholds.
 
@@ -1206,7 +1343,7 @@ class RconCommands(ABC):
             The vote kick thresholds.
 
         """
-        return await self.execute("GetVoteKickThreshold", 2)
+        return await self._get_vote_kick_thresholds()
 
     async def reset_vote_kick_thresholds(self) -> None:
         """Reset the vote kick thresholds to the default values."""
@@ -1330,7 +1467,7 @@ class RconCommands(ABC):
 
     async def set_match_timer(
         self,
-        game_mode: GameMode | GameModeLiteral,
+        game_mode: GameMode | _GameModeLiteral,
         minutes: int,
     ) -> None:
         """Set the match timer for a specific game mode.
@@ -1340,7 +1477,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
+        game_mode : GameMode | str
             The game mode to set the match timer for.
         minutes : int
             The number of minutes to set the match timer to.
@@ -1355,7 +1492,7 @@ class RconCommands(ABC):
             },
         )
 
-    async def reset_match_timer(self, game_mode: GameMode | GameModeLiteral) -> None:
+    async def reset_match_timer(self, game_mode: GameMode | _GameModeLiteral) -> None:
         """Reset the match timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1363,7 +1500,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
+        game_mode : GameMode | str
             The game mode to reset the match timer for.
 
         """
@@ -1377,7 +1514,7 @@ class RconCommands(ABC):
 
     async def set_warmup_timer(
         self,
-        game_mode: GameMode | GameModeLiteral,
+        game_mode: GameMode | _GameModeLiteral,
         minutes: int,
     ) -> None:
         """Set the warmup timer for a specific game mode.
@@ -1388,7 +1525,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
+        game_mode : GameMode | str
             The game mode to set the warmup timer for.
         minutes : int
             The number of minutes to set the warmup timer to.
@@ -1403,7 +1540,7 @@ class RconCommands(ABC):
             },
         )
 
-    async def remove_warmup_timer(self, game_mode: GameMode | GameModeLiteral) -> None:
+    async def reset_warmup_timer(self, game_mode: GameMode | _GameModeLiteral) -> None:
         """Reset the warmup timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1411,7 +1548,7 @@ class RconCommands(ABC):
 
         Parameters
         ----------
-        game_mode : GameMode | Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
+        game_mode : GameMode | str
             The game mode to reset the warmup timer for.
 
         """
@@ -1454,3 +1591,318 @@ class RconCommands(ABC):
                 "Enable": enabled,
             },
         )
+
+
+class HLLRconCommands(_RconCommands):
+    @override
+    @cast_response_to_model(HLLGetAdminLogResponse)
+    async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
+        return await self._get_admin_log(seconds_span, filter_)
+
+    @override
+    @cast_response_to_model(HLLGetMapShuffleEnabledResponse, lambda r: r.enabled)
+    async def get_map_shuffle_enabled(self) -> str:
+        return await self._get_map_shuffle_enabled()
+
+    @override
+    @cast_response_to_model(HLLGetCommandsResponse)
+    async def get_commands(self) -> str:
+        return await self._get_commands()
+
+    @override
+    @cast_response_to_model(HLLGetAdminGroupsResponse)
+    async def get_admin_groups(self) -> str:
+        return await self._get_admin_groups()
+
+    @override
+    @cast_response_to_model(HLLGetAdminUsersResponse)
+    async def get_admin_users(self) -> str:
+        return await self._get_admin_users()
+
+    @override
+    @cast_response_to_model(HLLGetBansResponse)
+    async def get_permanent_bans(self) -> str:
+        return await self._get_permanent_bans()
+
+    @override
+    @cast_response_to_model(HLLGetBansResponse)
+    async def get_temporary_bans(self) -> str:
+        return await self._get_temporary_bans()
+
+    @override
+    @cast_response_to_model(HLLGetTeamSwitchCooldownResponse, lambda r: r.minutes)
+    async def get_team_switch_cooldown(self) -> str:
+        return await self._get_team_switch_cooldown()
+
+    @override
+    @cast_response_to_model(HLLGetIdleKickDurationResponse, lambda r: r.minutes)
+    async def get_idle_kick_duration(self) -> str:
+        return await self._get_idle_kick_duration()
+
+    @override
+    @cast_response_to_model(HLLGetPlayerResponse)
+    async def get_player(self, player_id: str) -> str:
+        return await self._get_player(player_id)
+
+    @override
+    @cast_response_to_model(HLLGetPlayersResponse)
+    async def get_players(self) -> str:
+        return await self._get_players()
+
+    @override
+    @cast_response_to_model(HLLGetMapRotationResponse)
+    async def get_map_rotation(self) -> str:
+        return await self._get_map_rotation()
+
+    @override
+    @cast_response_to_model(HLLGetMapRotationResponse)
+    async def get_map_sequence(self) -> str:
+        return await self._get_map_sequence()
+
+    @override
+    @cast_response_to_model(HLLGetServerSessionResponse)
+    async def get_server_session(self) -> str:
+        return await self._get_server_session()
+
+    @override
+    @cast_response_to_model(HLLGetServerConfigResponse)
+    async def get_server_config(self) -> str:
+        return await self._get_server_config()
+
+    @override
+    @cast_response_to_model(HLLGetBannedWordsResponse)
+    async def get_banned_words(self) -> str:
+        return await self._get_banned_words()
+
+    @override
+    @cast_response_to_model(HLLGetVipsResponse)
+    async def get_vip_users(self) -> str:
+        return await self._get_vip_users()
+
+    @override
+    @cast_response_to_model(HLLGetHighPingThresholdResponse, lambda r: r.threshold)
+    async def get_high_ping_threshold(self) -> str:
+        return await self._get_high_ping_threshold()
+
+    @override
+    @cast_response_to_model(HLLGetCommandDetailsResponse)
+    async def get_command_details(self, command: str) -> str:
+        return await self._get_command_details(command)
+
+    @override
+    @cast_response_to_model(HLLGetAutoBalanceEnabledResponse, lambda r: r.enabled)
+    async def get_auto_balance_enabled(self) -> str:
+        return await self._get_auto_balance_enabled()
+
+    @override
+    @cast_response_to_model(HLLGetAutoBalanceThresholdResponse, lambda r: r.threshold)
+    async def get_auto_balance_threshold(self) -> str:
+        return await self._get_auto_balance_threshold()
+
+    @override
+    @cast_response_to_model(HLLGetVoteKickEnabledResponse, lambda r: r.enabled)
+    async def get_vote_kick_enabled(self) -> str:
+        return await self._get_vote_kick_enabled()
+
+    @override
+    @cast_response_to_model(HLLGetVoteKickThresholdsResponse)
+    async def get_vote_kick_thresholds(self) -> str:
+        return await self._get_vote_kick_thresholds()
+
+    if TYPE_CHECKING:
+
+        @override
+        async def disband_squad(
+            self,
+            faction: Faction | HLLPlayerFactionId | int,
+            squad_index: int,
+            reason: str,
+        ) -> bool: ...
+
+        @override
+        async def change_map(self, map_name: str | Layer) -> None: ...
+
+        @override
+        async def set_match_timer(
+            self,
+            game_mode: GameMode | HLLGameModeLiteral,
+            minutes: int,
+        ) -> None: ...
+
+        @override
+        async def reset_match_timer(
+            self,
+            game_mode: GameMode | HLLGameModeLiteral,
+        ) -> None: ...
+
+        @override
+        async def set_warmup_timer(
+            self,
+            game_mode: GameMode | HLLGameModeLiteral,
+            minutes: int,
+        ) -> None: ...
+
+        @override
+        async def reset_warmup_timer(
+            self,
+            game_mode: GameMode | HLLGameModeLiteral,
+        ) -> None: ...
+
+
+class HLLVRconCommands(_RconCommands):
+    @override
+    @cast_response_to_model(HLLVGetAdminLogResponse)
+    async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
+        return await self._get_admin_log(seconds_span, filter_)
+
+    @override
+    @cast_response_to_model(HLLVGetMapShuffleEnabledResponse, lambda r: r.enabled)
+    async def get_map_shuffle_enabled(self) -> str:
+        return await self._get_map_shuffle_enabled()
+
+    @override
+    @cast_response_to_model(HLLVGetCommandsResponse)
+    async def get_commands(self) -> str:
+        return await self._get_commands()
+
+    @override
+    @cast_response_to_model(HLLVGetAdminGroupsResponse)
+    async def get_admin_groups(self) -> str:
+        return await self._get_admin_groups()
+
+    @override
+    @cast_response_to_model(HLLVGetAdminUsersResponse)
+    async def get_admin_users(self) -> str:
+        return await self._get_admin_users()
+
+    @override
+    @cast_response_to_model(HLLVGetBansResponse)
+    async def get_permanent_bans(self) -> str:
+        return await self._get_permanent_bans()
+
+    @override
+    @cast_response_to_model(HLLVGetBansResponse)
+    async def get_temporary_bans(self) -> str:
+        return await self._get_temporary_bans()
+
+    @override
+    @cast_response_to_model(HLLVGetTeamSwitchCooldownResponse, lambda r: r.minutes)
+    async def get_team_switch_cooldown(self) -> str:
+        return await self._get_team_switch_cooldown()
+
+    @override
+    @cast_response_to_model(HLLVGetIdleKickDurationResponse, lambda r: r.minutes)
+    async def get_idle_kick_duration(self) -> str:
+        return await self._get_idle_kick_duration()
+
+    @override
+    @cast_response_to_model(HLLVGetPlayerResponse)
+    async def get_player(self, player_id: str) -> str:
+        return await self._get_player(player_id)
+
+    @override
+    @cast_response_to_model(HLLVGetPlayersResponse)
+    async def get_players(self) -> str:
+        return await self._get_players()
+
+    @override
+    @cast_response_to_model(HLLVGetMapRotationResponse)
+    async def get_map_rotation(self) -> str:
+        return await self._get_map_rotation()
+
+    @override
+    @cast_response_to_model(HLLVGetMapRotationResponse)
+    async def get_map_sequence(self) -> str:
+        return await self._get_map_sequence()
+
+    @override
+    @cast_response_to_model(HLLVGetServerSessionResponse)
+    async def get_server_session(self) -> str:
+        return await self._get_server_session()
+
+    @override
+    @cast_response_to_model(HLLVGetServerConfigResponse)
+    async def get_server_config(self) -> str:
+        return await self._get_server_config()
+
+    @override
+    @cast_response_to_model(HLLVGetBannedWordsResponse)
+    async def get_banned_words(self) -> str:
+        return await self._get_banned_words()
+
+    @override
+    @cast_response_to_model(HLLVGetVipsResponse)
+    async def get_vip_users(self) -> str:
+        return await self._get_vip_users()
+
+    @override
+    @cast_response_to_model(HLLVGetHighPingThresholdResponse, lambda r: r.threshold)
+    async def get_high_ping_threshold(self) -> str:
+        return await self._get_high_ping_threshold()
+
+    @override
+    @cast_response_to_model(HLLVGetCommandDetailsResponse)
+    async def get_command_details(self, command: str) -> str:
+        return await self._get_command_details(command)
+
+    @override
+    @cast_response_to_model(HLLVGetAutoBalanceEnabledResponse, lambda r: r.enabled)
+    async def get_auto_balance_enabled(self) -> str:
+        return await self._get_auto_balance_enabled()
+
+    @override
+    @cast_response_to_model(HLLVGetAutoBalanceThresholdResponse, lambda r: r.threshold)
+    async def get_auto_balance_threshold(self) -> str:
+        return await self._get_auto_balance_threshold()
+
+    @override
+    @cast_response_to_model(HLLVGetVoteKickEnabledResponse, lambda r: r.enabled)
+    async def get_vote_kick_enabled(self) -> str:
+        return await self._get_vote_kick_enabled()
+
+    @override
+    @cast_response_to_model(HLLVGetVoteKickThresholdsResponse)
+    async def get_vote_kick_thresholds(self) -> str:
+        return await self._get_vote_kick_thresholds()
+
+    if TYPE_CHECKING:
+
+        @override
+        async def disband_squad(
+            self,
+            faction: Faction | HLLVPlayerFactionId | int,
+            squad_index: int,
+            reason: str,
+        ) -> bool: ...
+
+        @override
+        async def change_map(self, map_name: str | Layer) -> None: ...
+
+        @override
+        async def set_match_timer(
+            self,
+            game_mode: GameMode | HLLVGameModeLiteral,
+            minutes: int,
+        ) -> None: ...
+
+        @override
+        async def reset_match_timer(
+            self,
+            game_mode: GameMode | HLLVGameModeLiteral,
+        ) -> None: ...
+
+        @override
+        async def set_warmup_timer(
+            self,
+            game_mode: GameMode | HLLVGameModeLiteral,
+            minutes: int,
+        ) -> None: ...
+
+        @override
+        async def reset_warmup_timer(
+            self,
+            game_mode: GameMode | HLLVGameModeLiteral,
+        ) -> None: ...
+
+
+RconCommands: TypeAlias = HLLRconCommands | HLLVRconCommands

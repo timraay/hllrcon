@@ -1,18 +1,18 @@
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Self
 
 from typing_extensions import override
 
-from hllrcon.commands import RconCommands
-from hllrcon.exceptions import HLLConnectionLostError
+from hllrcon.commands import _RconCommands
+from hllrcon.exceptions import RconConnectionLostError
 from hllrcon.protocol.protocol import RconProtocol
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
 
-class RconConnection(RconCommands):
+class _RconConnection(_RconCommands):
     """A class representing a connection to an RCON server.
 
     RconConnections are single-use and cannot be reused after being disconnected from
@@ -58,7 +58,7 @@ class RconConnection(RconCommands):
         port: int,
         password: str,
         logger: logging.Logger | None = None,
-    ) -> "RconConnection":
+    ) -> Self:
         """Connect to the RCON server.
 
         Parameters
@@ -109,7 +109,15 @@ class RconConnection(RconCommands):
         body: str | dict[str, Any] = "",
     ) -> str:
         if self._disconnect_event.is_set():
-            raise HLLConnectionLostError
+            raise RconConnectionLostError
         response = await self._protocol.execute(command, version, body)
         response.raise_for_status()
         return response.content_body
+
+
+class HLLRconConnection(_RconConnection):
+    pass
+
+
+class HLLVRconConnection(_RconConnection):
+    pass
