@@ -372,14 +372,18 @@ class _Layer(
     @computed_field
     @cached_property
     def attacking_faction(self) -> FactionT | None:
-        if self.attacking_team is None:
-            return None
-        if self.attacking_team == self.map.allies.team:
-            return self.map.allies
-        if self.attacking_team == self.map.axis.team:
-            return self.map.axis
-        msg = f"Attacking team {self.attacking_team} is not one of either faction"
-        raise ValueError(msg)
+        match self.attacking_team:
+            case None:
+                return None
+            case self.map.allies.team:
+                return self.map.allies
+            case self.map.axis.team:
+                return self.map.axis
+            case _:  # pragma: no cover
+                msg = (
+                    f"Attacking team {self.attacking_team} is not one of either faction"
+                )
+                raise ValueError(msg)
 
     @computed_field
     @cached_property
@@ -389,14 +393,18 @@ class _Layer(
     @computed_field
     @cached_property
     def defending_faction(self) -> FactionT | None:
-        if self.attacking_team is None:
-            return None
-        if self.attacking_team == self.map.allies.team:
-            return self.map.axis
-        if self.attacking_team == self.map.axis.team:
-            return self.map.allies
-        msg = f"Attacking team {self.attacking_team} is not one of either faction"
-        raise ValueError(msg)
+        match self.attacking_team:
+            case None:
+                return None
+            case self.map.allies.team:
+                return self.map.axis
+            case self.map.axis.team:
+                return self.map.allies
+            case _:  # pragma: no cover
+                msg = (
+                    f"Attacking team {self.attacking_team} is not one of either faction"
+                )
+                raise ValueError(msg)
 
 
 class HLLLayer(_Layer[HLLTeam, HLLFaction, HLLMap, HLLGameMode]):

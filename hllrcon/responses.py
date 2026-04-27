@@ -171,7 +171,7 @@ class HLLPlayerPlatform(StrEnum):
 
 class HLLVPlayerPlatform(StrEnum):
     # TODO: Add more
-    HLLV_STEAM = "EPlatformFamily::Steam"
+    STEAM = "EPlatformFamily::Steam"
 
 
 PlayerPlatform: TypeAlias = HLLPlayerPlatform | HLLVPlayerPlatform
@@ -946,11 +946,11 @@ class _GetVipsResponse(Response):
 
 
 class HLLGetVipsResponse(_GetVipsResponse):
-    vips: list[HLLGetVipsResponseEntry]
+    vips: list[HLLGetVipsResponseEntry] = Field(validation_alias="vipPlayers")
 
 
 class HLLVGetVipsResponse(_GetVipsResponse):
-    vips: list[HLLVGetVipsResponseEntry]
+    vips: list[HLLVGetVipsResponseEntry] = Field(validation_alias="vipPlayers")
 
 
 GetVipsResponse: TypeAlias = HLLGetVipsResponse | HLLVGetVipsResponse

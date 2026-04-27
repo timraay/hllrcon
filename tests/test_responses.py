@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 import pytest
 from hllrcon.data import HLLGameMode, HLLLayer, HLLRole
+from hllrcon.data.game_modes import HLLVGameMode
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
     HLLGetAdminLogResponseEntry,
@@ -12,6 +13,7 @@ from hllrcon.responses import (
     HLLPlayerFactionId,
     HLLPlayerPlatform,
     HLLPlayerRoleId,
+    HLLVGetMapRotationResponseEntry,
 )
 
 if TYPE_CHECKING:
@@ -119,6 +121,24 @@ def test_map_rotation_entry_find_layer() -> None:
 
     entry.game_mode_name = "Control Skirmish - La Petite Chapelle"
     assert entry.game_mode == HLLGameMode.SKIRMISH
+
+    entry.game_mode_name = "U.S. Offensive"
+    assert entry.game_mode == HLLGameMode.OFFENSIVE
+
+    hllv_entry = HLLVGetMapRotationResponseEntry(
+        name="FOY",
+        game_mode_name="Warfare",
+        time_of_day="DAY",
+        id="foy_warfare",
+        position=0,
+    )
+    assert hllv_entry.game_mode == HLLVGameMode.WARFARE
+
+    hllv_entry.game_mode_name = "Control Skirmish - La Petite Chapelle"
+    assert hllv_entry.game_mode == HLLVGameMode.SKIRMISH
+
+    hllv_entry.game_mode_name = "U.S. Offensive"
+    assert hllv_entry.game_mode == HLLVGameMode.OFFENSIVE
 
     unknown_entry = HLLGetMapRotationResponseEntry(
         name="SOY",

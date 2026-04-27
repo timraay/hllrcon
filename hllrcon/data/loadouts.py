@@ -74,7 +74,7 @@ class _Loadout(IndexedBaseModel[LoadoutId], Generic[FactionT, RoleT, LoadoutItem
     # @computed_field
     @cached_property  # type: ignore[misc]
     def id(self) -> LoadoutId:  # type: ignore[override]
-        return LoadoutId(
+        return LoadoutId(  # pragma: no cover
             faction_id=self.faction.id,
             role_id=self.role.id,
             name=self.name,
@@ -4782,7 +4782,7 @@ class HLLVLoadout(_Loadout[HLLVFaction, HLLVRole, HLLVLoadoutItem]):
     # @computed_field
     @cached_property  # type: ignore[misc]
     def id(self) -> LoadoutId:  # type: ignore[override]
-        return LoadoutId(
+        return LoadoutId(  # pragma: no cover
             faction_id=self.faction.id,
             role_id=self.role.id,
             name=self.name,

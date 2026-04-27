@@ -59,7 +59,7 @@ class _Map(CaseInsensitiveIndexedBaseModel[R], Generic[FactionT, R]):
                 return CardinalDirection.BOTTOM_TO_TOP
             case CardinalDirection.BOTTOM_TO_TOP:
                 return CardinalDirection.TOP_TO_BOTTOM
-            case _:
+            case _:  # pragma: no cover
                 msg = f"Invalid direction: {self.allies_direction}"
                 raise ValueError(msg)
 
@@ -72,7 +72,7 @@ class _Map(CaseInsensitiveIndexedBaseModel[R], Generic[FactionT, R]):
                 return Orientation.HORIZONTAL
             case CardinalDirection.TOP_TO_BOTTOM | CardinalDirection.BOTTOM_TO_TOP:
                 return Orientation.VERTICAL
-            case _:
+            case _:  # pragma: no cover
                 msg = f"Invalid direction: {self.allies_direction}"
                 raise ValueError(msg)
 

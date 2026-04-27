@@ -27,6 +27,8 @@ from hllrcon.data._utils import (
     model_sequence_serializer,
     model_serializer,
 )
+from hllrcon.data.factions import Faction, HLLVFaction
+from hllrcon.data.maps import CardinalDirection, Orientation
 from hllrcon.data.sectors import GridPositionalModel
 from pydantic import BaseModel, ValidationError
 
@@ -210,7 +212,7 @@ class TestDataFactions:
         assert None not in HLLFaction.all()
 
     class FactionProperties(NamedTuple):
-        faction: HLLFaction
+        faction: Faction
         is_allied: bool
         is_axis: bool
 
@@ -223,6 +225,8 @@ class TestDataFactions:
             FactionProperties(HLLFaction.CW, True, False),
             FactionProperties(HLLFaction.DAK, False, True),
             FactionProperties(HLLFaction.B8A, True, False),
+            FactionProperties(HLLVFaction.US, True, False),
+            FactionProperties(HLLVFaction.NVA, False, True),
         ],
     )
     def test_faction_properties(self, properties: FactionProperties) -> None:
@@ -547,6 +551,56 @@ class TestDataMaps:
         assert hash(map_) == hash(map_.id.lower())
         assert hash(map_) != hash(HLLMap.DRIEL)
 
+    @pytest.mark.parametrize(
+        ("allies_direction", "axis_direction", "orientation", "is_mirrored"),
+        [
+            (
+                CardinalDirection.LEFT_TO_RIGHT,
+                CardinalDirection.RIGHT_TO_LEFT,
+                Orientation.HORIZONTAL,
+                False,
+            ),
+            (
+                CardinalDirection.RIGHT_TO_LEFT,
+                CardinalDirection.LEFT_TO_RIGHT,
+                Orientation.HORIZONTAL,
+                True,
+            ),
+            (
+                CardinalDirection.TOP_TO_BOTTOM,
+                CardinalDirection.BOTTOM_TO_TOP,
+                Orientation.VERTICAL,
+                False,
+            ),
+            (
+                CardinalDirection.BOTTOM_TO_TOP,
+                CardinalDirection.TOP_TO_BOTTOM,
+                Orientation.VERTICAL,
+                True,
+            ),
+        ],
+    )
+    def test_map_axis_direction(
+        self,
+        allies_direction: CardinalDirection,
+        axis_direction: CardinalDirection,
+        orientation: Orientation,
+        is_mirrored: bool,
+    ) -> None:
+        map_ = HLLMap(
+            id="foo",
+            name="Foo",
+            tag="FOO",
+            pretty_name="Foo",
+            short_name="FOO",
+            allies=HLLFaction.US,
+            axis=HLLFaction.GER,
+            allies_direction=allies_direction,
+        )
+        assert map_.axis_direction == axis_direction
+        assert map_.orientation == orientation
+        assert map_.is_mirrored == is_mirrored
+
 
 class TestDataTeams:
     def test_team_by_id(self) -> None:
@@ -582,14 +636,15 @@ class TestDataRoles:
         is_infantry: bool
         is_tanker: bool
         is_artillery: bool
+        is_mortar: bool
         is_recon: bool
         is_squad_leader: bool
 
     @pytest.mark.parametrize(
         "properties",
         [
-            RoleProperties(HLLRole.RIFLEMAN, True, False, False, False, False),
-            RoleProperties(HLLRole.ASSAULT, True, False, False, False, False),
+            RoleProperties(HLLRole.RIFLEMAN, True, False, False, False, False, False),
+            RoleProperties(HLLRole.ASSAULT, True, False, False, False, False, False),
             RoleProperties(
                 HLLRole.AUTOMATIC_RIFLEMAN,
                 True,
@@ -597,27 +652,53 @@ class TestDataRoles:
                 False,
                 False,
                 False,
+                False,
             ),
-            RoleProperties(HLLRole.MEDIC, True, False, False, False, False),
-            RoleProperties(HLLRole.SPOTTER, False, False, False, True, True),
-            RoleProperties(HLLRole.SUPPORT, True, False, False, False, False),
-            RoleProperties(HLLRole.MACHINE_GUNNER, True, False, False, False, False),
-            RoleProperties(HLLRole.ANTI_TANK, True, False, False, False, False),
-            RoleProperties(HLLRole.ENGINEER, True, False, False, False, False),
-            RoleProperties(HLLRole.OFFICER, True, False, False, False, True),
-            RoleProperties(HLLRole.SNIPER, False, False, False, True, False),
-            RoleProperties(HLLRole.CREWMAN, False, True, False, False, False),
-            RoleProperties(HLLRole.TANK_COMMANDER, False, True, False, False, True),
-            RoleProperties(HLLRole.COMMANDER, False, False, False, False, True),
-            RoleProperties(HLLRole.ARTILLERY_OBSERVER, False, False, True, False, True),
-            RoleProperties(HLLRole.OPERATOR, False, False, True, False, False),
-            RoleProperties(HLLRole.GUNNER, False, False, True, False, False),
+            RoleProperties(HLLRole.MEDIC, True, False, False, False, False, False),
+            RoleProperties(HLLRole.SPOTTER, False, False, False, False, True, True),
+            RoleProperties(HLLRole.SUPPORT, True, False, False, False, False, False),
+            RoleProperties(
+                HLLRole.MACHINE_GUNNER,
+                True,
+                False,
+                False,
+                False,
+                False,
+                False,
+            ),
+            RoleProperties(HLLRole.ANTI_TANK, True, False, False, False, False, False),
+            RoleProperties(HLLRole.ENGINEER, True, False, False, False, False, False),
+            RoleProperties(HLLRole.OFFICER, True, False, False, False, False, True),
+            RoleProperties(HLLRole.SNIPER, False, False, False, False, True, False),
+            RoleProperties(HLLRole.CREWMAN, False, True, False, False, False, False),
+            RoleProperties(
+                HLLRole.TANK_COMMANDER,
+                False,
+                True,
+                False,
+                False,
+                False,
+                True,
+            ),
+            RoleProperties(HLLRole.COMMANDER, False, False, False, False, False, True),
+            RoleProperties(
+                HLLRole.ARTILLERY_OBSERVER,
+                False,
+                False,
+                True,
+                False,
+                False,
+                True,
+            ),
+            RoleProperties(HLLRole.OPERATOR, False, False, True, False, False, False),
+            RoleProperties(HLLRole.GUNNER, False, False, True, False, False, False),
         ],
     )
     def test_role_properties(self, properties: RoleProperties) -> None:
         assert properties.role.is_infantry is properties.is_infantry
         assert properties.role.is_tanker is properties.is_tanker
         assert properties.role.is_artillery is properties.is_artillery
+        assert properties.role.is_mortar is properties.is_mortar
         assert properties.role.is_recon is properties.is_recon
         assert properties.role.is_squad_leader is properties.is_squad_leader
 

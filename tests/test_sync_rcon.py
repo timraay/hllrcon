@@ -7,8 +7,8 @@ from typing import Any
 from unittest import mock
 
 import pytest
-from hllrcon.connection import HLLRconConnection
-from hllrcon.sync.rcon import HLLSyncRcon
+from hllrcon.connection import HLLRconConnection, HLLVRconConnection
+from hllrcon.sync.rcon import HLLSyncRcon, HLLVSyncRcon
 
 
 @pytest.fixture
@@ -31,6 +31,25 @@ def rcon(monkeypatch: pytest.MonkeyPatch, connection: mock.Mock) -> HLLSyncRcon:
 
 
 def test_basic_usage(rcon: HLLSyncRcon, connection: mock.Mock) -> None:
+    with rcon.connect():
+        connection.execute.return_value = "pong"
+        result = rcon.execute("ping", 1)
+        assert result == "pong"
+
+
+def test_hllv_basic_usage(monkeypatch: pytest.MonkeyPatch) -> None:
+    connection = mock.Mock(spec=HLLVRconConnection)
+    connection.is_connected.return_value = True
+
+    async def get_connection(
+        *_args: Any,  # noqa: ANN401
+        **_kwargs: dict[str, Any],
+    ) -> HLLVRconConnection:
+        return connection
+
+    monkeypatch.setattr("hllrcon.rcon.HLLVRconConnection.connect", get_connection)
+    rcon = HLLVSyncRcon(host="localhost", port=1234, password="password")
+
     with rcon.connect():
         connection.execute.return_value = "pong"
         result = rcon.execute("ping", 1)

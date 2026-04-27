@@ -5,7 +5,7 @@
 
 import json
 from functools import partial
-from typing import Any, Literal
+from typing import Any, ClassVar, Literal
 from unittest import mock
 
 import pytest
@@ -14,10 +14,10 @@ from hllrcon.data.layers import HLLLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
     ForceMode,
-    _GetVoteKickThresholdsResponse,
-    _GetVoteKickThresholdsResponseEntry,
 )
 from hllrcon.sync.commands import (
+    HLLSyncRconCommands,
+    HLLVSyncRconCommands,
     _SyncRconCommands,
     cast_response_to_bool,
     cast_response_to_model,
@@ -53,6 +53,14 @@ class SyncRconCommandsStub(_SyncRconCommands):
         if isinstance(self.response, RconCommandError):
             raise self.response
         return self.response
+
+
+class HLLSyncRconCommandsStub(HLLSyncRconCommands, SyncRconCommandsStub):
+    pass
+
+
+class HLLVSyncRconCommandsStub(HLLVSyncRconCommands, SyncRconCommandsStub):
+    pass
 
 
 class CustomModel(BaseModel):
@@ -141,12 +149,14 @@ class TestCastResponseToBool:
 
 
 class TestCommands:
+    stub: ClassVar[type[SyncRconCommandsStub]] = SyncRconCommandsStub
+
     def test_commands_add_admin(self) -> None:
         player_id = "Player ID"
         admin_group = "Admin Group"
         comment = "Comment"
 
-        SyncRconCommandsStub(
+        self.stub(
             "AddAdmin",
             2,
             {
@@ -159,7 +169,7 @@ class TestCommands:
     def test_commands_remove_admin(self) -> None:
         player_id = "Player ID"
 
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveAdmin",
             2,
             {"PlayerId": player_id},
@@ -170,7 +180,7 @@ class TestCommands:
         self,
         filter_: str | None,
     ) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetAdminLog",
             2,
             {"LogBackTrackTime": 60, "Filters": filter_ or ""},
@@ -187,7 +197,7 @@ class TestCommands:
             ValueError,
             match="seconds_span must be a non-negative integer",
         ):
-            SyncRconCommandsStub(
+            self.stub(
                 "GetAdminLog",
                 2,
                 {"LogBackTrackTime": -1, "Filters": ""},
@@ -195,7 +205,7 @@ class TestCommands:
 
     def test_commands_change_map(self) -> None:
         map_name = "Map Name"
-        SyncRconCommandsStub(
+        self.stub(
             "ChangeMap",
             2,
             {"MapName": map_name},
@@ -210,7 +220,7 @@ class TestCommands:
             ["N30 HIGHWAY", "BIZORY-FOY ROAD", "EASTERN OURTHE"],
             ["ROAD TO BASTOGNE", "BOIS JACQUES", "FOREST OUTSKIRTS"],
         )
-        response = SyncRconCommandsStub(
+        response = self.stub(
             "GetClientReferenceData",
             2,
             command_id,
@@ -236,7 +246,7 @@ class TestCommands:
 
     def test_commands_get_available_sector_names_invalid_message(self) -> None:
         command_id = "SetSectorLayout"
-        stub = SyncRconCommandsStub(
+        stub = self.stub(
             "GetClientReferenceData",
             2,
             command_id,
@@ -268,7 +278,7 @@ class TestCommands:
         sector4 = "Sector 4"
         sector5 = "Sector 5"
 
-        SyncRconCommandsStub(
+        self.stub(
             "SetSectorLayout",
             2,
             {
@@ -283,7 +293,7 @@ class TestCommands:
     def test_commands_add_map_to_rotation(self) -> None:
         map_name = "Map1"
         index = 3
-        SyncRconCommandsStub(
+        self.stub(
             "AddMapToRotation",
             2,
             {"MapName": map_name, "Index": index},
@@ -291,7 +301,7 @@ class TestCommands:
 
     def test_commands_remove_map_from_rotation(self) -> None:
         index = 2
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveMapFromRotation",
             2,
             {"Index": index},
@@ -300,7 +310,7 @@ class TestCommands:
     def test_commands_add_map_to_sequence(self) -> None:
         map_name = "Map2"
         index = 1
-        SyncRconCommandsStub(
+        self.stub(
             "AddMapToSequence",
             2,
             {"MapName": map_name, "Index": index},
@@ -308,14 +318,14 @@ class TestCommands:
 
     def test_commands_remove_map_from_sequence(self) -> None:
         index = 4
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveMapFromSequence",
             2,
             {"Index": index},
         ).remove_map_from_sequence(index)
 
     def test_commands_get_map_shuffle_enabled(self) -> None:
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetMapShuffleEnabled",
             2,
             response=json.dumps({"enable": True}),
@@ -323,7 +333,7 @@ class TestCommands:
         assert result is True
 
     def test_commands_set_map_shuffle_enabled(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "SetMapShuffleEnabled",
             2,
             {"Enable": True},
@@ -332,7 +342,7 @@ class TestCommands:
     def test_commands_move_map_from_sequence(self) -> None:
         old_index = 1
         new_index = 2
-        SyncRconCommandsStub(
+        self.stub(
             "MoveMapInSequence",
             2,
             {"CurrentIndex": old_index, "NewIndex": new_index},
@@ -341,7 +351,7 @@ class TestCommands:
     def test_commands_get_available_maps(self) -> None:
         command_id = "AddMapToRotation"
         maps = ["foy_warfare", "stmariedumont_warfare", "hurtgenforest_warfare_V2"]
-        response = SyncRconCommandsStub(
+        response = self.stub(
             "GetClientReferenceData",
             2,
             command_id,
@@ -374,7 +384,7 @@ class TestCommands:
     def test_commands_get_available_maps_invalid_message(self) -> None:
         command_id = "AddMapToRotation"
         maps = ["foy_warfare", "stmariedumont_warfare", "hurtgenforest_warfare_V2"]
-        stub = SyncRconCommandsStub(
+        stub = self.stub(
             "GetClientReferenceData",
             2,
             command_id,
@@ -407,7 +417,7 @@ class TestCommands:
             stub.get_available_maps()
 
     def test_commands_get_commands(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetDisplayableCommands",
             2,
             response=json.dumps(
@@ -429,7 +439,7 @@ class TestCommands:
         ).get_commands()
 
     def test_commands_get_admin_groups(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetAdminGroups",
             2,
             response=json.dumps(
@@ -445,7 +455,7 @@ class TestCommands:
         ).get_admin_groups()
 
     def test_commands_get_admin_users(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetAdminUsers",
             2,
             response=json.dumps(
@@ -467,7 +477,7 @@ class TestCommands:
         ).get_admin_users()
 
     def test_commands_get_permanent_bans(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetPermanentBans",
             2,
             response=json.dumps(
@@ -495,7 +505,7 @@ class TestCommands:
         ).get_permanent_bans()
 
     def test_commands_get_temporary_bans(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetTemporaryBans",
             2,
             response=json.dumps(
@@ -526,7 +536,7 @@ class TestCommands:
         team_id = 1
         squad_id = 2
         reason = "Disbanding for testing"
-        SyncRconCommandsStub(
+        self.stub(
             "DisbandPlatoon",
             2,
             {
@@ -539,7 +549,7 @@ class TestCommands:
     def test_commands_force_team_switch(self) -> None:
         player_id = "player123"
         force_mode = ForceMode.IMMEDIATE
-        response = SyncRconCommandsStub(
+        response = self.stub(
             "ForceTeamSwitch",
             2,
             {
@@ -551,7 +561,7 @@ class TestCommands:
 
     def test_commands_get_team_switch_cooldown(self) -> None:
         minutes = 15
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetTeamSwitchCooldown",
             2,
             response=json.dumps({"teamSwitchCooldown": minutes}),
@@ -560,7 +570,7 @@ class TestCommands:
 
     def test_commands_set_team_switch_cooldown(self) -> None:
         minutes = 10
-        SyncRconCommandsStub(
+        self.stub(
             "SetTeamSwitchCooldown",
             2,
             {"TeamSwitchTimer": minutes},
@@ -568,7 +578,7 @@ class TestCommands:
 
     def test_commands_set_max_queued_players(self) -> None:
         num = 20
-        SyncRconCommandsStub(
+        self.stub(
             "SetMaxQueuedPlayers",
             2,
             {"MaxQueuedPlayers": num},
@@ -576,7 +586,7 @@ class TestCommands:
 
     def test_commands_get_idle_kick_duration(self) -> None:
         minutes = 15
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetKickIdleDuration",
             2,
             response=json.dumps({"idleTimeoutMinutes": minutes}),
@@ -585,7 +595,7 @@ class TestCommands:
 
     def test_commands_set_idle_kick_duration(self) -> None:
         minutes = 15
-        SyncRconCommandsStub(
+        self.stub(
             "SetIdleKickDuration",
             2,
             {"IdleTimeoutMinutes": minutes},
@@ -593,7 +603,7 @@ class TestCommands:
 
     def test_commands_set_welcome_message(self) -> None:
         message = "Hello all!"
-        SyncRconCommandsStub(
+        self.stub(
             "SetWelcomeMessage",
             2,
             {"Message": message},
@@ -602,7 +612,7 @@ class TestCommands:
     def test_commands_get_player(self) -> None:
         player_id = "player123"
 
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "player", "Value": player_id},
@@ -615,7 +625,7 @@ class TestCommands:
                     "eosId": "1234567890",
                     "level": 25,
                     "team": 1,
-                    "role": 1,
+                    "role": 4,
                     "platoon": "ABLE",
                     "loadout": "Combat Medic",
                     "stats": {
@@ -641,7 +651,7 @@ class TestCommands:
         ).get_player(player_id)
 
     def test_commands_get_players(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "players", "Value": ""},
@@ -656,7 +666,7 @@ class TestCommands:
                             "eosId": "1234567890",
                             "level": 25,
                             "team": 1,
-                            "role": 1,
+                            "role": 4,
                             "platoon": "ABLE",
                             "loadout": "Combat Medic",
                             "stats": {
@@ -684,7 +694,7 @@ class TestCommands:
         ).get_players()
 
     def test_commands_get_map_rotation(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "maprotation", "Value": ""},
@@ -712,7 +722,7 @@ class TestCommands:
         ).get_map_rotation()
 
     def test_commands_get_map_sequence(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "mapsequence", "Value": ""},
@@ -740,7 +750,7 @@ class TestCommands:
         ).get_map_sequence()
 
     def test_commands_get_server_session(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "session", "Value": ""},
@@ -767,7 +777,7 @@ class TestCommands:
         ).get_server_session()
 
     def test_commands_get_server_config(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "serverconfig", "Value": ""},
@@ -783,7 +793,7 @@ class TestCommands:
         ).get_server_config()
 
     def test_commands_get_banned_words(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "bannedwords", "Value": ""},
@@ -795,7 +805,7 @@ class TestCommands:
         ).get_banned_words()
 
     def test_commands_get_vip_users(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "GetServerInformation",
             2,
             {"Name": "vipplayers", "Value": ""},
@@ -817,7 +827,7 @@ class TestCommands:
 
     def test_commands_broadcast(self) -> None:
         message = "Broadcast message"
-        SyncRconCommandsStub(
+        self.stub(
             "ServerBroadcast",
             2,
             {"Message": message},
@@ -825,7 +835,7 @@ class TestCommands:
 
     def test_commands_get_high_ping_threshold(self) -> None:
         ms = 150
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetHighPingThreshold",
             2,
             response=json.dumps({"highPingThresholdMs": ms}),
@@ -834,7 +844,7 @@ class TestCommands:
 
     def test_commands_set_high_ping_threshold(self) -> None:
         ms = 150
-        SyncRconCommandsStub(
+        self.stub(
             "SetHighPingThreshold",
             2,
             {"HighPingThresholdMs": ms},
@@ -842,7 +852,7 @@ class TestCommands:
 
     def test_commands_get_command_details(self) -> None:
         command_id = "cmd1"
-        SyncRconCommandsStub(
+        self.stub(
             "GetClientReferenceData",
             2,
             command_id,
@@ -881,7 +891,7 @@ class TestCommands:
     def test_commands_message_player(self) -> None:
         player_id = "pid"
         message = "Private message"
-        SyncRconCommandsStub(
+        self.stub(
             "MessagePlayer",
             2,
             {"Message": message, "PlayerId": player_id},
@@ -889,7 +899,7 @@ class TestCommands:
 
     def test_commands_message_all_players(self) -> None:
         message = "Hello all!"
-        SyncRconCommandsStub(
+        self.stub(
             "MessageAllPlayers",
             2,
             {"Message": message},
@@ -898,7 +908,7 @@ class TestCommands:
     def test_commands_kill_player(self) -> None:
         player_id = "pid"
         reason = "Misconduct"
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "PunishPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason},
@@ -908,7 +918,7 @@ class TestCommands:
     def test_commands_kill_player_already_dead(self) -> None:
         player_id = "pid"
         reason = "Already dead"
-        stub = SyncRconCommandsStub(
+        stub = self.stub(
             "PunishPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason},
@@ -921,7 +931,7 @@ class TestCommands:
     def test_commands_kick_player(self) -> None:
         player_id = "pid"
         reason = "AFK"
-        SyncRconCommandsStub(
+        self.stub(
             "KickPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason},
@@ -931,7 +941,7 @@ class TestCommands:
         player_id = "pid"
         reason = "Cheating"
         admin_name = "admin"
-        SyncRconCommandsStub(
+        self.stub(
             "PermanentBanPlayer",
             2,
             {"PlayerId": player_id, "Reason": reason, "AdminName": admin_name},
@@ -942,7 +952,7 @@ class TestCommands:
         reason = "Toxic"
         admin_name = "admin"
         duration_hours = 12
-        SyncRconCommandsStub(
+        self.stub(
             "TemporaryBanPlayer",
             2,
             {
@@ -955,7 +965,7 @@ class TestCommands:
 
     def test_commands_remove_temp_ban(self) -> None:
         player_id = "pid"
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveTemporaryBan",
             2,
             {"PlayerId": player_id},
@@ -963,7 +973,7 @@ class TestCommands:
 
     def test_commands_remove_permanent_ban(self) -> None:
         player_id = "pid"
-        SyncRconCommandsStub(
+        self.stub(
             "RemovePermanentBan",
             2,
             {"PlayerId": player_id},
@@ -979,7 +989,7 @@ class TestCommands:
     def test_commands_remove_player_from_squad(self) -> None:
         player_id = "pid"
         reason = "Squad disbanded"
-        SyncRconCommandsStub(
+        self.stub(
             "RemovePlayerFromPlatoon",
             2,
             {
@@ -989,7 +999,7 @@ class TestCommands:
         ).remove_player_from_squad(player_id, reason)
 
     def test_commands_get_auto_balance_enabled(self) -> None:
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetAutoBalanceEnabled",
             2,
             response=json.dumps({"enable": True}),
@@ -997,14 +1007,14 @@ class TestCommands:
         assert result is True
 
     def test_commands_set_auto_balance_enabled(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "SetAutoBalanceEnabled",
             2,
             {"Enable": True},
         ).set_auto_balance_enabled(enabled=True)
 
     def test_commands_get_auto_balance_threshold(self) -> None:
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetAutoBalanceThreshold",
             2,
             response=json.dumps({"autoBalanceThreshold": 3}),
@@ -1013,14 +1023,14 @@ class TestCommands:
 
     def test_commands_set_auto_balance_threshold(self) -> None:
         threshold = 5
-        SyncRconCommandsStub(
+        self.stub(
             "SetAutoBalanceThreshold",
             2,
             {"AutoBalanceThreshold": threshold},
         ).set_auto_balance_threshold(threshold)
 
     def test_commands_get_vote_kick_enabled(self) -> None:
-        result = SyncRconCommandsStub(
+        result = self.stub(
             "GetVoteKickEnabled",
             2,
             response=json.dumps({"enable": True}),
@@ -1028,34 +1038,28 @@ class TestCommands:
         assert result is True
 
     def test_commands_set_vote_kick_enabled(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "SetVoteKickEnabled",
             2,
             {"Enable": True},
         ).set_vote_kick_enabled(enabled=True)
 
     def test_commands_get_vote_kick_thresholds(self) -> None:
-        result = SyncRconCommandsStub(
+        self.stub(
             "GetVoteKickThreshold",
             2,
             response=json.dumps({"entries": [{"playerCount": 10, "voteThreshold": 2}]}),
         ).get_vote_kick_thresholds()
 
-        assert result == _GetVoteKickThresholdsResponse(
-            entries=[
-                _GetVoteKickThresholdsResponseEntry(player_count=10, vote_threshold=2),
-            ],
-        )
-
     def test_commands_reset_vote_kick_thresholds(self) -> None:
-        SyncRconCommandsStub(
+        self.stub(
             "ResetVoteKickThreshold",
             2,
         ).reset_vote_kick_thresholds()
 
     def test_commands_set_vote_kick_thresholds(self) -> None:
         thresholds = [(10, 2), (20, 3)]
-        SyncRconCommandsStub(
+        self.stub(
             "SetVoteKickThreshold",
             2,
             {"ThresholdValue": "10,2,20,3"},
@@ -1063,7 +1067,7 @@ class TestCommands:
 
     def test_commands_add_banned_words(self) -> None:
         words = ["badword1", "badword2"]
-        SyncRconCommandsStub(
+        self.stub(
             "AddBannedWords",
             2,
             {"Words": ",".join(words)},
@@ -1071,7 +1075,7 @@ class TestCommands:
 
     def test_commands_remove_banned_words(self) -> None:
         words = ["badword1", "badword2"]
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveBannedWords",
             2,
             {"Words": ",".join(words)},
@@ -1080,7 +1084,7 @@ class TestCommands:
     def test_commands_add_vip(self) -> None:
         player_id = "vip123"
         description = "desc"
-        SyncRconCommandsStub(
+        self.stub(
             "AddVip",
             2,
             {"PlayerId": player_id, "Comment": description},
@@ -1088,7 +1092,7 @@ class TestCommands:
 
     def test_commands_remove_vip(self) -> None:
         player_id = "vip123"
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveVip",
             2,
             {"PlayerId": player_id},
@@ -1096,7 +1100,7 @@ class TestCommands:
 
     def test_commands_set_num_vip_slots(self) -> None:
         num_slots = 5
-        SyncRconCommandsStub(
+        self.stub(
             "SetVipSlotCount",
             2,
             {"VipSlotCount": num_slots},
@@ -1105,7 +1109,7 @@ class TestCommands:
     def test_commands_set_match_timer(self) -> None:
         game_mode: Literal["Warfare"] = "Warfare"
         minutes = 30
-        SyncRconCommandsStub(
+        self.stub(
             "SetMatchTimer",
             2,
             {"GameMode": game_mode, "MatchLength": minutes},
@@ -1113,7 +1117,7 @@ class TestCommands:
 
     def test_commands_remove_match_timer(self) -> None:
         game_mode: Literal["Warfare"] = "Warfare"
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveMatchTimer",
             2,
             {"GameMode": game_mode},
@@ -1122,7 +1126,7 @@ class TestCommands:
     def test_commands_set_warmup_timer(self) -> None:
         game_mode: Literal["Warfare"] = "Warfare"
         minutes = 5
-        SyncRconCommandsStub(
+        self.stub(
             "SetWarmupTimer",
             2,
             {"GameMode": game_mode, "WarmupLength": minutes},
@@ -1130,7 +1134,7 @@ class TestCommands:
 
     def test_commands_remove_warmup_timer(self) -> None:
         game_mode: Literal["Warfare"] = "Warfare"
-        SyncRconCommandsStub(
+        self.stub(
             "RemoveWarmupTimer",
             2,
             {"GameMode": game_mode},
@@ -1139,11 +1143,123 @@ class TestCommands:
     def test_commands_set_dynamic_weather_enabled(self) -> None:
         layer = HLLLayer.CARENTAN_WARFARE_NIGHT
         enabled = True
-        SyncRconCommandsStub(
+        self.stub(
             "SetDynamicWeatherEnabled",
             2,
             {"MapId": "carentan_warfare_night", "Enable": enabled},
         ).set_dynamic_weather_enabled(layer, enabled=enabled)
+
+
+class TestHLLCommands(TestCommands):
+    stub = HLLSyncRconCommandsStub
+
+
+class TestHLLVCommands(TestCommands):
+    stub = HLLVSyncRconCommandsStub
+
+    def test_commands_get_player(self) -> None:
+        player_id = "player123"
+
+        self.stub(
+            "GetServerInformation",
+            2,
+            {"Name": "player", "Value": player_id},
+            json.dumps(
+                {
+                    "name": "Player1",
+                    "clanTag": "ClanA",
+                    "iD": player_id,
+                    "platform": "EPlatformFamily::Steam",
+                    "eosId": "1234567890",
+                    "level": 25,
+                    "team": 1,
+                    "role": 4,
+                    "platoon": "ABLE",
+                    "loadout": "Combat Medic",
+                    "stats": {
+                        "deaths": 50,
+                        "infantryKills": 150,
+                        "vehicleKills": 20,
+                        "teamKills": 5,
+                        "vehiclesDestroyed": 3,
+                    },
+                    "scoreData": {
+                        "cOMBAT": 100,
+                        "offense": 50,
+                        "defense": 30,
+                        "support": 20,
+                    },
+                    "worldPosition": {
+                        "x": 1000,
+                        "y": 2000,
+                        "z": 300,
+                    },
+                },
+            ),
+        ).get_player(player_id)
+
+    def test_commands_get_players(self) -> None:
+        self.stub(
+            "GetServerInformation",
+            2,
+            {"Name": "players", "Value": ""},
+            json.dumps(
+                {
+                    "players": [
+                        {
+                            "name": "Player1",
+                            "clanTag": "ClanA",
+                            "iD": "123",
+                            "platform": "EPlatformFamily::Steam",
+                            "eosId": "1234567890",
+                            "level": 25,
+                            "team": 1,
+                            "role": 4,
+                            "platoon": "ABLE",
+                            "loadout": "Combat Medic",
+                            "stats": {
+                                "deaths": 50,
+                                "infantryKills": 150,
+                                "vehicleKills": 20,
+                                "teamKills": 5,
+                                "vehiclesDestroyed": 3,
+                            },
+                            "scoreData": {
+                                "cOMBAT": 100,
+                                "offense": 50,
+                                "defense": 30,
+                                "support": 20,
+                            },
+                            "worldPosition": {
+                                "x": 1000,
+                                "y": 2000,
+                                "z": 300,
+                            },
+                        },
+                    ],
+                },
+            ),
+        ).get_players()
+
+    def test_commands_get_server_config(self) -> None:
+        self.stub(
+            "GetServerInformation",
+            2,
+            {"Name": "serverconfig", "Value": ""},
+            json.dumps(
+                {
+                    "serverName": "My Server",
+                    "buildNumber": "12345",
+                    "buildRevision": "67890",
+                    "supportedPlatforms": [
+                        "EPlatform::PC_Steam",
+                        "EPlatform::PC_WinGDK",
+                        "EPlatform::PC_EGS",
+                    ],
+                    "passwordProtected": False,
+                },
+            ),
+        ).get_server_config()
 
 
 def test_get_game_mode_id() -> None:
