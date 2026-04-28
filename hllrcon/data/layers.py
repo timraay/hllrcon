@@ -39,6 +39,7 @@ from hllrcon.data.sectors import (
     SECTORS_STMARIEDUMONT_SMALL,
     SECTORS_STMEREEGLISE_LARGE,
     SECTORS_STMEREEGLISE_SMALL,
+    SECTORS_THANHHOABRIDGE_LARGE,
     SECTORS_TOBRUK_LARGE,
     SECTORS_TOBRUK_SMALL,
     SECTORS_UTAHBEACH_LARGE,
@@ -2347,6 +2348,19 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
         "usa": HLLVFaction.US,
         "nva": HLLVFaction.NVA,
     }
+
+    @class_cached_property
+    @classmethod
+    def THANHHOABRIDGE_WARFARE_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevf_warfare_day",
+            map=HLLVMap.THANH_HOA_BRIDGE,
+            game_mode=HLLVGameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_THANHHOABRIDGE_LARGE,
+        )
 
 
 Layer: TypeAlias = HLLLayer | HLLVLayer

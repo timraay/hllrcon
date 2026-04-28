@@ -2377,3 +2377,109 @@ SECTORS_UTAHBEACH_LARGE = Sector.large_layout(
         ),
     ),
 )
+
+SECTORS_THANHHOABRIDGE_LARGE = Sector.large_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="BOATYARD",
+                name="Boatyard",
+                center=(-26711.188, -66974.23, 368.7799),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="RAILWAY CHECKPOINT",
+                name="Railway Checkpoint",
+                center=(301.89554, -66974.23, 368.7799),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="AN CHURONG FARM",
+                name="An Churong Farm",
+                center=(40268.223, -68976.58, 1031.0018),
+                radius=6500.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="DURONG DONG PASS",
+                name="Durong Dong Pass",
+                center=(-34861.426, -38548.562, 6874.606),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="NAM MA RIVER",
+                name="Nam Ma River",
+                center=(188.59703, -39094.87, 1998.1714),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="YEN TRUNG VILLAGE",
+                name="Yen Trung Village",
+                center=(39839.543, -39842.816, 1125.4146),
+                radius=6500.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="FORTIFIED TRAIN STATION",
+                name="Fortified Train Station",
+                center=(-39710.062, -114.86133, 2555.588),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="DRAGONS JAW",
+                name="Dragons Jaw",
+                center=(82.95596, 28.122723, 1034.0825),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="TRAINYARD",
+                name="Trainyard",
+                center=(43745.086, 793.2927, 1415.1827),
+                radius=6500.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="RAILWAY VILLAGE",
+                name="Railway Village",
+                center=(-39434.08, 39536.87, 1148.4784),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="NVA RIVER CHECKPOINT",
+                name="NVA River Checkpoint",
+                center=(5141.5293, 38865.094, 811.91583),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="HAM RONG APPROACH",
+                name="Ham Rong Approach",
+                center=(38966.496, 37232.004, 1200.2751),
+                radius=6500.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="US ENCAMPMENT",
+                name="US Encampment",
+                center=(-40381.227, 67607.44, 1057.4843),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="US PBR CAMP",
+                name="US PBR Camp",
+                center=(-1533.2261, 67225.56, 467.283),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="HOANG LONG LZ",
+                name="Hoang Long LZ",
+                center=(40538.805, 66755.37, 815.4627),
+                radius=6500.0,
+            ),
+        ),
+    ),
+)

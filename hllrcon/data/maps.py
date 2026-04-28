@@ -32,6 +32,7 @@ class Orientation(StrEnum):
 class _Map(CaseInsensitiveIndexedBaseModel[R], Generic[FactionT, R]):
     name: str
     tag: str
+    year: int
     pretty_name: str
     short_name: str
     allies: Annotated[
@@ -100,6 +101,7 @@ class HLLMap(_Map[HLLFaction]):
             id="carentan",
             name="CARENTAN",
             tag="CAR",
+            year=1944,
             pretty_name="Carentan",
             short_name="Carentan",
             allies=HLLFaction.US,
@@ -114,6 +116,7 @@ class HLLMap(_Map[HLLFaction]):
             id="driel",
             name="DRIEL",
             tag="DRL",
+            year=1944,
             pretty_name="Driel",
             short_name="Driel",
             allies=HLLFaction.CW,
@@ -128,6 +131,7 @@ class HLLMap(_Map[HLLFaction]):
             id="elalamein",
             name="EL ALAMEIN",
             tag="ELA",
+            year=1942,
             pretty_name="El Alamein",
             short_name="Alamein",
             allies=HLLFaction.B8A,
@@ -142,6 +146,7 @@ class HLLMap(_Map[HLLFaction]):
             id="elsenbornridge",
             name="ELSENBORN RIDGE",
             tag="EBR",
+            year=1944,
             pretty_name="Elsenborn Ridge",
             short_name="Elsenborn",
             allies=HLLFaction.US,
@@ -156,6 +161,7 @@ class HLLMap(_Map[HLLFaction]):
             id="foy",
             name="FOY",
             tag="FOY",
+            year=1944,
             pretty_name="Foy",
             short_name="Foy",
             allies=HLLFaction.US,
@@ -170,6 +176,7 @@ class HLLMap(_Map[HLLFaction]):
             id="hill400",
             name="HILL 400",
             tag="HIL",
+            year=1944,
             pretty_name="Hill 400",
             short_name="Hill 400",
             allies=HLLFaction.US,
@@ -184,6 +191,7 @@ class HLLMap(_Map[HLLFaction]):
             id="hurtgenforest",
             name="HÜRTGEN FOREST",
             tag="HUR",
+            year=1944,
             pretty_name="Hurtgen Forest",
             short_name="Hurtgen",
             allies=HLLFaction.US,
@@ -198,6 +206,7 @@ class HLLMap(_Map[HLLFaction]):
             id="kharkov",
             name="Kharkov",
             tag="KHA",
+            year=1943,
             pretty_name="Kharkov",
             short_name="Kharkov",
             allies=HLLFaction.SOV,
@@ -212,6 +221,7 @@ class HLLMap(_Map[HLLFaction]):
             id="kursk",
             name="KURSK",
             tag="KUR",
+            year=1943,
             pretty_name="Kursk",
             short_name="Kursk",
             allies=HLLFaction.SOV,
@@ -226,6 +236,7 @@ class HLLMap(_Map[HLLFaction]):
             id="mortain",
             name="MORTAIN",
             tag="MOR",
+            year=1944,
             pretty_name="Mortain",
             short_name="Mortain",
             allies=HLLFaction.US,
@@ -240,6 +251,7 @@ class HLLMap(_Map[HLLFaction]):
             id="omahabeach",
             name="OMAHA BEACH",
             tag="OMA",
+            year=1944,
             pretty_name="Omaha Beach",
             short_name="Omaha",
             allies=HLLFaction.US,
@@ -254,6 +266,7 @@ class HLLMap(_Map[HLLFaction]):
             id="purpleheartlane",
             name="PURPLE HEART LANE",
             tag="PHL",
+            year=1944,
             pretty_name="Purple Heart Lane",
             short_name="PHL",
             allies=HLLFaction.US,
@@ -268,6 +281,7 @@ class HLLMap(_Map[HLLFaction]):
             id="remagen",
             name="REMAGEN",
             tag="REM",
+            year=1945,
             pretty_name="Remagen",
             short_name="Remagen",
             allies=HLLFaction.US,
@@ -282,6 +296,7 @@ class HLLMap(_Map[HLLFaction]):
             id="smolensk",
             name="SMOLENSK",
             tag="SMO",
+            year=1941,
             pretty_name="Smolensk",
             short_name="Smolensk",
             allies=HLLFaction.SOV,
@@ -296,6 +311,7 @@ class HLLMap(_Map[HLLFaction]):
             id="stmariedumont",
             name="ST MARIE DU MONT",
             tag="SMDM",
+            year=1944,
             pretty_name="St. Marie Du Mont",
             short_name="SMDM",
             allies=HLLFaction.US,
@@ -310,6 +326,7 @@ class HLLMap(_Map[HLLFaction]):
             id="stmereeglise",
             name="SAINTE-MÈRE-ÉGLISE",
             tag="SME",
+            year=1944,
             pretty_name="St. Mere Eglise",
             short_name="SME",
             allies=HLLFaction.US,
@@ -324,6 +341,7 @@ class HLLMap(_Map[HLLFaction]):
             id="stalingrad",
             name="STALINGRAD",
             tag="STA",
+            year=1942,
             pretty_name="Stalingrad",
             short_name="Stalingrad",
             allies=HLLFaction.SOV,
@@ -338,6 +356,7 @@ class HLLMap(_Map[HLLFaction]):
             id="tobruk",
             name="TOBRUK",
             tag="TBK",
+            year=1942,
             pretty_name="Tobruk",
             short_name="Tobruk",
             allies=HLLFaction.B8A,
@@ -352,6 +371,7 @@ class HLLMap(_Map[HLLFaction]):
             id="utahbeach",
             name="UTAH BEACH",
             tag="UTA",
+            year=1944,
             pretty_name="Utah Beach",
             short_name="Utah",
             allies=HLLFaction.US,
@@ -361,7 +381,20 @@ class HLLMap(_Map[HLLFaction]):
 
 
 class HLLVMap(_Map[HLLVFaction]):
-    pass
+    @class_cached_property
+    @classmethod
+    def THANH_HOA_BRIDGE(cls) -> "HLLVMap":
+        return cls(
+            id="wdevf",
+            name="THANH HÒA BRIDGE",
+            tag="THA",
+            year=1965,
+            pretty_name="Thanh Hòa Bridge",
+            short_name="Thanh Hoa",
+            allies=HLLVFaction.US,
+            axis=HLLVFaction.NVA,
+            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+        )
 
 
 Map: TypeAlias = HLLMap | HLLVMap
