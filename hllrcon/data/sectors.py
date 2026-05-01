@@ -1024,6 +1024,122 @@ SECTORS_HURTGENFOREST_LARGE = Sector.large_layout(
     ),
 )
 
+SECTORS_JUNOBEACH_LARGE = Sector.large_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="REGINA LANDING",
+                name="",
+                center=(-39610.0, -68715.0, -4463.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="BUNKER R612",
+                name="",
+                center=(-10.0, -68715.0, -4388.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="WN29",
+                name="",
+                center=(39765.0, -69319.0, -4388.0),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="LA PLATINE",
+                name="",
+                center=(-39610.0, -40340.0, -4388.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="LA MARINA",
+                name="",
+                center=(-10.0, -40340.0, -4388.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="HÉROULT HOUSE",
+                name="",
+                center=(50583.223, -44190.965, -4388.0),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="GRAYE-SUR-MER",
+                name="",
+                center=(-39610.0, 4660.0, -4388.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="LA SUELLES RIVER",
+                name="",
+                center=(-10.0, 4660.0, -4388.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="MARKET SQUARE",
+                name="",
+                center=(39765.0, 4660.0, -4388.0),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="WEAPONS FACTORY",
+                name="",
+                center=(-39610.0, 41685.0, -3988.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="LE SENTIER SUELLES",
+                name="",
+                center=(-10.0, 41685.0, -4388.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="ROAD TO BÉNY-SUR-MER",
+                name="",
+                center=(39765.0, 41685.0, -3913.0),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="GRAYE-SUR-MER OUTSKIRTS",
+                name="",
+                center=(-39670.0, 69078.0, -4708.0),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="RADAR STATION",
+                name="",
+                center=(-2611.0, 67760.0, -4388.0),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="CHEM DE LA LAMPE",
+                name="",
+                center=(39765.0, 70210.0, -3938.0),
+                radius=8000.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_JUNOBEACH_SMALL = Sector.skirmish_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoint=Strongpoint(
+        id="LA SUELLES RIVER",
+        name="La Suelles River",
+        center=(-2850.0, -50.0, 250.0),
+        radius=5000.0,
+    ),
+)
+
 SECTORS_KHARKOV_LARGE = Sector.large_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(

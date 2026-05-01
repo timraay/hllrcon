@@ -7,7 +7,7 @@ from .teams import Team
 
 
 class Faction(IndexedBaseModel[int, None]):
-    UNASSIGNED_ID: ClassVar[int] = 6
+    UNASSIGNED_ID: ClassVar[int] = 7
 
     id: int
     name: str
@@ -57,6 +57,7 @@ class Faction(IndexedBaseModel[int, None]):
         - Soviet Union (`SOV`)
         - Commonwealth (`CW`)
         - British 8th Army (`B8A`)
+        - Canada (`CAN`)
         """
         return self.team == Team.ALLIES
 
@@ -137,5 +138,15 @@ class Faction(IndexedBaseModel[int, None]):
             id=5,
             name="British Eighth Army",
             short_name="B8A",
+            team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN(cls) -> "Faction":
+        return cls(
+            id=6,
+            name="Canada",
+            short_name="CAN",
             team=Team.ALLIES,
         )

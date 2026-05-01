@@ -101,7 +101,8 @@ class PlayerFactionId(IntEnum):
     CW = 3
     DAK = 4
     B8A = 5
-    UNASSIGNED = 6
+    CAN = 6
+    UNASSIGNED = 7
 
 
 class PlayerRoleId(IntEnum):
