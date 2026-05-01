@@ -100,6 +100,9 @@
           "smolensk_warfare_day",
           "smolensk_warfare_dusk",
           "smolensk_warfare_night",
+          "junobeach_warfare_day",
+          "junobeach_warfare_morning",
+          "junobeach_warfare_night",
           "REM_L_1945_Warfare",
           "REM_L_1945_WarfareNight",
           "utahbeach_offensive_us",
@@ -116,7 +119,7 @@
           "kursk_offensive_rus",
           "stmariedumont_off_us",
           "stmariedumont_off_ger",
-          "carentan_offensive_gerF",
+          "carentan_offensive_ger",
           "foy_offensive_us",
           "hill400_offensive_ger",
           "omahabeach_offensive_ger",
@@ -154,6 +157,12 @@
           "smolensk_offensiveRus_dusk",
           "smolensk_offensiveGer_night",
           "smolensk_offensiveRus_night",
+          "junobeach_offensiveger_day",
+          "junobeach_offensiveger_morning",
+          "junobeach_offensiveger_night",
+          "junobeach_offensivecan_day",
+          "junobeach_offensivecan_morning",
+          "junobeach_offensivecan_night",
           "REM_L_1945_OffensiveUS",
           "REM_L_1945_OffensiveGER",
           "ELA_S_1942_P_Skirmish",
@@ -189,6 +198,9 @@
           "smolensk_skirmish_day",
           "smolensk_skirmish_dusk",
           "smolensk_skirmish_night",
+          "junobeach_skirmish_day",
+          "junobeach_skirmish_morning",
+          "junobeach_skirmish_night",
           "REM_S_1945_P_Skirmish_Day",
           "REM_S_1945_P_Skirmish_Night"
         ],
@@ -232,6 +244,9 @@
           "smolensk_warfare_day",
           "smolensk_warfare_dusk",
           "smolensk_warfare_night",
+          "junobeach_warfare_day",
+          "junobeach_warfare_morning",
+          "junobeach_warfare_night",
           "REM_L_1945_Warfare",
           "REM_L_1945_WarfareNight",
           "utahbeach_offensive_us",
@@ -248,7 +263,7 @@
           "kursk_offensive_rus",
           "stmariedumont_off_us",
           "stmariedumont_off_ger",
-          "carentan_offensive_gerF",
+          "carentan_offensive_ger",
           "foy_offensive_us",
           "hill400_offensive_ger",
           "omahabeach_offensive_ger",
@@ -286,6 +301,12 @@
           "smolensk_offensiveRus_dusk",
           "smolensk_offensiveGer_night",
           "smolensk_offensiveRus_night",
+          "junobeach_offensiveger_day",
+          "junobeach_offensiveger_morning",
+          "junobeach_offensiveger_night",
+          "junobeach_offensivecan_day",
+          "junobeach_offensivecan_morning",
+          "junobeach_offensivecan_night",
           "REM_L_1945_OffensiveUS",
           "REM_L_1945_OffensiveGER",
           "ELA_S_1942_P_Skirmish",
@@ -321,6 +342,9 @@
           "smolensk_skirmish_day",
           "smolensk_skirmish_dusk",
           "smolensk_skirmish_night",
+          "junobeach_skirmish_day",
+          "junobeach_skirmish_morning",
+          "junobeach_skirmish_night",
           "REM_S_1945_P_Skirmish_Day",
           "REM_S_1945_P_Skirmish_Night"
         ]
@@ -344,12 +368,10 @@
         "name": "Map Name",
         "id": "MapName",
         "display_member": [
-          "foy_warfare",
-          "remagen_warfare"
+          "junobeach_warfare_day"
         ],
         "value_member": [
-          "foy_warfare",
-          "remagen_warfare"
+          "junobeach_warfare_day"
         ]
       },
       {
@@ -392,12 +414,10 @@
         "name": "MapName",
         "id": "MapName",
         "display_member": [
-          "foy_warfare",
-          "remagen_warfare"
+          "junobeach_warfare_day"
         ],
         "value_member": [
-          "foy_warfare",
-          "remagen_warfare"
+          "junobeach_warfare_day"
         ]
       }
     ]
@@ -982,12 +1002,10 @@
         "name": "Map ID",
         "id": "MapId",
         "display_member": [
-          "foy_warfare",
-          "remagen_warfare"
+          "junobeach_warfare_day"
         ],
         "value_member": [
-          "foy_warfare",
-          "remagen_warfare"
+          "junobeach_warfare_day"
         ]
       },
       {
@@ -1108,14 +1126,14 @@
         "name": "Sector 1",
         "id": "Sector_1",
         "display_member": [
-          "ROAD TO RECOGNE",
-          "COBRU APPROACH",
-          "ROAD TO NOVILLE"
+          "REGINA LANDING",
+          "BUNKER R612",
+          "WN29"
         ],
         "value_member": [
-          "ROAD TO RECOGNE",
-          "COBRU APPROACH",
-          "ROAD TO NOVILLE"
+          "REGINA LANDING",
+          "BUNKER R612",
+          "WN29"
         ]
       },
       {
@@ -1123,14 +1141,14 @@
         "name": "Sector 2",
         "id": "Sector_2",
         "display_member": [
-          "COBRU FACTORY",
-          "FOY",
-          "FLAK BATTERY"
+          "LA PLATINE",
+          "LA MARINA",
+          "HÉROULT HOUSE"
         ],
         "value_member": [
-          "COBRU FACTORY",
-          "FOY",
-          "FLAK BATTERY"
+          "LA PLATINE",
+          "LA MARINA",
+          "HÉROULT HOUSE"
         ]
       },
       {
@@ -1138,14 +1156,14 @@
         "name": "Sector 3",
         "id": "Sector_3",
         "display_member": [
-          "WEST BEND",
-          "SOUTHERN EDGE",
-          "DUGOUT BARN"
+          "GRAYE-SUR-MER",
+          "LA SUELLES RIVER",
+          "MARKET SQUARE"
         ],
         "value_member": [
-          "WEST BEND",
-          "SOUTHERN EDGE",
-          "DUGOUT BARN"
+          "GRAYE-SUR-MER",
+          "LA SUELLES RIVER",
+          "MARKET SQUARE"
         ]
       },
       {
@@ -1153,14 +1171,14 @@
         "name": "Sector 4",
         "id": "Sector_4",
         "display_member": [
-          "N30 HIGHWAY",
-          "BIZORY-FOY ROAD",
-          "EASTERN OURTHE"
+          "WEAPONS FACTORY",
+          "LE SENTIER SUELLES",
+          "ROAD TO BÉNY-SUR-MER"
         ],
         "value_member": [
-          "N30 HIGHWAY",
-          "BIZORY-FOY ROAD",
-          "EASTERN OURTHE"
+          "WEAPONS FACTORY",
+          "LE SENTIER SUELLES",
+          "ROAD TO BÉNY-SUR-MER"
         ]
       },
       {
@@ -1168,14 +1186,14 @@
         "name": "Sector 5",
         "id": "Sector_5",
         "display_member": [
-          "ROAD TO BASTOGNE",
-          "BOIS JACQUES",
-          "FOREST OUTSKIRTS"
+          "GRAYE-SUR-MER OUTSKIRTS",
+          "RADAR STATION",
+          "CHEM DE LA LAMPE"
         ],
         "value_member": [
-          "ROAD TO BASTOGNE",
-          "BOIS JACQUES",
-          "FOREST OUTSKIRTS"
+          "GRAYE-SUR-MER OUTSKIRTS",
+          "RADAR STATION",
+          "CHEM DE LA LAMPE"
         ]
       }
     ]

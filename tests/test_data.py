@@ -202,10 +202,11 @@ class TestDataFactions:
         assert Faction.by_id(3) == Faction.CW
         assert Faction.by_id(4) == Faction.DAK
         assert Faction.by_id(5) == Faction.B8A
-        assert Faction.by_id(6) is None
+        assert Faction.by_id(6) == Faction.CAN
+        assert Faction.by_id(7) is None
 
         with pytest.raises(ValueError, match="not found"):
-            Faction.by_id(7)
+            Faction.by_id(8)
 
         assert None not in Faction.all()
 
