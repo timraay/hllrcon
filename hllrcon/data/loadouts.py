@@ -502,7 +502,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="M1 GARAND", amount=12),
-                LoadoutItem(name="BAZOOKA", amount=3),
+                LoadoutItem(name="BAZOOKA", amount=2),
                 LoadoutItem(name="MK2 GRENADE", amount=2),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="M3 KNIFE", amount=1),
@@ -1298,7 +1298,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="KARABINER 98K", amount=12),
-                LoadoutItem(name="PANZERSCHRECK", amount=3),
+                LoadoutItem(name="PANZERSCHRECK", amount=2),
                 LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="FELDSPATEN", amount=1),
@@ -2075,7 +2075,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=8,
             items=[
                 LoadoutItem(name="PPSH 41", amount=8),
-                LoadoutItem(name="BAZOOKA", amount=3),
+                LoadoutItem(name="BAZOOKA", amount=2),
                 LoadoutItem(name="RG-42 GRENADE", amount=2),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="MPL-50 SPADE", amount=1),
@@ -2795,7 +2795,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                LoadoutItem(name="PIAT", amount=3),
+                LoadoutItem(name="PIAT", amount=2),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
@@ -3588,7 +3588,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="KARABINER 98K", amount=12),
-                LoadoutItem(name="PANZERSCHRECK", amount=3),
+                LoadoutItem(name="PANZERSCHRECK", amount=2),
                 LoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="FELDSPATEN", amount=1),
@@ -4343,7 +4343,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                LoadoutItem(name="PIAT", amount=3),
+                LoadoutItem(name="PIAT", amount=2),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
@@ -4736,6 +4736,770 @@ class Loadout(IndexedBaseModel[LoadoutId]):
         return cls(
             name="Veteran",
             faction=Faction.B8A,
+            role=Role.SNIPER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_COMMANDER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.COMMANDER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_COMMANDER_VETERAN(cls) -> "Loadout":
+        return cls(
+            name="Veteran",
+            faction=Faction.CAN,
+            role=Role.COMMANDER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_OFFICER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.OFFICER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_OFFICER_POINT_MAN(cls) -> "Loadout":
+        return cls(
+            name="Point Man",
+            faction=Faction.CAN,
+            role=Role.OFFICER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_OFFICER_NCO(cls) -> "Loadout":
+        return cls(
+            name="NCO",
+            faction=Faction.CAN,
+            role=Role.OFFICER,
+            requires_level=6,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=3),
+                LoadoutItem(name="No.77", amount=3),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_RIFLEMAN_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.RIFLEMAN,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Small Ammunition Box", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_RIFLEMAN_VETERAN(cls) -> "Loadout":
+        return cls(
+            name="Veteran",
+            faction=Faction.CAN,
+            role=Role.RIFLEMAN,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_RIFLEMAN_TROOPER(cls) -> "Loadout":
+        return cls(
+            name="Trooper",
+            faction=Faction.CAN,
+            role=Role.RIFLEMAN,
+            requires_level=6,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Explosive Ammo Box", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ASSAULT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.ASSAULT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=8),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ASSAULT_VETERAN(cls) -> "Loadout":
+        return cls(
+            name="Veteran",
+            faction=Faction.CAN,
+            role=Role.ASSAULT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Lanchester", amount=8),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ASSAULT_GRENADIER(cls) -> "Loadout":
+        return cls(
+            name="Grenadier",
+            faction=Faction.CAN,
+            role=Role.ASSAULT,
+            requires_level=6,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=6),
+                LoadoutItem(name="No.77", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ASSAULT_RAIDER(cls) -> "Loadout":
+        return cls(
+            name="Raider",
+            faction=Faction.CAN,
+            role=Role.ASSAULT,
+            requires_level=9,
+            items=[
+                LoadoutItem(name="Lanchester", amount=8),
+                LoadoutItem(name="Mills Bomb", amount=6),
+                LoadoutItem(name="No.77", amount=4),
+                LoadoutItem(name="Satchel", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_AUTOMATIC_RIFLEMAN_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.AUTOMATIC_RIFLEMAN,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Bren Gun", amount=10),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_AUTOMATIC_RIFLEMAN_VETERAN(cls) -> "Loadout":
+        return cls(
+            name="Veteran",
+            faction=Faction.CAN,
+            role=Role.AUTOMATIC_RIFLEMAN,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=8),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_MEDIC_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.MEDIC,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=4),
+                LoadoutItem(name="Enfield No.2 Mk I", amount=8),
+                LoadoutItem(name="No.77", amount=4),
+                LoadoutItem(name="Morphine", amount=20),
+                LoadoutItem(name="Bandage", amount=20),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_MEDIC_VETERAN(cls) -> "Loadout":
+        return cls(
+            name="Veteran",
+            faction=Faction.CAN,
+            role=Role.MEDIC,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="FN-Inglis No 2 MK I", amount=21),
+                LoadoutItem(name="No.77", amount=6),
+                LoadoutItem(name="Morphine", amount=20),
+                LoadoutItem(name="Bandage", amount=20),
+                LoadoutItem(name="Medical Supplies", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.CAN,
+            role=Role.SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Small Ammunition Box", amount=1),
+                LoadoutItem(name="Explosive Ammo Box", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SUPPORT_FLAMER(cls) -> "Loadout":
+        return cls(
+            name="Flamer",
+            faction=Faction.CAN,
+            role=Role.SUPPORT,
+            requires_level=8,
+            items=[
+                LoadoutItem(name="FLAMETHROWER", amount=1),
+                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_MACHINE_GUNNER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.MACHINE_GUNNER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Bren Gun", amount=14),
+                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ANTI_TANK_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.ANTI_TANK,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="PIAT", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ANTI_TANK_GUN_CREW(cls) -> "Loadout":
+        return cls(
+            name="Gun Crew",
+            faction=Faction.CAN,
+            role=Role.ANTI_TANK,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Ordnance QF 6-pounder", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ANTI_TANK_AMBUSHER(cls) -> "Loadout":
+        return cls(
+            name="Ambusher",
+            faction=Faction.CAN,
+            role=Role.ANTI_TANK,
+            requires_level=6,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=8),
+                LoadoutItem(name="No.82 Grenade", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
+                LoadoutItem(name="A.T. Mine G.S. Mk V", amount=4),
+                LoadoutItem(name="Satchel", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
+                LoadoutItem(name="A.T. Mine G.S. Mk V", amount=1),
+                LoadoutItem(name="Wrench", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Torch", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ENGINEER_SAPPER(cls) -> "Loadout":
+        return cls(
+            name="Sapper",
+            faction=Faction.CAN,
+            role=Role.ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="SMLE No.1 Mk III", amount=6),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
+                LoadoutItem(name="Satchel", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ENGINEER_FIELD_ENGINEER(cls) -> "Loadout":
+        return cls(
+            name="Field Engineer",
+            faction=Faction.CAN,
+            role=Role.ENGINEER,
+            requires_level=6,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Wrench", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Torch", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_TANK_COMMANDER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.TANK_COMMANDER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=4),
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_TANK_COMMANDER_MECHANIC(cls) -> "Loadout":
+        return cls(
+            name="Mechanic",
+            faction=Faction.CAN,
+            role=Role.TANK_COMMANDER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="Torch", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_CREWMAN_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.CREWMAN,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_CREWMAN_MECHANIC(cls) -> "Loadout":
+        return cls(
+            name="Mechanic",
+            faction=Faction.CAN,
+            role=Role.CREWMAN,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Torch", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_CREWMAN_TECHNICIAN(cls) -> "Loadout":
+        return cls(
+            name="Technician",
+            faction=Faction.CAN,
+            role=Role.CREWMAN,
+            requires_level=7,
+            items=[
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Wrench", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ARTILLERY_OBSERVER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ARTILLERY_OBSERVER_JUNIOR_SERGEANT(cls) -> "Loadout":
+        return cls(
+            name="Junior Sergeant",
+            faction=Faction.CAN,
+            role=Role.ARTILLERY_OBSERVER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Enfield No.2 Mk I", amount=4),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ARTILLERY_ENGINEER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Wrench", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Torch", amount=1),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
+                LoadoutItem(name="Ordnance QF 6-pounder", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ARTILLERY_ENGINEER_PIONEER(cls) -> "Loadout":
+        return cls(
+            name="Pioneer",
+            faction=Faction.CAN,
+            role=Role.ARTILLERY_ENGINEER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Torch", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ARTILLERY_SUPPORT_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_ARTILLERY_SUPPORT_AMMO_CARRIER(cls) -> "Loadout":
+        return cls(
+            name="Ammo Carrier",
+            faction=Faction.CAN,
+            role=Role.ARTILLERY_SUPPORT,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Explosive Ammo Box", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SPOTTER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.SPOTTER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Lanchester", amount=8),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Small Ammunition Box", amount=1),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SPOTTER_SCOUT(cls) -> "Loadout":
+        return cls(
+            name="Scout",
+            faction=Faction.CAN,
+            role=Role.SPOTTER,
+            requires_level=3,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I", amount=6),
+                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Watch", amount=1),
+                LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SNIPER_STANDARD_ISSUE(cls) -> "Loadout":
+        return cls(
+            name="Standard Issue",
+            faction=Faction.CAN,
+            role=Role.SNIPER,
+            requires_level=1,
+            items=[
+                LoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
+                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="Mills Bomb", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_SNIPER_VETERAN(cls) -> "Loadout":
+        return cls(
+            name="Veteran",
+            faction=Faction.CAN,
             role=Role.SNIPER,
             requires_level=3,
             items=[

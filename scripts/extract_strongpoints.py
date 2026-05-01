@@ -22,7 +22,7 @@ def main() -> None:
     content = json.loads(Path("scripts/extract_strongpoints.json").read_text())
     strongpoints: list[Strongpoint] = []
     for actor in content:
-        if actor["Name"] == "TriggerShape" and actor["Outer"].startswith(
+        if actor["Name"] == "TriggerShape" and actor["Outer"]["ObjectName"].startswith(
             "SphereSectorCaptureBooster",
         ):
             props = actor["Properties"]

@@ -236,7 +236,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Stuart M5A1",
             name="M5A1 Stuart",
             type=VehicleType.LIGHT_TANK,
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -275,7 +275,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Sherman M4A3(75)W",
             name="M4A3(75)W Sherman",
             type=VehicleType.MEDIUM_TANK,
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -501,7 +501,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="M3 Half-track",
             name="M3 Half-track",
             type=VehicleType.HALF_TRACK,
-            factions={Faction.US},
+            factions={Faction.US, Faction.SOV, Faction.CW, Faction.B8A},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -564,7 +564,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Jeep Willys",
             name="Willy's Jeep",
             type=VehicleType.JEEP,
-            factions={Faction.US},
+            factions={Faction.US, Faction.CW, Faction.B8A},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1575,7 +1575,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="QF 6-Pounder",
             name="QF 6-Pounder",
             type=VehicleType.ANTI_TANK_GUN,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1600,7 +1600,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="QF 25-Pounder",
             name="QF 25-Pounder",
             type=VehicleType.ARTILLERY,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1625,7 +1625,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Daimler",
             name="Daimler",
             type=VehicleType.RECON_VEHICLE,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1826,7 +1826,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Firefly",
             name="Sherman Firefly",
             type=VehicleType.HEAVY_TANK,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1902,7 +1902,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Churchill Mk.VII",
             name="Churchill Mk VII",
             type=VehicleType.HEAVY_TANK,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -2045,13 +2045,223 @@ class Vehicle(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def THREE_TON_GS_SUPPLY(cls) -> "Vehicle":
+        """*3-Ton GS (Supply)*"""
+        return cls(
+            id="3-Ton GS (Supply)",
+            name="Bedford OYD",
+            type=VehicleType.SUPPLY_TRUCK,
+            factions={Faction.CAN},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def THREE_TON_GS_TRANSPORT(cls) -> "Vehicle":
+        """*3-Ton GS (Transport)*"""
+        return cls(
+            id="3-Ton GS (Transport)",
+            name="Bedford OYD",
+            type=VehicleType.TRANSPORT_TRUCK,
+            factions={Faction.CAN},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=3,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=4,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=5,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=6,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=7,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=8,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=9,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=10,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=11,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def HALF_TRACK(cls) -> "Vehicle":
+        """*Half-track*"""
+        return cls(
+            id="Half-track",
+            name="Half-track",
+            type=VehicleType.HALF_TRACK,
+            factions={Faction.CAN},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        Weapon.V_M2_BROWNING__M3_HALF_TRACK,
+                    ],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=3,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=4,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=5,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=6,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=7,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def JEEP(cls) -> "Vehicle":
+        """*Jeep*"""
+        return cls(
+            id="Jeep",
+            name="Jeep",
+            type=VehicleType.JEEP,
+            factions={Faction.CAN},
+            seats=[
+                VehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+                VehicleSeat(
+                    index=3,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def CHURCHILL_MK_III_AVRE(cls) -> "Vehicle":
         """*Churchill Mk III A.V.R.E.*"""
         return cls(
             id="Churchill Mk III A.V.R.E.",
             name="Churchill AVRE",
             type=VehicleType.SELF_PROPELLED_ARTILLERY,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
