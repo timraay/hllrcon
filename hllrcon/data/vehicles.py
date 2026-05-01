@@ -1575,7 +1575,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="QF 6-Pounder",
             name="QF 6-Pounder",
             type=VehicleType.ANTI_TANK_GUN,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,
@@ -1600,7 +1600,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="QF 25-Pounder",
             name="QF 25-Pounder",
             type=VehicleType.ARTILLERY,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             seats=[
                 VehicleSeat(
                     index=0,

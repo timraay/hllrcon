@@ -2771,7 +2771,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 6-POUNDER",
             name="57mm Cannon",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.AT_GUN,
         )
 
@@ -2783,7 +2783,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 25-POUNDER",
             name="88mm Howitzer",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.ARTILLERY,
         )
 
@@ -2795,7 +2795,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 2-POUNDER",
             name="QF 2-Pounder",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2807,7 +2807,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 75MM",
             name="QF 75mm",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2819,8 +2819,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 57MM",
             name="QF 57mm",
             vehicle_id=None,
-            # CW, GER and US are only here because their SPA cannons are wrongly named
-            factions={Faction.B8A, Faction.CW, Faction.GER, Faction.US},
+            factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2832,7 +2831,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 17-POUNDER",
             name="QF 17-Pounder",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2844,7 +2843,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2856,7 +2855,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA 7.92mm",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2880,7 +2879,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA 7.92mm",
             name="7.92mm",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_HULL_MG,
         )
 
