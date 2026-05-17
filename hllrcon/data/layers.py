@@ -241,6 +241,7 @@ class _Layer(
                 pretty_name=map_id.capitalize(),
                 short_name=map_id.capitalize(),
                 tag=map_tag,
+                year=1944,
                 allies=(
                     attackers
                     if attackers and attackers.team == cls._DEFAULT_ALLIES_FACTION.team
