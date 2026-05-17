@@ -6,6 +6,7 @@ from pydantic import AfterValidator, Field
 from hllrcon.data.roles import HLLRole
 from scripts.extractlib.loader import Model, Object
 from scripts.extractlib.objects.data_table import DataTableReference
+from scripts.extractlib.structs.faction import EFaction
 from scripts.extractlib.structs.loadout_item import HLLLoadoutItem
 from scripts.extractlib.types import String
 
@@ -27,7 +28,7 @@ class HLLTeamLoadoutsPropertiesLoadout(Model):
 
 
 class HLLTeamLoadoutsProperties(Model):
-    faction: str | None = None
+    faction: EFaction = EFaction.GER
 
     rifleman: list[HLLTeamLoadoutsPropertiesLoadout]
     assault: list[HLLTeamLoadoutsPropertiesLoadout]

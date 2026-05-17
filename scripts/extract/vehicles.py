@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 from collections.abc import Iterator
 from enum import StrEnum
 from pathlib import Path
-from typing import Generic, cast
+from typing import Generic, TypedDict, cast
 
 from pydantic import BaseModel, TypeAdapter, model_validator
 
@@ -73,14 +73,13 @@ HLL_VEHICLE_CONSTRUCTOR_TEMPLATE = """\
             seats={seats},
         )"""
 
-# TODO: exposed
 HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE = """\
 HLLVehicleSeat(
     index={index},
     type=HLLVehicleSeatType.{seat.name},
     weapons={weapons},
     requires_roles={requires_roles},
-    exposed=False,
+    exposed={exposed},
 )"""
 
 
@@ -103,6 +102,9 @@ class VehicleWeaponAmmoType(StrEnum):
         if shell_type in (EShellType.SMOKE, EShellType.MAX):
             return cls.SMOKE
         return None
+
+    def is_lethal(self) -> bool:
+        return self not in (VehicleWeaponAmmoType.RECON, VehicleWeaponAmmoType.SMOKE)
 
 
 class VehicleSeatRoleTypes(StrEnum):
@@ -132,6 +134,9 @@ class VehicleWeapon(BaseModel):
     type: HLLWeaponType
     ammo: list[VehicleWeaponAmmo]
 
+    def is_lethal(self) -> bool:
+        return any(ammo.type.is_lethal() for ammo in self.ammo)
+
 
 class VehicleSeatData(BaseModel):
     name: str
@@ -150,7 +155,7 @@ class VehicleSeatData(BaseModel):
         weapons: list[WeaponData] = []
         for weapon in self.weapons:
             weapon_id = f"{weapon.name} [{vehicle_data.id}]"
-            meth_name = "V_" + to_method_name(weapon_id)
+            meth_name = "V_" + to_method_name(weapon_id).lstrip("_")
             weapons.append(
                 WeaponData(
                     meth_name=meth_name,
@@ -161,11 +166,10 @@ class VehicleSeatData(BaseModel):
                     type=weapon.type,
                 ),
             )
-            if include_generic:
-                if weapon.name == "QF 25-POUNDER":
-                    generic_meth_name = "V_QF_25_POUNDER__UNKNOWN_2"
-                else:
-                    generic_meth_name = "V_" + to_method_name(weapon.name) + "__UNKNOWN"
+            if include_generic and weapon.is_lethal():
+                generic_meth_name = (
+                    "V_" + to_method_name(weapon.name).lstrip("_") + "__UNKNOWN"
+                )
                 weapons.append(
                     WeaponData(
                         meth_name=generic_meth_name,
@@ -211,6 +215,9 @@ class VehicleSeatData(BaseModel):
         )
 
 
+_vehicle_id_no_metadata_warned: set[str] = set()
+
+
 class VehicleData(BaseModel):
     meth_name: str = ""
     blueprint_ids: set[str]
@@ -223,9 +230,19 @@ class VehicleData(BaseModel):
     tracks: VehicleCompartmentData
     engine: VehicleCompartmentData
     seats: list[VehicleSeatData] = []
+    exposed: bool = False
 
     @model_validator(mode="after")
     def set_meth_name(self) -> "VehicleData":
+        meta = HLL_VEHICLE_METADATA.get(self.id)
+        if meta is not None:
+            self.meth_name = meta.get("meth_name", self.meth_name)
+            self.name = meta.get("name", self.name)
+            self.exposed = meta.get("exposed", self.exposed)
+        elif self.id not in _vehicle_id_no_metadata_warned:
+            logger.warning("No metadata found for vehicle ID: %s", self.id)
+            _vehicle_id_no_metadata_warned.add(self.id)
+
         if not self.meth_name:
             self.meth_name = to_method_name(self.id)
         return self
@@ -268,6 +285,7 @@ class VehicleData(BaseModel):
                     seat=seat,
                     weapons=weapons,
                     requires_roles=requires_roles,
+                    exposed=self.exposed,
                 ),
             )
 
@@ -570,15 +588,19 @@ class ArmoredVehicleExtractor(
     VehicleExtractor[HLLArmorProperties | HLLSelfPropelledArtilleryProperties],
 ):
     def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:
-        if seat_index == 0:
-            return HLLWeaponType.TANK_HULL_MG
-        if seat_index == 1:
-            if isinstance(weapon, HLLArmorWeaponBallistic):
-                return HLLWeaponType.TANK_COAXIAL_MG
+        if isinstance(weapon, HLLArmorWeaponBallistic):
+            if seat_index == 0:
+                return HLLWeaponType.TANK_HULL_MG
+            return HLLWeaponType.TANK_COAXIAL_MG
+
+        if isinstance(weapon, HLLArmorWeaponProjectile | HLLArmorWeaponMountedHowitzer):
             return HLLWeaponType.TANK_CANNON
-        if seat_index == 2:
-            # Recon gun
-            return HLLWeaponType.NON_LETHAL
+
+        if isinstance(weapon, HLLArmorWeaponReconGun):
+            return HLLWeaponType.TANK_RECON
+
+        if isinstance(weapon, HLLArmorWeaponSmokeScreen):
+            return HLLWeaponType.TANK_SMOKE_SCREEN
 
         return super().get_weapon_type(weapon, seat_index)
 
@@ -978,6 +1000,213 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
             raise TypeError(msg)
 
         yield data
+
+
+class VehicleMetaData(TypedDict, total=False):
+    meth_name: str
+    name: str
+    exposed: bool
+
+
+HLL_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
+    "Daimler": {
+        "name": "Daimler",
+        "exposed": False,
+    },
+    "Tetrarch": {
+        "name": "Tetrarch",
+        "exposed": False,
+    },
+    "Jeep Willys": {
+        "name": "Willy's Jeep",
+        "exposed": True,
+    },
+    "Firefly": {
+        "name": "Sherman Firefly",
+        "exposed": False,
+    },
+    "Bedford OYD (Supply)": {
+        "name": "Bedford OYD",
+        "exposed": True,
+    },
+    "Bedford OYD (Transport)": {
+        "name": "Bedford OYD",
+        "exposed": True,
+    },
+    "M3 Half-track": {
+        "name": "M3 Half-track",
+        "exposed": True,
+    },
+    "Cromwell": {
+        "name": "Cromwell",
+        "exposed": False,
+    },
+    "Churchill Mk.VII": {
+        "name": "Churchill Mk VII",
+        "exposed": False,
+    },
+    "Churchill Mk III A.V.R.E.": {
+        "meth_name": "CHURCHILL_MK_III_AVRE",
+        "name": "Churchill AVRE",
+        "exposed": False,
+    },
+    "Sd.Kfz.234 Puma": {
+        "name": "Sd.Kfz.234 Puma",
+        "exposed": False,
+    },
+    "Sd.Kfz.171 Panther": {
+        "name": "Sd.Kfz.171 Panther",
+        "exposed": False,
+    },
+    "Sd.Kfz.181 Tiger 1": {
+        "name": "Sd.Kfz.181 Tiger 1",
+        "exposed": False,
+    },
+    "Sturmpanzer IV": {
+        "name": "Sturmpanzer IV",
+        "exposed": False,
+    },
+    "Opel Blitz (Supply)": {
+        "name": "Opel Blitz",
+        "exposed": True,
+    },
+    "Opel Blitz (Transport)": {
+        "name": "Opel Blitz",
+        "exposed": True,
+    },
+    "Sd.Kfz 251 Half-track": {
+        "name": "Sd.Kfz.251 Half-track",
+        "exposed": True,
+    },
+    "Sd.Kfz.121 Luchs": {
+        "name": "Sd.Kfz.121 Luchs",
+        "exposed": False,
+    },
+    "Sd.Kfz.161 Panzer IV": {
+        "name": "Sd.Kfz.161 Panzer IV",
+        "exposed": False,
+    },
+    "Kubelwagen": {
+        "name": "Kubelwagen",
+        "exposed": True,
+    },
+    "BA-10": {
+        "name": "BA-10",
+        "exposed": False,
+    },
+    "T34/76": {
+        "name": "T34/76",
+        "exposed": False,
+    },
+    "IS-1": {
+        "name": "IS-1",
+        "exposed": False,
+    },
+    "ZIS-5 (Supply)": {
+        "name": "ZIS-5",
+        "exposed": True,
+    },
+    "ZIS-5 (Transport)": {
+        "name": "ZIS-5",
+        "exposed": True,
+    },
+    "GAZ-67": {
+        "name": "GAZ-67",
+        "exposed": True,
+    },
+    "T70": {
+        "name": "T70",
+        "exposed": False,
+    },
+    "KV-2": {
+        "name": "KV-2",
+        "exposed": False,
+    },
+    "M8 Greyhound": {
+        "name": "M8 Greyhound",
+        "exposed": False,
+    },
+    "Sherman M4A3E2": {
+        "name": "M4A3E2 Sherman",
+        "exposed": False,
+    },
+    "Sherman M4A3E2(76)": {
+        "name": "M4A3E2(76) Sherman",
+        "exposed": False,
+    },
+    "GMC CCKW 353 (Supply)": {
+        "name": "GMC CCKW 353",
+        "exposed": True,
+    },
+    "GMC CCKW 353 (Transport)": {
+        "name": "GMC CCKW 353",
+        "exposed": True,
+    },
+    "Sherman M4A3(75)W": {
+        "name": "M4A3(75)W Sherman",
+        "exposed": False,
+    },
+    "Stuart M5A1": {
+        "name": "M5A1 Stuart",
+        "exposed": False,
+    },
+    "M4A3 (105mm)": {
+        "name": "Sherman M4(104)",
+        "exposed": False,
+    },
+    "M3 Stuart Honey": {
+        "name": "M3 Stuart Honey",
+        "exposed": False,
+    },
+    "Churchill Mk.III": {
+        "name": "Churchill Mk III",
+        "exposed": False,
+    },
+    "Crusader Mk.III": {
+        "name": "Crusader Mk III",
+        "exposed": False,
+    },
+    "Bishop SP 25pdr": {
+        "name": "Bishop",
+        "exposed": False,
+    },
+    "Panzer III Ausf.N": {
+        "name": "Sd.Kfz.141 Panzer III",
+        "exposed": False,
+    },
+    "M114": {
+        "name": "M114 Howitzer",
+        "exposed": True,
+    },
+    "M1938 (M-30)": {
+        "name": "M-30",
+        "exposed": True,
+    },
+    "sFH 18": {
+        "name": "sFH 18",
+        "exposed": True,
+    },
+    "QF 25-Pounder": {
+        "name": "QF 25-Pounder",
+        "exposed": True,
+    },
+    "M1 57mm": {
+        "name": "M1 57mm",
+        "exposed": True,
+    },
+    "ZiS-2": {
+        "name": "ZiS-2",
+        "exposed": True,
+    },
+    "PAK 40": {
+        "name": "Pak 40",
+        "exposed": True,
+    },
+    "QF 6-Pounder": {
+        "name": "QF 6-Pounder",
+        "exposed": True,
+    },
+}
 
 
 def main() -> None:

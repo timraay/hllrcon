@@ -64,16 +64,27 @@ def stringify_factions(factions: Collection[Faction]) -> str:
 
 
 def to_method_name(s: str) -> str:
-    return (
+    s = (
         s.upper()
         .replace("/ ", "_")
         .replace("/", "_")
         .replace("-", "_")
         .replace(" ", "_")
-        .replace("(", "")
-        .replace(")", "")
         .replace("[", "_")
         .replace("]", "_")
-        .replace(".", "")
-        .strip("_")
+        .replace(".", "_")
+        .replace("(", "")
+        .replace(")", "")
     )
+
+    # replace non-ASCII characters
+    s = re.sub(r"[^A-Z0-9_]", "_", s)
+
+    # Strip underscores
+    s = s.strip("_")
+
+    # replace starting digit with underscore
+    if s and s[0].isdigit():
+        s = "_" + s
+
+    return s
