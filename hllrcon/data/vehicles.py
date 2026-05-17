@@ -228,6 +228,20 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=4,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
             ],
         )
 
@@ -618,6 +632,20 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                         HLLWeapon.V_PRIMARY__DAIMLER,
                     ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=4,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
                     exposed=False,
                 ),
             ],
@@ -1258,6 +1286,20 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=4,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
             ],
         )
 
@@ -1770,6 +1812,20 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                         HLLWeapon.V_PRIMARY__SD_KFZ_234_PUMA,
                     ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=4,
+                    type=HLLVehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
                     exposed=False,
                 ),
             ],

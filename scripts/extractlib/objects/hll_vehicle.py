@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from enum import StrEnum
 from typing import Annotated, Any, Generic
 
@@ -70,6 +71,9 @@ class HLLVehicleProperties(Model):
     low_speed_threshold_kph: float = 0.0
     team: ETeam
 
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from []
+
 
 class HLLArmorProperties(HLLVehicleProperties):
     driver_seat_class: BGCReference[TankSeat]
@@ -85,6 +89,28 @@ class HLLArmorProperties(HLLVehicleProperties):
 
     def get_commander_seat(self) -> TankSeat:
         return self.commander_seat_class.get_inst(TankSeat)
+
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.get_driver_seat()
+        yield self.get_gunner_seat()
+        yield self.get_commander_seat()
+
+
+class HLLReconVehicleProperties(HLLArmorProperties):
+    first_passenger_seat_class: BGCReference[VehicleSeat]
+    second_passenger_seat_class: BGCReference[VehicleSeat]
+
+    def get_first_passenger_seat(self) -> VehicleSeat:
+        return self.first_passenger_seat_class.get_inst(VehicleSeat)
+
+    def get_second_passenger_seat(self) -> VehicleSeat:
+        return self.second_passenger_seat_class.get_inst(VehicleSeat)
+
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.get_first_passenger_seat()
+        yield self.get_second_passenger_seat()
 
 
 class HLLSelfPropelledArtilleryProperties(HLLArmorProperties):
@@ -117,6 +143,13 @@ class HLLTruckProperties(HLLVehicleProperties):
     def get_back_passenger_seat(self) -> VehicleSeat:
         return self.back_passenger_seat_class.get_inst(VehicleSeat)
 
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.get_driver_seat()
+        yield self.get_front_passenger_seat()
+        for _ in range(self.num_back_passenger_seats):
+            yield self.get_back_passenger_seat()
+
 
 class HLLHalftrackProperties(HLLTruckProperties):
     turret_controller: ObjectReference[Any] | None = None
@@ -131,6 +164,11 @@ class HLLAntiTankGunProperties(HLLVehicleProperties):
 
     def get_loader_seat(self) -> VehicleSeat:
         return self.loader_seat_class.get_inst(VehicleSeat)
+
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.get_gunner_seat()
+        yield self.get_loader_seat()
 
 
 class HLLHowitzerProperties(HLLAntiTankGunProperties):
@@ -148,6 +186,7 @@ HLLVehiclePropT_co = TypeVar(
     "HLLVehiclePropT_co",
     bound=HLLVehicleProperties,
     default=HLLArmorProperties
+    | HLLReconVehicleProperties
     | HLLSelfPropelledArtilleryProperties
     | HLLHalftrackProperties
     | HLLTruckProperties

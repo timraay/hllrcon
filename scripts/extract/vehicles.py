@@ -50,6 +50,7 @@ from scripts.extractlib.objects.hll_vehicle import (
     HLLArmorProperties,
     HLLHalftrackProperties,
     HLLHowitzerProperties,
+    HLLReconVehicleProperties,
     HLLSelfPropelledArtilleryProperties,
     HLLTruckProperties,
     HLLVehicle,
@@ -585,7 +586,11 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
 
 
 class ArmoredVehicleExtractor(
-    VehicleExtractor[HLLArmorProperties | HLLSelfPropelledArtilleryProperties],
+    VehicleExtractor[
+        HLLArmorProperties
+        | HLLReconVehicleProperties
+        | HLLSelfPropelledArtilleryProperties
+    ],
 ):
     def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:
         if isinstance(weapon, HLLArmorWeaponBallistic):
@@ -609,15 +614,9 @@ class ArmoredVehicleExtractor(
         health = self.vehicle.properties.armor_health.get(HLLArmorHealthComponent)
         inventory = self.vehicle.properties.armor_inventory.get(HLLArmorInventory)
 
-        driver_seat = self.vehicle.properties.get_driver_seat()
-        gunner_seat = self.vehicle.properties.get_gunner_seat()
-        commander_seat = self.vehicle.properties.get_commander_seat()
-        # TODO: RV passenger seats
-
         seats = [
-            self.seat_component_to_model(driver_seat),
-            self.seat_component_to_model(gunner_seat),
-            self.seat_component_to_model(commander_seat),
+            self.seat_component_to_model(seat)
+            for seat in self.vehicle.properties.get_seats()
         ]
 
         for inventory_item in inventory.properties.default_inventory:
@@ -661,12 +660,9 @@ class ArtilleryVehicleExtractor(
         health = self.vehicle.properties.armor_health.get(HLLArmorHealthComponent)
         inventory = self.vehicle.properties.armor_inventory.get(HLLArmorInventory)
 
-        gunner_seat = self.vehicle.properties.get_gunner_seat()
-        loader_seat = self.vehicle.properties.get_loader_seat()
-
         seats = [
-            self.seat_component_to_model(gunner_seat),
-            self.seat_component_to_model(loader_seat),
+            self.seat_component_to_model(seat)
+            for seat in self.vehicle.properties.get_seats()
         ]
 
         for inventory_item in inventory.properties.default_inventory:
@@ -710,18 +706,10 @@ class InfantryVehicleExtractor(
         health = self.vehicle.properties.armor_health.get(HLLArmorHealthComponent)
         inventory = self.vehicle.properties.armor_inventory.get(HLLArmorInventory)
 
-        driver_seat = self.vehicle.properties.get_driver_seat()
-        front_passenger_seat = self.vehicle.properties.get_front_passenger_seat()
-        back_passenger_seat = self.vehicle.properties.get_back_passenger_seat()
-
         seats = [
-            self.seat_component_to_model(driver_seat),
-            self.seat_component_to_model(front_passenger_seat),
+            self.seat_component_to_model(seat)
+            for seat in self.vehicle.properties.get_seats()
         ]
-        seats.extend(
-            self.seat_component_to_model(back_passenger_seat)
-            for _ in range(self.vehicle.properties.num_back_passenger_seats)
-        )
 
         for inventory_item in inventory.properties.default_inventory:
             seat_index = inventory_item.owning_seat_index
@@ -874,14 +862,14 @@ def get_vehicle_type_from_ui_subcategory(
 
 
 STRUCT_NAME_TO_VEHICLE_CLASS: dict[str, type[HLLVehicle]] = {
-    "Class'Daimler'": HLLVehicle[HLLArmorProperties],
+    "Class'Daimler'": HLLVehicle[HLLReconVehicleProperties],
     "Class'T70'": HLLVehicle[HLLArmorProperties],
     "Class'Luchs'": HLLVehicle[HLLArmorProperties],
     "Class'BaseJeep'": HLLVehicle[HLLTruckProperties],
-    "Class'Greyhound'": HLLVehicle[HLLArmorProperties],
-    "Class'Puma'": HLLVehicle[HLLArmorProperties],
+    "Class'Greyhound'": HLLVehicle[HLLReconVehicleProperties],
+    "Class'Puma'": HLLVehicle[HLLReconVehicleProperties],
     "Class'Panther'": HLLVehicle[HLLArmorProperties],
-    "Class'BA10'": HLLVehicle[HLLArmorProperties],
+    "Class'BA10'": HLLVehicle[HLLReconVehicleProperties],
     "Class'T34'": HLLVehicle[HLLArmorProperties],
     "Class'ShermanJumbo'": HLLVehicle[HLLArmorProperties],
     "Class'M3Halftrack'": HLLVehicle[HLLHalftrackProperties],
@@ -962,7 +950,10 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
     for vehicle, vehicle_type, factions in get_all_vehicles():
         if isinstance(vehicle.properties, HLLArmorProperties):
             data = ArmoredVehicleExtractor(
-                cast("HLLVehicle[HLLArmorProperties]", vehicle),
+                cast(
+                    "HLLVehicle[HLLArmorProperties | HLLReconVehicleProperties]",
+                    vehicle,
+                ),
                 vehicle_type,
                 factions,
             ).extract()
