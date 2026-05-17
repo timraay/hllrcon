@@ -13,6 +13,7 @@ from scripts.extractlib.objects.hll_armor_health_component import (
 )
 from scripts.extractlib.objects.hll_armor_inventory import HLLArmorInventory
 from scripts.extractlib.objects.tank_seat import (
+    ArtillerySeat,
     SelfPropelledArtillerySeat,
     TankSeat,
     VehicleSeat,
@@ -34,9 +35,9 @@ class WFLBaseTankPropertiesMetaData(Model):
 
 class HLLVehicleProperties(Model):
     armor_collision_body: Annotated[
-        ObjectReference[Any],
+        ObjectReference[Any] | None,
         Field(alias="ArmourCollision_Body"),
-    ]
+    ] = None
     armor_collision_tracks: Annotated[
         ObjectReference[Any] | None,
         Field(alias="ArmourCollision_Tracks"),
@@ -50,7 +51,6 @@ class HLLVehicleProperties(Model):
         Field(alias="ArmourCollision_Barrel"),
     ] = None
     engine_warmup_duration: float = 0.0
-    driver_seat_class: BGCReference[VehicleSeat]
     armor_health: Annotated[
         ObjectReference[HLLArmorHealthComponent],
         Field(alias="ArmourHealth"),
@@ -69,9 +69,6 @@ class HLLVehicleProperties(Model):
     ] = None
     low_speed_threshold_kph: float = 0.0
     team: ETeam
-
-    def get_driver_seat(self) -> VehicleSeat:
-        return self.driver_seat_class.get_inst(VehicleSeat)
 
 
 class HLLArmorProperties(HLLVehicleProperties):
@@ -107,8 +104,12 @@ class HLLSelfPropelledArtilleryProperties(HLLArmorProperties):
 
 class HLLTruckProperties(HLLVehicleProperties):
     num_back_passenger_seats: int = 10
+    driver_seat_class: BGCReference[VehicleSeat]
     front_passenger_seat_class: BGCReference[VehicleSeat]
     back_passenger_seat_class: BGCReference[VehicleSeat]
+
+    def get_driver_seat(self) -> VehicleSeat:
+        return self.driver_seat_class.get_inst(VehicleSeat)
 
     def get_front_passenger_seat(self) -> VehicleSeat:
         return self.front_passenger_seat_class.get_inst(VehicleSeat)
@@ -121,13 +122,37 @@ class HLLHalftrackProperties(HLLTruckProperties):
     turret_controller: ObjectReference[Any] | None = None
 
 
+class HLLAntiTankGunProperties(HLLVehicleProperties):
+    gunner_seat_class: BGCReference[VehicleSeat]
+    loader_seat_class: BGCReference[VehicleSeat]
+
+    def get_gunner_seat(self) -> VehicleSeat:
+        return self.gunner_seat_class.get_inst(VehicleSeat)
+
+    def get_loader_seat(self) -> VehicleSeat:
+        return self.loader_seat_class.get_inst(VehicleSeat)
+
+
+class HLLHowitzerProperties(HLLAntiTankGunProperties):
+    gunner_seat_class: BGCReference[ArtillerySeat]
+    loader_seat_class: BGCReference[ArtillerySeat]
+
+    def get_gunner_seat(self) -> ArtillerySeat:
+        return self.gunner_seat_class.get_inst(ArtillerySeat)
+
+    def get_loader_seat(self) -> ArtillerySeat:
+        return self.loader_seat_class.get_inst(ArtillerySeat)
+
+
 HLLVehiclePropT_co = TypeVar(
     "HLLVehiclePropT_co",
     bound=HLLVehicleProperties,
     default=HLLArmorProperties
     | HLLSelfPropelledArtilleryProperties
     | HLLHalftrackProperties
-    | HLLTruckProperties,
+    | HLLTruckProperties
+    | HLLHowitzerProperties
+    | HLLAntiTankGunProperties,
     covariant=True,
 )
 

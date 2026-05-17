@@ -11,7 +11,6 @@ from pydantic_core import CoreSchema, core_schema
 from typing_extensions import TypeVar
 
 from scripts import HLL_METADATA_PATH
-from scripts.extractlib.utils import merge_dicts
 from tests.integration_tests.conftest import HLL_GAME
 
 RE_OBJECT_PATH = re.compile(r"^(?P<path>.+?)(?:\.(?P<index>\d+))?$")
@@ -42,6 +41,16 @@ def set_root_path(path: Path) -> None:
 
 def get_root_path() -> Path:
     return _root_path
+
+
+def merge_dicts(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = base.copy()
+    for key, value in override.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+            merged[key] = merge_dicts(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
 
 
 def local_to_abs_path(local_path: str | PathLike, *, add_ext: bool = True) -> Path:

@@ -1,6 +1,6 @@
 from typing import Annotated, Generic, TypeVar
 
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from scripts.extractlib.loader import Model, Object
 from scripts.extractlib.types import String
@@ -55,6 +55,21 @@ class SelfPropelledArtillerySeatProperties(TankSeatProperties):
     ] = False
 
 
+class ArtillerySeatProperties(VehicleSeatProperties):
+    is_locked_to_artillery_squad: Annotated[
+        bool,
+        Field(alias="bIsLockedToArtillerySquad"),
+    ] = False
+
+    @model_validator(mode="after")
+    def set_block_roles(self) -> "ArtillerySeatProperties":
+        if self.is_locked_to_artillery_squad:
+            object.__setattr__(self, "only_allow_armor_units_in", True)
+            object.__setattr__(self, "block_tank_roles", True)
+            object.__setattr__(self, "block_artillery_roles", False)
+        return self
+
+
 VehicleSeatPropertiesT_co = TypeVar(
     "VehicleSeatPropertiesT_co",
     bound=VehicleSeatProperties,
@@ -84,4 +99,8 @@ class TankSeat(VehicleSeat[TankSeatPropertiesT_co], Generic[TankSeatPropertiesT_
 class SelfPropelledArtillerySeat(
     TankSeat[SelfPropelledArtillerySeatProperties],
 ):
+    pass
+
+
+class ArtillerySeat(VehicleSeat[ArtillerySeatProperties]):
     pass

@@ -988,6 +988,93 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
 
     @class_cached_property
     @classmethod
+    def M1_57MM(cls) -> "HLLVehicle":
+        """*M1 57mm*"""
+        return cls(
+            id="M1 57mm",
+            name="M1 57mm",
+            factions={HLLFaction.US},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_57MM_CANNON__M1_57MM,
+                    ],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def M114(cls) -> "HLLVehicle":
+        """*M114*"""
+        return cls(
+            id="M114",
+            name="M114",
+            factions={HLLFaction.US},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_155MM_HOWITZER__M114,
+                    ],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def M1938_M_30(cls) -> "HLLVehicle":
+        """*M1938 (M-30)*"""
+        return cls(
+            id="M1938 (M-30)",
+            name="M1938 (M-30)",
+            factions={HLLFaction.SOV},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_122MM_HOWITZER__M1938_M_30,
+                    ],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def M3_HALF_TRACK(cls) -> "HLLVehicle":
         """*M3 Half-track*"""
         return cls(
@@ -1300,6 +1387,35 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
 
     @class_cached_property
     @classmethod
+    def PAK_40(cls) -> "HLLVehicle":
+        """*PAK 40*"""
+        return cls(
+            id="PAK 40",
+            name="PAK 40",
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_75MM_CANNON__PAK_40,
+                    ],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def PANZER_III_AUSFN(cls) -> "HLLVehicle":
         """*Panzer III Ausf.N*"""
         return cls(
@@ -1332,6 +1448,64 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                     type=HLLVehicleSeatType.COMMANDER,
                     weapons=[],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def QF_25_POUNDER(cls) -> "HLLVehicle":
+        """*QF 25-Pounder*"""
+        return cls(
+            id="QF 25-Pounder",
+            name="QF 25-Pounder",
+            factions={HLLFaction.CW, HLLFaction.B8A},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_QF_25_POUNDER__QF_25_POUNDER,
+                    ],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def QF_6_POUNDER(cls) -> "HLLVehicle":
+        """*QF 6-Pounder*"""
+        return cls(
+            id="QF 6-Pounder",
+            name="QF 6-Pounder",
+            factions={HLLFaction.CW, HLLFaction.B8A},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_QF_6_POUNDER__QF_6_POUNDER,
+                    ],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=None,
                     exposed=False,
                 ),
             ],
@@ -2025,6 +2199,64 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                     type=HLLVehicleSeatType.PASSENGER,
                     weapons=[],
                     requires_roles=None,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def ZIS_2(cls) -> "HLLVehicle":
+        """*ZiS-2*"""
+        return cls(
+            id="ZiS-2",
+            name="ZiS-2",
+            factions={HLLFaction.SOV},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_57MM_CANNON__ZIS_2,
+                    ],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SFH_18(cls) -> "HLLVehicle":
+        """*sFH 18*"""
+        return cls(
+            id="sFH 18",
+            name="sFH 18",
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=HLLVehicleType.ARTILLERY,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=HLLVehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_150MM_HOWITZER__SFH_18,
+                    ],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=HLLVehicleSeatType.LOADER,
+                    weapons=[],
+                    requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
             ],

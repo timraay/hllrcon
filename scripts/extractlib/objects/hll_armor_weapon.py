@@ -6,6 +6,7 @@ from pydantic import Field
 from scripts.extractlib.loader import Model, Object
 from scripts.extractlib.objects.blueprint_generated_class import BGCReference
 from scripts.extractlib.objects.hll_ballistics_component import HLLBallisticsComponent
+from scripts.extractlib.objects.hll_howitzer_projectile import HLLHowitzerProjectile
 from scripts.extractlib.objects.hll_projectile_bullet import HLLProjectileBullet
 from scripts.extractlib.objects.shooter_projectile import ShooterProjectile
 from scripts.extractlib.structs.vec2 import Vec2
@@ -15,7 +16,8 @@ from scripts.extractlib.types import CultureInvariantString, String
 class EShellType(StrEnum):
     AP = "EAmmoShellType::AST_AP"
     HE = "EAmmoShellType::AST_HE"
-    MAX = "EAmmoShellType::AST_MAX"  # Smoke
+    SMOKE = "EAmmoShellType::AST_SMOKE"  # Artillery Smoke
+    MAX = "EAmmoShellType::AST_MAX"  # Tank Smoke
     NONE = "EAmmoShellType::AST_NONE"  # SPA, Recon Gun, Half-Track
 
 
@@ -93,6 +95,16 @@ class HLLArmorWeaponReconGunProperties(HLLArmorWeaponProperties):
     pass
 
 
+class HLLArmorWeaponHowitzerProperties(HLLArmorWeaponProperties):
+    min_max_dispersion: Vec2
+    min_max_dispersion_within_outpost_range: Vec2
+    projectiles: Annotated[
+        list[BGCReference[HLLHowitzerProjectile]],
+        Field(alias="Shells"),
+    ]
+    observer_outpost_range: float = 0.0
+
+
 class HLLArmorWeaponMountedHowitzerProperties(HLLArmorWeaponProperties):
     min_max_range: Vec2
     inverted_artillery_mode_min_max_pitch: Vec2
@@ -131,6 +143,14 @@ class HLLArmorWeaponReconGun(Object[HLLArmorWeaponReconGunProperties]):
     pass
 
 
+class HLLArmorWeaponHowitzer(Object[HLLArmorWeaponHowitzerProperties]):
+    def get_projectiles(self) -> list[HLLHowitzerProjectile]:
+        return [
+            projectile.get_inst(HLLHowitzerProjectile)
+            for projectile in self.properties.projectiles
+        ]
+
+
 class HLLArmorWeaponMountedHowitzer(Object[HLLArmorWeaponMountedHowitzerProperties]):
     def get_projectiles(self) -> list[ShooterProjectile]:
         return [
@@ -147,6 +167,7 @@ HLLArmorWeapon = (
     HLLArmorWeaponBallistic
     | HLLArmorWeaponProjectile
     | HLLArmorWeaponReconGun
+    | HLLArmorWeaponHowitzer
     | HLLArmorWeaponMountedHowitzer
     | HLLArmorWeaponSmokeScreen
 )

@@ -26,11 +26,15 @@ from scripts.extractlib.objects.blueprint_generated_class import BlueprintGenera
 from scripts.extractlib.objects.hll_armor_health_component import (
     HLLArmorHealthComponent,
 )
-from scripts.extractlib.objects.hll_armor_inventory import HLLArmorInventory
+from scripts.extractlib.objects.hll_armor_inventory import (
+    HLLArmorInventory,
+    HLLArmorInventoryPropertiesDefaultInventoryItem,
+)
 from scripts.extractlib.objects.hll_armor_weapon import (
     EShellType,
     HLLArmorWeapon,
     HLLArmorWeaponBallistic,
+    HLLArmorWeaponHowitzer,
     HLLArmorWeaponMountedHowitzer,
     HLLArmorWeaponProjectile,
     HLLArmorWeaponReconGun,
@@ -42,14 +46,17 @@ from scripts.extractlib.objects.hll_commander_ability import (
 )
 from scripts.extractlib.objects.hll_map_ability_data import HLLMapAbilityData
 from scripts.extractlib.objects.hll_vehicle import (
+    HLLAntiTankGunProperties,
     HLLArmorProperties,
     HLLHalftrackProperties,
+    HLLHowitzerProperties,
     HLLSelfPropelledArtilleryProperties,
     HLLTruckProperties,
     HLLVehicle,
     HLLVehiclePropT_co,
 )
 from scripts.extractlib.objects.tank_seat import VehicleSeat
+from scripts.extractlib.utils import find_objects_in_dir
 
 logger = logging.getLogger(__name__)
 
@@ -66,7 +73,7 @@ HLL_VEHICLE_CONSTRUCTOR_TEMPLATE = """\
             seats={seats},
         )"""
 
-# TODO: weapons, requires_roles, exposed
+# TODO: exposed
 HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE = """\
 HLLVehicleSeat(
     index={index},
@@ -93,7 +100,7 @@ class VehicleWeaponAmmoType(StrEnum):
             return cls.AP
         if shell_type == EShellType.HE:
             return cls.HE
-        if shell_type == EShellType.MAX:
+        if shell_type in (EShellType.SMOKE, EShellType.MAX):
             return cls.SMOKE
         return None
 
@@ -155,14 +162,14 @@ class VehicleSeatData(BaseModel):
                 ),
             )
             if include_generic:
-                generic_weapon_id = weapon.name
-                generic_meth_name = (
-                    "V_" + to_method_name(generic_weapon_id) + "__UNKNOWN"
-                )
+                if weapon.name == "QF 25-POUNDER":
+                    generic_meth_name = "V_QF_25_POUNDER__UNKNOWN_2"
+                else:
+                    generic_meth_name = "V_" + to_method_name(weapon.name) + "__UNKNOWN"
                 weapons.append(
                     WeaponData(
                         meth_name=generic_meth_name,
-                        id=generic_weapon_id,
+                        id=weapon.name,
                         name=weapon.name,
                         vehicle_id=None,
                         factions=vehicle_data.factions,
@@ -225,16 +232,17 @@ class VehicleData(BaseModel):
 
     def get_weapons(self, *, include_generic: bool = False) -> list[WeaponData]:
         weapons: list[WeaponData] = []
-        weapons.append(
-            WeaponData(
-                meth_name="V_ROADKILL__" + to_method_name(self.id),
-                id=self.id,
-                name=self.id,
-                vehicle_id=self.id,
-                factions=self.factions,
-                type=HLLWeaponType.ROADKILL,
-            ),
-        )
+        if self.type not in (HLLVehicleType.ARTILLERY, HLLVehicleType.ANTI_TANK_GUN):
+            weapons.append(
+                WeaponData(
+                    meth_name="V_ROADKILL__" + to_method_name(self.id),
+                    id=self.id,
+                    name=self.id,
+                    vehicle_id=self.id,
+                    factions=self.factions,
+                    type=HLLWeaponType.ROADKILL,
+                ),
+            )
         for seat in self.seats:
             weapons.extend(seat.get_weapons(self, include_generic=include_generic))
         return weapons
@@ -358,6 +366,202 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
         msg = "Cannot determine weapon type"
         raise ValueError(msg)
 
+    def _get_weapon_ammo_ballistic(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponBallistic,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        for ammo_source in ammo_sources:
+            weapon_data.ammo.append(
+                VehicleWeaponAmmo(
+                    munitions_cost=0,
+                    clip_size=ammo_source.clip_size,
+                    max_clips=ammo_source.max_clips,
+                    name=str(ammo_source.display_name),
+                    type=VehicleWeaponAmmoType.MG,
+                    explosion_damage=0,
+                    explosion_radius=0,
+                ),
+            )
+
+    def _get_weapon_ammo_projectile(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponProjectile,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        projectiles = weapon.get_projectiles()
+        for ammo_source, projectile in zip(
+            ammo_sources,
+            projectiles,
+            strict=True,
+        ):
+            ammo_type = VehicleWeaponAmmoType.from_shell_type(
+                ammo_source.shell_type,
+            )
+            if not ammo_type:
+                ammo_type = VehicleWeaponAmmoType.AP
+                if weapon_data.type != HLLWeaponType.AT_GUN:
+                    logger.error(
+                        "Cannot determine ammo type for source %s",
+                        ammo_source,
+                    )
+
+            weapon_data.ammo.append(
+                VehicleWeaponAmmo(
+                    munitions_cost=0,
+                    clip_size=ammo_source.clip_size,
+                    max_clips=ammo_source.max_clips,
+                    name=str(ammo_source.display_name),
+                    type=ammo_type,
+                    explosion_damage=projectile.properties.explosion_damage,
+                    explosion_radius=projectile.properties.explosion_radius,
+                ),
+            )
+
+    def _get_weapon_ammo_howitzer(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponHowitzer,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        projectiles = weapon.get_projectiles()
+        for ammo_source, projectile in zip(
+            ammo_sources,
+            projectiles,
+            strict=True,
+        ):
+            if projectile.properties.damage == 0:
+                ammo_type = VehicleWeaponAmmoType.SMOKE
+            else:
+                ammo_type = VehicleWeaponAmmoType.HE
+
+            weapon_data.ammo.append(
+                VehicleWeaponAmmo(
+                    munitions_cost=0,
+                    clip_size=ammo_source.clip_size,
+                    max_clips=ammo_source.max_clips,
+                    name=str(ammo_source.display_name),
+                    type=ammo_type,
+                    explosion_damage=projectile.properties.damage,
+                    explosion_radius=projectile.properties.damage_radius,
+                ),
+            )
+
+    def _get_weapon_ammo_mounted_howitzer(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponMountedHowitzer,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        projectiles = weapon.get_projectiles()
+        for ammo_source, projectile in zip(
+            ammo_sources,
+            projectiles,
+            strict=True,
+        ):
+            if projectile.properties.explosion_damage == 0:
+                ammo_type = VehicleWeaponAmmoType.SMOKE
+            elif projectile.properties.explosion_radius > 3000:
+                ammo_type = VehicleWeaponAmmoType.HE
+            else:
+                ammo_type = VehicleWeaponAmmoType.AP
+
+            weapon_data.ammo.append(
+                VehicleWeaponAmmo(
+                    munitions_cost=0,
+                    clip_size=ammo_source.clip_size,
+                    max_clips=ammo_source.max_clips,
+                    name=str(ammo_source.display_name),
+                    type=ammo_type,
+                    explosion_damage=projectile.properties.explosion_damage,
+                    explosion_radius=projectile.properties.explosion_radius,
+                ),
+            )
+
+    def _get_weapon_ammo_recon_gun(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponReconGun,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        for ammo_source in ammo_sources:
+            weapon_data.ammo.append(
+                VehicleWeaponAmmo(
+                    munitions_cost=0,
+                    clip_size=ammo_source.clip_size,
+                    max_clips=ammo_source.max_clips,
+                    name=str(ammo_source.display_name),
+                    type=VehicleWeaponAmmoType.RECON,
+                    explosion_damage=0,
+                    explosion_radius=0,
+                ),
+            )
+
+    def _get_weapon_ammo_smoke_screen(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponSmokeScreen,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        for ammo_source in ammo_sources:
+            weapon_data.ammo.append(
+                VehicleWeaponAmmo(
+                    munitions_cost=0,
+                    clip_size=ammo_source.clip_size,
+                    max_clips=ammo_source.max_clips,
+                    name=str(ammo_source.display_name),
+                    type=VehicleWeaponAmmoType.SMOKE,
+                    explosion_damage=0,
+                    explosion_radius=0,
+                ),
+            )
+
+    def get_weapon(
+        self,
+        inventory_item: HLLArmorInventoryPropertiesDefaultInventoryItem,
+    ) -> VehicleWeapon:
+        seat_index = inventory_item.owning_seat_index
+        weapon = inventory_item.get_weapon()
+        weapon_type = self.get_weapon_type(weapon, seat_index)
+
+        weapon_data = VehicleWeapon(
+            name=str(weapon.properties.weapon_name),
+            type=weapon_type,
+            ammo=[],
+        )
+
+        if isinstance(weapon, HLLArmorWeaponBallistic):
+            self._get_weapon_ammo_ballistic(weapon_data, weapon)
+        elif isinstance(
+            weapon,
+            HLLArmorWeaponProjectile,
+        ):
+            self._get_weapon_ammo_projectile(weapon_data, weapon)
+        elif isinstance(
+            weapon,
+            HLLArmorWeaponHowitzer,
+        ):
+            self._get_weapon_ammo_howitzer(weapon_data, weapon)
+        elif isinstance(
+            weapon,
+            HLLArmorWeaponMountedHowitzer,
+        ):
+            self._get_weapon_ammo_mounted_howitzer(weapon_data, weapon)
+        elif isinstance(weapon, HLLArmorWeaponReconGun):
+            self._get_weapon_ammo_recon_gun(weapon_data, weapon)
+        elif isinstance(weapon, HLLArmorWeaponSmokeScreen):
+            self._get_weapon_ammo_smoke_screen(weapon_data, weapon)
+        else:
+            logger.warning(
+                "Unexpected weapon type %s for weapon %s",
+                type(weapon),
+                weapon,
+            )
+
+        return weapon_data
+
     @abstractmethod
     def extract(self) -> VehicleData: ...
 
@@ -378,7 +582,7 @@ class ArmoredVehicleExtractor(
 
         return super().get_weapon_type(weapon, seat_index)
 
-    def extract(self) -> VehicleData:  # noqa: C901, PLR0912
+    def extract(self) -> VehicleData:
         meta_data = self.vehicle.properties.armor_meta_data
         health = self.vehicle.properties.armor_health.get(HLLArmorHealthComponent)
         inventory = self.vehicle.properties.armor_inventory.get(HLLArmorInventory)
@@ -395,121 +599,58 @@ class ArmoredVehicleExtractor(
         ]
 
         for inventory_item in inventory.properties.default_inventory:
-            seat_index = inventory_item.owning_seat_index
-            weapon = inventory_item.get_weapon()
-            weapon_type = self.get_weapon_type(weapon, seat_index)
+            weapon_data = self.get_weapon(inventory_item)
 
-            weapon_data = VehicleWeapon(
-                name=str(weapon.properties.weapon_name),
-                type=weapon_type,
-                ammo=[],
-            )
+            seat_index = inventory_item.owning_seat_index
             seats[seat_index].weapons.append(weapon_data)
 
-            ammo_sources = weapon.properties.ammo_info.ammo_sources
-            if isinstance(weapon, HLLArmorWeaponBallistic):
-                for ammo_source in ammo_sources:
-                    weapon_data.ammo.append(
-                        VehicleWeaponAmmo(
-                            munitions_cost=0,
-                            clip_size=ammo_source.clip_size,
-                            max_clips=ammo_source.max_clips,
-                            name=str(ammo_source.display_name),
-                            type=VehicleWeaponAmmoType.MG,
-                            explosion_damage=0,
-                            explosion_radius=0,
-                        ),
-                    )
-            elif isinstance(
-                weapon,
-                HLLArmorWeaponProjectile,
-            ):
-                projectiles = weapon.get_projectiles()
-                for ammo_source, projectile in zip(
-                    ammo_sources,
-                    projectiles,
-                    strict=True,
-                ):
-                    ammo_type = VehicleWeaponAmmoType.from_shell_type(
-                        ammo_source.shell_type,
-                    )
-                    if not ammo_type:
-                        logger.error(
-                            "Cannot determine ammo type for source %s",
-                            ammo_source,
-                        )
-                        ammo_type = VehicleWeaponAmmoType.AP
-                    weapon_data.ammo.append(
-                        VehicleWeaponAmmo(
-                            munitions_cost=0,
-                            clip_size=ammo_source.clip_size,
-                            max_clips=ammo_source.max_clips,
-                            name=str(ammo_source.display_name),
-                            type=ammo_type,
-                            explosion_damage=projectile.properties.explosion_damage,
-                            explosion_radius=projectile.properties.explosion_radius,
-                        ),
-                    )
-            elif isinstance(
-                weapon,
-                HLLArmorWeaponMountedHowitzer,
-            ):
-                projectiles = weapon.get_projectiles()
-                for ammo_source, projectile in zip(
-                    ammo_sources,
-                    projectiles,
-                    strict=True,
-                ):
-                    if projectile.properties.explosion_damage == 0:
-                        ammo_type = VehicleWeaponAmmoType.SMOKE
-                    elif projectile.properties.explosion_radius > 3000:
-                        ammo_type = VehicleWeaponAmmoType.HE
-                    else:
-                        ammo_type = VehicleWeaponAmmoType.AP
+        return VehicleData(
+            blueprint_ids={self.vehicle.name.removeprefix("Default__")},
+            id=str(meta_data.display_name),
+            name=str(meta_data.display_name),
+            type=self.vehicle_type,
+            factions=self.factions,
+            hull=VehicleCompartmentData(
+                health=health.properties.armor_info.hull_max_health or 0,
+            ),
+            turret=VehicleCompartmentData(
+                health=health.properties.armor_info.turret_max_health or 0,
+            ),
+            tracks=VehicleCompartmentData(
+                health=health.properties.armor_info.tracks_max_health or 0,
+            ),
+            engine=VehicleCompartmentData(
+                health=health.properties.armor_info.engine_max_health or 0,
+            ),
+            seats=seats,
+        )
 
-                    weapon_data.ammo.append(
-                        VehicleWeaponAmmo(
-                            munitions_cost=0,
-                            clip_size=ammo_source.clip_size,
-                            max_clips=ammo_source.max_clips,
-                            name=str(ammo_source.display_name),
-                            type=ammo_type,
-                            explosion_damage=projectile.properties.explosion_damage,
-                            explosion_radius=projectile.properties.explosion_radius,
-                        ),
-                    )
-            elif isinstance(weapon, HLLArmorWeaponReconGun):
-                for ammo_source in ammo_sources:
-                    weapon_data.ammo.append(
-                        VehicleWeaponAmmo(
-                            munitions_cost=0,
-                            clip_size=ammo_source.clip_size,
-                            max_clips=ammo_source.max_clips,
-                            name=str(ammo_source.display_name),
-                            type=VehicleWeaponAmmoType.RECON,
-                            explosion_damage=0,
-                            explosion_radius=0,
-                        ),
-                    )
-            elif isinstance(weapon, HLLArmorWeaponSmokeScreen):
-                ammo_source = weapon.properties.ammo_info.ammo_sources[0]
-                weapon_data.ammo.append(
-                    VehicleWeaponAmmo(
-                        munitions_cost=0,
-                        clip_size=ammo_source.clip_size,
-                        max_clips=ammo_source.max_clips,
-                        name=str(ammo_source.display_name),
-                        type=VehicleWeaponAmmoType.SMOKE,
-                        explosion_damage=0,
-                        explosion_radius=0,
-                    ),
-                )
-            else:
-                logger.warning(
-                    "Unexpected weapon type %s for weapon %s",
-                    type(weapon),
-                    weapon,
-                )
+
+class ArtilleryVehicleExtractor(
+    VehicleExtractor[HLLHowitzerProperties | HLLAntiTankGunProperties],
+):
+    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:  # noqa: ARG002
+        if isinstance(weapon, HLLArmorWeaponHowitzer):
+            return HLLWeaponType.ARTILLERY
+        return HLLWeaponType.AT_GUN
+
+    def extract(self) -> VehicleData:
+        meta_data = self.vehicle.properties.armor_meta_data
+        health = self.vehicle.properties.armor_health.get(HLLArmorHealthComponent)
+        inventory = self.vehicle.properties.armor_inventory.get(HLLArmorInventory)
+
+        gunner_seat = self.vehicle.properties.get_gunner_seat()
+        loader_seat = self.vehicle.properties.get_loader_seat()
+
+        seats = [
+            self.seat_component_to_model(gunner_seat),
+            self.seat_component_to_model(loader_seat),
+        ]
+
+        for inventory_item in inventory.properties.default_inventory:
+            weapon_data = self.get_weapon(inventory_item)
+            seat_index = inventory_item.owning_seat_index
+            seats[seat_index].weapons.append(weapon_data)
 
         return VehicleData(
             blueprint_ids={self.vehicle.name.removeprefix("Default__")},
@@ -595,20 +736,36 @@ class InfantryVehicleExtractor(
 
 
 ABILITIES_DIR = Path("HLL/Content/Blueprints/Abilities/Setup")
-ABILITIES_FACTIONS: dict[Path, HLLFaction | None] = {
-    ABILITIES_DIR / "US_DefaultAbilities": HLLFaction.US,
-    ABILITIES_DIR / "US_DefaultAbilities_Winter": HLLFaction.US,
-    ABILITIES_DIR / "GER_DefaultAbilities": HLLFaction.GER,
-    ABILITIES_DIR / "GER_DefaultAbilities_Winter": HLLFaction.GER,
-    ABILITIES_DIR / "GER_DefaultAbilities_STA": HLLFaction.GER,
-    ABILITIES_DIR / "RU_DefaultAbilities": HLLFaction.RUS,
-    ABILITIES_DIR / "RU_DefaultAbilities_Winter": HLLFaction.RUS,
-    ABILITIES_DIR / "COM_DefaultAbilities": HLLFaction.CW,
-    ABILITIES_DIR / "NA_Variant/GER_DefaultAbilities_NA": HLLFaction.DAK,
-    ABILITIES_DIR / "NA_Variant/COM_DefaultAbilities_NA": HLLFaction.B8A,
+ABILITIES_FACTIONS: dict[Path, set[HLLFaction]] = {
+    ABILITIES_DIR / "US_DefaultAbilities": {HLLFaction.US},
+    ABILITIES_DIR / "US_DefaultAbilities_Winter": {HLLFaction.US},
+    ABILITIES_DIR / "GER_DefaultAbilities": {HLLFaction.GER},
+    ABILITIES_DIR / "GER_DefaultAbilities_Winter": {HLLFaction.GER},
+    ABILITIES_DIR / "GER_DefaultAbilities_STA": {HLLFaction.GER},
+    ABILITIES_DIR / "RU_DefaultAbilities": {HLLFaction.RUS},
+    ABILITIES_DIR / "RU_DefaultAbilities_Winter": {HLLFaction.RUS},
+    ABILITIES_DIR / "COM_DefaultAbilities": {HLLFaction.CW},
+    ABILITIES_DIR / "NA_Variant/GER_DefaultAbilities_NA": {HLLFaction.DAK},
+    ABILITIES_DIR / "NA_Variant/COM_DefaultAbilities_NA": {HLLFaction.B8A},
 }
 ABILITIES_FACTIONS = {
-    local_to_abs_path(fp): faction for fp, faction in ABILITIES_FACTIONS.items()
+    local_to_abs_path(fp): factions for fp, factions in ABILITIES_FACTIONS.items()
+}
+
+
+ARTILLERY_DIR = Path("HLL/Content/Blueprints/Artillery")
+ARTILLERY_FACTIONS: dict[Path, set[HLLFaction]] = {
+    ARTILLERY_DIR / "US/Anti-Tank/BP_USAntiTank": {HLLFaction.US},
+    ARTILLERY_DIR / "RUS/Anti-Tank/BP_RUSAntiTank": {HLLFaction.RUS},
+    ARTILLERY_DIR / "GER/Anti-Tank/BP_GERAntiTank": {HLLFaction.GER, HLLFaction.DAK},
+    ARTILLERY_DIR / "COM/Anti-Tank/BP_COMAntiTank": {HLLFaction.CW, HLLFaction.B8A},
+    ARTILLERY_DIR / "US/Howitzer/BP_US_M114": {HLLFaction.US},
+    ARTILLERY_DIR / "RUS/Artillery/BP_RUS_M30": {HLLFaction.RUS},
+    ARTILLERY_DIR / "GER/Howitzer/BP_GER_SFH18": {HLLFaction.GER, HLLFaction.DAK},
+    ARTILLERY_DIR / "COM/Howitzer/BP_COM_Howitzer": {HLLFaction.CW, HLLFaction.B8A},
+}
+ARTILLERY_FACTIONS = {
+    local_to_abs_path(fp): factions for fp, factions in ARTILLERY_FACTIONS.items()
 }
 
 
@@ -617,25 +774,45 @@ def get_all_ability_files() -> Iterator[Path]:
     yield from abilities_dir.glob("**/*_DefaultAbilities*.json")
 
 
-def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, HLLFaction]]:
+def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[HLLFaction]]]:
     for ability_fp in get_all_ability_files():
         ability_data = load_object_from_file(ability_fp, 0, HLLMapAbilityData)
-        faction = ABILITIES_FACTIONS.get(ability_fp)
-        if faction is None:
-            if ability_fp not in ABILITIES_FACTIONS:
+        factions = ABILITIES_FACTIONS.get(ability_fp)
+        if not factions:
+            if factions is None:
                 logger.warning(
                     "Ability file %s not found in ABILITIES_FACTIONS mapping",
                     ability_fp,
                 )
             continue
-        yield ability_data, faction
+        yield ability_data, factions
 
 
-def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, HLLFaction]]:
-    for ability_table, faction in get_all_ability_tables():
+def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[HLLFaction]]]:
+    for ability_table, factions in get_all_ability_tables():
         for ability in ability_table.properties.abilities:
             if a := ability.get_ability():
-                yield a, faction
+                yield a, factions
+
+
+def get_all_artillery() -> Iterator[tuple[HLLVehicle, Path]]:
+    for howitzer_bgc, fp in find_objects_in_dir(
+        local_to_abs_path(ARTILLERY_DIR, add_ext=False),
+        lambda bgc: bgc.get_root_struct_name() == "Class'HLLHowitzer'",
+        obj_type=BlueprintGeneratedClass[HLLVehicle[HLLHowitzerProperties]],
+        glob_pattern="**/BP_*.json",
+        cond_obj_type=BlueprintGeneratedClass,
+    ):
+        yield howitzer_bgc.get_default_object(HLLVehicle[HLLHowitzerProperties]), fp
+
+    for antitank_bgc, fp in find_objects_in_dir(
+        local_to_abs_path(ARTILLERY_DIR, add_ext=False),
+        lambda bgc: bgc.get_root_struct_name() == "Class'HLLAntiTankGun'",
+        obj_type=BlueprintGeneratedClass[HLLVehicle[HLLAntiTankGunProperties]],
+        glob_pattern="**/BP_*.json",
+        cond_obj_type=BlueprintGeneratedClass,
+    ):
+        yield antitank_bgc.get_default_object(HLLVehicle[HLLAntiTankGunProperties]), fp
 
 
 UI_SUBCATEGORY_TO_VEHICLE_TYPE: dict[str, VehicleType] = {
@@ -703,10 +880,8 @@ def get_vehicle_class_from_root_struct(
     return STRUCT_NAME_TO_VEHICLE_CLASS[struct_name]
 
 
-def get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction]]]:
-    seen: dict[HLLVehicle, tuple[VehicleType, set[HLLFaction]]] = {}
-
-    for ability, faction in get_all_abilities():
+def _get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction]]]:
+    for ability, factions in get_all_abilities():
         if not isinstance(
             ability.properties,
             HLLCommanderAbilitySpawnVehicleProperties,
@@ -723,6 +898,27 @@ def get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction
             str(ability.properties.ui_sub_category),
         )
 
+        yield vehicle, vehicle_type, factions
+
+    for vehicle, vehicle_fp in get_all_artillery():
+        if vehicle_fp not in ARTILLERY_FACTIONS:
+            logger.warning(
+                "Artillery file %s not found in ARTILLERY_FACTIONS mapping",
+                vehicle_fp,
+            )
+            continue
+
+        if not ARTILLERY_FACTIONS[vehicle_fp]:
+            continue
+
+        factions = ARTILLERY_FACTIONS[vehicle_fp]
+        yield vehicle, HLLVehicleType.ARTILLERY, factions
+
+
+def get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction]]]:
+    seen: dict[HLLVehicle, tuple[VehicleType, set[HLLFaction]]] = {}
+
+    for vehicle, vehicle_type, factions in _get_all_vehicles():
         if vehicle in seen:
             if seen[vehicle][0] != vehicle_type:
                 logger.error(
@@ -731,10 +927,10 @@ def get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction
                     seen[vehicle][0],
                     vehicle_type,
                 )
-            seen[vehicle][1].add(faction)
+            seen[vehicle][1].update(factions)
             continue
 
-        seen[vehicle] = (vehicle_type, {faction})
+        seen[vehicle] = (vehicle_type, factions)
 
     for vehicle, (vehicle_type, factions) in seen.items():
         yield vehicle, vehicle_type, factions
@@ -756,6 +952,18 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
             data = InfantryVehicleExtractor(
                 cast(
                     "HLLVehicle[HLLHalftrackProperties | HLLTruckProperties]",
+                    vehicle,
+                ),
+                vehicle_type,
+                factions,
+            ).extract()
+        elif isinstance(
+            vehicle.properties,
+            (HLLHowitzerProperties, HLLAntiTankGunProperties),
+        ):
+            data = ArtilleryVehicleExtractor(
+                cast(
+                    "HLLVehicle[HLLHowitzerProperties | HLLAntiTankGunProperties]",
                     vehicle,
                 ),
                 vehicle_type,

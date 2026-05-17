@@ -932,6 +932,54 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_122MM_HOWITZER__UNKNOWN(cls) -> "HLLWeapon":
+        """*122MM HOWITZER*"""
+        return cls(
+            id="122MM HOWITZER",
+            name="122MM HOWITZER",
+            vehicle_id=None,
+            factions={HLLFaction.SOV},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_122MM_HOWITZER__M1938_M_30(cls) -> "HLLWeapon":
+        """*122MM HOWITZER [M1938 (M-30)]*"""
+        return cls(
+            id="122MM HOWITZER [M1938 (M-30)]",
+            name="122MM HOWITZER",
+            vehicle_id="M1938 (M-30)",
+            factions={HLLFaction.SOV},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_150MM_HOWITZER__UNKNOWN(cls) -> "HLLWeapon":
+        """*150MM HOWITZER*"""
+        return cls(
+            id="150MM HOWITZER",
+            name="150MM HOWITZER",
+            vehicle_id=None,
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_150MM_HOWITZER__SFH_18(cls) -> "HLLWeapon":
+        """*150MM HOWITZER [sFH 18]*"""
+        return cls(
+            id="150MM HOWITZER [sFH 18]",
+            name="150MM HOWITZER",
+            vehicle_id="sFH 18",
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_152MM_M_10T__UNKNOWN(cls) -> "HLLWeapon":
         """*152MM M-10T*"""
         return cls(
@@ -952,6 +1000,30 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             vehicle_id="KV-2",
             factions={HLLFaction.SOV},
             type=HLLWeaponType.TANK_CANNON,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_155MM_HOWITZER__UNKNOWN(cls) -> "HLLWeapon":
+        """*155MM HOWITZER*"""
+        return cls(
+            id="155MM HOWITZER",
+            name="155MM HOWITZER",
+            vehicle_id=None,
+            factions={HLLFaction.US},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_155MM_HOWITZER__M114(cls) -> "HLLWeapon":
+        """*155MM HOWITZER [M114]*"""
+        return cls(
+            id="155MM HOWITZER [M114]",
+            name="155MM HOWITZER",
+            vehicle_id="M114",
+            factions={HLLFaction.US},
+            type=HLLWeaponType.ARTILLERY,
         )
 
     @class_cached_property
@@ -1112,6 +1184,42 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_57MM_CANNON__UNKNOWN(cls) -> "HLLWeapon":
+        """*57MM CANNON*"""
+        return cls(
+            id="57MM CANNON",
+            name="57MM CANNON",
+            vehicle_id=None,
+            factions={HLLFaction.US, HLLFaction.SOV},
+            type=HLLWeaponType.AT_GUN,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_57MM_CANNON__M1_57MM(cls) -> "HLLWeapon":
+        """*57MM CANNON [M1 57mm]*"""
+        return cls(
+            id="57MM CANNON [M1 57mm]",
+            name="57MM CANNON",
+            vehicle_id="M1 57mm",
+            factions={HLLFaction.US},
+            type=HLLWeaponType.AT_GUN,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_57MM_CANNON__ZIS_2(cls) -> "HLLWeapon":
+        """*57MM CANNON [ZiS-2]*"""
+        return cls(
+            id="57MM CANNON [ZiS-2]",
+            name="57MM CANNON",
+            vehicle_id="ZiS-2",
+            factions={HLLFaction.SOV},
+            type=HLLWeaponType.AT_GUN,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_75CM_KWK_37__UNKNOWN(cls) -> "HLLWeapon":
         """*7.5CM KwK 37*"""
         return cls(
@@ -1143,7 +1251,19 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75MM CANNON",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=HLLWeaponType.UNKNOWN,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_75MM_CANNON__PAK_40(cls) -> "HLLWeapon":
+        """*75MM CANNON [PAK 40]*"""
+        return cls(
+            id="75MM CANNON [PAK 40]",
+            name="75MM CANNON",
+            vehicle_id="PAK 40",
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=HLLWeaponType.AT_GUN,
         )
 
     @class_cached_property
@@ -2543,6 +2663,54 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             vehicle_id="Bishop SP 25pdr",
             factions={HLLFaction.B8A},
             type=HLLWeaponType.TANK_CANNON,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_QF_25_POUNDER__UNKNOWN_2(cls) -> "HLLWeapon":
+        """*QF 25-POUNDER*"""
+        return cls(
+            id="QF 25-POUNDER",
+            name="QF 25-POUNDER",
+            vehicle_id=None,
+            factions={HLLFaction.CW, HLLFaction.B8A},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_QF_25_POUNDER__QF_25_POUNDER(cls) -> "HLLWeapon":
+        """*QF 25-POUNDER [QF 25-Pounder]*"""
+        return cls(
+            id="QF 25-POUNDER [QF 25-Pounder]",
+            name="QF 25-POUNDER",
+            vehicle_id="QF 25-Pounder",
+            factions={HLLFaction.CW, HLLFaction.B8A},
+            type=HLLWeaponType.ARTILLERY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_QF_6_POUNDER__UNKNOWN(cls) -> "HLLWeapon":
+        """*QF 6-POUNDER*"""
+        return cls(
+            id="QF 6-POUNDER",
+            name="QF 6-POUNDER",
+            vehicle_id=None,
+            factions={HLLFaction.CW, HLLFaction.B8A},
+            type=HLLWeaponType.AT_GUN,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_QF_6_POUNDER__QF_6_POUNDER(cls) -> "HLLWeapon":
+        """*QF 6-POUNDER [QF 6-Pounder]*"""
+        return cls(
+            id="QF 6-POUNDER [QF 6-Pounder]",
+            name="QF 6-POUNDER",
+            vehicle_id="QF 6-Pounder",
+            factions={HLLFaction.CW, HLLFaction.B8A},
+            type=HLLWeaponType.AT_GUN,
         )
 
     @class_cached_property

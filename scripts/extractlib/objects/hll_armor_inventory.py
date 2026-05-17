@@ -10,6 +10,7 @@ from scripts.extractlib.objects.blueprint_generated_class import (
 from scripts.extractlib.objects.hll_armor_weapon import (
     HLLArmorWeapon,
     HLLArmorWeaponBallistic,
+    HLLArmorWeaponHowitzer,
     HLLArmorWeaponMountedHowitzer,
     HLLArmorWeaponProjectile,
     HLLArmorWeaponReconGun,
@@ -35,6 +36,8 @@ class HLLArmorInventoryPropertiesDefaultInventoryItem(Model):
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponProjectile)
         elif super_class_name == "Class'HLLArmourWeapon_ReconGun'":
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponReconGun)
+        elif super_class_name == "Class'HLLArmourWeapon_Howitzer'":
+            weapon = weapon_bgc.get_default_object(HLLArmorWeaponHowitzer)
         elif super_class_name == "Class'HLLArmourWeapon_MountedHowitzer'":
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponMountedHowitzer)
         elif super_class_name == "Class'HLLArmourWeapon_SmokeScreen'":

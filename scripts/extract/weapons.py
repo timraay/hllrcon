@@ -52,7 +52,7 @@ class WeaponData(BaseModel):
         wd1 = weap_seq[0]
         wd2 = weap_seq[1]
 
-        for prop_name in ("meth_name", "id", "name", "type", "vehicle_id"):
+        for prop_name in ("meth_name", "id", "name", "vehicle_id"):
             prop1 = getattr(wd1, prop_name)
             prop2 = getattr(wd2, prop_name)
             if prop1 != prop2:
@@ -62,7 +62,6 @@ class WeaponData(BaseModel):
                     prop1,
                     prop2,
                 )
-                raise ValueError(msg)
 
         wd_merged = WeaponData(
             meth_name=wd1.meth_name,
@@ -70,7 +69,7 @@ class WeaponData(BaseModel):
             name=wd1.name,
             vehicle_id=wd1.vehicle_id,
             factions=wd1.factions.union(wd2.factions),
-            type=wd1.type,
+            type=wd1.type if wd1.type == wd2.type else HLLWeaponType.UNKNOWN,
         )
 
         return WeaponData.merge(wd_merged, *weap_seq[2:])
