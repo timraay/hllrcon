@@ -244,7 +244,7 @@ class HLLVPlayerRoleId(IntEnum):
     SPOTTER = 4
     SPECIALIST = 5
     MACHINE_GUNNER = 6
-    GRENADER = 7
+    GRENADIER = 7
     ENGINEER = 8
     SQUAD_LEADER = 9
     SNIPER = 10
