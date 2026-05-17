@@ -6,19 +6,19 @@ from pydantic import AfterValidator, Field
 from hllrcon.data.roles import HLLRole
 from scripts.extractlib.loader import Model, Object
 from scripts.extractlib.objects.data_table import DataTableReference
-from scripts.extractlib.structs.loadout_item import LoadoutItem
-from scripts.extractlib.types import LocalizationKey
+from scripts.extractlib.structs.loadout_item import HLLLoadoutItem
+from scripts.extractlib.types import String
 
 
 class HLLTeamLoadoutsPropertiesLoadoutItem(Model):
-    loadout_item: DataTableReference[LoadoutItem]
+    loadout_item: DataTableReference[HLLLoadoutItem]
     initial_clips: Annotated[int, AfterValidator(lambda v: max(v, 1))]
     maximum_clips: int
 
 
 class HLLTeamLoadoutsPropertiesLoadout(Model):
     display_name: Annotated[
-        LocalizationKey,
+        String,
         Field(validation_alias="LoadoutDisplayName"),
     ]
     level_requirement: int
