@@ -6,7 +6,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Generic, cast
 
-from pydantic import BaseModel, TypeAdapter
+from pydantic import BaseModel, TypeAdapter, model_validator
 
 from hllrcon.data.factions import HLLFaction
 from hllrcon.data.vehicles import HLLVehicleType, VehicleType
@@ -56,10 +56,10 @@ logger = logging.getLogger(__name__)
 HLL_VEHICLE_CONSTRUCTOR_TEMPLATE = """\
     @class_cached_property
     @classmethod
-    def {meth_name}(cls) -> "HLLVehicle":
-        \"\"\"*{vehicle.name}*\"\"\"
+    def {vehicle.meth_name}(cls) -> "HLLVehicle":
+        \"\"\"*{vehicle.id}*\"\"\"
         return cls(
-            id="{vehicle.name}",
+            id="{vehicle.id}",
             name="{vehicle.name}",
             factions={factions},
             type=HLLVehicleType.{vehicle.type.name},
@@ -71,7 +71,7 @@ HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE = """\
 HLLVehicleSeat(
     index={index},
     type=HLLVehicleSeatType.{seat.name},
-    weapons=[],
+    weapons={weapons},
     requires_roles={requires_roles},
     exposed=False,
 )"""
@@ -134,6 +134,43 @@ class VehicleSeatData(BaseModel):
     switch_time: float
     exit_time: float
 
+    def get_weapons(
+        self,
+        vehicle_data: "VehicleData",
+        *,
+        include_generic: bool = False,
+    ) -> list[WeaponData]:
+        weapons: list[WeaponData] = []
+        for weapon in self.weapons:
+            weapon_id = f"{weapon.name} [{vehicle_data.id}]"
+            meth_name = "V_" + to_method_name(weapon_id)
+            weapons.append(
+                WeaponData(
+                    meth_name=meth_name,
+                    id=weapon_id,
+                    name=weapon.name,
+                    vehicle_id=vehicle_data.id,
+                    factions=vehicle_data.factions,
+                    type=weapon.type,
+                ),
+            )
+            if include_generic:
+                generic_weapon_id = weapon.name
+                generic_meth_name = (
+                    "V_" + to_method_name(generic_weapon_id) + "__UNKNOWN"
+                )
+                weapons.append(
+                    WeaponData(
+                        meth_name=generic_meth_name,
+                        id=generic_weapon_id,
+                        name=weapon.name,
+                        vehicle_id=None,
+                        factions=vehicle_data.factions,
+                        type=weapon.type,
+                    ),
+                )
+        return weapons
+
     @staticmethod
     def merge(
         seat1: "VehicleSeatData",
@@ -168,7 +205,9 @@ class VehicleSeatData(BaseModel):
 
 
 class VehicleData(BaseModel):
-    ids: set[str]
+    meth_name: str = ""
+    blueprint_ids: set[str]
+    id: str
     name: str
     type: VehicleType
     factions: set[HLLFaction]
@@ -178,32 +217,29 @@ class VehicleData(BaseModel):
     engine: VehicleCompartmentData
     seats: list[VehicleSeatData] = []
 
-    def get_weapons(self) -> list[WeaponData]:
+    @model_validator(mode="after")
+    def set_meth_name(self) -> "VehicleData":
+        if not self.meth_name:
+            self.meth_name = to_method_name(self.id)
+        return self
+
+    def get_weapons(self, *, include_generic: bool = False) -> list[WeaponData]:
         weapons: list[WeaponData] = []
         weapons.append(
             WeaponData(
-                id=self.name,
-                name=self.name,
+                meth_name="V_ROADKILL__" + to_method_name(self.id),
+                id=self.id,
+                name=self.id,
+                vehicle_id=self.id,
                 factions=self.factions,
                 type=HLLWeaponType.ROADKILL,
             ),
         )
-        weapons.extend(
-            WeaponData(
-                id=f"{weapon.name} [{self.name}]",
-                name=weapon.name,
-                factions=self.factions,
-                type=weapon.type,
-            )
-            for seat in self.seats
-            for weapon in seat.weapons
-        )
+        for seat in self.seats:
+            weapons.extend(seat.get_weapons(self, include_generic=include_generic))
         return weapons
 
-    def to_constructor(self, meth_name: str | None = None) -> str:
-        factions = stringify_factions(self.factions)
-        meth_name = to_method_name(self.name)
-
+    def to_constructor(self) -> str:
         seats: list[str] = []
         for index, seat in enumerate(self.seats):
             if seat.role_types == VehicleSeatRoleTypes.TANK_CREW:
@@ -213,18 +249,23 @@ class VehicleData(BaseModel):
             else:
                 requires_roles = "None"
 
+            weapons = stringify_list(
+                [f"HLLWeapon.{weapon.meth_name}" for weapon in seat.get_weapons(self)],
+                indent=4,
+            ).lstrip()
+
             seats.append(
                 HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE.format(
                     index=index,
                     seat=seat,
+                    weapons=weapons,
                     requires_roles=requires_roles,
                 ),
             )
 
         return HLL_VEHICLE_CONSTRUCTOR_TEMPLATE.format(
-            meth_name=meth_name,
             vehicle=self,
-            factions=factions,
+            factions=stringify_factions(self.factions),
             seats=stringify_list(seats, indent=3 * 4).lstrip(),
         )
 
@@ -240,7 +281,7 @@ class VehicleData(BaseModel):
         vd1 = vd_seq[0]
         vd2 = vd_seq[1]
 
-        for prop_name in ("name", "type", "hull", "turret", "tracks", "engine"):
+        for prop_name in ("id", "name", "type", "hull", "turret", "tracks", "engine"):
             prop1 = getattr(vd1, prop_name)
             prop2 = getattr(vd2, prop_name)
             if prop1 != prop2:
@@ -248,8 +289,8 @@ class VehicleData(BaseModel):
                     "Inconsistent property VehicleData.%s when merging (%s, %s):"
                     " %s != %s",
                     prop_name,
-                    vd1.ids,
-                    vd2.ids,
+                    vd1.blueprint_ids,
+                    vd2.blueprint_ids,
                     prop1,
                     prop2,
                 )
@@ -258,7 +299,8 @@ class VehicleData(BaseModel):
             raise ValueError(msg)
 
         vd_merged = VehicleData(
-            ids=vd1.ids | vd2.ids,
+            blueprint_ids=vd1.blueprint_ids | vd2.blueprint_ids,
+            id=vd1.id,
             name=vd1.name,
             type=vd1.type,
             factions=vd1.factions.union(vd2.factions),
@@ -470,7 +512,8 @@ class ArmoredVehicleExtractor(
                 )
 
         return VehicleData(
-            ids={self.vehicle.name.removeprefix("Default__")},
+            blueprint_ids={self.vehicle.name.removeprefix("Default__")},
+            id=str(meta_data.display_name),
             name=str(meta_data.display_name),
             type=self.vehicle_type,
             factions=self.factions,
@@ -530,7 +573,8 @@ class InfantryVehicleExtractor(
             seats[seat_index].weapons.append(weapon_data)
 
         return VehicleData(
-            ids={self.vehicle.name.removeprefix("Default__")},
+            blueprint_ids={self.vehicle.name.removeprefix("Default__")},
+            id=str(meta_data.display_name),
             name=str(meta_data.display_name),
             type=self.vehicle_type,
             factions=self.factions,
@@ -729,10 +773,9 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
 
 
 def main() -> None:
-    vehicle_data = sorted(get_all_vehicle_data(), key=lambda v: v.name)
-    vehicle_ids = itertools.groupby(vehicle_data, lambda v: v.name)
+    vehicle_data = sorted(get_all_vehicle_data(), key=lambda v: v.id)
+    vehicle_ids = itertools.groupby(vehicle_data, lambda v: v.id)
     vehicles = [VehicleData.merge(*vd_seq) for _, vd_seq in vehicle_ids]
-
     vehicle_constructors: list[str] = [v.to_constructor() for v in vehicles]
 
     inject_code(
@@ -744,6 +787,24 @@ def main() -> None:
     Path("dist").mkdir(exist_ok=True)
     Path("dist/vehicles.json").write_bytes(
         TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
+    )
+
+    weapon_data = sorted(
+        (
+            weapon
+            for vehicle in vehicles
+            for weapon in vehicle.get_weapons(include_generic=True)
+        ),
+        key=lambda w: w.id,
+    )
+    weapon_ids = itertools.groupby(weapon_data, lambda w: w.id)
+    weapons = [WeaponData.merge(*wd_seq) for _, wd_seq in weapon_ids]
+    weapon_constructors: list[str] = [w.to_constructor() for w in weapons]
+
+    inject_code(
+        Path("hllrcon/data/weapons.py"),
+        "hll vehicles",
+        "\n\n".join(weapon_constructors),
     )
 
 

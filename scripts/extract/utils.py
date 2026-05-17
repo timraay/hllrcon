@@ -72,6 +72,8 @@ def to_method_name(s: str) -> str:
         .replace(" ", "_")
         .replace("(", "")
         .replace(")", "")
+        .replace("[", "_")
+        .replace("]", "_")
         .replace(".", "")
         .strip("_")
     )

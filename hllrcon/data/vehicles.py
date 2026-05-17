@@ -212,14 +212,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_19_K_45MM__BA_10,
+                        HLLWeapon.V_COAXIAL_DT__BA_10,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=2,
                     type=HLLVehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_PRIMARY__BA_10,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -370,7 +375,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_QF_25_POUNDER__BISHOP_SP_25PDR,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -397,14 +404,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_BESA_792MM__CHURCHILL_MK_III_AVRE,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_230MM_PETARD__CHURCHILL_MK_III_AVRE,
+                        HLLWeapon.V_COAXIAL_BESA_792MM__CHURCHILL_MK_III_AVRE,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -431,14 +443,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_BESA_792MM__CHURCHILL_MKIII,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_OQF_57MM__CHURCHILL_MKIII,
+                        HLLWeapon.V_COAXIAL_BESA_792MM__CHURCHILL_MKIII,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -465,14 +482,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_BESA_792MM__CHURCHILL_MKVII,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_OQF_75MM__CHURCHILL_MKVII,
+                        HLLWeapon.V_COAXIAL_BESA_792MM__CHURCHILL_MKVII,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -499,14 +521,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_BESA__CROMWELL,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_OQF_75MM__CROMWELL,
+                        HLLWeapon.V_COAXIAL_BESA__CROMWELL,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -540,7 +567,10 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_OQF_57MM__CRUSADER_MKIII,
+                        HLLWeapon.V_COAXIAL_BESA__CRUSADER_MKIII,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -574,14 +604,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_QF_2_POUNDER__DAIMLER,
+                        HLLWeapon.V_COAXIAL_BESA__DAIMLER,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=2,
                     type=HLLVehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_PRIMARY__DAIMLER,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -608,7 +643,10 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_QF_17_POUNDER__FIREFLY,
+                        HLLWeapon.V_COAXIAL_M1919__FIREFLY,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -800,21 +838,28 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_DT__IS_1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_D_5T_85MM__IS_1,
+                        HLLWeapon.V_COAXIAL_DT__IS_1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=2,
                     type=HLLVehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_EXHAUST_FUEL_INJECTION__IS_1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -875,14 +920,18 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_DT__KV_2,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_152MM_M_10T__KV_2,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -957,7 +1006,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_M2_BROWNING__M3_HALF_TRACK,
+                    ],
                     requires_roles=None,
                     exposed=False,
                 ),
@@ -1019,14 +1070,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_M1919__M3_STUART_HONEY,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_37MM_CANNON__M3_STUART_HONEY,
+                        HLLWeapon.V_COAXIAL_M1919__M3_STUART_HONEY,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1053,14 +1109,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_M1919__M4A3_105MM,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_105MM_HOWITZER__M4A3_105MM,
+                        HLLWeapon.V_COAXIAL_M1919__M4A3_105MM,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1094,14 +1155,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_M6_37MM__M8_GREYHOUND,
+                        HLLWeapon.V_COAXIAL_M1919__M8_GREYHOUND,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=2,
                     type=HLLVehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_PRIMARY__M8_GREYHOUND,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1245,14 +1311,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_MG34__PANZER_III_AUSFN,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_75CM_KWK_37__PANZER_III_AUSFN,
+                        HLLWeapon.V_COAXIAL_MG34__PANZER_III_AUSFN,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1286,7 +1357,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_MG_42__SDKFZ_251_HALF_TRACK,
+                    ],
                     requires_roles=None,
                     exposed=False,
                 ),
@@ -1355,7 +1428,10 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_20MM_KWK_30__SDKFZ121_LUCHS,
+                        HLLWeapon.V_COAXIAL_MG34__SDKFZ121_LUCHS,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1382,14 +1458,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_MG34__SDKFZ161_PANZER_IV,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_75MM_CANNON__SDKFZ161_PANZER_IV,
+                        HLLWeapon.V_COAXIAL_MG34__SDKFZ161_PANZER_IV,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1416,14 +1497,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_MG34__SDKFZ171_PANTHER,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_75MM_CANNON__SDKFZ171_PANTHER,
+                        HLLWeapon.V_COAXIAL_MG34__SDKFZ171_PANTHER,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1450,14 +1536,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_MG34__SDKFZ181_TIGER_1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_88_KWK_36_L_56__SDKFZ181_TIGER_1,
+                        HLLWeapon.V_COAXIAL_MG34__SDKFZ181_TIGER_1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1491,14 +1582,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_50MM_KWK_39_1__SDKFZ234_PUMA,
+                        HLLWeapon.V_COAXIAL_MG34__SDKFZ234_PUMA,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=2,
                     type=HLLVehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_PRIMARY__SDKFZ234_PUMA,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1518,14 +1614,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_M1919__SHERMAN_M4A375W,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_75MM_CANNON__SHERMAN_M4A375W,
+                        HLLWeapon.V_COAXIAL_M1919__SHERMAN_M4A375W,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1552,14 +1653,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_M1919__SHERMAN_M4A3E2,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_75MM_M3_GUN__SHERMAN_M4A3E2,
+                        HLLWeapon.V_COAXIAL_M1919__SHERMAN_M4A3E2,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1586,14 +1692,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_M1919__SHERMAN_M4A3E276,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_76MM_M1_GUN__SHERMAN_M4A3E276,
+                        HLLWeapon.V_COAXIAL_M1919__SHERMAN_M4A3E276,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1620,14 +1731,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_M1919__STUART_M5A1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_37MM_CANNON__STUART_M5A1,
+                        HLLWeapon.V_COAXIAL_M1919__STUART_M5A1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1661,7 +1777,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_STUH_43_L_12__STURMPANZER_IV,
+                    ],
                     requires_roles=_HLL_ARTY_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1688,14 +1806,19 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=0,
                     type=HLLVehicleSeatType.DRIVER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_HULL_DT__T34_76,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_76MM_ZIS_5__T34_76,
+                        HLLWeapon.V_COAXIAL_DT__T34_76,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1729,7 +1852,10 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_45MM_M1937__T70,
+                        HLLWeapon.V_COAXIAL_DT__T70,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1763,7 +1889,10 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat, HLLVehicleType]):
                 HLLVehicleSeat(
                     index=1,
                     type=HLLVehicleSeatType.GUNNER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_QF_2_POUNDER__TETRARCH,
+                        HLLWeapon.V_COAXIAL_BESA__TETRARCH,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
