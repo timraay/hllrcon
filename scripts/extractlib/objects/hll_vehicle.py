@@ -15,6 +15,7 @@ from scripts.extractlib.objects.hll_armor_health_component import (
 from scripts.extractlib.objects.hll_armor_inventory import HLLArmorInventory
 from scripts.extractlib.objects.tank_seat import (
     ArtillerySeat,
+    MortarSeat,
     SelfPropelledArtillerySeat,
     TankSeat,
     VehicleSeat,
@@ -171,6 +172,17 @@ class HLLAntiTankGunProperties(HLLVehicleProperties):
         yield self.get_loader_seat()
 
 
+class HLLAntiAircraftGunProperties(HLLVehicleProperties):
+    gunner_seat_class: BGCReference[VehicleSeat]
+
+    def get_gunner_seat(self) -> VehicleSeat:
+        return self.gunner_seat_class.get_inst(VehicleSeat)
+
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.get_gunner_seat()
+
+
 class HLLHowitzerProperties(HLLAntiTankGunProperties):
     gunner_seat_class: BGCReference[ArtillerySeat]
     loader_seat_class: BGCReference[ArtillerySeat]
@@ -180,6 +192,18 @@ class HLLHowitzerProperties(HLLAntiTankGunProperties):
 
     def get_loader_seat(self) -> ArtillerySeat:
         return self.loader_seat_class.get_inst(ArtillerySeat)
+
+
+class HLLMortarProperties(HLLAntiTankGunProperties):
+    team: ETeam = ETeam.AXIS
+    gunner_seat_class: BGCReference[MortarSeat]
+    loader_seat_class: BGCReference[MortarSeat]
+
+    def get_gunner_seat(self) -> MortarSeat:
+        return self.gunner_seat_class.get_inst(MortarSeat)
+
+    def get_loader_seat(self) -> MortarSeat:
+        return self.loader_seat_class.get_inst(MortarSeat)
 
 
 class HLLVBoatProperties(HLLVehicleProperties):
@@ -277,8 +301,10 @@ HLLVehiclePropT_co = TypeVar(
     | HLLSelfPropelledArtilleryProperties
     | HLLHalftrackProperties
     | HLLTruckProperties
-    | HLLHowitzerProperties
     | HLLAntiTankGunProperties
+    | HLLHowitzerProperties
+    | HLLMortarProperties
+    | HLLAntiAircraftGunProperties
     | HLLVBoatProperties
     | HLLVHelicopterProperties,
     covariant=True,

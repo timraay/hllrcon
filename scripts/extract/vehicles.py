@@ -37,6 +37,7 @@ from scripts.extractlib.objects.hll_armor_weapon import (
     HLLArmorWeapon,
     HLLArmorWeaponBallistic,
     HLLArmorWeaponHowitzer,
+    HLLArmorWeaponMortar,
     HLLArmorWeaponMountedHowitzer,
     HLLArmorWeaponProjectile,
     HLLArmorWeaponReconGun,
@@ -48,10 +49,12 @@ from scripts.extractlib.objects.hll_commander_ability import (
 )
 from scripts.extractlib.objects.hll_map_ability_data import HLLMapAbilityData
 from scripts.extractlib.objects.hll_vehicle import (
+    HLLAntiAircraftGunProperties,
     HLLAntiTankGunProperties,
     HLLArmorProperties,
     HLLHalftrackProperties,
     HLLHowitzerProperties,
+    HLLMortarProperties,
     HLLReconVehicleProperties,
     HLLSelfPropelledArtilleryProperties,
     HLLTruckProperties,
@@ -189,6 +192,8 @@ class VehicleSeatData(BaseModel):
     def get_seat_type(self) -> VehicleSeatType:
         if self.name.startswith("GUNNER "):
             return VehicleSeatType.GUNNER
+        if self.name == "AIMER":
+            return VehicleSeatType.GUNNER
 
         return VehicleSeatType[to_method_name(self.name)]
 
@@ -296,7 +301,12 @@ class VehicleData(BaseModel):
 
     def get_weapons(self, *, include_generic: bool = False) -> list[WeaponData]:
         weapons: list[WeaponData] = []
-        if self.type not in (VehicleType.ARTILLERY, VehicleType.ANTI_TANK_GUN):
+        if self.type not in (
+            VehicleType.ARTILLERY,
+            VehicleType.ANTI_TANK_GUN,
+            VehicleType.ANTI_AIRCRAFT_GUN,
+            VehicleType.MORTAR,
+        ):
             weapons.append(
                 WeaponData(
                     meth_name="V_ROADKILL__" + to_method_name(self.id),
@@ -598,6 +608,37 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
                 ),
             )
 
+    def _get_weapon_ammo_mortar(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponMortar,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+        projectiles = weapon.get_projectiles()
+
+        if len(projectiles) != 1:
+            logger.error(
+                "Unexpected number of projectiles for mortar weapon %s:"
+                " Expected 1, got %s",
+                weapon.properties.weapon_name,
+                len(projectiles),
+            )
+
+        ammo_source = ammo_sources[0]
+        projectile = projectiles[0]
+
+        weapon_data.ammo.append(
+            VehicleWeaponAmmo(
+                munitions_cost=0,
+                clip_size=ammo_source.clip_size,
+                max_clips=ammo_source.max_clips,
+                name=str(ammo_source.display_name),
+                type=VehicleWeaponAmmoType.HE,
+                explosion_damage=projectile.properties.explosion_damage,
+                explosion_radius=projectile.properties.explosion_radius,
+            ),
+        )
+
     def get_weapon(
         self,
         inventory_item: HLLArmorInventoryPropertiesDefaultInventoryItem,
@@ -633,6 +674,8 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
             self._get_weapon_ammo_recon_gun(weapon_data, weapon)
         elif isinstance(weapon, HLLArmorWeaponSmokeScreen):
             self._get_weapon_ammo_smoke_screen(weapon_data, weapon)
+        elif isinstance(weapon, HLLArmorWeaponMortar):
+            self._get_weapon_ammo_mortar(weapon_data, weapon)
         else:
             logger.warning(
                 "Unexpected weapon type %s for weapon %s",
@@ -709,12 +752,23 @@ class ArmoredVehicleExtractor(
 
 
 class ArtilleryVehicleExtractor(
-    VehicleExtractor[HLLHowitzerProperties | HLLAntiTankGunProperties],
+    VehicleExtractor[
+        HLLHowitzerProperties
+        | HLLAntiTankGunProperties
+        | HLLMortarProperties
+        | HLLAntiAircraftGunProperties
+    ],
 ):
-    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:  # noqa: ARG002
+    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:
         if isinstance(weapon, HLLArmorWeaponHowitzer):
             return WeaponType.ARTILLERY
-        return WeaponType.AT_GUN
+        if isinstance(weapon, HLLArmorWeaponMortar):
+            return WeaponType.MORTAR
+        if isinstance(weapon, HLLArmorWeaponBallistic):
+            return WeaponType.MOUNTED_MG
+        if isinstance(weapon, HLLArmorWeaponProjectile):
+            return WeaponType.AT_GUN
+        return super().get_weapon_type(weapon, seat_index)
 
     def extract(self) -> VehicleData:
         meta_data = self.vehicle.properties.armor_meta_data
@@ -873,6 +927,20 @@ with root_path_ctx(HLLV_METADATA_PATH):
         for fp, factions in HLLV_ABILITIES_FACTIONS.items()
     }
 
+    HLLV_MORTARS_DIR = Path(
+        "HLLVietnam/Content/_WFL/Blueprints/Weapons/MortarPrototypes",
+    )
+    HLLV_ANTI_AIR_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Weapons/AntiAircraft")
+    HLLV_ARTILLERY_FACTIONS: dict[Path, set[Faction]] = {
+        HLLV_MORTARS_DIR / "US/BP_Mortar_US_M29.json": {HLLVFaction.US},
+        HLLV_MORTARS_DIR / "BP_Mortar_NVA_Type67.json": {HLLVFaction.NVA},
+        HLLV_ANTI_AIR_DIR / "BP_DShKMAntiAircraftGun.json": {HLLVFaction.NVA},
+    }
+    HLLV_ARTILLERY_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLLV_ARTILLERY_FACTIONS.items()
+    }
+
 
 def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[Faction]]]:
     abilities_dir, abilities_factions_map = game_switch(
@@ -903,7 +971,7 @@ def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[Faction]]]:
                 yield a, factions
 
 
-def get_all_artillery() -> Iterator[tuple[HLLVehicle, Path]]:
+def get_all_artillery() -> Iterator[tuple[HLLVehicle, VehicleType, Path]]:
     if get_root_path() == HLL_METADATA_PATH:
         for howitzer_bgc, fp in find_objects_in_dir(
             local_to_abs_path(HLL_ARTILLERY_DIR, add_ext=False),
@@ -912,7 +980,11 @@ def get_all_artillery() -> Iterator[tuple[HLLVehicle, Path]]:
             glob_pattern="**/BP_*.json",
             cond_obj_type=BlueprintGeneratedClass,
         ):
-            yield howitzer_bgc.get_default_object(HLLVehicle[HLLHowitzerProperties]), fp
+            yield (
+                howitzer_bgc.get_default_object(HLLVehicle[HLLHowitzerProperties]),
+                VehicleType.ARTILLERY,
+                fp,
+            )
 
         for antitank_bgc, fp in find_objects_in_dir(
             local_to_abs_path(HLL_ARTILLERY_DIR, add_ext=False),
@@ -923,10 +995,38 @@ def get_all_artillery() -> Iterator[tuple[HLLVehicle, Path]]:
         ):
             yield (
                 antitank_bgc.get_default_object(HLLVehicle[HLLAntiTankGunProperties]),
+                VehicleType.ANTI_TANK_GUN,
                 fp,
             )
     elif get_root_path() == HLLV_METADATA_PATH:
-        # TODO: HLLV Artillery
+        for mortar_bgc, fp in find_objects_in_dir(
+            local_to_abs_path(HLLV_MORTARS_DIR, add_ext=False),
+            lambda bgc: bgc.get_root_struct_name() == "Class'HLLMortar'",
+            obj_type=BlueprintGeneratedClass[HLLVehicle[HLLMortarProperties]],
+            glob_pattern="**/BP_Mortar_*.json",
+            cond_obj_type=BlueprintGeneratedClass,
+        ):
+            yield (
+                mortar_bgc.get_default_object(HLLVehicle[HLLMortarProperties]),
+                VehicleType.MORTAR,
+                fp,
+            )
+
+        for antiair_bgc, fp in find_objects_in_dir(
+            local_to_abs_path(HLLV_ANTI_AIR_DIR, add_ext=False),
+            lambda bgc: bgc.get_root_struct_name() == "Class'HLLAntiAircraftGun'",
+            obj_type=BlueprintGeneratedClass[HLLVehicle[HLLAntiAircraftGunProperties]],
+            glob_pattern="**/BP_*Gun.json",
+            cond_obj_type=BlueprintGeneratedClass,
+        ):
+            yield (
+                antiair_bgc.get_default_object(
+                    HLLVehicle[HLLAntiAircraftGunProperties],
+                ),
+                VehicleType.ANTI_AIRCRAFT_GUN,
+                fp,
+            )
+
         return
     else:
         msg = f"Unexpected root path {get_root_path()}"
@@ -1027,19 +1127,23 @@ def _get_all_vehicle_attributes() -> Iterator[
 
         yield vehicle, vehicle_type, factions
 
-    for vehicle, vehicle_fp in get_all_artillery():
-        if vehicle_fp not in HLL_ARTILLERY_FACTIONS:
+    for vehicle, vehicle_type, vehicle_fp in get_all_artillery():
+        artillery_factions = game_switch(
+            HLL_ARTILLERY_FACTIONS,
+            HLLV_ARTILLERY_FACTIONS,
+        )
+        if vehicle_fp not in artillery_factions:
             logger.warning(
                 "Artillery file %s not found in ARTILLERY_FACTIONS mapping",
                 vehicle_fp,
             )
             continue
 
-        if not HLL_ARTILLERY_FACTIONS[vehicle_fp]:
+        if not artillery_factions[vehicle_fp]:
             continue
 
-        factions = HLL_ARTILLERY_FACTIONS[vehicle_fp]
-        yield vehicle, VehicleType.ARTILLERY, factions
+        factions = artillery_factions[vehicle_fp]
+        yield vehicle, vehicle_type, factions
 
 
 def get_all_vehicle_attributes() -> Iterator[
@@ -1091,7 +1195,12 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
             ).extract()
         elif isinstance(
             vehicle.properties,
-            (HLLHowitzerProperties, HLLAntiTankGunProperties),
+            (
+                HLLHowitzerProperties,
+                HLLAntiTankGunProperties,
+                HLLMortarProperties,
+                HLLAntiAircraftGunProperties,
+            ),
         ):
             data = ArtilleryVehicleExtractor(
                 cast(
@@ -1365,6 +1474,14 @@ HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
     },
     "US Boat": {
         "name": "PBR",
+        "exposed": True,
+    },
+    "MORTAR": {
+        "name": "Mortar",
+        "exposed": True,
+    },
+    "DShKM Anti-Aircraft Gun": {
+        "name": "DShKM",
         "exposed": True,
     },
 }

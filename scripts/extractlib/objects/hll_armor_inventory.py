@@ -11,6 +11,7 @@ from scripts.extractlib.objects.hll_armor_weapon import (
     HLLArmorWeapon,
     HLLArmorWeaponBallistic,
     HLLArmorWeaponHowitzer,
+    HLLArmorWeaponMortar,
     HLLArmorWeaponMountedHowitzer,
     HLLArmorWeaponProjectile,
     HLLArmorWeaponReconGun,
@@ -45,6 +46,8 @@ class HLLArmorInventoryPropertiesDefaultInventoryItem(Model):
             "Class'HLLArmourWeapon_Smokescreen'",
         }:
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponSmokeScreen)
+        elif super_class_name == "Class'HLLArmourWeapon_Mortar'":
+            weapon = weapon_bgc.get_default_object(HLLArmorWeaponMortar)
         else:
             msg = f"Unexpected super struct {super_class_name} for weapon {weapon_bgc}"
             raise ValueError(msg)

@@ -7,6 +7,7 @@ from scripts.extractlib.loader import Model, Object
 from scripts.extractlib.objects.blueprint_generated_class import BGCReference
 from scripts.extractlib.objects.hll_ballistics_component import HLLBallisticsComponent
 from scripts.extractlib.objects.hll_howitzer_projectile import HLLHowitzerProjectile
+from scripts.extractlib.objects.hll_mortar_projectile import HLLMortarProjectile
 from scripts.extractlib.objects.hll_projectile_bullet import HLLProjectileBullet
 from scripts.extractlib.objects.shooter_projectile import ShooterProjectile
 from scripts.extractlib.structs.vec2 import Vec2
@@ -123,6 +124,13 @@ class HLLArmorWeaponSmokeScreenProperties(HLLArmorWeaponProperties):
     pass
 
 
+class HLLArmorWeaponMortarProperties(HLLArmorWeaponProperties):
+    projectiles: Annotated[
+        list[BGCReference[HLLMortarProjectile]],
+        Field(alias="Projectiles"),
+    ]
+
+
 class HLLArmorWeaponBallistic(Object[HLLArmorWeaponBallisticProperties]):
     shot_delay: float = 0.1
 
@@ -163,6 +171,14 @@ class HLLArmorWeaponSmokeScreen(Object[HLLArmorWeaponSmokeScreenProperties]):
     pass
 
 
+class HLLArmorWeaponMortar(Object[HLLArmorWeaponMortarProperties]):
+    def get_projectiles(self) -> list[HLLMortarProjectile]:
+        return [
+            projectile.get_inst(HLLMortarProjectile)
+            for projectile in self.properties.projectiles
+        ]
+
+
 HLLArmorWeapon = (
     HLLArmorWeaponBallistic
     | HLLArmorWeaponProjectile
@@ -170,4 +186,5 @@ HLLArmorWeapon = (
     | HLLArmorWeaponHowitzer
     | HLLArmorWeaponMountedHowitzer
     | HLLArmorWeaponSmokeScreen
+    | HLLArmorWeaponMortar
 )

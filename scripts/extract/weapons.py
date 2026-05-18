@@ -1041,6 +1041,12 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "M60D [US Transport Helicopter]": {
         "name": "M60D",
     },
+    "MORTAR [MORTAR]": {
+        "name": "Mortar",
+    },
+    "DShKM Anti-Aircraft Gun [DShKM Anti-Aircraft Gun]": {
+        "name": "DShK",
+    },
     "Gaz 63 (Supply)": {},
     "Gaz 63 (Transport)": {},
     "M35 (Supply)": {},
@@ -1054,4 +1060,10 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "US Boat": {},
     "US Supply Helicopter": {},
     "US Transport Helicopter": {},
+    "MORTAR": {
+        "name": "Mortar",
+    },
+    "DShKM Anti-Aircraft Gun": {
+        "name": "DShK",
+    },
 }

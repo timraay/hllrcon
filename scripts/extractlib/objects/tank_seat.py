@@ -70,6 +70,21 @@ class ArtillerySeatProperties(VehicleSeatProperties):
         return self
 
 
+class MortarSeatProperties(VehicleSeatProperties):
+    only_allow_armor_units_in: Annotated[
+        bool,
+        Field(alias="bOnlyAllowArmourUnitsIn"),
+    ] = True
+    block_tank_roles: Annotated[
+        bool,
+        Field(alias="bBlockTankRoles"),
+    ] = True
+    block_artillery_roles: Annotated[
+        bool,
+        Field(alias="bBlockArtilleryRoles"),
+    ] = False
+
+
 VehicleSeatPropertiesT_co = TypeVar(
     "VehicleSeatPropertiesT_co",
     bound=VehicleSeatProperties,
@@ -103,4 +118,8 @@ class SelfPropelledArtillerySeat(
 
 
 class ArtillerySeat(VehicleSeat[ArtillerySeatProperties]):
+    pass
+
+
+class MortarSeat(VehicleSeat[MortarSeatProperties]):
     pass

@@ -47,6 +47,7 @@ class WeaponType(StrEnum):
     MOUNTED_MG = "Mounted MG"
     ROADKILL = "Roadkill"
     ARTILLERY = "Artillery"
+    MORTAR = "Mortar"
     COMMANDER_ABILITY = "Commander Ability"
     SATCHEL = "Satchel"
     SMOKE_GRENADE = "Smoke"
@@ -3743,6 +3744,32 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_DSHKM_ANTI_AIRCRAFT_GUN__UNKNOWN(cls) -> "HLLVWeapon":
+        """*DShKM Anti-Aircraft Gun*"""
+        return cls(
+            id="DShKM Anti-Aircraft Gun",
+            name="DShK",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_DSHKM_ANTI_AIRCRAFT_GUN__DSHKM_ANTI_AIRCRAFT_GUN(cls) -> "HLLVWeapon":
+        """*DShKM Anti-Aircraft Gun [DShKM Anti-Aircraft Gun]*"""
+        return cls(
+            id="DShKM Anti-Aircraft Gun [DShKM Anti-Aircraft Gun]",
+            name="DShK",
+            vehicle_id="DShKM Anti-Aircraft Gun",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_DHSK__NVA_BOAT(cls) -> "HLLVWeapon":
         """*Dhsk [NVA Boat]*"""
         return cls(
@@ -3842,6 +3869,32 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id="US Transport Helicopter",
             factions={HLLVFaction.US},
             type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_MORTAR__UNKNOWN(cls) -> "HLLVWeapon":
+        """*MORTAR*"""
+        return cls(
+            id="MORTAR",
+            name="Mortar",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.MORTAR,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_MORTAR__MORTAR(cls) -> "HLLVWeapon":
+        """*MORTAR [MORTAR]*"""
+        return cls(
+            id="MORTAR [MORTAR]",
+            name="Mortar",
+            vehicle_id="MORTAR",
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.MORTAR,
             magnification=None,
         )
 

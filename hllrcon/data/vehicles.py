@@ -52,10 +52,10 @@ class VehicleType(StrEnum):
     SELF_PROPELLED_ARTILLERY = "Self-Propelled Artillery"
     ARTILLERY = "Artillery"
     ANTI_TANK_GUN = "Anti-Tank Gun"
+    ANTI_AIRCRAFT_GUN = "Anti-Aircraft Gun"
     BOAT = "Boat"
     HELICOPTER = "Helicopter"
     MORTAR = "Mortar"
-    MG_EMPLACEMENT = "MG Emplacement"
 
 
 class VehicleSeatType(StrEnum):
@@ -1004,7 +1004,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
             id="M1 57mm",
             name="M1 57mm",
             factions={HLLFaction.US},
-            type=VehicleType.ARTILLERY,
+            type=VehicleType.ANTI_TANK_GUN,
             seats=[
                 HLLVehicleSeat(
                     index=0,
@@ -1417,7 +1417,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
             id="PAK 40",
             name="Pak 40",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=VehicleType.ARTILLERY,
+            type=VehicleType.ANTI_TANK_GUN,
             seats=[
                 HLLVehicleSeat(
                     index=0,
@@ -1514,7 +1514,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
             id="QF 6-Pounder",
             name="QF 6-Pounder",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=VehicleType.ARTILLERY,
+            type=VehicleType.ANTI_TANK_GUN,
             seats=[
                 HLLVehicleSeat(
                     index=0,
@@ -2250,7 +2250,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
             id="ZiS-2",
             name="ZiS-2",
             factions={HLLFaction.SOV},
-            type=VehicleType.ARTILLERY,
+            type=VehicleType.ANTI_TANK_GUN,
             seats=[
                 HLLVehicleSeat(
                     index=0,
@@ -2305,6 +2305,28 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
 
 class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
     ### INJECT "hllv vehicles" START
+
+    @class_cached_property
+    @classmethod
+    def DSHKM_ANTI_AIRCRAFT_GUN(cls) -> "HLLVVehicle":
+        """*DShKM Anti-Aircraft Gun*"""
+        return cls(
+            id="DShKM Anti-Aircraft Gun",
+            name="DShKM",
+            factions={HLLVFaction.NVA},
+            type=VehicleType.ANTI_AIRCRAFT_GUN,
+            seats=[
+                HLLVVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLVWeapon.V_DSHKM_ANTI_AIRCRAFT_GUN__DSHKM_ANTI_AIRCRAFT_GUN,
+                    ],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+            ],
+        )
 
     @class_cached_property
     @classmethod
@@ -2549,6 +2571,35 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     type=VehicleSeatType.PASSENGER,
                     weapons=[],
                     requires_roles=None,
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def MORTAR(cls) -> "HLLVVehicle":
+        """*MORTAR*"""
+        return cls(
+            id="MORTAR",
+            name="Mortar",
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=VehicleType.MORTAR,
+            seats=[
+                HLLVVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[],
+                    requires_roles=_HLLV_MORTAR_CREW_ROLES,
+                    exposed=True,
+                ),
+                HLLVVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.LOADER,
+                    weapons=[
+                        HLLVWeapon.V_MORTAR__MORTAR,
+                    ],
+                    requires_roles=_HLLV_MORTAR_CREW_ROLES,
                     exposed=True,
                 ),
             ],
