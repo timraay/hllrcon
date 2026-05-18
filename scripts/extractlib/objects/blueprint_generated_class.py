@@ -13,6 +13,7 @@ __all__ = ("BlueprintGeneratedClass",)
 
 class BlueprintGeneratedClass(Object[Model], Generic[ObjectT]):
     class_default_object: ObjectReference[ObjectT]
+    super: ObjectReference["BlueprintGeneratedClass[Any]"] | None = None
     super_struct: ObjectReference["BlueprintGeneratedClass[Any]"] | None = None
 
     def get_default_object(self, obj_type: type[ObjectT]) -> ObjectT:

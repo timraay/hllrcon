@@ -5,13 +5,14 @@ from typing import TypedDict
 
 from pydantic import BaseModel, model_validator
 
-from hllrcon.data.factions import HLLFaction
-from hllrcon.data.weapons import HLLWeaponType
+from hllrcon.data.factions import Faction
+from hllrcon.data.weapons import WeaponType
 from scripts.extract.utils import (
     stringify_enum_member,
     stringify_factions,
     to_method_name,
 )
+from scripts.extractlib.utils import game_switch
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,20 @@ HLL_WEAPON_CONSTRUCTOR_TEMPLATE = """\
     @class_cached_property
     @classmethod
     def {meth_name}(cls) -> "HLLWeapon":
+        \"\"\"*{id}*\"\"\"
+        return cls(
+            id="{id}",
+            name="{name}",
+            vehicle_id={vehicle_id},
+            factions={factions_str},
+            type={weapon_type},
+            magnification={magnification},
+        )"""
+
+HLLV_WEAPON_CONSTRUCTOR_TEMPLATE = """\
+    @class_cached_property
+    @classmethod
+    def {meth_name}(cls) -> "HLLVWeapon":
         \"\"\"*{id}*\"\"\"
         return cls(
             id="{id}",
@@ -37,13 +52,14 @@ class WeaponData(BaseModel):
     id: str
     name: str = ""
     vehicle_id: str | None = None
-    factions: set[HLLFaction]
-    type: HLLWeaponType = HLLWeaponType.UNKNOWN
+    factions: set[Faction]
+    type: WeaponType = WeaponType.UNKNOWN
     magnification: int | None = None
 
     @model_validator(mode="after")
     def set_meth_name(self) -> "WeaponData":
-        meta = HLL_WEAPON_METADATA.get(self.id)
+        metadata = game_switch(HLL_WEAPON_METADATA, HLLV_WEAPON_METADATA)
+        meta = metadata.get(self.id)
         if meta is not None:
             self.meth_name = meta.get("meth_name", self.meth_name)
             self.name = meta.get("name", self.name)
@@ -86,14 +102,18 @@ class WeaponData(BaseModel):
             name=wd1.name,
             vehicle_id=wd1.vehicle_id,
             factions=wd1.factions.union(wd2.factions),
-            type=wd1.type if wd1.type == wd2.type else HLLWeaponType.UNKNOWN,
+            type=wd1.type if wd1.type == wd2.type else WeaponType.UNKNOWN,
             magnification=wd1.magnification,
         )
 
         return WeaponData.merge(wd_merged, *weap_seq[2:])
 
     def to_constructor(self) -> str:
-        return HLL_WEAPON_CONSTRUCTOR_TEMPLATE.format(
+        template = game_switch(
+            HLL_WEAPON_CONSTRUCTOR_TEMPLATE,
+            HLLV_WEAPON_CONSTRUCTOR_TEMPLATE,
+        )
+        return template.format(
             meth_name=self.meth_name,
             id=self.id,
             name=self.name,
@@ -107,79 +127,79 @@ class WeaponData(BaseModel):
 class WeaponMetaData(TypedDict, total=False):
     meth_name: str
     name: str
-    type: HLLWeaponType
+    type: WeaponType
     magnification: int
 
 
 HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "M1 GARAND": {
         "name": "M1 Garand",
-        "type": HLLWeaponType.SEMI_AUTO_RIFLE,
+        "type": WeaponType.SEMI_AUTO_RIFLE,
     },
     "M1 CARBINE": {
         "name": "M1 Carbine",
-        "type": HLLWeaponType.SEMI_AUTO_RIFLE,
+        "type": WeaponType.SEMI_AUTO_RIFLE,
     },
     "M1A1 THOMPSON": {
         "name": "M1A1 Thompson",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "M3 GREASE GUN": {
         "name": "M3 Grease Gun",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "M1918A2 BAR": {
         "name": "M1918A2 BAR",
-        "type": HLLWeaponType.ASSAULT_RIFLE,
+        "type": WeaponType.ASSAULT_RIFLE,
     },
     "BROWNING M1919": {
         "name": "M1919 Browning",
-        "type": HLLWeaponType.MACHINE_GUN,
+        "type": WeaponType.MACHINE_GUN,
     },
     "M1903 SPRINGFIELD": {
         "name": "M1903 Springfield",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
         "magnification": 4,
     },
     "M97 TRENCH GUN": {
         "name": "M97 Trench Gun",
-        "type": HLLWeaponType.SHOTGUN,
+        "type": WeaponType.SHOTGUN,
     },
     "COLT M1911": {
         "name": "Colt M1911",
-        "type": HLLWeaponType.PISTOL,
+        "type": WeaponType.PISTOL,
     },
     "M3 KNIFE": {
         "name": "M3 Knife",
-        "type": HLLWeaponType.MELEE,
+        "type": WeaponType.MELEE,
     },
     "SATCHEL": {
         "name": "Satchel Charge",
-        "type": HLLWeaponType.SATCHEL,
+        "type": WeaponType.SATCHEL,
     },
     "MK2 GRENADE": {
         "name": "Mk 2 Grenade",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "M2 FLAMETHROWER": {
         "name": "M2 Flamethrower",
-        "type": HLLWeaponType.FLAMETHROWER,
+        "type": WeaponType.FLAMETHROWER,
     },
     "BAZOOKA": {
         "name": "Bazooka",
-        "type": HLLWeaponType.ROCKET_LAUNCHER,
+        "type": WeaponType.ROCKET_LAUNCHER,
     },
     "M2 AP MINE": {
         "name": "M2 AP Mine",
-        "type": HLLWeaponType.AP_MINE,
+        "type": WeaponType.AP_MINE,
     },
     "M1A1 AT MINE": {
         "name": "M1A1 AT Mine",
-        "type": HLLWeaponType.AT_MINE,
+        "type": WeaponType.AT_MINE,
     },
     "FLARE GUN": {
         "name": "Flare Gun",
-        "type": HLLWeaponType.FLARE_GUN,
+        "type": WeaponType.RECON_FLARE,
     },
     "57MM CANNON [M1 57mm]": {
         "name": "57mm Cannon",
@@ -280,81 +300,81 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     },
     "M2 Browning": {
         "name": "M2 Browning",
-        "type": HLLWeaponType.MOUNTED_MG,
+        "type": WeaponType.MOUNTED_MG,
     },
     "KARABINER 98K": {
         "name": "Karabiner 98k",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "GEWEHR 43": {
         "name": "G43",
-        "type": HLLWeaponType.SEMI_AUTO_RIFLE,
+        "type": WeaponType.SEMI_AUTO_RIFLE,
     },
     "STG44": {
         "name": "STG44",
-        "type": HLLWeaponType.ASSAULT_RIFLE,
+        "type": WeaponType.ASSAULT_RIFLE,
     },
     "FG42": {
         "name": "FG42",
-        "type": HLLWeaponType.ASSAULT_RIFLE,
+        "type": WeaponType.ASSAULT_RIFLE,
     },
     "MP40": {
         "name": "MP40",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "MG34": {
         "name": "MG34",
-        "type": HLLWeaponType.MACHINE_GUN,
+        "type": WeaponType.MACHINE_GUN,
     },
     "MG42": {
         "name": "MG42",
-        "type": HLLWeaponType.MACHINE_GUN,
+        "type": WeaponType.MACHINE_GUN,
     },
     "FLAMMENWERFER 41": {
         "name": "Flammenwerfer 41",
-        "type": HLLWeaponType.FLAMETHROWER,
+        "type": WeaponType.FLAMETHROWER,
     },
     "KARABINER 98K x8": {
         "name": "Karabiner 98k",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
         "magnification": 8,
     },
     "FG42 x4": {
         "name": "FG42",
-        "type": HLLWeaponType.SEMI_AUTO_RIFLE,
+        "type": WeaponType.SEMI_AUTO_RIFLE,
         "magnification": 4,
     },
     "LUGER P08": {
         "name": "Luger P08",
-        "type": HLLWeaponType.PISTOL,
+        "type": WeaponType.PISTOL,
     },
     "WALTHER P38": {
         "name": "Walther P38",
-        "type": HLLWeaponType.PISTOL,
+        "type": WeaponType.PISTOL,
     },
     "FELDSPATEN": {
         "name": "Feldspaten",
-        "type": HLLWeaponType.MELEE,
+        "type": WeaponType.MELEE,
     },
     "M24 STIELHANDGRANATE": {
         "name": "M24 Stielhandgranate",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "M43 STIELHANDGRANATE": {
         "name": "M43 Stielhandgranate",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "PANZERSCHRECK": {
         "name": "Panzerschreck",
-        "type": HLLWeaponType.ROCKET_LAUNCHER,
+        "type": WeaponType.ROCKET_LAUNCHER,
     },
     "S-MINE": {
         "name": "S-Mine",
-        "type": HLLWeaponType.AP_MINE,
+        "type": WeaponType.AP_MINE,
     },
     "TELLERMINE 43": {
         "name": "Tellermine 43",
-        "type": HLLWeaponType.AT_MINE,
+        "type": WeaponType.AT_MINE,
     },
     "75MM CANNON [PAK 40]": {
         "name": "75mm Cannon",
@@ -414,7 +434,7 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     },
     "MG 42 [Sd.Kfz 251 Half-track]": {
         "name": "MG42",
-        "type": HLLWeaponType.MOUNTED_MG,
+        "type": WeaponType.MOUNTED_MG,
     },
     "StuH 43 L/12 [Sturmpanzer IV]": {
         "name": "StuH 43 L/12",
@@ -448,84 +468,84 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     },
     "MG 42": {
         "name": "MG42",
-        "type": HLLWeaponType.MOUNTED_MG,
+        "type": WeaponType.MOUNTED_MG,
     },
     "7.5CM KwK 37": {
         "name": "75mm KwK 37",
     },
     "MOSIN NAGANT 1891": {
         "name": "Mosin-Nagant 1891",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "MOSIN NAGANT 91/30": {
         "name": "Mosin-Nagant 91/30",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "MOSIN NAGANT M38": {
         "name": "Mosin-Nagant M38",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "SVT40": {
         "name": "SVT-40",
-        "type": HLLWeaponType.SEMI_AUTO_RIFLE,
+        "type": WeaponType.SEMI_AUTO_RIFLE,
     },
     "PPSH 41": {
         "name": "PPSh-41",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "PPSH 41 W/DRUM": {
         "name": "PPSh-41 with Drum",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "DP-27": {
         "name": "DP-27",
-        "type": HLLWeaponType.MACHINE_GUN,
+        "type": WeaponType.MACHINE_GUN,
     },
     "SCOPED MOSIN NAGANT 91/30": {
         "name": "Mosin-Nagant 91/30",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
         "magnification": 4,
     },
     "SCOPED SVT40": {
         "name": "SVT-40",
-        "type": HLLWeaponType.SEMI_AUTO_RIFLE,
+        "type": WeaponType.SEMI_AUTO_RIFLE,
         "magnification": 4,
     },
     "NAGANT M1895": {
         "name": "Nagant M1895",
-        "type": HLLWeaponType.REVOLVER,
+        "type": WeaponType.REVOLVER,
     },
     "TOKAREV TT33": {
         "name": "Tokarev TT-33",
-        "type": HLLWeaponType.PISTOL,
+        "type": WeaponType.PISTOL,
     },
     "MPL-50 SPADE": {
         "name": "MPL-50 Spade",
-        "type": HLLWeaponType.MELEE,
+        "type": WeaponType.MELEE,
     },
     "SATCHEL CHARGE": {
         "name": "Satchel Charge",
-        "type": HLLWeaponType.SATCHEL,
+        "type": WeaponType.SATCHEL,
     },
     "RG-42 GRENADE": {
         "name": "RG-42 Grenade",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "MOLOTOV": {
         "name": "Molotov",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "PTRS-41": {
         "name": "PTRS-41",
-        "type": HLLWeaponType.ANTI_MATERIEL_RIFLE,
+        "type": WeaponType.ANTI_MATERIEL_RIFLE,
     },
     "POMZ AP MINE": {
         "name": "POMZ AP Mine",
-        "type": HLLWeaponType.AP_MINE,
+        "type": WeaponType.AP_MINE,
     },
     "TM-35 AT MINE": {
         "name": "TM-35 AT Mine",
-        "type": HLLWeaponType.AT_MINE,
+        "type": WeaponType.AT_MINE,
     },
     "57MM CANNON [ZiS-2]": {
         "name": "57mm Cannon",
@@ -603,80 +623,80 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     },
     "SMLE No.1 Mk III": {
         "name": "SMLE Mk III",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "Rifle No.4 Mk I": {
         "name": "No.4 Rifle Mk I",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "Sten Gun Mk.II": {
         "name": "Sten Mk II",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "Sten Gun Mk.V": {
         "name": "Sten Mk V",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "M1928A1 THOMPSON": {
         "name": "M1928A1 Thompson",
-        "type": HLLWeaponType.SUBMACHINE_GUN,
+        "type": WeaponType.SUBMACHINE_GUN,
     },
     "Bren Gun": {
         "name": "Bren Gun",
-        "type": HLLWeaponType.ASSAULT_RIFLE,
+        "type": WeaponType.ASSAULT_RIFLE,
     },
     "Lewis Gun": {
         "name": "Lewis Gun",
-        "type": HLLWeaponType.MACHINE_GUN,
+        "type": WeaponType.MACHINE_GUN,
     },
     "FLAMETHROWER": {
         "name": "Lifebuoy Flamethrower",
-        "type": HLLWeaponType.FLAMETHROWER,
+        "type": WeaponType.FLAMETHROWER,
     },
     "Rifle No.4 Mk I Sniper": {
         "name": "No.4 Rifle Mk I",
-        "type": HLLWeaponType.BOLT_ACTION_RIFLE,
+        "type": WeaponType.BOLT_ACTION_RIFLE,
         "magnification": 8,
     },
     "Webley MK VI": {
         "name": "Webley Mk IV",
-        "type": HLLWeaponType.REVOLVER,
+        "type": WeaponType.REVOLVER,
     },
     "Fairbairn–Sykes": {
         "name": "Fairbairn-Sykes",
-        "type": HLLWeaponType.MELEE,
+        "type": WeaponType.MELEE,
     },
     "Satchel": {
         "name": "Satchel Charge",
-        "type": HLLWeaponType.SATCHEL,
+        "type": WeaponType.SATCHEL,
     },
     "Mills Bomb": {
         "name": "Mills Bomb",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "No.82 Grenade": {
         "name": "Gammon Bomb",
-        "type": HLLWeaponType.GRENADE,
+        "type": WeaponType.GRENADE,
     },
     "PIAT": {
         "name": "PIAT",
-        "type": HLLWeaponType.ROCKET_LAUNCHER,
+        "type": WeaponType.ROCKET_LAUNCHER,
     },
     "Boys Anti-tank Rifle": {
         "name": "Boys AT Rifle",
-        "type": HLLWeaponType.ANTI_MATERIEL_RIFLE,
+        "type": WeaponType.ANTI_MATERIEL_RIFLE,
     },
     "A.P. Shrapnel Mine Mk II": {
         "name": "AP Shrapnel Mine Mk II",
-        "type": HLLWeaponType.AP_MINE,
+        "type": WeaponType.AP_MINE,
     },
     "A.T. Mine G.S. Mk V": {
         "name": "AT Mine G.S. Mk V",
-        "type": HLLWeaponType.AT_MINE,
+        "type": WeaponType.AT_MINE,
     },
     "No.2 Mk 5 Flare Pistol": {
         "name": "No.2 Mk V Flare Gun",
-        "type": HLLWeaponType.FLARE_GUN,
+        "type": WeaponType.RECON_FLARE,
     },
     "QF 6-POUNDER [QF 6-Pounder]": {
         "name": "57mm Cannon",
@@ -807,162 +827,162 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     },
     "BOMBING RUN": {
         "name": "Bombing Run",
-        "type": HLLWeaponType.COMMANDER_ABILITY,
+        "type": WeaponType.COMMANDER_ABILITY,
     },
     "STRAFING RUN": {
         "name": "Strafing Run",
-        "type": HLLWeaponType.COMMANDER_ABILITY,
+        "type": WeaponType.COMMANDER_ABILITY,
     },
     "PRECISION STRIKE": {
         "name": "Precision Strike",
-        "type": HLLWeaponType.COMMANDER_ABILITY,
+        "type": WeaponType.COMMANDER_ABILITY,
     },
     "Unknown": {
         "name": "Artillery Strike",
-        "type": HLLWeaponType.COMMANDER_ABILITY,
+        "type": WeaponType.COMMANDER_ABILITY,
     },
     "FireSpot": {
         "name": "Fire",
     },
     "SMALL AMMUNITION BOX": {
         "name": "Small Ammunition Box",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "HAMMER": {
         "name": "Hammer",
-        "type": HLLWeaponType.HAMMER,
+        "type": WeaponType.HAMMER,
     },
     "BANDAGE": {
         "name": "Bandage",
-        "type": HLLWeaponType.HEALING,
+        "type": WeaponType.HEALING,
     },
     "NB39 NEBELHANDGRANATE": {
         "name": "NB39 Nebelhandgranate",
-        "type": HLLWeaponType.SMOKE_GRENADE,
+        "type": WeaponType.SMOKE_GRENADE,
     },
     "EXPLOSIVE AMMO BOX": {
         "name": "Explosive Ammo Box",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "MORPHINE AMPOULE": {
         "name": "Morphine",
-        "type": HLLWeaponType.HEALING,
+        "type": WeaponType.HEALING,
     },
     "MEDICAL SUPPLIES": {
         "name": "Medical Supplies",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "WATCH": {
         "name": "Watch",
-        "type": HLLWeaponType.WATCH,
+        "type": WeaponType.WATCH,
     },
     "DIENSTGLAS 6×30": {
         "name": "Dienstglas 6x30",
-        "type": HLLWeaponType.BINOCULARS,
+        "type": WeaponType.BINOCULARS,
     },
     "SUPPLIES": {
         "name": "Supplies",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "PAK 40": {
         "name": "Wrench",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "WRENCH": {
         "name": "Wrench",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "TORCH": {
         "name": "Torch",
-        "type": HLLWeaponType.TORCH,
+        "type": WeaponType.TORCH,
     },
     "EXTERIOR CUSTOMIZATION": {
         "name": "Exterior Customization",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "M18 SMOKE GRENADE": {
         "name": "M18 Smoke Grenade",
-        "type": HLLWeaponType.SMOKE_GRENADE,
+        "type": WeaponType.SMOKE_GRENADE,
     },
     "MORPHINE SYRETTE": {
         "name": "Morphine Syrette",
-        "type": HLLWeaponType.HEALING,
+        "type": WeaponType.HEALING,
     },
     "WESTINGHOUSE M3 6×30": {
         "name": "Westinghouse M3 6x30",
-        "type": HLLWeaponType.BINOCULARS,
+        "type": WeaponType.BINOCULARS,
     },
     "57MM M1": {
         "name": "Wrench",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "RDG-2 SMOKE": {
         "name": "RDG-2 Smoke Grenade",
-        "type": HLLWeaponType.SMOKE_GRENADE,
+        "type": WeaponType.SMOKE_GRENADE,
     },
     "REVIVE": {
         "name": "Revive",
-        "type": HLLWeaponType.HEALING,
+        "type": WeaponType.HEALING,
     },
     "RKKA 8×40": {
         "name": "RKKA 8x40",
-        "type": HLLWeaponType.BINOCULARS,
+        "type": WeaponType.BINOCULARS,
     },
     "ZiS-2": {
         "name": "ZiS-2",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "Bandage": {
         "name": "Bandage",
-        "type": HLLWeaponType.HEALING,
+        "type": WeaponType.HEALING,
     },
     "Hammer": {
         "name": "Hammer",
-        "type": HLLWeaponType.HAMMER,
+        "type": WeaponType.HAMMER,
     },
     "Small Ammunition Box": {
         "name": "Small Ammunition Box",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "No.77": {
         "name": "No.77 WP Grenade",
-        "type": HLLWeaponType.SMOKE_GRENADE,
+        "type": WeaponType.SMOKE_GRENADE,
     },
     "Explosive Ammo Box": {
         "name": "Explosive Ammo Box",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "Morphine": {
         "name": "Morphine",
-        "type": HLLWeaponType.HEALING,
+        "type": WeaponType.HEALING,
     },
     "Medical Supplies": {
         "name": "Medical Supplies",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "Watch": {
         "name": "Watch",
-        "type": HLLWeaponType.WATCH,
+        "type": WeaponType.WATCH,
     },
     "Prism No.2 Mk II x6": {
         "name": "Prism No.2 Mk II x6",
-        "type": HLLWeaponType.BINOCULARS,
+        "type": WeaponType.BINOCULARS,
     },
     "Supplies": {
         "name": "Supplies",
-        "type": HLLWeaponType.SUPPLIES,
+        "type": WeaponType.SUPPLIES,
     },
     "Ordnance QF 6-pounder": {
         "name": "Ordnance QF 6-pounder",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "Wrench": {
         "name": "Wrench",
-        "type": HLLWeaponType.WRENCH,
+        "type": WeaponType.WRENCH,
     },
     "Torch": {
         "name": "Torch",
-        "type": HLLWeaponType.TORCH,
+        "type": WeaponType.TORCH,
     },
     "PRIMARY [BA-10]": {
         "name": "Receive Intel",
@@ -994,4 +1014,44 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "StuH 43 L/12": {
         "name": "StuH 43 L/12",
     },
+}
+
+HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
+    "Dhsk [NVA Boat]": {
+        "name": "DShK",
+    },
+    "RPD [NVA Boat]": {
+        "name": "RPD",
+    },
+    "100MM D-10T CANNON [Sd.Kfz.171 Panther]": {
+        "name": "100mm D-10T",
+    },
+    "SGMT 7.62MM [Sd.Kfz.171 Panther]": {
+        "name": "SGMT",
+    },
+    "None [Sd.Kfz.171 Panther]": {
+        "name": "Smoke Screen",
+    },
+    "M2 Browning [US Boat]": {
+        "name": "M2 Browning",
+    },
+    "Flare Gun [US Transport Helicopter]": {
+        "name": "Flare Gun",
+    },
+    "M60D [US Transport Helicopter]": {
+        "name": "M60D",
+    },
+    "Gaz 63 (Supply)": {},
+    "Gaz 63 (Transport)": {},
+    "M35 (Supply)": {},
+    "M35 (Transport)": {},
+    "NVA Boat": {},
+    "Sd.Kfz.171 Panther": {},
+    "100MM D-10T CANNON": {},
+    "SGMT 7.62MM": {
+        "name": "SGMT",
+    },
+    "US Boat": {},
+    "US Supply Helicopter": {},
+    "US Transport Helicopter": {},
 }

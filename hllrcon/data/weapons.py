@@ -18,15 +18,10 @@ if TYPE_CHECKING:
 
 
 FactionT = TypeVar("FactionT", bound=_Faction)
-WeaponTypeT = TypeVar("WeaponTypeT", bound="_WeaponType")
 VehicleT = TypeVar("VehicleT", bound="_Vehicle")
 
 
-class _WeaponType(StrEnum):
-    pass
-
-
-class HLLWeaponType(_WeaponType):
+class WeaponType(StrEnum):
     BOLT_ACTION_RIFLE = "Bolt Action Rifle"
     SEMI_AUTO_RIFLE = "Semi-Auto Rifle"
     ASSAULT_RIFLE = "Assault Rifle"
@@ -40,7 +35,7 @@ class HLLWeaponType(_WeaponType):
     AT_MINE = "Anti-Tank Mine"
     FLAMETHROWER = "Flamethrower"
     MELEE = "Melee"
-    FLARE_GUN = "Flare Gun"
+    RECON_FLARE = "Recon Flare"
     ROCKET_LAUNCHER = "Rocket Launcher"
     ANTI_MATERIEL_RIFLE = "Anti-Materiel Rifle"
     AT_GUN = "Anti-Tank Gun"
@@ -65,17 +60,10 @@ class HLLWeaponType(_WeaponType):
     UNKNOWN = "Unknown"
 
 
-class HLLVWeaponType(_WeaponType):
-    pass
-
-
-WeaponType: TypeAlias = HLLWeaponType | HLLVWeaponType
-
-
-class _Weapon(IndexedBaseModel[str], Generic[FactionT, WeaponTypeT, VehicleT]):
+class _Weapon(IndexedBaseModel[str], Generic[FactionT, VehicleT]):
     id: str
     name: str
-    type: WeaponTypeT
+    type: WeaponType
     vehicle_id: str | None = None
     factions: Annotated[
         set[FactionT],
@@ -87,20 +75,20 @@ class _Weapon(IndexedBaseModel[str], Generic[FactionT, WeaponTypeT, VehicleT]):
     @property
     def is_lethal(self) -> bool:
         return self.type not in {
-            HLLWeaponType.TANK_RECON,
-            HLLWeaponType.TANK_SMOKE_SCREEN,
-            HLLWeaponType.SMOKE_GRENADE,
-            HLLWeaponType.HEALING,
-            HLLWeaponType.BINOCULARS,
-            HLLWeaponType.SUPPLIES,
-            HLLWeaponType.HAMMER,
-            HLLWeaponType.WRENCH,
-            HLLWeaponType.TORCH,
-            HLLWeaponType.WATCH,
+            WeaponType.TANK_RECON,
+            WeaponType.TANK_SMOKE_SCREEN,
+            WeaponType.SMOKE_GRENADE,
+            WeaponType.HEALING,
+            WeaponType.BINOCULARS,
+            WeaponType.SUPPLIES,
+            WeaponType.HAMMER,
+            WeaponType.WRENCH,
+            WeaponType.TORCH,
+            WeaponType.WATCH,
         }
 
 
-class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
+class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
     # @computed_field(repr=False)
     @cached_property
     def vehicle(self) -> "HLLVehicle | None":
@@ -121,7 +109,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="AP Shrapnel Mine Mk II",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.AP_MINE,
+            type=WeaponType.AP_MINE,
             magnification=None,
         )
 
@@ -134,7 +122,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="AT Mine G.S. Mk V",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.AT_MINE,
+            type=WeaponType.AT_MINE,
             magnification=None,
         )
 
@@ -147,7 +135,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bandage",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.HEALING,
+            type=WeaponType.HEALING,
             magnification=None,
         )
 
@@ -160,7 +148,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bandage",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.HEALING,
+            type=WeaponType.HEALING,
             magnification=None,
         )
 
@@ -173,7 +161,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bazooka",
             vehicle_id=None,
             factions={HLLFaction.US, HLLFaction.SOV},
-            type=HLLWeaponType.ROCKET_LAUNCHER,
+            type=WeaponType.ROCKET_LAUNCHER,
             magnification=None,
         )
 
@@ -186,7 +174,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Boys AT Rifle",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ANTI_MATERIEL_RIFLE,
+            type=WeaponType.ANTI_MATERIEL_RIFLE,
             magnification=None,
         )
 
@@ -199,7 +187,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bren Gun",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ASSAULT_RIFLE,
+            type=WeaponType.ASSAULT_RIFLE,
             magnification=None,
         )
 
@@ -212,7 +200,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.MACHINE_GUN,
+            type=WeaponType.MACHINE_GUN,
             magnification=None,
         )
 
@@ -225,7 +213,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Colt M1911",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.PISTOL,
+            type=WeaponType.PISTOL,
             magnification=None,
         )
 
@@ -238,7 +226,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Dienstglas 6x30",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.BINOCULARS,
+            type=WeaponType.BINOCULARS,
             magnification=None,
         )
 
@@ -251,7 +239,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DP-27",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.MACHINE_GUN,
+            type=WeaponType.MACHINE_GUN,
             magnification=None,
         )
 
@@ -264,7 +252,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Explosive Ammo Box",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -277,7 +265,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Explosive Ammo Box",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -290,7 +278,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Exterior Customization",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.B8A},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -303,7 +291,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Fairbairn-Sykes",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.MELEE,
+            type=WeaponType.MELEE,
             magnification=None,
         )
 
@@ -316,7 +304,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Feldspaten",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.MELEE,
+            type=WeaponType.MELEE,
             magnification=None,
         )
 
@@ -329,7 +317,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="FG42",
             vehicle_id=None,
             factions={HLLFaction.GER},
-            type=HLLWeaponType.ASSAULT_RIFLE,
+            type=WeaponType.ASSAULT_RIFLE,
             magnification=None,
         )
 
@@ -342,7 +330,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="FG42",
             vehicle_id=None,
             factions={HLLFaction.GER},
-            type=HLLWeaponType.SEMI_AUTO_RIFLE,
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=4,
         )
 
@@ -355,7 +343,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Lifebuoy Flamethrower",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.FLAMETHROWER,
+            type=WeaponType.FLAMETHROWER,
             magnification=None,
         )
 
@@ -368,7 +356,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Flammenwerfer 41",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.FLAMETHROWER,
+            type=WeaponType.FLAMETHROWER,
             magnification=None,
         )
 
@@ -381,7 +369,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Flare Gun",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.FLARE_GUN,
+            type=WeaponType.RECON_FLARE,
             magnification=None,
         )
 
@@ -394,7 +382,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="G43",
             vehicle_id=None,
             factions={HLLFaction.GER},
-            type=HLLWeaponType.SEMI_AUTO_RIFLE,
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=None,
         )
 
@@ -407,7 +395,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Hammer",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.HAMMER,
+            type=WeaponType.HAMMER,
             magnification=None,
         )
 
@@ -420,7 +408,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Hammer",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.HAMMER,
+            type=WeaponType.HAMMER,
             magnification=None,
         )
 
@@ -433,7 +421,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Karabiner 98k",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
@@ -446,7 +434,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Karabiner 98k",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=8,
         )
 
@@ -459,7 +447,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Lewis Gun",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.MACHINE_GUN,
+            type=WeaponType.MACHINE_GUN,
             magnification=None,
         )
 
@@ -472,7 +460,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Luger P08",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.PISTOL,
+            type=WeaponType.PISTOL,
             magnification=None,
         )
 
@@ -485,7 +473,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M18 Smoke Grenade",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.SMOKE_GRENADE,
+            type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
 
@@ -498,7 +486,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1903 Springfield",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=4,
         )
 
@@ -511,7 +499,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1918A2 BAR",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.ASSAULT_RIFLE,
+            type=WeaponType.ASSAULT_RIFLE,
             magnification=None,
         )
 
@@ -524,7 +512,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1928A1 Thompson",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -537,7 +525,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1A1 AT Mine",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.AT_MINE,
+            type=WeaponType.AT_MINE,
             magnification=None,
         )
 
@@ -550,7 +538,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1A1 Thompson",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -563,7 +551,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1 Carbine",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.SEMI_AUTO_RIFLE,
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=None,
         )
 
@@ -576,7 +564,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1 Garand",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.SEMI_AUTO_RIFLE,
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=None,
         )
 
@@ -589,7 +577,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M24 Stielhandgranate",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -602,7 +590,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M2 AP Mine",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.AP_MINE,
+            type=WeaponType.AP_MINE,
             magnification=None,
         )
 
@@ -615,7 +603,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M2 Flamethrower",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.FLAMETHROWER,
+            type=WeaponType.FLAMETHROWER,
             magnification=None,
         )
 
@@ -628,7 +616,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M3 Grease Gun",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -641,7 +629,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M3 Knife",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.MELEE,
+            type=WeaponType.MELEE,
             magnification=None,
         )
 
@@ -654,7 +642,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M43 Stielhandgranate",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -667,7 +655,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M97 Trench Gun",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.SHOTGUN,
+            type=WeaponType.SHOTGUN,
             magnification=None,
         )
 
@@ -680,7 +668,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Medical Supplies",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -693,7 +681,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Medical Supplies",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -706,7 +694,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.MACHINE_GUN,
+            type=WeaponType.MACHINE_GUN,
             magnification=None,
         )
 
@@ -719,7 +707,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG42",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.MACHINE_GUN,
+            type=WeaponType.MACHINE_GUN,
             magnification=None,
         )
 
@@ -732,7 +720,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Mills Bomb",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -745,7 +733,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Mk 2 Grenade",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -758,7 +746,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Molotov",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -771,7 +759,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Morphine",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.HEALING,
+            type=WeaponType.HEALING,
             magnification=None,
         )
 
@@ -784,7 +772,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Morphine",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.HEALING,
+            type=WeaponType.HEALING,
             magnification=None,
         )
 
@@ -797,7 +785,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Morphine Syrette",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.HEALING,
+            type=WeaponType.HEALING,
             magnification=None,
         )
 
@@ -810,7 +798,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Mosin-Nagant 1891",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
@@ -823,7 +811,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Mosin-Nagant 91/30",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
@@ -836,7 +824,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Mosin-Nagant M38",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
@@ -849,7 +837,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MP40",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -862,7 +850,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MPL-50 Spade",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.MELEE,
+            type=WeaponType.MELEE,
             magnification=None,
         )
 
@@ -875,7 +863,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Nagant M1895",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.REVOLVER,
+            type=WeaponType.REVOLVER,
             magnification=None,
         )
 
@@ -888,7 +876,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="NB39 Nebelhandgranate",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.SMOKE_GRENADE,
+            type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
 
@@ -901,7 +889,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="No.2 Mk V Flare Gun",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.FLARE_GUN,
+            type=WeaponType.RECON_FLARE,
             magnification=None,
         )
 
@@ -914,7 +902,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="No.77 WP Grenade",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SMOKE_GRENADE,
+            type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
 
@@ -927,7 +915,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Gammon Bomb",
             vehicle_id=None,
             factions={HLLFaction.CW},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -940,7 +928,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Ordnance QF 6-pounder",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -953,7 +941,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Wrench",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -966,7 +954,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Panzerschreck",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROCKET_LAUNCHER,
+            type=WeaponType.ROCKET_LAUNCHER,
             magnification=None,
         )
 
@@ -979,7 +967,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="PIAT",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ROCKET_LAUNCHER,
+            type=WeaponType.ROCKET_LAUNCHER,
             magnification=None,
         )
 
@@ -992,7 +980,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="POMZ AP Mine",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.AP_MINE,
+            type=WeaponType.AP_MINE,
             magnification=None,
         )
 
@@ -1005,7 +993,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="PPSh-41",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -1018,7 +1006,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="PPSh-41 with Drum",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -1031,7 +1019,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Prism No.2 Mk II x6",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.BINOCULARS,
+            type=WeaponType.BINOCULARS,
             magnification=None,
         )
 
@@ -1044,7 +1032,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="PTRS-41",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ANTI_MATERIEL_RIFLE,
+            type=WeaponType.ANTI_MATERIEL_RIFLE,
             magnification=None,
         )
 
@@ -1057,7 +1045,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="RDG-2 Smoke Grenade",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.SMOKE_GRENADE,
+            type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
 
@@ -1070,7 +1058,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Revive",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.HEALING,
+            type=WeaponType.HEALING,
             magnification=None,
         )
 
@@ -1083,7 +1071,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="RG-42 Grenade",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.GRENADE,
+            type=WeaponType.GRENADE,
             magnification=None,
         )
 
@@ -1096,7 +1084,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="No.4 Rifle Mk I",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
@@ -1109,7 +1097,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="No.4 Rifle Mk I",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=8,
         )
 
@@ -1122,7 +1110,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="RKKA 8x40",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.BINOCULARS,
+            type=WeaponType.BINOCULARS,
             magnification=None,
         )
 
@@ -1135,7 +1123,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Satchel Charge",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.DAK},
-            type=HLLWeaponType.SATCHEL,
+            type=WeaponType.SATCHEL,
             magnification=None,
         )
 
@@ -1148,7 +1136,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Satchel Charge",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SATCHEL,
+            type=WeaponType.SATCHEL,
             magnification=None,
         )
 
@@ -1161,7 +1149,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Satchel Charge",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.SATCHEL,
+            type=WeaponType.SATCHEL,
             magnification=None,
         )
 
@@ -1174,7 +1162,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Mosin-Nagant 91/30",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=4,
         )
 
@@ -1187,7 +1175,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="SVT-40",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.SEMI_AUTO_RIFLE,
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=4,
         )
 
@@ -1200,7 +1188,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Small Ammunition Box",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -1213,7 +1201,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Small Ammunition Box",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -1226,7 +1214,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="SMLE Mk III",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.BOLT_ACTION_RIFLE,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
@@ -1239,7 +1227,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sten Mk II",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -1252,7 +1240,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sten Mk V",
             vehicle_id=None,
             factions={HLLFaction.CW},
-            type=HLLWeaponType.SUBMACHINE_GUN,
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -1265,7 +1253,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="STG44",
             vehicle_id=None,
             factions={HLLFaction.GER},
-            type=HLLWeaponType.ASSAULT_RIFLE,
+            type=WeaponType.ASSAULT_RIFLE,
             magnification=None,
         )
 
@@ -1278,7 +1266,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Supplies",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -1291,7 +1279,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Supplies",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.SUPPLIES,
+            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -1304,7 +1292,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="SVT-40",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.SEMI_AUTO_RIFLE,
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=None,
         )
 
@@ -1317,7 +1305,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="S-Mine",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.AP_MINE,
+            type=WeaponType.AP_MINE,
             magnification=None,
         )
 
@@ -1330,7 +1318,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Tellermine 43",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.AT_MINE,
+            type=WeaponType.AT_MINE,
             magnification=None,
         )
 
@@ -1343,7 +1331,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="TM-35 AT Mine",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.AT_MINE,
+            type=WeaponType.AT_MINE,
             magnification=None,
         )
 
@@ -1356,7 +1344,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Tokarev TT-33",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.PISTOL,
+            type=WeaponType.PISTOL,
             magnification=None,
         )
 
@@ -1369,7 +1357,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Torch",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.TORCH,
+            type=WeaponType.TORCH,
             magnification=None,
         )
 
@@ -1382,7 +1370,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Torch",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TORCH,
+            type=WeaponType.TORCH,
             magnification=None,
         )
 
@@ -1395,7 +1383,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Walther P38",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.PISTOL,
+            type=WeaponType.PISTOL,
             magnification=None,
         )
 
@@ -1408,7 +1396,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Watch",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.WATCH,
+            type=WeaponType.WATCH,
             magnification=None,
         )
 
@@ -1421,7 +1409,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Watch",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.WATCH,
+            type=WeaponType.WATCH,
             magnification=None,
         )
 
@@ -1434,7 +1422,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Webley Mk IV",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.REVOLVER,
+            type=WeaponType.REVOLVER,
             magnification=None,
         )
 
@@ -1447,7 +1435,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Westinghouse M3 6x30",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.BINOCULARS,
+            type=WeaponType.BINOCULARS,
             magnification=None,
         )
 
@@ -1460,7 +1448,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Wrench",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -1473,7 +1461,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Wrench",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -1486,7 +1474,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="ZiS-2",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -1499,7 +1487,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Wrench",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.WRENCH,
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -1515,7 +1503,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="105mm Howitzer",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1528,7 +1516,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="105mm Howitzer",
             vehicle_id="M4A3 (105mm)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1541,7 +1529,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="122mm Howitzer",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -1554,7 +1542,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="122mm Howitzer",
             vehicle_id="M1938 (M-30)",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -1567,7 +1555,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="150mm Howitzer",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -1580,7 +1568,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="150mm Howitzer",
             vehicle_id="sFH 18",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -1593,7 +1581,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M-10T 152mm",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1606,7 +1594,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M-10T 152mm",
             vehicle_id="KV-2",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1619,7 +1607,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="155mm Howitzer",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -1632,7 +1620,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="155mm Howitzer",
             vehicle_id="M114",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -1645,7 +1633,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="45mm M1932",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1658,7 +1646,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="45mm M1932",
             vehicle_id="BA-10",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1671,7 +1659,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="20mm KwK 30",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1684,7 +1672,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="20mm KwK 30",
             vehicle_id="Sd.Kfz.121 Luchs",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1697,7 +1685,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="230mm Petard",
             vehicle_id=None,
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1710,7 +1698,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="230mm Petard",
             vehicle_id="Churchill Mk III A.V.R.E.",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1723,7 +1711,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="37mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.US, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1736,7 +1724,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="37mm Cannon",
             vehicle_id="M3 Stuart Honey",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1749,7 +1737,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="37mm Cannon",
             vehicle_id="Stuart M5A1",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1762,7 +1750,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="45mm M1937",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1775,7 +1763,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="45mm M1937",
             vehicle_id="T70",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1788,7 +1776,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="50mm KwK 39/1",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1801,7 +1789,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="50mm KwK 39/1",
             vehicle_id="Sd.Kfz.234 Puma",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1814,7 +1802,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="57mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.US, HLLFaction.SOV},
-            type=HLLWeaponType.AT_GUN,
+            type=WeaponType.AT_GUN,
             magnification=None,
         )
 
@@ -1827,7 +1815,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="57mm Cannon",
             vehicle_id="M1 57mm",
             factions={HLLFaction.US},
-            type=HLLWeaponType.AT_GUN,
+            type=WeaponType.AT_GUN,
             magnification=None,
         )
 
@@ -1840,7 +1828,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="57mm Cannon",
             vehicle_id="ZiS-2",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.AT_GUN,
+            type=WeaponType.AT_GUN,
             magnification=None,
         )
 
@@ -1853,7 +1841,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm KwK 37",
             vehicle_id=None,
             factions={HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1866,7 +1854,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm KwK 37",
             vehicle_id="Panzer III Ausf.N",
             factions={HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1879,7 +1867,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.DAK},
-            type=HLLWeaponType.UNKNOWN,
+            type=WeaponType.UNKNOWN,
             magnification=None,
         )
 
@@ -1892,7 +1880,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id="PAK 40",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.AT_GUN,
+            type=WeaponType.AT_GUN,
             magnification=None,
         )
 
@@ -1905,7 +1893,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id="Sd.Kfz.161 Panzer IV",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1918,7 +1906,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id="Sd.Kfz.171 Panther",
             factions={HLLFaction.GER},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1931,7 +1919,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id="Sherman M4A3(75)W",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1944,7 +1932,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1957,7 +1945,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="75mm Cannon",
             vehicle_id="Sherman M4A3E2",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1970,7 +1958,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="76mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1983,7 +1971,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="76mm Cannon",
             vehicle_id="Sherman M4A3E2(76)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -1996,7 +1984,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="76mm M1940",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -2009,7 +1997,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="76mm M1940",
             vehicle_id="T34/76",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -2022,7 +2010,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="88mm KwK 36 L/56",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -2035,7 +2023,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="88mm KwK 36 L/56",
             vehicle_id="Sd.Kfz.181 Tiger 1",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -2048,7 +2036,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BA-10",
             vehicle_id="BA-10",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2061,7 +2049,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bedford OYD (Supply)",
             vehicle_id="Bedford OYD (Supply)",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2074,7 +2062,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bedford OYD (Transport)",
             vehicle_id="Bedford OYD (Transport)",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2087,7 +2075,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Bishop SP 25pdr",
             vehicle_id="Bishop SP 25pdr",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2100,7 +2088,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2113,7 +2101,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2126,7 +2114,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Churchill Mk III A.V.R.E.",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2139,7 +2127,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Churchill Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2152,7 +2140,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Churchill Mk.VII",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2165,7 +2153,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Cromwell",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2178,7 +2166,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Crusader Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2191,7 +2179,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Daimler",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2204,7 +2192,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Tetrarch",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2217,7 +2205,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="COAXIAL DT",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2230,7 +2218,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="BA-10",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2243,7 +2231,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="IS-1",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2256,7 +2244,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="T34/76",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2269,7 +2257,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="T70",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2282,7 +2270,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id=None,
             factions={HLLFaction.US, HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2295,7 +2283,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Firefly",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2308,7 +2296,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="M3 Stuart Honey",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2321,7 +2309,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="M4A3 (105mm)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2334,7 +2322,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="M8 Greyhound",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2347,7 +2335,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Sherman M4A3(75)W",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2360,7 +2348,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Sherman M4A3E2(76)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2373,7 +2361,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Sherman M4A3E2",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2386,7 +2374,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Stuart M5A1",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2399,7 +2387,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2412,7 +2400,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Panzer III Ausf.N",
             factions={HLLFaction.DAK},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2425,7 +2413,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.121 Luchs",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2438,7 +2426,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.161 Panzer IV",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2451,7 +2439,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.171 Panther",
             factions={HLLFaction.GER},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2464,7 +2452,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.181 Tiger 1",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2477,7 +2465,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.234 Puma",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_COAXIAL_MG,
+            type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
@@ -2490,7 +2478,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Churchill Mk III A.V.R.E.",
             vehicle_id="Churchill Mk III A.V.R.E.",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2503,7 +2491,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Churchill Mk.III",
             vehicle_id="Churchill Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2516,7 +2504,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Churchill Mk.VII",
             vehicle_id="Churchill Mk.VII",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2529,7 +2517,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Cromwell",
             vehicle_id="Cromwell",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2542,7 +2530,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Crusader Mk.III",
             vehicle_id="Crusader Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2555,7 +2543,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="D-5T 85mm",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -2568,7 +2556,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="D-5T 85mm",
             vehicle_id="IS-1",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -2581,7 +2569,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Daimler",
             vehicle_id="Daimler",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2594,7 +2582,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Smoke Screen",
             vehicle_id="IS-1",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_SMOKE_SCREEN,
+            type=WeaponType.TANK_SMOKE_SCREEN,
             magnification=None,
         )
 
@@ -2607,7 +2595,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Firefly",
             vehicle_id="Firefly",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2620,7 +2608,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="GAZ-67",
             vehicle_id="GAZ-67",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2633,7 +2621,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="GMC CCKW 353 (Supply)",
             vehicle_id="GMC CCKW 353 (Supply)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2646,7 +2634,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="GMC CCKW 353 (Transport)",
             vehicle_id="GMC CCKW 353 (Transport)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2659,7 +2647,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id=None,
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2672,7 +2660,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="7.92mm",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2685,7 +2673,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Churchill Mk III A.V.R.E.",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2698,7 +2686,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Churchill Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2711,7 +2699,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Churchill Mk.VII",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2724,7 +2712,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="BESA",
             vehicle_id="Cromwell",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2737,7 +2725,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="HULL DT",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2750,7 +2738,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="IS-1",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2763,7 +2751,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="KV-2",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2776,7 +2764,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="DT",
             vehicle_id="T34/76",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2789,7 +2777,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id=None,
             factions={HLLFaction.US, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2802,7 +2790,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="M3 Stuart Honey",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2815,7 +2803,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="M4A3 (105mm)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2828,7 +2816,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Sherman M4A3(75)W",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2841,7 +2829,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Sherman M4A3E2(76)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2854,7 +2842,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Sherman M4A3E2",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2867,7 +2855,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M1919 Browning",
             vehicle_id="Stuart M5A1",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2880,7 +2868,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2893,7 +2881,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Panzer III Ausf.N",
             factions={HLLFaction.DAK},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2906,7 +2894,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.161 Panzer IV",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2919,7 +2907,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.171 Panther",
             factions={HLLFaction.GER},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2932,7 +2920,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG34",
             vehicle_id="Sd.Kfz.181 Tiger 1",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_HULL_MG,
+            type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
 
@@ -2945,7 +2933,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="IS-1",
             vehicle_id="IS-1",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2958,7 +2946,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Jeep Willys",
             vehicle_id="Jeep Willys",
             factions={HLLFaction.US, HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2971,7 +2959,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="KV-2",
             vehicle_id="KV-2",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2984,7 +2972,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Kubelwagen",
             vehicle_id="Kubelwagen",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -2997,7 +2985,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M2 Browning",
             vehicle_id="M3 Half-track",
             factions={HLLFaction.US, HLLFaction.SOV, HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.MOUNTED_MG,
+            type=WeaponType.MOUNTED_MG,
             magnification=None,
         )
 
@@ -3010,7 +2998,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M3 Half-track",
             vehicle_id="M3 Half-track",
             factions={HLLFaction.US, HLLFaction.SOV, HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3023,7 +3011,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M3 Stuart Honey",
             vehicle_id="M3 Stuart Honey",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3036,7 +3024,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M4A3 (105mm)",
             vehicle_id="M4A3 (105mm)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3049,7 +3037,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="37mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3062,7 +3050,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="37mm Cannon",
             vehicle_id="M8 Greyhound",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3075,7 +3063,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="M8 Greyhound",
             vehicle_id="M8 Greyhound",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3088,7 +3076,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="MG42",
             vehicle_id="Sd.Kfz 251 Half-track",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.MOUNTED_MG,
+            type=WeaponType.MOUNTED_MG,
             magnification=None,
         )
 
@@ -3101,7 +3089,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 57mm",
             vehicle_id=None,
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3114,7 +3102,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 57mm",
             vehicle_id="Churchill Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3127,7 +3115,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 57mm",
             vehicle_id="Crusader Mk.III",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3140,7 +3128,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 75mm",
             vehicle_id=None,
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3153,7 +3141,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 75mm",
             vehicle_id="Churchill Mk.VII",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3166,7 +3154,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 75mm",
             vehicle_id="Cromwell",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3179,7 +3167,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Opel Blitz (Supply)",
             vehicle_id="Opel Blitz (Supply)",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3192,7 +3180,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Opel Blitz (Transport)",
             vehicle_id="Opel Blitz (Transport)",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3205,7 +3193,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Receive Intel",
             vehicle_id="BA-10",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.TANK_RECON,
+            type=WeaponType.TANK_RECON,
             magnification=None,
         )
 
@@ -3218,7 +3206,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Receive Intel",
             vehicle_id="Daimler",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_RECON,
+            type=WeaponType.TANK_RECON,
             magnification=None,
         )
 
@@ -3231,7 +3219,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Receive Intel",
             vehicle_id="M8 Greyhound",
             factions={HLLFaction.US},
-            type=HLLWeaponType.TANK_RECON,
+            type=WeaponType.TANK_RECON,
             magnification=None,
         )
 
@@ -3244,7 +3232,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Receive Intel",
             vehicle_id="Sd.Kfz.234 Puma",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.TANK_RECON,
+            type=WeaponType.TANK_RECON,
             magnification=None,
         )
 
@@ -3257,7 +3245,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Panzer III Ausf.N",
             vehicle_id="Panzer III Ausf.N",
             factions={HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3270,7 +3258,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 17-Pounder",
             vehicle_id=None,
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3283,7 +3271,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 17-Pounder",
             vehicle_id="Firefly",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3296,7 +3284,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 2-Pounder",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3309,7 +3297,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 2-Pounder",
             vehicle_id="Daimler",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3322,7 +3310,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="QF 2-Pounder",
             vehicle_id="Tetrarch",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3335,7 +3323,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="88mm Howitzer",
             vehicle_id=None,
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3348,7 +3336,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="88mm Howitzer",
             vehicle_id="Bishop SP 25pdr",
             factions={HLLFaction.B8A},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3361,7 +3349,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="88mm Howitzer",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -3374,7 +3362,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="88mm Howitzer",
             vehicle_id="QF 25-Pounder",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.ARTILLERY,
+            type=WeaponType.ARTILLERY,
             magnification=None,
         )
 
@@ -3387,7 +3375,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="57mm Cannon",
             vehicle_id=None,
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.AT_GUN,
+            type=WeaponType.AT_GUN,
             magnification=None,
         )
 
@@ -3400,7 +3388,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="57mm Cannon",
             vehicle_id="QF 6-Pounder",
             factions={HLLFaction.CW, HLLFaction.B8A},
-            type=HLLWeaponType.AT_GUN,
+            type=WeaponType.AT_GUN,
             magnification=None,
         )
 
@@ -3413,7 +3401,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sd.Kfz 251 Half-track",
             vehicle_id="Sd.Kfz 251 Half-track",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3426,7 +3414,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sd.Kfz.121 Luchs",
             vehicle_id="Sd.Kfz.121 Luchs",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3439,7 +3427,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sd.Kfz.161 Panzer IV",
             vehicle_id="Sd.Kfz.161 Panzer IV",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3452,7 +3440,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sd.Kfz.171 Panther",
             vehicle_id="Sd.Kfz.171 Panther",
             factions={HLLFaction.GER},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3465,7 +3453,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sd.Kfz.181 Tiger 1",
             vehicle_id="Sd.Kfz.181 Tiger 1",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3478,7 +3466,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sd.Kfz.234 Puma",
             vehicle_id="Sd.Kfz.234 Puma",
             factions={HLLFaction.GER, HLLFaction.DAK},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3491,7 +3479,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sherman M4A3(75)W",
             vehicle_id="Sherman M4A3(75)W",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3504,7 +3492,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sherman M4A3E2",
             vehicle_id="Sherman M4A3E2",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3517,7 +3505,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sherman M4A3E2(76)",
             vehicle_id="Sherman M4A3E2(76)",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3530,7 +3518,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="StuH 43 L/12",
             vehicle_id=None,
             factions={HLLFaction.GER},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3543,7 +3531,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="StuH 43 L/12",
             vehicle_id="Sturmpanzer IV",
             factions={HLLFaction.GER},
-            type=HLLWeaponType.TANK_CANNON,
+            type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
@@ -3556,7 +3544,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Stuart M5A1",
             vehicle_id="Stuart M5A1",
             factions={HLLFaction.US},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3569,7 +3557,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Sturmpanzer IV",
             vehicle_id="Sturmpanzer IV",
             factions={HLLFaction.GER},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3582,7 +3570,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="T34/76",
             vehicle_id="T34/76",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3595,7 +3583,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="T70",
             vehicle_id="T70",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3608,7 +3596,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="Tetrarch",
             vehicle_id="Tetrarch",
             factions={HLLFaction.CW},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3621,7 +3609,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="ZIS-5 (Supply)",
             vehicle_id="ZIS-5 (Supply)",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3634,7 +3622,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             name="ZIS-5 (Transport)",
             vehicle_id="ZIS-5 (Transport)",
             factions={HLLFaction.SOV},
-            type=HLLWeaponType.ROADKILL,
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 
@@ -3650,7 +3638,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             id="UNKNOWN",
             name="Unknown",
             factions=set(HLLFaction.all()),
-            type=HLLWeaponType.UNKNOWN,
+            type=WeaponType.UNKNOWN,
         )
 
     @class_cached_property
@@ -3661,7 +3649,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             id="BOMBING RUN",
             name="Bombing Run",
             factions=set(HLLFaction.all()) - {HLLFaction.SOV},
-            type=HLLWeaponType.COMMANDER_ABILITY,
+            type=WeaponType.COMMANDER_ABILITY,
         )
 
     @class_cached_property
@@ -3672,7 +3660,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             id="STRAFING RUN",
             name="Strafing Run",
             factions=set(HLLFaction.all()),
-            type=HLLWeaponType.COMMANDER_ABILITY,
+            type=WeaponType.COMMANDER_ABILITY,
         )
 
     @class_cached_property
@@ -3683,7 +3671,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             id="PRECISION STRIKE",
             name="Precision Strike",
             factions=set(HLLFaction.all()),
-            type=HLLWeaponType.COMMANDER_ABILITY,
+            type=WeaponType.COMMANDER_ABILITY,
         )
 
     @class_cached_property
@@ -3694,7 +3682,7 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             id="Unknown",
             name="Artillery Strike",
             factions=set(HLLFaction.all()),
-            type=HLLWeaponType.COMMANDER_ABILITY,
+            type=WeaponType.COMMANDER_ABILITY,
         )
 
     @class_cached_property
@@ -3711,11 +3699,11 @@ class HLLWeapon(_Weapon[HLLFaction, HLLWeaponType, "HLLVehicle"]):
             id="FireSpot",
             name="Fire",
             factions=set(HLLFaction.all()),
-            type=HLLWeaponType.UNKNOWN,
+            type=WeaponType.UNKNOWN,
         )
 
 
-class HLLVWeapon(_Weapon[HLLVFaction, HLLVWeaponType, "HLLVVehicle"]):
+class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
     # @computed_field(repr=False)
     @cached_property
     def vehicle(self) -> "HLLVVehicle | None":
@@ -3724,6 +3712,257 @@ class HLLVWeapon(_Weapon[HLLVFaction, HLLVWeaponType, "HLLVVehicle"]):
         if self.vehicle_id:
             return HLLVVehicle.by_id(self.vehicle_id)
         return None
+
+    ### INJECT "hllv vehicles" START
+
+    @class_cached_property
+    @classmethod
+    def V_100MM_D_10T_CANNON__UNKNOWN(cls) -> "HLLVWeapon":
+        """*100MM D-10T CANNON*"""
+        return cls(
+            id="100MM D-10T CANNON",
+            name="100MM D-10T CANNON",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.TANK_CANNON,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_100MM_D_10T_CANNON__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
+        """*100MM D-10T CANNON [Sd.Kfz.171 Panther]*"""
+        return cls(
+            id="100MM D-10T CANNON [Sd.Kfz.171 Panther]",
+            name="100mm D-10T",
+            vehicle_id="Sd.Kfz.171 Panther",
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.TANK_CANNON,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_DHSK__NVA_BOAT(cls) -> "HLLVWeapon":
+        """*Dhsk [NVA Boat]*"""
+        return cls(
+            id="Dhsk [NVA Boat]",
+            name="DShK",
+            vehicle_id="NVA Boat",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_FLARE_GUN__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
+        """*Flare Gun [US Transport Helicopter]*"""
+        return cls(
+            id="Flare Gun [US Transport Helicopter]",
+            name="Flare Gun",
+            vehicle_id="US Transport Helicopter",
+            factions={HLLVFaction.US},
+            type=WeaponType.RECON_FLARE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__GAZ_63_SUPPLY(cls) -> "HLLVWeapon":
+        """*Gaz 63 (Supply)*"""
+        return cls(
+            id="Gaz 63 (Supply)",
+            name="Gaz 63 (Supply)",
+            vehicle_id="Gaz 63 (Supply)",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__GAZ_63_TRANSPORT(cls) -> "HLLVWeapon":
+        """*Gaz 63 (Transport)*"""
+        return cls(
+            id="Gaz 63 (Transport)",
+            name="Gaz 63 (Transport)",
+            vehicle_id="Gaz 63 (Transport)",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_M2_BROWNING__US_BOAT(cls) -> "HLLVWeapon":
+        """*M2 Browning [US Boat]*"""
+        return cls(
+            id="M2 Browning [US Boat]",
+            name="M2 Browning",
+            vehicle_id="US Boat",
+            factions={HLLVFaction.US},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__M35_SUPPLY(cls) -> "HLLVWeapon":
+        """*M35 (Supply)*"""
+        return cls(
+            id="M35 (Supply)",
+            name="M35 (Supply)",
+            vehicle_id="M35 (Supply)",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__M35_TRANSPORT(cls) -> "HLLVWeapon":
+        """*M35 (Transport)*"""
+        return cls(
+            id="M35 (Transport)",
+            name="M35 (Transport)",
+            vehicle_id="M35 (Transport)",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_M60D__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
+        """*M60D [US Transport Helicopter]*"""
+        return cls(
+            id="M60D [US Transport Helicopter]",
+            name="M60D",
+            vehicle_id="US Transport Helicopter",
+            factions={HLLVFaction.US},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__NVA_BOAT(cls) -> "HLLVWeapon":
+        """*NVA Boat*"""
+        return cls(
+            id="NVA Boat",
+            name="NVA Boat",
+            vehicle_id="NVA Boat",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_NONE__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
+        """*None [Sd.Kfz.171 Panther]*"""
+        return cls(
+            id="None [Sd.Kfz.171 Panther]",
+            name="Smoke Screen",
+            vehicle_id="Sd.Kfz.171 Panther",
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.TANK_SMOKE_SCREEN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_RPD__NVA_BOAT(cls) -> "HLLVWeapon":
+        """*RPD [NVA Boat]*"""
+        return cls(
+            id="RPD [NVA Boat]",
+            name="RPD",
+            vehicle_id="NVA Boat",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_SGMT_7_62MM__UNKNOWN(cls) -> "HLLVWeapon":
+        """*SGMT 7.62MM*"""
+        return cls(
+            id="SGMT 7.62MM",
+            name="SGMT",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.TANK_COAXIAL_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_SGMT_7_62MM__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
+        """*SGMT 7.62MM [Sd.Kfz.171 Panther]*"""
+        return cls(
+            id="SGMT 7.62MM [Sd.Kfz.171 Panther]",
+            name="SGMT",
+            vehicle_id="Sd.Kfz.171 Panther",
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.TANK_COAXIAL_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
+        """*Sd.Kfz.171 Panther*"""
+        return cls(
+            id="Sd.Kfz.171 Panther",
+            name="Sd.Kfz.171 Panther",
+            vehicle_id="Sd.Kfz.171 Panther",
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__US_BOAT(cls) -> "HLLVWeapon":
+        """*US Boat*"""
+        return cls(
+            id="US Boat",
+            name="US Boat",
+            vehicle_id="US Boat",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__US_SUPPLY_HELICOPTER(cls) -> "HLLVWeapon":
+        """*US Supply Helicopter*"""
+        return cls(
+            id="US Supply Helicopter",
+            name="US Supply Helicopter",
+            vehicle_id="US Supply Helicopter",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
+        """*US Transport Helicopter*"""
+        return cls(
+            id="US Transport Helicopter",
+            name="US Transport Helicopter",
+            vehicle_id="US Transport Helicopter",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    ### INJECT "hllv vehicles" END
 
 
 Weapon: TypeAlias = HLLWeapon | HLLVWeapon

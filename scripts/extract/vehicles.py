@@ -8,18 +8,20 @@ from typing import Generic, TypedDict, cast
 
 from pydantic import BaseModel, TypeAdapter, model_validator
 
-from hllrcon.data.factions import HLLFaction
-from hllrcon.data.vehicles import HLLVehicleType, VehicleType
-from hllrcon.data.weapons import HLLWeaponType
+from hllrcon.data.factions import Faction, HLLFaction, HLLVFaction
+from hllrcon.data.vehicles import VehicleSeatType, VehicleType
+from hllrcon.data.weapons import WeaponType
+from scripts import HLL_METADATA_PATH, HLLV_METADATA_PATH
 from scripts.extract.utils import (
     inject_code,
+    stringify_enum_member,
     stringify_factions,
     stringify_list,
     to_method_name,
 )
 from scripts.extract.weapons import WeaponData
 from scripts.extractlib.loader import (
-    load_object_from_file,
+    get_root_path,
     local_to_abs_path,
 )
 from scripts.extractlib.objects.blueprint_generated_class import BlueprintGeneratedClass
@@ -53,11 +55,14 @@ from scripts.extractlib.objects.hll_vehicle import (
     HLLReconVehicleProperties,
     HLLSelfPropelledArtilleryProperties,
     HLLTruckProperties,
+    HLLVBoatProperties,
     HLLVehicle,
     HLLVehiclePropT_co,
+    HLLVHelicopterProperties,
 )
+from scripts.extractlib.objects.shooter_projectile import ShooterProjectile
 from scripts.extractlib.objects.tank_seat import VehicleSeat
-from scripts.extractlib.utils import find_objects_in_dir
+from scripts.extractlib.utils import find_objects_in_dir, game_switch, root_path_ctx
 
 logger = logging.getLogger(__name__)
 
@@ -70,14 +75,35 @@ HLL_VEHICLE_CONSTRUCTOR_TEMPLATE = """\
             id="{vehicle.id}",
             name="{vehicle.name}",
             factions={factions},
-            type=HLLVehicleType.{vehicle.type.name},
+            type=VehicleType.{vehicle.type.name},
             seats={seats},
         )"""
 
 HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE = """\
 HLLVehicleSeat(
     index={index},
-    type=HLLVehicleSeatType.{seat.name},
+    type={type},
+    weapons={weapons},
+    requires_roles={requires_roles},
+    exposed={exposed},
+)"""
+HLLV_VEHICLE_CONSTRUCTOR_TEMPLATE = """\
+    @class_cached_property
+    @classmethod
+    def {vehicle.meth_name}(cls) -> "HLLVVehicle":
+        \"\"\"*{vehicle.id}*\"\"\"
+        return cls(
+            id="{vehicle.id}",
+            name="{vehicle.name}",
+            factions={factions},
+            type=VehicleType.{vehicle.type.name},
+            seats={seats},
+        )"""
+
+HLLV_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE = """\
+HLLVVehicleSeat(
+    index={index},
+    type={type},
     weapons={weapons},
     requires_roles={requires_roles},
     exposed={exposed},
@@ -92,9 +118,10 @@ class VehicleWeaponAmmoType(StrEnum):
     SMOKE = "Smoke"
 
     @classmethod
-    def from_shell_type(
+    def from_shell_type(  # noqa: PLR0911
         cls,
         shell_type: EShellType,
+        projectile: ShooterProjectile,
     ) -> "VehicleWeaponAmmoType | None":
         if shell_type == EShellType.AP:
             return cls.AP
@@ -102,6 +129,18 @@ class VehicleWeaponAmmoType(StrEnum):
             return cls.HE
         if shell_type in (EShellType.SMOKE, EShellType.MAX):
             return cls.SMOKE
+
+        if projectile.type in ("BP_Heavy_Shell_C", "BP_ATGun_Shell_C"):
+            return cls.AP
+        if projectile.type in (
+            "BP_HE_Heavy_Shell_C",
+            "BP_HE_Medium_Shell_C",
+            "BP_HE_Shell_C",
+        ):
+            return cls.HE
+        if projectile.type == "BP_Smoke_Shell_C":
+            return cls.SMOKE
+
         return None
 
     def is_lethal(self) -> bool:
@@ -132,7 +171,7 @@ class VehicleWeaponAmmo(BaseModel):
 
 class VehicleWeapon(BaseModel):
     name: str
-    type: HLLWeaponType
+    type: WeaponType
     ammo: list[VehicleWeaponAmmo]
 
     def is_lethal(self) -> bool:
@@ -146,6 +185,12 @@ class VehicleSeatData(BaseModel):
     entry_time: float
     switch_time: float
     exit_time: float
+
+    def get_seat_type(self) -> VehicleSeatType:
+        if self.name.startswith("GUNNER "):
+            return VehicleSeatType.GUNNER
+
+        return VehicleSeatType[to_method_name(self.name)]
 
     def get_weapons(
         self,
@@ -225,7 +270,7 @@ class VehicleData(BaseModel):
     id: str
     name: str
     type: VehicleType
-    factions: set[HLLFaction]
+    factions: set[Faction]
     hull: VehicleCompartmentData
     turret: VehicleCompartmentData
     tracks: VehicleCompartmentData
@@ -235,7 +280,8 @@ class VehicleData(BaseModel):
 
     @model_validator(mode="after")
     def set_meth_name(self) -> "VehicleData":
-        meta = HLL_VEHICLE_METADATA.get(self.id)
+        metadata = game_switch(HLL_VEHICLE_METADATA, HLLV_VEHICLE_METADATA)
+        meta = metadata.get(self.id)
         if meta is not None:
             self.meth_name = meta.get("meth_name", self.meth_name)
             self.name = meta.get("name", self.name)
@@ -250,7 +296,7 @@ class VehicleData(BaseModel):
 
     def get_weapons(self, *, include_generic: bool = False) -> list[WeaponData]:
         weapons: list[WeaponData] = []
-        if self.type not in (HLLVehicleType.ARTILLERY, HLLVehicleType.ANTI_TANK_GUN):
+        if self.type not in (VehicleType.ARTILLERY, VehicleType.ANTI_TANK_GUN):
             weapons.append(
                 WeaponData(
                     meth_name="V_ROADKILL__" + to_method_name(self.id),
@@ -258,7 +304,7 @@ class VehicleData(BaseModel):
                     name=self.id,
                     vehicle_id=self.id,
                     factions=self.factions,
-                    type=HLLWeaponType.ROADKILL,
+                    type=WeaponType.ROADKILL,
                 ),
             )
         for seat in self.seats:
@@ -267,30 +313,45 @@ class VehicleData(BaseModel):
 
     def to_constructor(self) -> str:
         seats: list[str] = []
+        template, seat_template = game_switch(
+            (HLL_VEHICLE_CONSTRUCTOR_TEMPLATE, HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE),
+            (HLLV_VEHICLE_CONSTRUCTOR_TEMPLATE, HLLV_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE),
+        )
         for index, seat in enumerate(self.seats):
             if seat.role_types == VehicleSeatRoleTypes.TANK_CREW:
-                requires_roles = "_HLL_TANK_CREW_ROLES"
+                requires_roles = game_switch(
+                    "_HLL_TANK_CREW_ROLES",
+                    "_HLLV_TANK_CREW_ROLES",
+                )
             elif seat.role_types == VehicleSeatRoleTypes.ARTY_CREW:
-                requires_roles = "_HLL_ARTY_CREW_ROLES"
+                requires_roles = game_switch(
+                    "_HLL_ARTY_CREW_ROLES",
+                    "_HLLV_MORTAR_CREW_ROLES",
+                )
             else:
                 requires_roles = "None"
 
+            weapon_cls = game_switch("HLLWeapon", "HLLVWeapon")
             weapons = stringify_list(
-                [f"HLLWeapon.{weapon.meth_name}" for weapon in seat.get_weapons(self)],
+                [
+                    f"{weapon_cls}.{weapon.meth_name}"
+                    for weapon in seat.get_weapons(self)
+                ],
                 indent=4,
             ).lstrip()
 
             seats.append(
-                HLL_VEHICLE_SEAT_CONSTRUCTOR_TEMPLATE.format(
+                seat_template.format(
                     index=index,
                     seat=seat,
+                    type=stringify_enum_member(seat.get_seat_type()),
                     weapons=weapons,
                     requires_roles=requires_roles,
                     exposed=self.exposed,
                 ),
             )
 
-        return HLL_VEHICLE_CONSTRUCTOR_TEMPLATE.format(
+        return template.format(
             vehicle=self,
             factions=stringify_factions(self.factions),
             seats=stringify_list(seats, indent=3 * 4).lstrip(),
@@ -349,7 +410,7 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
         self,
         vehicle: HLLVehicle[HLLVehiclePropT_co],
         vehicle_type: VehicleType,
-        factions: set[HLLFaction],
+        factions: set[Faction],
     ) -> None:
         self.vehicle = vehicle
         self.vehicle_type = vehicle_type
@@ -381,7 +442,7 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
             exit_time=component.properties.exit_time,
         )
 
-    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:  # noqa: ARG002
+    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:  # noqa: ARG002
         msg = "Cannot determine weapon type"
         raise ValueError(msg)
 
@@ -418,14 +479,14 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
         ):
             ammo_type = VehicleWeaponAmmoType.from_shell_type(
                 ammo_source.shell_type,
+                projectile,
             )
             if not ammo_type:
                 ammo_type = VehicleWeaponAmmoType.AP
-                if weapon_data.type != HLLWeaponType.AT_GUN:
-                    logger.error(
-                        "Cannot determine ammo type for source %s",
-                        ammo_source,
-                    )
+                logger.error(
+                    "Cannot determine ammo type for source %s",
+                    ammo_source,
+                )
 
             weapon_data.ammo.append(
                 VehicleWeaponAmmo(
@@ -592,20 +653,20 @@ class ArmoredVehicleExtractor(
         | HLLSelfPropelledArtilleryProperties
     ],
 ):
-    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:
+    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:
         if isinstance(weapon, HLLArmorWeaponBallistic):
             if seat_index == 0:
-                return HLLWeaponType.TANK_HULL_MG
-            return HLLWeaponType.TANK_COAXIAL_MG
+                return WeaponType.TANK_HULL_MG
+            return WeaponType.TANK_COAXIAL_MG
 
         if isinstance(weapon, HLLArmorWeaponProjectile | HLLArmorWeaponMountedHowitzer):
-            return HLLWeaponType.TANK_CANNON
+            return WeaponType.TANK_CANNON
 
         if isinstance(weapon, HLLArmorWeaponReconGun):
-            return HLLWeaponType.TANK_RECON
+            return WeaponType.TANK_RECON
 
         if isinstance(weapon, HLLArmorWeaponSmokeScreen):
-            return HLLWeaponType.TANK_SMOKE_SCREEN
+            return WeaponType.TANK_SMOKE_SCREEN
 
         return super().get_weapon_type(weapon, seat_index)
 
@@ -650,10 +711,10 @@ class ArmoredVehicleExtractor(
 class ArtilleryVehicleExtractor(
     VehicleExtractor[HLLHowitzerProperties | HLLAntiTankGunProperties],
 ):
-    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:  # noqa: ARG002
+    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:  # noqa: ARG002
         if isinstance(weapon, HLLArmorWeaponHowitzer):
-            return HLLWeaponType.ARTILLERY
-        return HLLWeaponType.AT_GUN
+            return WeaponType.ARTILLERY
+        return WeaponType.AT_GUN
 
     def extract(self) -> VehicleData:
         meta_data = self.vehicle.properties.armor_meta_data
@@ -693,11 +754,19 @@ class ArtilleryVehicleExtractor(
 
 
 class InfantryVehicleExtractor(
-    VehicleExtractor[HLLTruckProperties | HLLHalftrackProperties],
+    VehicleExtractor[
+        HLLTruckProperties
+        | HLLHalftrackProperties
+        | HLLVBoatProperties
+        | HLLVHelicopterProperties
+    ],
 ):
-    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> HLLWeaponType:
+    def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:
         if isinstance(weapon, HLLArmorWeaponBallistic):
-            return HLLWeaponType.MOUNTED_MG
+            return WeaponType.MOUNTED_MG
+        if isinstance(weapon, HLLArmorWeaponProjectile):
+            # TODO: Assert that this is a helicopter
+            return WeaponType.RECON_FLARE
 
         return super().get_weapon_type(weapon, seat_index)
 
@@ -745,49 +814,78 @@ class InfantryVehicleExtractor(
         )
 
 
-ABILITIES_DIR = Path("HLL/Content/Blueprints/Abilities/Setup")
-ABILITIES_FACTIONS: dict[Path, set[HLLFaction]] = {
-    ABILITIES_DIR / "US_DefaultAbilities": {HLLFaction.US},
-    ABILITIES_DIR / "US_DefaultAbilities_Winter": {HLLFaction.US},
-    ABILITIES_DIR / "GER_DefaultAbilities": {HLLFaction.GER},
-    ABILITIES_DIR / "GER_DefaultAbilities_Winter": {HLLFaction.GER},
-    ABILITIES_DIR / "GER_DefaultAbilities_STA": {HLLFaction.GER},
-    ABILITIES_DIR / "RU_DefaultAbilities": {HLLFaction.RUS},
-    ABILITIES_DIR / "RU_DefaultAbilities_Winter": {HLLFaction.RUS},
-    ABILITIES_DIR / "COM_DefaultAbilities": {HLLFaction.CW},
-    ABILITIES_DIR / "NA_Variant/GER_DefaultAbilities_NA": {HLLFaction.DAK},
-    ABILITIES_DIR / "NA_Variant/COM_DefaultAbilities_NA": {HLLFaction.B8A},
-}
-ABILITIES_FACTIONS = {
-    local_to_abs_path(fp): factions for fp, factions in ABILITIES_FACTIONS.items()
-}
+with root_path_ctx(HLL_METADATA_PATH):
+    HLL_ABILITIES_DIR = Path("HLL/Content/Blueprints/Abilities/Setup")
+    HLL_ABILITIES_FACTIONS: dict[Path, set[Faction]] = {
+        HLL_ABILITIES_DIR / "US_DefaultAbilities": {HLLFaction.US},
+        HLL_ABILITIES_DIR / "US_DefaultAbilities_Winter": {HLLFaction.US},
+        HLL_ABILITIES_DIR / "GER_DefaultAbilities": {HLLFaction.GER},
+        HLL_ABILITIES_DIR / "GER_DefaultAbilities_Winter": {HLLFaction.GER},
+        HLL_ABILITIES_DIR / "GER_DefaultAbilities_STA": {HLLFaction.GER},
+        HLL_ABILITIES_DIR / "RU_DefaultAbilities": {HLLFaction.RUS},
+        HLL_ABILITIES_DIR / "RU_DefaultAbilities_Winter": {HLLFaction.RUS},
+        HLL_ABILITIES_DIR / "COM_DefaultAbilities": {HLLFaction.CW},
+        HLL_ABILITIES_DIR / "NA_Variant/GER_DefaultAbilities_NA": {HLLFaction.DAK},
+        HLL_ABILITIES_DIR / "NA_Variant/COM_DefaultAbilities_NA": {HLLFaction.B8A},
+    }
+    HLL_ABILITIES_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLL_ABILITIES_FACTIONS.items()
+    }
+
+    HLL_ARTILLERY_DIR = Path("HLL/Content/Blueprints/Artillery")
+    HLL_ARTILLERY_FACTIONS: dict[Path, set[Faction]] = {
+        HLL_ARTILLERY_DIR / "US/Anti-Tank/BP_USAntiTank": {HLLFaction.US},
+        HLL_ARTILLERY_DIR / "RUS/Anti-Tank/BP_RUSAntiTank": {HLLFaction.RUS},
+        HLL_ARTILLERY_DIR / "GER/Anti-Tank/BP_GERAntiTank": {
+            HLLFaction.GER,
+            HLLFaction.DAK,
+        },
+        HLL_ARTILLERY_DIR / "COM/Anti-Tank/BP_COMAntiTank": {
+            HLLFaction.CW,
+            HLLFaction.B8A,
+        },
+        HLL_ARTILLERY_DIR / "US/Howitzer/BP_US_M114": {HLLFaction.US},
+        HLL_ARTILLERY_DIR / "RUS/Artillery/BP_RUS_M30": {HLLFaction.RUS},
+        HLL_ARTILLERY_DIR / "GER/Howitzer/BP_GER_SFH18": {
+            HLLFaction.GER,
+            HLLFaction.DAK,
+        },
+        HLL_ARTILLERY_DIR / "COM/Howitzer/BP_COM_Howitzer": {
+            HLLFaction.CW,
+            HLLFaction.B8A,
+        },
+    }
+    HLL_ARTILLERY_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLL_ARTILLERY_FACTIONS.items()
+    }
 
 
-ARTILLERY_DIR = Path("HLL/Content/Blueprints/Artillery")
-ARTILLERY_FACTIONS: dict[Path, set[HLLFaction]] = {
-    ARTILLERY_DIR / "US/Anti-Tank/BP_USAntiTank": {HLLFaction.US},
-    ARTILLERY_DIR / "RUS/Anti-Tank/BP_RUSAntiTank": {HLLFaction.RUS},
-    ARTILLERY_DIR / "GER/Anti-Tank/BP_GERAntiTank": {HLLFaction.GER, HLLFaction.DAK},
-    ARTILLERY_DIR / "COM/Anti-Tank/BP_COMAntiTank": {HLLFaction.CW, HLLFaction.B8A},
-    ARTILLERY_DIR / "US/Howitzer/BP_US_M114": {HLLFaction.US},
-    ARTILLERY_DIR / "RUS/Artillery/BP_RUS_M30": {HLLFaction.RUS},
-    ARTILLERY_DIR / "GER/Howitzer/BP_GER_SFH18": {HLLFaction.GER, HLLFaction.DAK},
-    ARTILLERY_DIR / "COM/Howitzer/BP_COM_Howitzer": {HLLFaction.CW, HLLFaction.B8A},
-}
-ARTILLERY_FACTIONS = {
-    local_to_abs_path(fp): factions for fp, factions in ARTILLERY_FACTIONS.items()
-}
+with root_path_ctx(HLLV_METADATA_PATH):
+    HLLV_ABILITIES_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Abilities")
+    HLLV_ABILITIES_FACTIONS: dict[Path, set[Faction]] = {
+        HLLV_ABILITIES_DIR / "US/Waterfall_US_DefaultAbilities": {HLLVFaction.US},
+        HLLV_ABILITIES_DIR / "NVA/Waterfall_NVA_DefaultAbilities": {HLLVFaction.NVA},
+    }
+    HLLV_ABILITIES_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLLV_ABILITIES_FACTIONS.items()
+    }
 
 
-def get_all_ability_files() -> Iterator[Path]:
-    abilities_dir = local_to_abs_path(ABILITIES_DIR, add_ext=False)
-    yield from abilities_dir.glob("**/*_DefaultAbilities*.json")
-
-
-def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[HLLFaction]]]:
-    for ability_fp in get_all_ability_files():
-        ability_data = load_object_from_file(ability_fp, 0, HLLMapAbilityData)
-        factions = ABILITIES_FACTIONS.get(ability_fp)
+def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[Faction]]]:
+    abilities_dir, abilities_factions_map = game_switch(
+        (HLL_ABILITIES_DIR, HLL_ABILITIES_FACTIONS),
+        (HLLV_ABILITIES_DIR, HLLV_ABILITIES_FACTIONS),
+    )
+    for ability_data, ability_fp in find_objects_in_dir(
+        local_to_abs_path(abilities_dir, add_ext=False),
+        lambda obj: obj.type == "HLLMapAbilityData",
+        obj_type=HLLMapAbilityData,
+        glob_pattern="**/*_DefaultAbilities*.json",
+    ):
+        factions = abilities_factions_map.get(ability_fp)
         if not factions:
             if factions is None:
                 logger.warning(
@@ -798,7 +896,7 @@ def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[HLLFaction
         yield ability_data, factions
 
 
-def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[HLLFaction]]]:
+def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[Faction]]]:
     for ability_table, factions in get_all_ability_tables():
         for ability in ability_table.properties.abilities:
             if a := ability.get_ability():
@@ -806,33 +904,43 @@ def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[HLLFaction]]]
 
 
 def get_all_artillery() -> Iterator[tuple[HLLVehicle, Path]]:
-    for howitzer_bgc, fp in find_objects_in_dir(
-        local_to_abs_path(ARTILLERY_DIR, add_ext=False),
-        lambda bgc: bgc.get_root_struct_name() == "Class'HLLHowitzer'",
-        obj_type=BlueprintGeneratedClass[HLLVehicle[HLLHowitzerProperties]],
-        glob_pattern="**/BP_*.json",
-        cond_obj_type=BlueprintGeneratedClass,
-    ):
-        yield howitzer_bgc.get_default_object(HLLVehicle[HLLHowitzerProperties]), fp
+    if get_root_path() == HLL_METADATA_PATH:
+        for howitzer_bgc, fp in find_objects_in_dir(
+            local_to_abs_path(HLL_ARTILLERY_DIR, add_ext=False),
+            lambda bgc: bgc.get_root_struct_name() == "Class'HLLHowitzer'",
+            obj_type=BlueprintGeneratedClass[HLLVehicle[HLLHowitzerProperties]],
+            glob_pattern="**/BP_*.json",
+            cond_obj_type=BlueprintGeneratedClass,
+        ):
+            yield howitzer_bgc.get_default_object(HLLVehicle[HLLHowitzerProperties]), fp
 
-    for antitank_bgc, fp in find_objects_in_dir(
-        local_to_abs_path(ARTILLERY_DIR, add_ext=False),
-        lambda bgc: bgc.get_root_struct_name() == "Class'HLLAntiTankGun'",
-        obj_type=BlueprintGeneratedClass[HLLVehicle[HLLAntiTankGunProperties]],
-        glob_pattern="**/BP_*.json",
-        cond_obj_type=BlueprintGeneratedClass,
-    ):
-        yield antitank_bgc.get_default_object(HLLVehicle[HLLAntiTankGunProperties]), fp
+        for antitank_bgc, fp in find_objects_in_dir(
+            local_to_abs_path(HLL_ARTILLERY_DIR, add_ext=False),
+            lambda bgc: bgc.get_root_struct_name() == "Class'HLLAntiTankGun'",
+            obj_type=BlueprintGeneratedClass[HLLVehicle[HLLAntiTankGunProperties]],
+            glob_pattern="**/BP_*.json",
+            cond_obj_type=BlueprintGeneratedClass,
+        ):
+            yield (
+                antitank_bgc.get_default_object(HLLVehicle[HLLAntiTankGunProperties]),
+                fp,
+            )
+    elif get_root_path() == HLLV_METADATA_PATH:
+        # TODO: HLLV Artillery
+        return
+    else:
+        msg = f"Unexpected root path {get_root_path()}"
+        raise ValueError(msg)
 
 
 UI_SUBCATEGORY_TO_VEHICLE_TYPE: dict[str, VehicleType] = {
-    "HEAVY ARMOR": HLLVehicleType.HEAVY_TANK,
-    "MEDIUM ARMOR": HLLVehicleType.MEDIUM_TANK,
-    "LIGHT ARMOR": HLLVehicleType.LIGHT_TANK,
-    "RECON": HLLVehicleType.RECON_VEHICLE,
-    "SELF-PROPELLED ARTILLERY": HLLVehicleType.SELF_PROPELLED_ARTILLERY,
-    "HALF-TRACK": HLLVehicleType.HALF_TRACK,
-    "SUPPORT": HLLVehicleType.SUPPLY_TRUCK,
+    "HEAVY ARMOR": VehicleType.HEAVY_TANK,
+    "MEDIUM ARMOR": VehicleType.MEDIUM_TANK,
+    "LIGHT ARMOR": VehicleType.LIGHT_TANK,
+    "RECON": VehicleType.RECON_VEHICLE,
+    "SELF-PROPELLED ARTILLERY": VehicleType.SELF_PROPELLED_ARTILLERY,
+    "HALF-TRACK": VehicleType.HALF_TRACK,
+    "SUPPORT": VehicleType.SUPPLY_TRUCK,
 }
 
 
@@ -841,22 +949,26 @@ def get_vehicle_type_from_ui_subcategory(
     ui_sub_category: str,
 ) -> VehicleType:
     vehicle_type = UI_SUBCATEGORY_TO_VEHICLE_TYPE[ui_sub_category]
-    if vehicle_type != HLLVehicleType.SUPPLY_TRUCK:
+    if vehicle_type != VehicleType.SUPPLY_TRUCK:
         return vehicle_type
 
     vehicle_struct = vehicle_bgc.get_root_struct_name()
     if vehicle_struct == "Class'BaseJeep'":
-        return HLLVehicleType.JEEP
+        return VehicleType.JEEP
     if vehicle_struct == "Class'BaseTruck'":
         if "transport" in vehicle_bgc.name.lower():
-            return HLLVehicleType.TRANSPORT_TRUCK
+            return VehicleType.TRANSPORT_TRUCK
         if "supply" in vehicle_bgc.name.lower():
-            return HLLVehicleType.SUPPLY_TRUCK
+            return VehicleType.SUPPLY_TRUCK
         msg = (
             "Cannot determine vehicle type for BaseTruck with name"
             f" '{vehicle_bgc.name}'"
         )
         raise ValueError(msg)
+    if vehicle_struct == "Class'BaseWaterfallBoat'":
+        return VehicleType.BOAT
+    if vehicle_struct == "Class'BaseHelicopter'":
+        return VehicleType.HELICOPTER
     msg = f"Unexpected vehicle struct '{vehicle_struct}'"
     raise ValueError(msg)
 
@@ -877,6 +989,9 @@ STRUCT_NAME_TO_VEHICLE_CLASS: dict[str, type[HLLVehicle]] = {
     "Class'SelfPropelledArtillery'": HLLVehicle[HLLSelfPropelledArtilleryProperties],
     "Class'Tiger'": HLLVehicle[HLLArmorProperties],
     "Class'SdKfz251Halftrack'": HLLVehicle[HLLHalftrackProperties],
+    "Class'WFLBaseTank'": HLLVehicle[HLLArmorProperties],
+    "Class'BaseWaterfallBoat'": HLLVehicle[HLLVBoatProperties],
+    "Class'BaseHelicopter'": HLLVehicle[HLLVHelicopterProperties],
 }
 
 
@@ -890,7 +1005,9 @@ def get_vehicle_class_from_root_struct(
     return STRUCT_NAME_TO_VEHICLE_CLASS[struct_name]
 
 
-def _get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction]]]:
+def _get_all_vehicle_attributes() -> Iterator[
+    tuple[HLLVehicle, VehicleType, set[Faction]]
+]:
     for ability, factions in get_all_abilities():
         if not isinstance(
             ability.properties,
@@ -911,24 +1028,26 @@ def _get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFactio
         yield vehicle, vehicle_type, factions
 
     for vehicle, vehicle_fp in get_all_artillery():
-        if vehicle_fp not in ARTILLERY_FACTIONS:
+        if vehicle_fp not in HLL_ARTILLERY_FACTIONS:
             logger.warning(
                 "Artillery file %s not found in ARTILLERY_FACTIONS mapping",
                 vehicle_fp,
             )
             continue
 
-        if not ARTILLERY_FACTIONS[vehicle_fp]:
+        if not HLL_ARTILLERY_FACTIONS[vehicle_fp]:
             continue
 
-        factions = ARTILLERY_FACTIONS[vehicle_fp]
-        yield vehicle, HLLVehicleType.ARTILLERY, factions
+        factions = HLL_ARTILLERY_FACTIONS[vehicle_fp]
+        yield vehicle, VehicleType.ARTILLERY, factions
 
 
-def get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction]]]:
-    seen: dict[HLLVehicle, tuple[VehicleType, set[HLLFaction]]] = {}
+def get_all_vehicle_attributes() -> Iterator[
+    tuple[HLLVehicle, VehicleType, set[Faction]]
+]:
+    seen: dict[HLLVehicle, tuple[VehicleType, set[Faction]]] = {}
 
-    for vehicle, vehicle_type, factions in _get_all_vehicles():
+    for vehicle, vehicle_type, factions in _get_all_vehicle_attributes():
         if vehicle in seen:
             if seen[vehicle][0] != vehicle_type:
                 logger.error(
@@ -947,7 +1066,7 @@ def get_all_vehicles() -> Iterator[tuple[HLLVehicle, VehicleType, set[HLLFaction
 
 
 def get_all_vehicle_data() -> Iterator[VehicleData]:
-    for vehicle, vehicle_type, factions in get_all_vehicles():
+    for vehicle, vehicle_type, factions in get_all_vehicle_attributes():
         if isinstance(vehicle.properties, HLLArmorProperties):
             data = ArmoredVehicleExtractor(
                 cast(
@@ -977,6 +1096,18 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
             data = ArtilleryVehicleExtractor(
                 cast(
                     "HLLVehicle[HLLHowitzerProperties | HLLAntiTankGunProperties]",
+                    vehicle,
+                ),
+                vehicle_type,
+                factions,
+            ).extract()
+        elif isinstance(
+            vehicle.properties,
+            (HLLVBoatProperties, HLLVHelicopterProperties),
+        ):
+            data = InfantryVehicleExtractor(
+                cast(
+                    "HLLVehicle[HLLVBoatProperties | HLLVHelicopterProperties]",
                     vehicle,
                 ),
                 vehicle_type,
@@ -1199,24 +1330,54 @@ HLL_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
     },
 }
 
+HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
+    "Gaz 63 (Transport)": {
+        "name": "GAZ-63",
+        "exposed": True,
+    },
+    "Gaz 63 (Supply)": {
+        "name": "GAZ-63",
+        "exposed": True,
+    },
+    "Sd.Kfz.171 Panther": {
+        "name": "M48 Patton / T-54",
+        "exposed": False,
+    },
+    "NVA Boat": {
+        "name": "NVA Boat",
+        "exposed": True,
+    },
+    "US Transport Helicopter": {
+        "name": "Bell UH-1 Iroquois",
+        "exposed": True,
+    },
+    "US Supply Helicopter": {
+        "name": "Bell UH-1 Iroquois",
+        "exposed": True,
+    },
+    "M35 (Transport)": {
+        "name": "M35 Truck",
+        "exposed": True,
+    },
+    "M35 (Supply)": {
+        "name": "M35 Truck",
+        "exposed": True,
+    },
+    "US Boat": {
+        "name": "PBR",
+        "exposed": True,
+    },
+}
 
-def main() -> None:
+
+def get_all_vehicles() -> Iterator[VehicleData]:
     vehicle_data = sorted(get_all_vehicle_data(), key=lambda v: v.id)
     vehicle_ids = itertools.groupby(vehicle_data, lambda v: v.id)
-    vehicles = [VehicleData.merge(*vd_seq) for _, vd_seq in vehicle_ids]
-    vehicle_constructors: list[str] = [v.to_constructor() for v in vehicles]
+    for _, vd_seq in vehicle_ids:
+        yield VehicleData.merge(*vd_seq)
 
-    inject_code(
-        Path("hllrcon/data/vehicles.py"),
-        "hll vehicles",
-        "\n\n".join(vehicle_constructors),
-    )
 
-    Path("dist").mkdir(exist_ok=True)
-    Path("dist/vehicles.json").write_bytes(
-        TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
-    )
-
+def get_all_vehicle_weapons(vehicles: list[VehicleData]) -> Iterator[WeaponData]:
     weapon_data = sorted(
         (
             weapon
@@ -1226,14 +1387,59 @@ def main() -> None:
         key=lambda w: w.id,
     )
     weapon_ids = itertools.groupby(weapon_data, lambda w: w.id)
-    weapons = [WeaponData.merge(*wd_seq) for _, wd_seq in weapon_ids]
-    weapon_constructors: list[str] = [w.to_constructor() for w in weapons]
+    for _, wd_seq in weapon_ids:
+        yield WeaponData.merge(*wd_seq)
 
-    inject_code(
-        Path("hllrcon/data/weapons.py"),
-        "hll vehicles",
-        "\n\n".join(weapon_constructors),
-    )
+
+def main() -> None:
+
+    with root_path_ctx(HLL_METADATA_PATH):
+        vehicles = list(get_all_vehicles())
+        vehicle_constructors = [v.to_constructor() for v in vehicles]
+
+        inject_code(
+            Path("hllrcon/data/vehicles.py"),
+            "hll vehicles",
+            "\n\n".join(vehicle_constructors),
+        )
+
+        Path("dist").mkdir(exist_ok=True)
+        Path("dist/vehicles.json").write_bytes(
+            TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
+        )
+
+        weapons = list(get_all_vehicle_weapons(vehicles))
+        weapon_constructors = [w.to_constructor() for w in weapons]
+
+        inject_code(
+            Path("hllrcon/data/weapons.py"),
+            "hll vehicles",
+            "\n\n".join(weapon_constructors),
+        )
+
+    with root_path_ctx(HLLV_METADATA_PATH):
+        vehicles = list(get_all_vehicles())
+        vehicle_constructors = [v.to_constructor() for v in vehicles]
+
+        inject_code(
+            Path("hllrcon/data/vehicles.py"),
+            "hllv vehicles",
+            "\n\n".join(vehicle_constructors),
+        )
+
+        Path("dist").mkdir(exist_ok=True)
+        Path("dist/vehicles_vietnam.json").write_bytes(
+            TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
+        )
+
+        weapons = list(get_all_vehicle_weapons(vehicles))
+        weapon_constructors = [w.to_constructor() for w in weapons]
+
+        inject_code(
+            Path("hllrcon/data/weapons.py"),
+            "hllv vehicles",
+            "\n\n".join(weapon_constructors),
+        )
 
 
 if __name__ == "__main__":

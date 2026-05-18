@@ -3,7 +3,7 @@ from collections.abc import Collection
 from enum import Enum
 from pathlib import Path
 
-from hllrcon.data.factions import Faction, HLLFaction
+from hllrcon.data.factions import Faction
 
 
 def inject_code(fp: Path, marker: str, code: str) -> None:
@@ -53,14 +53,12 @@ def stringify_enum_member(member: Enum) -> str:
 
 
 def stringify_factions(factions: Collection[Faction]) -> str:
-    cls_name = HLLFaction.__name__
-    return (
-        f"{{{cls_name}."
-        + f", {cls_name}.".join(
-            f.short_name for f in sorted(factions, key=lambda x: x.id)
-        )
-        + "}"
-    )
+    factions_str = [
+        f"{type(f).__name__}.{f.short_name}"
+        for f in sorted(factions, key=lambda x: x.id)
+    ]
+
+    return "{" + ", ".join(factions_str) + "}"
 
 
 def to_method_name(s: str) -> str:

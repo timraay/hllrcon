@@ -67,7 +67,7 @@ class HLLArmorWeaponProperties(Model):
     ] = False
     disable_loading_health_ratio: float = 0.0
     min_load_time: float
-    weapon_name: String
+    weapon_name: String | None = None
     weapon_header: String | None = None
     disable_firing_when_weapon_damaged: Annotated[
         bool,

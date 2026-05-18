@@ -182,6 +182,93 @@ class HLLHowitzerProperties(HLLAntiTankGunProperties):
         return self.loader_seat_class.get_inst(ArtillerySeat)
 
 
+class HLLVBoatProperties(HLLVehicleProperties):
+    driver_seat_class: BGCReference[VehicleSeat]
+    gunner_seat_front_class: BGCReference[VehicleSeat]
+    gunner_seat_rear_class: BGCReference[VehicleSeat]
+    turret_controller: ObjectReference[Any]
+    front_mg_controller: Annotated[
+        ObjectReference[Any],
+        Field(alias="FrontMGController"),
+    ]
+    rear_mg_controller: Annotated[
+        ObjectReference[Any],
+        Field(alias="RearMGController"),
+    ]
+
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.driver_seat_class.get_inst(VehicleSeat)
+        yield self.gunner_seat_front_class.get_inst(VehicleSeat)
+        yield self.gunner_seat_rear_class.get_inst(VehicleSeat)
+
+
+class HLLVHelicopterProperties(HLLVehicleProperties):
+    num_passenger_seats: int
+    max_distance_from_ground_for_supply_drop: float
+
+    driver_seat_class: BGCReference[VehicleSeat]
+    passenger_seat_class: BGCReference[VehicleSeat]
+    left_gunner_seat_class: BGCReference[VehicleSeat] | None
+    right_gunner_seat_class: BGCReference[VehicleSeat] | None
+    helicopter_spotter_seat_class: BGCReference[VehicleSeat]
+    left_mg_controller: Annotated[
+        ObjectReference[Any],
+        Field(alias="LeftMGController"),
+    ]
+    right_mg_controller: Annotated[
+        ObjectReference[Any],
+        Field(alias="RightMGController"),
+    ]
+
+    armor_collision_turret_mounts: Annotated[
+        ObjectReference[Any] | None,
+        Field(alias="ArmourCollision_TurretMounts"),
+    ] = None
+    armor_collision_main_rotor_blades: Annotated[
+        ObjectReference[Any] | None,
+        Field(alias="ArmourCollision_MainRotorBlades"),
+    ] = None
+    armor_collision_rear_rotor_blades: Annotated[
+        ObjectReference[Any] | None,
+        Field(alias="ArmourCollision_RearRotorBlades"),
+    ] = None
+    armor_collision_transport_seats: Annotated[
+        ObjectReference[Any] | None,
+        Field(alias="ArmourCollision_TransportSeats"),
+    ] = None
+
+    def get_driver_seat(self) -> VehicleSeat:
+        return self.driver_seat_class.get_inst(VehicleSeat)
+
+    def get_passenger_seat(self) -> VehicleSeat:
+        return self.passenger_seat_class.get_inst(VehicleSeat)
+
+    def get_left_gunner_seat(self) -> VehicleSeat | None:
+        if not self.left_gunner_seat_class:
+            return None
+        return self.left_gunner_seat_class.get_inst(VehicleSeat)
+
+    def get_right_gunner_seat(self) -> VehicleSeat | None:
+        if not self.right_gunner_seat_class:
+            return None
+        return self.right_gunner_seat_class.get_inst(VehicleSeat)
+
+    def get_helicopter_spotter_seat(self) -> VehicleSeat:
+        return self.helicopter_spotter_seat_class.get_inst(VehicleSeat)
+
+    def get_seats(self) -> Iterator[VehicleSeat]:
+        yield from super().get_seats()
+        yield self.get_driver_seat()
+        if (seat := self.get_left_gunner_seat()) is not None:
+            yield seat
+        if (seat := self.get_right_gunner_seat()) is not None:
+            yield seat
+        yield self.get_helicopter_spotter_seat()
+        for _ in range(self.num_passenger_seats):
+            yield self.get_passenger_seat()
+
+
 HLLVehiclePropT_co = TypeVar(
     "HLLVehiclePropT_co",
     bound=HLLVehicleProperties,
@@ -191,7 +278,9 @@ HLLVehiclePropT_co = TypeVar(
     | HLLHalftrackProperties
     | HLLTruckProperties
     | HLLHowitzerProperties
-    | HLLAntiTankGunProperties,
+    | HLLAntiTankGunProperties
+    | HLLVBoatProperties
+    | HLLVHelicopterProperties,
     covariant=True,
 )
 

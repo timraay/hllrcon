@@ -11,7 +11,6 @@ from pydantic_core import CoreSchema, core_schema
 from typing_extensions import TypeVar
 
 from scripts import HLL_METADATA_PATH
-from tests.integration_tests.conftest import HLL_GAME
 
 RE_OBJECT_PATH = re.compile(r"^(?P<path>.+?)(?:\.(?P<index>\d+))?$")
 RE_ASSET_PATH = re.compile(r"^(?P<path>.+)\.(?P<name>.+)$")
@@ -56,8 +55,10 @@ def merge_dicts(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any
 def local_to_abs_path(local_path: str | PathLike, *, add_ext: bool = True) -> Path:
     local_path_str = Path(local_path).as_posix()
 
+    from scripts.extractlib.utils import game_switch  # noqa: PLC0415
+
     if local_path_str.startswith("/Game/"):
-        game_name = "HLL" if HLL_GAME == "hll" else "HLLVietnam"
+        game_name = game_switch("HLL", "HLLVietnam")
         local_path_str = f"./{game_name}/Content/" + local_path_str.removeprefix(
             "/Game/",
         )
@@ -107,6 +108,12 @@ def load_raw_from_file(
         raise TypeError(msg)
 
     raw_obj.setdefault("Properties", {})
+
+    plain_obj = Object[Any].model_validate(raw_obj)
+    if plain_obj.super is not None:
+        raw_super_obj = plain_obj.super.object_path.load_raw()
+        raw_obj = merge_dicts(raw_super_obj, raw_obj)
+
     plain_obj = Object[Any].model_validate(raw_obj)
     if plain_obj.template is not None:
         raw_template_obj = plain_obj.template.object_path.load_raw()
@@ -198,7 +205,7 @@ class ObjectPath(str):
         return core_schema.no_info_after_validator_function(cls, handler(str))
 
 
-class ObjectReference(Model, Generic[ObjectT]):
+class ObjectReference(Model, Generic[ObjectT_co]):
     object_name: str
     object_path: ObjectPath
 
@@ -208,7 +215,7 @@ class ObjectReference(Model, Generic[ObjectT]):
     def is_script(self) -> bool:
         return self.object_path.startswith("/Script/")
 
-    def get(self, obj_type: type[ObjectT]) -> ObjectT:
+    def get(self, obj_type: type[ObjectT_co]) -> ObjectT_co:
         return self.object_path.load(obj_type)
 
 
@@ -218,6 +225,7 @@ class Object(Model, Generic[ModelT_co]):
     flags: str
     class_: Annotated[str, Field(validation_alias="Class")]
     outer: ObjectReference | None = None
+    super: ObjectReference | None = None
     template: ObjectReference | None = None
     properties: ModelT_co
 
@@ -237,12 +245,12 @@ class AssetPath(ObjectPath):
         self.obj_index = str(groupdict["name"])
 
 
-class AssetReference(Model, Generic[ObjectT]):
+class AssetReference(Model, Generic[ObjectT_co]):
     asset_path_name: AssetPath
     sub_path_string: str | None = None
 
     def is_none(self) -> bool:
         return self.asset_path_name.is_none()
 
-    def get(self, asset_type: type[ObjectT]) -> ObjectT:
+    def get(self, asset_type: type[ObjectT_co]) -> ObjectT_co:
         return self.asset_path_name.load(asset_type)
