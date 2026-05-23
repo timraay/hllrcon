@@ -687,10 +687,12 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "type": WeaponType.ANTI_MATERIEL_RIFLE,
     },
     "A.P. Shrapnel Mine Mk II": {
+        "meth_name": "AP_SHRAPNEL_MINE_MK_II",
         "name": "AP Shrapnel Mine Mk II",
         "type": WeaponType.AP_MINE,
     },
     "A.T. Mine G.S. Mk V": {
+        "meth_name": "AT_MINE_GS_MK_V",
         "name": "AT Mine G.S. Mk V",
         "type": WeaponType.AT_MINE,
     },

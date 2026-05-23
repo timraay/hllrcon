@@ -36,22 +36,18 @@ HLL_LOADOUT_CONSTRUCTOR_TEMPLATE = """\
             items={items},
         )"""
 HLL_LOADOUT_ITEM_CONSTRUCTOR_TEMPLATE = """\
-HLLLoadoutItem(name="{self.name}", amount={self.amount})"""
+HLLLoadoutItem(
+    weapon=HLLWeapon.{self.weapon.meth_name},
+    ammo={self.ammo},
+)"""
 
 
 class LoadoutItemData(BaseModel):
-    name: str
-    amount: int
+    weapon: WeaponData
+    ammo: int
 
     def to_constructor(self) -> str:
         return HLL_LOADOUT_ITEM_CONSTRUCTOR_TEMPLATE.format(self=self)
-
-    def get_weapon(self, loadout: "LoadoutData") -> WeaponData:
-        return WeaponData(
-            id=self.name,
-            name=self.name,
-            factions={loadout.faction},
-        )
 
 
 class LoadoutData(BaseModel):
@@ -83,7 +79,7 @@ class LoadoutData(BaseModel):
         )
 
     def get_weapons(self) -> list[WeaponData]:
-        return [item.get_weapon(self) for item in self.items]
+        return [item.weapon for item in self.items]
 
 
 LOADOUTS_DIR = Path("HLL/Content/Blueprints/Loadouts")
@@ -123,8 +119,12 @@ def get_loadout_data() -> Iterator[LoadoutData]:
                     item_name = str(weapon_meta.display_name)
                     items.append(
                         LoadoutItemData(
-                            name=item_name,
-                            amount=item.initial_clips,
+                            weapon=WeaponData(
+                                id=item_name,
+                                name=item_name,
+                                factions={faction},
+                            ),
+                            ammo=item.initial_clips,
                         ),
                     )
 

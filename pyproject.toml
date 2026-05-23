@@ -90,6 +90,10 @@ omit = [
     "tests/**",
     "tests/integration_tests/**",
     "scripts/**",
+    "scripts/extract/**",
+    "scripts/extractlib/**",
+    "scripts/extractlib/objects/**",
+    "scripts/extractlib/structs/**",
     "tmp.py",
 ]
 

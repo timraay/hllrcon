@@ -1,3 +1,4 @@
+import itertools
 import json
 from collections.abc import Generator
 from typing import Annotated, NamedTuple
@@ -28,8 +29,11 @@ from hllrcon.data._utils import (
     model_serializer,
 )
 from hllrcon.data.factions import Faction, HLLVFaction
+from hllrcon.data.loadouts import HLLVLoadoutItem
 from hllrcon.data.maps import CardinalDirection, Orientation
+from hllrcon.data.roles import HLLVRole, Role
 from hllrcon.data.sectors import GridPositionalModel
+from hllrcon.data.weapons import HLLVWeapon, Weapon
 from pydantic import BaseModel, ValidationError
 
 
@@ -591,6 +595,7 @@ class TestDataMaps:
             id="foo",
             name="Foo",
             tag="FOO",
+            year=1944,
             pretty_name="Foo",
             short_name="FOO",
             allies=HLLFaction.US,
@@ -632,75 +637,272 @@ class TestDataRoles:
             HLLTeam.by_id(14)
 
     class RoleProperties(NamedTuple):
-        role: HLLRole
+        roles: list[Role]
         is_infantry: bool
         is_tanker: bool
         is_artillery: bool
         is_mortar: bool
         is_recon: bool
+        is_helicopter: bool
         is_squad_leader: bool
 
     @pytest.mark.parametrize(
         "properties",
         [
-            RoleProperties(HLLRole.RIFLEMAN, True, False, False, False, False, False),
-            RoleProperties(HLLRole.ASSAULT, True, False, False, False, False, False),
             RoleProperties(
-                HLLRole.AUTOMATIC_RIFLEMAN,
-                True,
-                False,
-                False,
-                False,
-                False,
-                False,
+                [
+                    HLLRole.RIFLEMAN,
+                    HLLRole.ASSAULT,
+                    HLLRole.AUTOMATIC_RIFLEMAN,
+                    HLLRole.MEDIC,
+                    HLLRole.SUPPORT,
+                    HLLRole.MACHINE_GUNNER,
+                    HLLRole.ANTI_TANK,
+                    HLLRole.ENGINEER,
+                    HLLVRole.RIFLEMAN,
+                    HLLVRole.MEDIC,
+                    HLLVRole.SPECIALIST,
+                    HLLVRole.MACHINE_GUNNER,
+                    HLLVRole.GRENADIER,
+                    HLLVRole.ENGINEER,
+                ],
+                is_infantry=True,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
             ),
-            RoleProperties(HLLRole.MEDIC, True, False, False, False, False, False),
-            RoleProperties(HLLRole.SPOTTER, False, False, False, False, True, True),
-            RoleProperties(HLLRole.SUPPORT, True, False, False, False, False, False),
             RoleProperties(
-                HLLRole.MACHINE_GUNNER,
-                True,
-                False,
-                False,
-                False,
-                False,
-                False,
+                [
+                    HLLRole.SPOTTER,
+                    HLLVRole.SPOTTER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=True,
+                is_helicopter=False,
+                is_squad_leader=True,
             ),
-            RoleProperties(HLLRole.ANTI_TANK, True, False, False, False, False, False),
-            RoleProperties(HLLRole.ENGINEER, True, False, False, False, False, False),
-            RoleProperties(HLLRole.OFFICER, True, False, False, False, False, True),
-            RoleProperties(HLLRole.SNIPER, False, False, False, False, True, False),
-            RoleProperties(HLLRole.CREWMAN, False, True, False, False, False, False),
             RoleProperties(
-                HLLRole.TANK_COMMANDER,
-                False,
-                True,
-                False,
-                False,
-                False,
-                True,
+                [
+                    HLLRole.OFFICER,
+                    HLLVRole.SQUAD_LEADER,
+                ],
+                is_infantry=True,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
             ),
-            RoleProperties(HLLRole.COMMANDER, False, False, False, False, False, True),
             RoleProperties(
-                HLLRole.ARTILLERY_OBSERVER,
-                False,
-                False,
-                True,
-                False,
-                False,
-                True,
+                [
+                    HLLRole.SNIPER,
+                    HLLVRole.SNIPER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=True,
+                is_helicopter=False,
+                is_squad_leader=False,
             ),
-            RoleProperties(HLLRole.OPERATOR, False, False, True, False, False, False),
-            RoleProperties(HLLRole.GUNNER, False, False, True, False, False, False),
+            RoleProperties(
+                [
+                    HLLRole.CREWMAN,
+                    HLLVRole.CREWMAN,
+                ],
+                is_infantry=False,
+                is_tanker=True,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.TANK_COMMANDER,
+                    HLLVRole.TANK_COMMANDER,
+                ],
+                is_infantry=False,
+                is_tanker=True,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.COMMANDER,
+                    HLLVRole.COMMANDER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.ARTILLERY_OBSERVER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=True,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.OPERATOR,
+                    HLLRole.GUNNER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=True,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.OBSERVER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=True,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.SUPPORT,
+                    HLLVRole.GUNNER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=True,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.LOGISTICS_OFFICER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=True,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.PILOT,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=True,
+                is_squad_leader=False,
+            ),
         ],
     )
     def test_role_properties(self, properties: RoleProperties) -> None:
-        assert properties.role.is_infantry is properties.is_infantry
-        assert properties.role.is_tanker is properties.is_tanker
-        assert properties.role.is_artillery is properties.is_artillery
-        assert properties.role.is_mortar is properties.is_mortar
-        assert properties.role.is_recon is properties.is_recon
-        assert properties.role.is_squad_leader is properties.is_squad_leader
+        for role in properties.roles:
+            assert role.is_infantry is properties.is_infantry
+            assert role.is_tanker is properties.is_tanker
+            assert role.is_artillery is properties.is_artillery
+            assert role.is_mortar is properties.is_mortar
+            assert role.is_recon is properties.is_recon
+            assert role.is_helicopter is properties.is_helicopter
+            assert role.is_squad_leader is properties.is_squad_leader
+
+    def test_role_hllv_get_available_capacity(self) -> None:
+        role = HLLVRole.SNIPER
+
+        assert role.get_available_capacity(0).max_weight == 6
+        assert role.get_available_capacity(1).max_weight == 6
+        assert role.get_available_capacity(10).max_weight == 15
+        assert role.get_available_capacity(11).max_weight == 15
+
+    def test_role_hllv_get_available_items(self) -> None:
+        role = HLLVRole.SNIPER
+        faction = HLLVFaction.US
+
+        l1_items = {
+            HLLVLoadoutItem.M40,
+            HLLVLoadoutItem.WFL_USHAMMER,
+            HLLVLoadoutItem.M18_SMOKE,
+            HLLVLoadoutItem.M61,
+            HLLVLoadoutItem.WFL_TNT,
+            HLLVLoadoutItem.WFL_USBANDAGE,
+            HLLVLoadoutItem.M3_KNIFE,
+            HLLVLoadoutItem._1911A1,
+        }
+
+        l10_items = l1_items | {
+            HLLVLoadoutItem.M18_SMOKEX2,
+            HLLVLoadoutItem.M61X2,
+            HLLVLoadoutItem.M18_CLAYMORE,
+            HLLVLoadoutItem.M18_SMOKEX3,
+            HLLVLoadoutItem.M61X3,
+            HLLVLoadoutItem.M18_CLAYMOREX2,
+            HLLVLoadoutItem.MODEL_77E_SHOTGUN,
+        }
+
+        assert role.get_available_items(0, faction) == l1_items
+        assert role.get_available_items(1, faction) == l1_items
+        assert role.get_available_items(10, faction) == l10_items
+        assert role.get_available_items(11, faction) == l10_items
+
+        l1_weapons = {item.weapon for item in l1_items}
+        l10_weapons = {item.weapon for item in l10_items}
+
+        assert role.get_available_weapons(0, faction) == l1_weapons
+        assert role.get_available_weapons(1, faction) == l1_weapons
+        assert role.get_available_weapons(10, faction) == l10_weapons
+        assert role.get_available_weapons(11, faction) == l10_weapons
+
+    @pytest.mark.parametrize("role", HLLVRole.all())
+    def test_role_hllv_progression_incremental(self, role: HLLVRole) -> None:
+        assert len(role.progression) == 10
+
+        for i, progression in enumerate(role.progression):
+            assert progression.level == i + 1
+
+        for prev, curr in itertools.pairwise(role.progression):
+            assert prev.max_weight <= curr.max_weight
+            assert not (
+                prev.secondary_slot_unlocked and not curr.secondary_slot_unlocked
+            )
+            assert not (prev.extra_ammo_unlocked and not curr.extra_ammo_unlocked)
+            assert prev.lethal_slots <= curr.lethal_slots
+            assert prev.utility_slots <= curr.utility_slots
+
+            prev_items = role.get_available_items(prev.level, HLLVFaction.US)
+            curr_items = role.get_available_items(curr.level, HLLVFaction.US)
+            assert prev_items <= curr_items
 
 
 class TestDataWeapons:
@@ -719,8 +921,21 @@ class TestDataWeapons:
             HLLWeapon.by_id("m1 garand")
 
     def test_weapon_resolve_vehicle(self) -> None:
+        weapon: Weapon
+
         for weapon in HLLWeapon.all():
             weapon.vehicle  # noqa: B018
+
+        for weapon in HLLVWeapon.all():
+            weapon.vehicle  # noqa: B018
+
+    def test_weapon_is_lethal(self) -> None:
+        assert HLLWeapon.M1_GARAND.is_lethal
+        assert HLLWeapon.MK2_GRENADE.is_lethal
+        assert HLLWeapon.V_COAXIAL_M1919__SHERMAN_M4A3E2.is_lethal
+        assert not HLLWeapon.M18_SMOKE_GRENADE.is_lethal
+        assert not HLLWeapon.WESTINGHOUSE_M3_6_30.is_lethal
+        assert not HLLWeapon.WRENCH.is_lethal
 
 
 class TestDataVehicles:
@@ -809,7 +1024,11 @@ class TestDataLoadouts:
         with pytest.raises(ValueError, match="not found"):
             HLLLoadout.by_name(HLLFaction.US, HLLRole.RIFLEMAN, "invalid_loadout")
 
-    def test_loadout_equipment_weapon(self) -> None:
-        assert HLLLoadout.US_OFFICER_NCO.items[0].weapon == HLLWeapon.M1_GARAND
-        assert HLLLoadout.US_OFFICER_NCO.items[1].weapon == HLLWeapon.MK2_GRENADE
-        assert HLLLoadout.US_OFFICER_NCO.items[2].weapon is None
+
+class TestDataLoadoutItems:
+    def test_loadout_calculate_weight(self) -> None:
+        loadout = HLLVLoadoutItem.RPG2
+        # Base is weight 6 with 2 ammo. Each rocket adds 3 weight.
+        assert loadout.calculate_weight(1) == 6
+        assert loadout.calculate_weight(2) == 6
+        assert loadout.calculate_weight(3) == 9

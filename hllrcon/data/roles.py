@@ -6,6 +6,11 @@ from pydantic import BaseModel
 
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
 
+if TYPE_CHECKING:
+    from hllrcon.data.factions import HLLVFaction
+    from hllrcon.data.loadouts import HLLVLoadoutItem
+    from hllrcon.data.weapons import HLLVWeapon
+
 RoleTypeT = TypeVar("RoleTypeT", bound=StrEnum)
 
 
@@ -79,6 +84,15 @@ class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
     def is_helicopter(self) -> bool:
         """Whether the role is associated with helicopter units."""
         return self.type == HLLVRoleType.HELICOPTER
+
+    @staticmethod
+    def clamp_level(level: int) -> int:
+        """Clamp a role level to the valid range of 1 to 10 inclusive."""
+        if level < 1:
+            return 1
+        if level > 10:
+            return 10
+        return level
 
 
 class HLLRole(_Role[HLLRoleType]):
@@ -452,7 +466,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             - Pilot
             """
 
-    def get_unlocks_at_level(self, level: int) -> HLLVRoleProgression:
+    def get_available_capacity(self, level: int) -> HLLVRoleProgression:
         """Get a role's available capacity at a given level.
 
         Parameters
@@ -466,11 +480,63 @@ class HLLVRole(_Role[HLLVRoleType]):
             The unlocks available at the given level.
 
         """
-        if level < 1 or level > 10:
-            msg = f"Level must be between 1 and 10, got {level}."
-            raise ValueError(msg)
+        return self.progression[self.clamp_level(level) - 1]
 
-        return self.progression[level - 1]
+    def get_available_items(
+        self,
+        level: int,
+        faction: "HLLVFaction",
+    ) -> set["HLLVLoadoutItem"]:
+        """Get the loadout items available to a role at a given level.
+
+        Parameters
+        ----------
+        level : int
+            The role level to get the unlocks for. Must be between 1 and 10 inclusive.
+        faction : HLLVFaction
+            The faction to get the unlocks for.
+
+        Returns
+        -------
+        set[HLLVLoadoutItem]
+            The loadout items available to the role at the given level.
+
+        """
+        from hllrcon.data.loadouts import HLLVLoadoutItem  # noqa: PLC0415
+
+        clamped_level = self.clamp_level(level)
+
+        return {
+            item
+            for item in HLLVLoadoutItem.all()
+            if (
+                item.faction is faction
+                and self in item.level_requirements
+                and item.level_requirements[self] <= clamped_level
+            )
+        }
+
+    def get_available_weapons(
+        self,
+        level: int,
+        faction: "HLLVFaction",
+    ) -> set["HLLVWeapon"]:
+        """Get the weapons available to a role at a given level.
+
+        Parameters
+        ----------
+        level : int
+            The role level to get the unlocks for. Must be between 1 and 10 inclusive.
+        faction : HLLVFaction
+            The faction to get the unlocks for.
+
+        Returns
+        -------
+        set[HLLVWeapon]
+            The weapons available to the role at the given level.
+
+        """
+        return {item.weapon for item in self.get_available_items(level, faction)}
 
     @class_cached_property
     @classmethod

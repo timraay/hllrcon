@@ -1,5 +1,5 @@
 # mypy: disable-error-code="prop-decorator"
-# ruff: noqa: N802, RUF001
+# ruff: noqa: N802, SLF001
 
 from enum import StrEnum
 from functools import cached_property
@@ -24,18 +24,10 @@ class HLLLoadoutId(NamedTuple):
 
 
 class HLLLoadoutItem(BaseModel, frozen=True):
-    name: str
-    """The name of this item."""
-    amount: int = 1
+    weapon: HLLWeapon
+    """The weapon corresponding to this item."""
+    ammo: int = 1
     """The amount of this item. For small arms, refers to the number of magazines."""
-
-    @cached_property
-    def weapon(self) -> HLLWeapon | None:
-        """The weapon corresponding to this item, if any."""
-        try:
-            return HLLWeapon.by_id(self.name)  # type: ignore[return-value]
-        except ValueError:
-            return None
 
 
 class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
@@ -138,12 +130,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=13),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=13,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -156,13 +166,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="WALTHER P38", amount=10),
-                HLLLoadoutItem(name="M24 STIELHANDGRANATE", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -175,12 +206,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="GEWEHR 43", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.GEWEHR_43,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -193,12 +242,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="GEWEHR 43", amount=10),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.GEWEHR_43,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -211,12 +278,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -229,12 +314,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="GEWEHR 43", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=6),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=3),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.GEWEHR_43,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -247,13 +350,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=9,
             items=[
-                HLLLoadoutItem(name="STG44", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=1),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STG44,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -266,11 +390,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="STG44", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STG44,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -283,11 +422,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=10),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -300,11 +454,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="FG42", amount=5),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FG42,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -317,12 +486,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=8),
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=4),
-                HLLLoadoutItem(name="MORPHINE AMPOULE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_AMPOULE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -335,12 +522,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="LUGER P08", amount=16),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=6),
-                HLLLoadoutItem(name="MORPHINE AMPOULE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="MEDICAL SUPPLIES", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=16,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_AMPOULE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MEDICAL_SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -353,15 +558,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -374,14 +606,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=10),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -394,12 +650,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -412,13 +686,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -431,13 +726,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="FLAMMENWERFER 41", amount=1),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLAMMENWERFER_41,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -450,10 +766,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MG34", amount=10),
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MG34,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -466,10 +794,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MG42", amount=6),
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MG42,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -482,11 +822,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="PANZERSCHRECK", amount=2),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PANZERSCHRECK,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -499,12 +854,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="PAK 40", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PAK_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -517,13 +890,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="TELLERMINE 43", amount=4),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TELLERMINE_43,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -536,14 +930,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="S-MINE", amount=2),
-                HLLLoadoutItem(name="TELLERMINE 43", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TELLERMINE_43,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -556,13 +974,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -575,14 +1014,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -595,14 +1058,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="GEWEHR 43", amount=10),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.GEWEHR_43,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -615,13 +1102,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=13),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=3),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=3),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=13,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -634,12 +1142,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K x8", amount=19),
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_X8,
+                    ammo=19,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -652,12 +1178,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="FG42 x4", amount=12),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FG42_X4,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -670,10 +1214,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -686,13 +1246,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -705,12 +1290,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=7,
             items=[
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -723,12 +1326,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=4),
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -741,12 +1366,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -759,13 +1406,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="LUGER P08", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -778,13 +1446,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="GEWEHR 43", amount=12),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.GEWEHR_43,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -797,14 +1486,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -817,15 +1530,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=10),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -838,14 +1578,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="TELLERMINE 43", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TELLERMINE_43,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -858,13 +1622,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -877,12 +1662,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=2),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=2,
+                ),
             ],
         )
 
@@ -895,13 +1698,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -914,12 +1738,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=19),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=19,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -932,12 +1774,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=12),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=4),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -950,12 +1810,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -968,12 +1846,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M97 TRENCH GUN", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M97_TRENCH_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -986,12 +1882,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=6),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=4),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1004,13 +1918,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=9,
             items=[
-                HLLLoadoutItem(name="M3 GREASE GUN", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=1),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_GREASE_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1023,11 +1958,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1918A2 BAR", amount=10),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1918A2_BAR,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1040,11 +1990,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1057,12 +2022,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=3),
-                HLLLoadoutItem(name="COLT M1911", amount=6),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=4),
-                HLLLoadoutItem(name="MORPHINE SYRETTE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_SYRETTE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1075,12 +2058,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="COLT M1911", amount=16),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=6),
-                HLLLoadoutItem(name="MORPHINE SYRETTE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="MEDICAL SUPPLIES", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=16,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_SYRETTE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MEDICAL_SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1093,15 +2094,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M2 AP MINE", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1114,14 +2142,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=12),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1134,12 +2186,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=12),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1152,13 +2222,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M3 GREASE GUN", amount=6),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_GREASE_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1171,13 +2262,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="M2 FLAMETHROWER", amount=1),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_FLAMETHROWER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1190,10 +2302,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="BROWNING M1919", amount=6),
-                HLLLoadoutItem(name="COLT M1911", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BROWNING_M1919,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1206,10 +2330,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1918A2 BAR", amount=14),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1918A2_BAR,
+                    ammo=14,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1222,11 +2358,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=12),
-                HLLLoadoutItem(name="BAZOOKA", amount=2),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BAZOOKA,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1239,12 +2390,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=12),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="57MM M1", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon._57MM_M1,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1257,13 +2426,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="M1A1 AT MINE", amount=4),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_AT_MINE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1276,14 +2466,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="M2 AP MINE", amount=2),
-                HLLLoadoutItem(name="M1A1 AT MINE", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_AT_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1296,13 +2510,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M97 TRENCH GUN", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M2 AP MINE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M97_TRENCH_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1315,14 +2550,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="M3 GREASE GUN", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_GREASE_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1335,14 +2594,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1355,14 +2638,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=12),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1375,13 +2682,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=19),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=3),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=3),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=19,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1394,12 +2722,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1903 SPRINGFIELD", amount=17),
-                HLLLoadoutItem(name="COLT M1911", amount=6),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1903_SPRINGFIELD,
+                    ammo=17,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1412,12 +2758,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1903 SPRINGFIELD", amount=17),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="M2 AP MINE", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1903_SPRINGFIELD,
+                    ammo=17,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1430,10 +2794,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1446,13 +2826,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1465,12 +2870,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=7,
             items=[
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1483,12 +2906,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=4),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1501,12 +2946,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="COLT M1911", amount=6),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1519,13 +2986,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1538,13 +3026,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=12),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1557,14 +3066,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1A1 THOMPSON", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1577,15 +3110,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=12),
-                HLLLoadoutItem(name="COLT M1911", amount=4),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="M2 AP MINE", amount=1),
-                HLLLoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WESTINGHOUSE_M3_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1598,14 +3158,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 CARBINE", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="M2 AP MINE", amount=1),
-                HLLLoadoutItem(name="M1A1 AT MINE", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_CARBINE,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1A1_AT_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1618,13 +3202,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M97 TRENCH GUN", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M2 AP MINE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M97_TRENCH_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M2_AP_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1637,12 +3242,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1 GARAND", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MK2 GRENADE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1655,13 +3278,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M3 GREASE GUN", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M18 SMOKE GRENADE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="M3 KNIFE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_GREASE_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M18_SMOKE_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1674,12 +3318,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 1891", amount=12),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_1891,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1692,13 +3354,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT M38", amount=12),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=4),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_M38,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1711,12 +3394,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT M38", amount=12),
-                HLLLoadoutItem(name="MOLOTOV", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_M38,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOLOTOV,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1729,12 +3430,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=14),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=14,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1747,11 +3466,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="PPSH 41 W/DRUM", amount=5),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41_W_DRUM,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1764,12 +3498,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="SVT40", amount=12),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=6),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=3),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1782,12 +3534,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=9,
             items=[
-                HLLLoadoutItem(name="PPSH 41 W/DRUM", amount=5),
-                HLLLoadoutItem(name="MOLOTOV", amount=2),
-                HLLLoadoutItem(name="SATCHEL CHARGE", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41_W_DRUM,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOLOTOV,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL_CHARGE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1800,11 +3570,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41 W/DRUM", amount=5),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41_W_DRUM,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1817,11 +3602,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="PPSH 41 W/DRUM", amount=5),
-                HLLLoadoutItem(name="MOLOTOV", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41_W_DRUM,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOLOTOV,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1834,12 +3634,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=8),
-                HLLLoadoutItem(name="NAGANT M1895", amount=7),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=4),
-                HLLLoadoutItem(name="REVIVE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=7,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.REVIVE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1852,12 +3670,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="NAGANT M1895", amount=18),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=6),
-                HLLLoadoutItem(name="REVIVE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="MEDICAL SUPPLIES", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=18,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.REVIVE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MEDICAL_SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1870,15 +3706,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=8),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="POMZ AP MINE", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.POMZ_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1891,14 +3754,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SVT40", amount=12),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1911,12 +3798,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=12),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1929,13 +3834,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SVT40", amount=12),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1948,13 +3874,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT M38", amount=12),
-                HLLLoadoutItem(name="NAGANT M1895", amount=4),
-                HLLLoadoutItem(name="MOLOTOV", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_M38,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOLOTOV,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1967,11 +3914,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="DP-27", amount=12),
-                HLLLoadoutItem(name="NAGANT M1895", amount=6),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DP_27,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -1984,11 +3946,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=16),
-                HLLLoadoutItem(name="PTRS-41", amount=8),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=16,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PTRS_41,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2001,12 +3978,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=12),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="ZiS-2", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.ZIS_2,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2019,13 +4014,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=8),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SATCHEL CHARGE", amount=1),
-                HLLLoadoutItem(name="TM-35 AT MINE", amount=4),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL_CHARGE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TM_35_AT_MINE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2038,11 +4054,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=8),
-                HLLLoadoutItem(name="BAZOOKA", amount=2),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BAZOOKA,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2055,14 +4086,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="POMZ AP MINE", amount=2),
-                HLLLoadoutItem(name="TM-35 AT MINE", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.POMZ_AP_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TM_35_AT_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2075,13 +4130,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="POMZ AP MINE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="SATCHEL CHARGE", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.POMZ_AP_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL_CHARGE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2094,14 +4170,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=8),
-                HLLLoadoutItem(name="TOKAREV TT33", amount=6),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TOKAREV_TT33,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2114,14 +4214,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SVT40", amount=12),
-                HLLLoadoutItem(name="TOKAREV TT33", amount=4),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TOKAREV_TT33,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2134,13 +4258,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="PPSH 41 W/DRUM", amount=5),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41_W_DRUM,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2153,12 +4298,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SCOPED MOSIN NAGANT 91/30", amount=17),
-                HLLLoadoutItem(name="NAGANT M1895", amount=6),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SCOPED_MOSIN_NAGANT_91_30,
+                    ammo=17,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2171,10 +4334,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="SCOPED SVT40", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SCOPED_SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2187,10 +4362,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="NAGANT M1895", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2203,13 +4394,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="NAGANT M1895", amount=6),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2222,12 +4438,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=7,
             items=[
-                HLLLoadoutItem(name="NAGANT M1895", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2240,12 +4474,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=4),
-                HLLLoadoutItem(name="NAGANT M1895", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2258,12 +4514,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="TOKAREV TT33", amount=6),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TOKAREV_TT33,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2276,13 +4554,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=10),
-                HLLLoadoutItem(name="NAGANT M1895", amount=4),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NAGANT_M1895,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2295,14 +4594,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="PPSH 41", amount=8),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PPSH_41,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2315,15 +4638,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SVT40", amount=12),
-                HLLLoadoutItem(name="TOKAREV TT33", amount=12),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="POMZ AP MINE", amount=1),
-                HLLLoadoutItem(name="RKKA 8×40", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TOKAREV_TT33,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.POMZ_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RKKA_8_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2336,14 +4686,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT M38", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="POMZ AP MINE", amount=1),
-                HLLLoadoutItem(name="TM-35 AT MINE", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_M38,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.POMZ_AP_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TM_35_AT_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2356,13 +4730,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT 91/30", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="POMZ AP MINE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_91_30,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.POMZ_AP_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2375,12 +4770,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MOSIN NAGANT M38", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="RG-42 GRENADE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MOSIN_NAGANT_M38,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RG_42_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2393,13 +4806,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SVT40", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="RDG-2 SMOKE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="MPL-50 SPADE", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SVT40,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2412,12 +4846,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Small Ammunition Box", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2430,12 +4882,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2448,12 +4918,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=2),
-                HLLLoadoutItem(name="Explosive Ammo Box", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2466,12 +4954,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.V", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_V,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2484,12 +4990,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2502,12 +5026,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=6),
-                HLLLoadoutItem(name="No.77", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2520,13 +5062,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=9,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                HLLLoadoutItem(name="Mills Bomb", amount=1),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Satchel", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2539,11 +5102,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Bren Gun", amount=10),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BREN_GUN,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2556,11 +5134,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2573,12 +5166,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=4),
-                HLLLoadoutItem(name="Webley MK VI", amount=8),
-                HLLLoadoutItem(name="No.77", amount=4),
-                HLLLoadoutItem(name="Morphine", amount=20),
-                HLLLoadoutItem(name="Bandage", amount=20),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2591,12 +5202,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=21),
-                HLLLoadoutItem(name="No.77", amount=6),
-                HLLLoadoutItem(name="Morphine", amount=20),
-                HLLLoadoutItem(name="Bandage", amount=20),
-                HLLLoadoutItem(name="Medical Supplies", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=21,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MEDICAL_SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2609,15 +5238,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.V", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Small Ammunition Box", amount=1),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_V,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2630,14 +5286,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_2_MK_5_FLARE_PISTOL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2650,12 +5330,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2668,13 +5366,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Small Ammunition Box", amount=1),
-                HLLLoadoutItem(name="Explosive Ammo Box", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2687,13 +5406,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="FLAMETHROWER", amount=1),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLAMETHROWER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2706,11 +5446,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Lewis Gun", amount=10),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LEWIS_GUN,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2723,10 +5478,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Bren Gun", amount=14),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BREN_GUN,
+                    ammo=14,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2739,11 +5506,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="PIAT", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PIAT,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2756,12 +5538,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Ordnance QF 6-pounder", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.ORDNANCE_QF_6_POUNDER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2774,14 +5574,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.V", amount=8),
-                HLLLoadoutItem(name="No.82 Grenade", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Satchel", amount=1),
-                HLLLoadoutItem(name="A.T. Mine G.S. Mk V", amount=4),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_V,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_82_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2794,12 +5618,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Boys Anti-tank Rifle", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BOYS_ANTI_TANK_RIFLE,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2812,14 +5654,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
-                HLLLoadoutItem(name="A.T. Mine G.S. Mk V", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2832,13 +5698,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Satchel", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2851,14 +5738,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.V", amount=5),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="No.82 Grenade", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_V,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_82_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2871,14 +5782,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.V", amount=5),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_V,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2891,14 +5826,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2911,13 +5870,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=3),
-                HLLLoadoutItem(name="No.77", amount=3),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2930,12 +5910,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I_SNIPER,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2948,12 +5946,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I_SNIPER,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2966,9 +5982,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2981,12 +6010,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
-                HLLLoadoutItem(name="Supplies", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -2999,11 +6050,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=7,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3016,11 +6082,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=4),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3033,11 +6118,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3050,13 +6154,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=8),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3069,13 +6194,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3088,14 +6234,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=5),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_2_MK_5_FLARE_PISTOL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3108,15 +6278,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_2_MK_5_FLARE_PISTOL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3129,14 +6326,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="A.T. Mine G.S. Mk V", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3149,13 +6370,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=5),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=2),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=2,
+                ),
             ],
         )
 
@@ -3168,12 +6410,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3186,13 +6446,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=5),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Explosive Ammo Box", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3205,12 +6486,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=13),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=13,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3223,13 +6522,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="WALTHER P38", amount=10),
-                HLLLoadoutItem(name="M24 STIELHANDGRANATE", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3242,12 +6562,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3260,12 +6598,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3278,12 +6634,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3296,12 +6670,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=6),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=3),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3314,13 +6706,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=9,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=1),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3333,11 +6746,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=10),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3350,11 +6778,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=10),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3367,12 +6810,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=8),
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=4),
-                HLLLoadoutItem(name="MORPHINE AMPOULE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_AMPOULE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3385,12 +6846,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="LUGER P08", amount=16),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=6),
-                HLLLoadoutItem(name="MORPHINE AMPOULE", amount=20),
-                HLLLoadoutItem(name="BANDAGE", amount=20),
-                HLLLoadoutItem(name="MEDICAL SUPPLIES", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=16,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_AMPOULE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MEDICAL_SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3403,15 +6882,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3424,14 +6930,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=10),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3444,12 +6974,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3462,13 +7010,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="SMALL AMMUNITION BOX", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3481,13 +7050,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="FLAMMENWERFER 41", amount=1),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLAMMENWERFER_41,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3500,10 +7090,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MG34", amount=10),
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MG34,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3516,10 +7118,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MG42", amount=6),
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MG42,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3532,11 +7146,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="PANZERSCHRECK", amount=2),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PANZERSCHRECK,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3549,12 +7178,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="PAK 40", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PAK_40,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3567,13 +7214,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="TELLERMINE 43", amount=4),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TELLERMINE_43,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3586,14 +7254,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="S-MINE", amount=2),
-                HLLLoadoutItem(name="TELLERMINE 43", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TELLERMINE_43,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3606,13 +7298,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SATCHEL", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3625,14 +7338,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3645,14 +7382,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3665,13 +7426,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=3),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=3),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3684,12 +7466,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K x8", amount=19),
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_X8,
+                    ammo=19,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3702,12 +7502,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K x8", amount=12),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_X8,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3720,9 +7538,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3735,12 +7566,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3753,11 +7606,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=7,
             items=[
-                HLLLoadoutItem(name="WALTHER P38", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3770,11 +7638,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=4),
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3787,11 +7674,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="LUGER P08", amount=6),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3804,13 +7710,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="LUGER P08", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3823,13 +7750,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3842,14 +7790,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="MP40", amount=8),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3862,15 +7834,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=10),
-                HLLLoadoutItem(name="WALTHER P38", amount=4),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="WATCH", amount=1),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="DIENSTGLAS 6×30", amount=1),
-                HLLLoadoutItem(name="FLARE GUN", amount=1),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.DIENSTGLAS_6_30,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLARE_GUN,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3883,14 +7882,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="WRENCH", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="S-MINE", amount=1),
-                HLLLoadoutItem(name="TELLERMINE 43", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TELLERMINE_43,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3903,13 +7926,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="S-MINE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="TORCH", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.S_MINE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3922,12 +7966,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="KARABINER 98K", amount=12),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="M43 STIELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=2),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K,
+                    ammo=12,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=2,
+                ),
             ],
         )
 
@@ -3940,13 +8002,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="MP40", amount=6),
-                HLLLoadoutItem(name="BANDAGE", amount=2),
-                HLLLoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
-                HLLLoadoutItem(name="SUPPLIES", amount=1),
-                HLLLoadoutItem(name="EXPLOSIVE AMMO BOX", amount=1),
-                HLLLoadoutItem(name="HAMMER", amount=1),
-                HLLLoadoutItem(name="FELDSPATEN", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MP40,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NB39_NEBELHANDGRANATE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3959,12 +8042,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Small Ammunition Box", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3977,12 +8078,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -3995,12 +8114,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.RIFLEMAN,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Explosive Ammo Box", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4013,12 +8150,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4031,12 +8186,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4049,12 +8222,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=6),
-                HLLLoadoutItem(name="No.77", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4067,13 +8258,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ASSAULT,
             requires_level=9,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                HLLLoadoutItem(name="Mills Bomb", amount=1),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Satchel", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4086,11 +8298,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Bren Gun", amount=10),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BREN_GUN,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4103,11 +8330,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4120,12 +8362,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=4),
-                HLLLoadoutItem(name="Webley MK VI", amount=8),
-                HLLLoadoutItem(name="No.77", amount=4),
-                HLLLoadoutItem(name="Morphine", amount=20),
-                HLLLoadoutItem(name="Bandage", amount=20),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4138,12 +8398,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MEDIC,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=21),
-                HLLLoadoutItem(name="No.77", amount=6),
-                HLLLoadoutItem(name="Morphine", amount=20),
-                HLLLoadoutItem(name="Bandage", amount=20),
-                HLLLoadoutItem(name="Medical Supplies", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=21,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MEDICAL_SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4156,15 +8434,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Small Ammunition Box", amount=1),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4177,14 +8482,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SPOTTER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_2_MK_5_FLARE_PISTOL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4197,12 +8526,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4215,13 +8562,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Small Ammunition Box", amount=1),
-                HLLLoadoutItem(name="Explosive Ammo Box", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMALL_AMMUNITION_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4234,13 +8602,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SUPPORT,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="FLAMETHROWER", amount=1),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FLAMETHROWER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4253,11 +8642,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Lewis Gun", amount=10),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LEWIS_GUN,
+                    ammo=10,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4270,10 +8674,22 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.MACHINE_GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Bren Gun", amount=14),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BREN_GUN,
+                    ammo=14,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4286,11 +8702,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="PIAT", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PIAT,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4303,12 +8734,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Ordnance QF 6-pounder", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.ORDNANCE_QF_6_POUNDER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4321,14 +8770,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="A.T. Mine G.S. Mk V", amount=4),
-                HLLLoadoutItem(name="Satchel", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4341,12 +8814,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ANTI_TANK,
             requires_level=8,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Boys Anti-tank Rifle", amount=8),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BOYS_ANTI_TANK_RIFLE,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4359,14 +8850,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
-                HLLLoadoutItem(name="A.T. Mine G.S. Mk V", amount=1),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4379,13 +8894,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
-                HLLLoadoutItem(name="Satchel", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SATCHEL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4398,14 +8934,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ENGINEER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=5),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4418,14 +8978,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=5),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4438,14 +9022,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4458,14 +9066,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OFFICER,
             requires_level=6,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=3),
-                HLLLoadoutItem(name="No.77", amount=3),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=3,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4478,12 +9110,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I_SNIPER,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4496,12 +9146,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.SNIPER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I_SNIPER,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4514,10 +9182,26 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4530,13 +9214,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4549,12 +9258,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.CREWMAN,
             requires_level=7,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4567,12 +9294,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=4),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4585,12 +9334,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.TANK_COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
-                HLLLoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXTERIOR_CUSTOMIZATION,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4603,13 +9374,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="M1928A1 THOMPSON", amount=8),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1928A1_THOMPSON,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4622,13 +9414,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.COMMANDER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4641,14 +9454,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=5),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_2_MK_5_FLARE_PISTOL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4661,15 +9498,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.ARTILLERY_OBSERVER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Webley MK VI", amount=4),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Watch", amount=1),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="Prism No.2 Mk II x6", amount=1),
-                HLLLoadoutItem(name="No.2 Mk 5 Flare Pistol", amount=1),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WATCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.PRISM_NO_2_MK_II_X6,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_2_MK_5_FLARE_PISTOL,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4682,14 +9546,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Wrench", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                HLLLoadoutItem(name="A.T. Mine G.S. Mk V", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4702,13 +9590,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.OPERATOR,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Bren Gun", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Torch", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=2),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BREN_GUN,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.AP_SHRAPNEL_MINE_MK_II,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=2,
+                ),
             ],
         )
 
@@ -4721,12 +9630,30 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=1,
             items=[
-                HLLLoadoutItem(name="SMLE No.1 Mk III", amount=6),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="Mills Bomb", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MILLS_BOMB,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 
@@ -4739,13 +9666,34 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             role=HLLRole.GUNNER,
             requires_level=3,
             items=[
-                HLLLoadoutItem(name="Sten Gun Mk.II", amount=5),
-                HLLLoadoutItem(name="Bandage", amount=2),
-                HLLLoadoutItem(name="No.77", amount=2),
-                HLLLoadoutItem(name="Supplies", amount=1),
-                HLLLoadoutItem(name="Explosive Ammo Box", amount=1),
-                HLLLoadoutItem(name="Hammer", amount=1),
-                HLLLoadoutItem(name="Fairbairn–Sykes", amount=1),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.STEN_GUN_MK_II,
+                    ammo=5,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
             ],
         )
 

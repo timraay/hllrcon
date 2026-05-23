@@ -884,7 +884,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def NO2_MK_5_FLARE_PISTOL(cls) -> "HLLWeapon":
+    def NO_2_MK_5_FLARE_PISTOL(cls) -> "HLLWeapon":
         """*No.2 Mk 5 Flare Pistol*"""
         return cls(
             id="No.2 Mk 5 Flare Pistol",
@@ -897,7 +897,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def NO77(cls) -> "HLLWeapon":
+    def NO_77(cls) -> "HLLWeapon":
         """*No.77*"""
         return cls(
             id="No.77",
@@ -910,7 +910,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def NO82_GRENADE(cls) -> "HLLWeapon":
+    def NO_82_GRENADE(cls) -> "HLLWeapon":
         """*No.82 Grenade*"""
         return cls(
             id="No.82 Grenade",
@@ -1014,7 +1014,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def PRISM_NO2_MK_II_X6(cls) -> "HLLWeapon":
+    def PRISM_NO_2_MK_II_X6(cls) -> "HLLWeapon":
         """*Prism No.2 Mk II x6*"""
         return cls(
             id="Prism No.2 Mk II x6",
@@ -1079,7 +1079,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def RIFLE_NO4_MK_I(cls) -> "HLLWeapon":
+    def RIFLE_NO_4_MK_I(cls) -> "HLLWeapon":
         """*Rifle No.4 Mk I*"""
         return cls(
             id="Rifle No.4 Mk I",
@@ -1092,7 +1092,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def RIFLE_NO4_MK_I_SNIPER(cls) -> "HLLWeapon":
+    def RIFLE_NO_4_MK_I_SNIPER(cls) -> "HLLWeapon":
         """*Rifle No.4 Mk I Sniper*"""
         return cls(
             id="Rifle No.4 Mk I Sniper",
@@ -1209,7 +1209,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def SMLE_NO1_MK_III(cls) -> "HLLWeapon":
+    def SMLE_NO_1_MK_III(cls) -> "HLLWeapon":
         """*SMLE No.1 Mk III*"""
         return cls(
             id="SMLE No.1 Mk III",
@@ -1222,7 +1222,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def STEN_GUN_MKII(cls) -> "HLLWeapon":
+    def STEN_GUN_MK_II(cls) -> "HLLWeapon":
         """*Sten Gun Mk.II*"""
         return cls(
             id="Sten Gun Mk.II",
@@ -1235,7 +1235,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def STEN_GUN_MKV(cls) -> "HLLWeapon":
+    def STEN_GUN_MK_V(cls) -> "HLLWeapon":
         """*Sten Gun Mk.V*"""
         return cls(
             id="Sten Gun Mk.V",
