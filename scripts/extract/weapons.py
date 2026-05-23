@@ -1017,6 +1017,228 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
 }
 
 HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
+    "M16A1": {
+        "name": "M16A1",
+        "type": WeaponType.ASSAULT_RIFLE,
+    },
+    "TNT": {
+        "name": "TNT",
+        "type": WeaponType.SATCHEL,
+    },
+    "Light Mortar": {
+        "name": "Wrench",
+        "type": WeaponType.WRENCH,
+    },
+    "M18 Claymore": {
+        "name": "M18 Claymore",
+        "type": WeaponType.AP_MINE,
+    },
+    "M1911A1": {
+        "name": "M1911A1",
+        "type": WeaponType.PISTOL,
+    },
+    "M16A1-M203": {
+        "name": "M16A1 w/M203",
+        "type": WeaponType.ASSAULT_RIFLE,
+    },
+    "M16A1 With Bayonet": {
+        "name": "M16A1 w/Bayonet",
+        "type": WeaponType.ASSAULT_RIFLE,
+    },
+    "M60": {
+        "name": "M60",
+        "type": WeaponType.MACHINE_GUN,
+    },
+    "M61 Frag Grenade": {
+        "name": "M61 Grenade",
+        "type": WeaponType.GRENADE,
+    },
+    "M183 Demolition Charge": {
+        "name": "M183 Demolition Charge",
+        "type": WeaponType.SATCHEL,
+    },
+    "Wrench": {
+        "name": "Wrench",
+        "type": WeaponType.WRENCH,
+    },
+    "M18 Smoke Grenade": {
+        "name": "M18 Smoke Grenade",
+        "type": WeaponType.SMOKE_GRENADE,
+    },
+    "M40": {
+        "name": "M40",
+        "type": WeaponType.BOLT_ACTION_RIFLE,
+        "magnification": 4,  # TODO: Might be different magnification
+    },
+    "M79 ": {
+        "name": "M79 Grenade Launcher",
+        "type": WeaponType.GRENADE_LAUNCHER,
+    },
+    "M72 ": {
+        "name": "M72 LAW",
+        "type": WeaponType.ROCKET_LAUNCHER,
+    },
+    "M2A1-7": {
+        "name": "M2 Flamethrower",
+        "type": WeaponType.FLAMETHROWER,
+    },
+    "Model 77E": {
+        "name": "Model 77E",
+        "type": WeaponType.SHOTGUN,
+    },
+    "M3 Knife": {
+        "name": "M3 Knife",
+        "type": WeaponType.MELEE,
+    },
+    "M3 Binoculars": {
+        "name": "M3 Binoculars",
+        "type": WeaponType.BINOCULARS,
+    },
+    "FIELD PAD": {
+        "name": "Field Pad",
+        "type": WeaponType.WATCH,
+    },
+    "Supplies": {
+        "name": "Supplies",
+        "type": WeaponType.SUPPLIES,
+    },
+    "Hammer": {
+        "name": "Hammer",
+        "type": WeaponType.HAMMER,
+    },
+    "Medical Supplies": {
+        "name": "Medical Supplies",
+        "type": WeaponType.SUPPLIES,
+    },
+    "REVIVE": {
+        "meth_name": "REVIVE_US",
+        "type": WeaponType.HEALING,
+        "name": "Revive",
+    },
+    "BANDAGE": {
+        "meth_name": "BANDAGE_US",
+        "type": WeaponType.HEALING,
+        "name": "Bandage",
+    },
+    "Small Ammunition Box": {
+        "name": "Small Ammo Box",
+        "type": WeaponType.SUPPLIES,
+    },
+    "Explosive Ammo Box": {
+        "name": "Explosive Ammo Box",
+        "type": WeaponType.SUPPLIES,
+    },
+    "M21 AT Mine": {
+        "name": "M21 AT Mine",
+        "type": WeaponType.AT_MINE,
+    },
+    "BLOW TORCH": {
+        "name": "Blowtorch",
+        "type": WeaponType.TORCH,
+    },
+    "AN-M8 Flare": {
+        "name": "AN-M8 Flare Pistol",
+        "type": WeaponType.RECON_FLARE,
+    },
+    "RPG-02": {
+        "name": "RPG-02",
+        "type": WeaponType.ROCKET_LAUNCHER,
+    },
+    "TM-46 AT Mine": {
+        "name": "TM-46 AT Mine",
+        "type": WeaponType.AT_MINE,
+    },
+    "Type 53 PU": {
+        "name": "Type 53",
+        "type": WeaponType.BOLT_ACTION_RIFLE,
+        "magnification": 4,  # TODO: Might be 3.5
+    },
+    "LPO-50": {
+        "name": "LPO-50 Flamethrower",
+        "type": WeaponType.FLAMETHROWER,
+    },
+    "IZH 58": {
+        "name": "IZh-58",
+        "type": WeaponType.SHOTGUN,
+    },
+    "Type 53 W/ N4 Rifle Launcher": {
+        "name": "Type 53 w/N4",
+        "type": WeaponType.BOLT_ACTION_RIFLE,
+    },
+    "RPD": {
+        "name": "RPD",
+        "type": WeaponType.MACHINE_GUN,
+    },
+    "K50M": {
+        "name": "K-50M",
+        "type": WeaponType.SUBMACHINE_GUN,
+    },
+    "K50M Drum": {
+        "name": "K-50M w/Drum",
+        "type": WeaponType.SUBMACHINE_GUN,
+    },
+    "Type 54": {
+        "name": "Type 54",
+        "type": WeaponType.PISTOL,
+    },
+    "DH10 AP Mine": {
+        "name": "DH-10 AP Mine",
+        "type": WeaponType.AP_MINE,
+    },
+    "Type 67": {
+        "name": "Type 67 Grenade",
+        "type": WeaponType.GRENADE,
+    },
+    "Knife": {
+        "name": "Knife",
+        "type": WeaponType.MELEE,
+    },
+    "Anti-Aircraft Gun Wrench": {
+        "name": "Wrench",
+        "type": WeaponType.WRENCH,
+    },
+    "RDG-1": {
+        "name": "RDG-1 Smoke Grenade",
+        "type": WeaponType.SMOKE_GRENADE,
+    },
+    "Binoculars": {
+        "name": "Binoculars",
+        "type": WeaponType.BINOCULARS,
+    },
+    "Type 56 W/ Bayonet": {
+        "name": "Type 56 w/Bayonet",
+        "type": WeaponType.ASSAULT_RIFLE,
+    },
+    "Ammo Box": {
+        "name": "Small Ammo Box",
+        "type": WeaponType.SUPPLIES,
+    },
+    "HE Ammo Box": {
+        "name": "Explosive Ammo Box",
+        "type": WeaponType.SUPPLIES,
+    },
+    "Revive": {
+        "meth_name": "REVIVE_NVA",
+        "type": WeaponType.HEALING,
+        "name": "Revive",
+    },
+    "Bandage": {
+        "meth_name": "BANDAGE_NVA",
+        "type": WeaponType.HEALING,
+        "name": "Bandage",
+    },
+    "Satchel Charge": {
+        "name": "Satchel Charge",
+        "type": WeaponType.SATCHEL,
+    },
+    "Type 53": {
+        "name": "Type 53",
+        "type": WeaponType.BOLT_ACTION_RIFLE,
+    },
+    "Chi Com Signal Pistol": {
+        "name": "Chi-Com Flare Pistol",
+        "type": WeaponType.RECON_FLARE,
+    },
     "Dhsk [NVA Boat]": {
         "name": "DShK",
     },

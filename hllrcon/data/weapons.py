@@ -31,6 +31,7 @@ class WeaponType(StrEnum):
     PISTOL = "Pistol"
     REVOLVER = "Revolver"
     GRENADE = "Grenade"
+    GRENADE_LAUNCHER = "Grenade Launcher"
     AP_MINE = "Anti-Personnel Mine"
     AT_MINE = "Anti-Tank Mine"
     FLAMETHROWER = "Flamethrower"
@@ -3713,6 +3714,712 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         if self.vehicle_id:
             return HLLVVehicle.by_id(self.vehicle_id)
         return None
+
+    ### INJECT "hllv loadout items" START
+
+    @class_cached_property
+    @classmethod
+    def AMMO_BOX(cls) -> "HLLVWeapon":
+        """*Ammo Box*"""
+        return cls(
+            id="Ammo Box",
+            name="Small Ammo Box",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SUPPLIES,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ANTI_AIRCRAFT_GUN_WRENCH(cls) -> "HLLVWeapon":
+        """*Anti-Aircraft Gun Wrench*"""
+        return cls(
+            id="Anti-Aircraft Gun Wrench",
+            name="Wrench",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.WRENCH,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def AN_M8_FLARE(cls) -> "HLLVWeapon":
+        """*AN-M8 Flare*"""
+        return cls(
+            id="AN-M8 Flare",
+            name="AN-M8 Flare Pistol",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.RECON_FLARE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def BANDAGE_NVA(cls) -> "HLLVWeapon":
+        """*Bandage*"""
+        return cls(
+            id="Bandage",
+            name="Bandage",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.HEALING,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def BANDAGE_US(cls) -> "HLLVWeapon":
+        """*BANDAGE*"""
+        return cls(
+            id="BANDAGE",
+            name="Bandage",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.HEALING,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def BINOCULARS(cls) -> "HLLVWeapon":
+        """*Binoculars*"""
+        return cls(
+            id="Binoculars",
+            name="Binoculars",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.BINOCULARS,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def BLOW_TORCH(cls) -> "HLLVWeapon":
+        """*BLOW TORCH*"""
+        return cls(
+            id="BLOW TORCH",
+            name="Blowtorch",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.TORCH,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CHI_COM_SIGNAL_PISTOL(cls) -> "HLLVWeapon":
+        """*Chi Com Signal Pistol*"""
+        return cls(
+            id="Chi Com Signal Pistol",
+            name="Chi-Com Flare Pistol",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.RECON_FLARE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DH10_AP_MINE(cls) -> "HLLVWeapon":
+        """*DH10 AP Mine*"""
+        return cls(
+            id="DH10 AP Mine",
+            name="DH-10 AP Mine",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.AP_MINE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def EXPLOSIVE_AMMO_BOX(cls) -> "HLLVWeapon":
+        """*Explosive Ammo Box*"""
+        return cls(
+            id="Explosive Ammo Box",
+            name="Explosive Ammo Box",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SUPPLIES,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FIELD_PAD(cls) -> "HLLVWeapon":
+        """*FIELD PAD*"""
+        return cls(
+            id="FIELD PAD",
+            name="Field Pad",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.WATCH,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HAMMER(cls) -> "HLLVWeapon":
+        """*Hammer*"""
+        return cls(
+            id="Hammer",
+            name="Hammer",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.HAMMER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HE_AMMO_BOX(cls) -> "HLLVWeapon":
+        """*HE Ammo Box*"""
+        return cls(
+            id="HE Ammo Box",
+            name="Explosive Ammo Box",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SUPPLIES,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def IZH_58(cls) -> "HLLVWeapon":
+        """*IZH 58*"""
+        return cls(
+            id="IZH 58",
+            name="IZh-58",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SHOTGUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def K50M(cls) -> "HLLVWeapon":
+        """*K50M*"""
+        return cls(
+            id="K50M",
+            name="K-50M",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SUBMACHINE_GUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def K50M_DRUM(cls) -> "HLLVWeapon":
+        """*K50M Drum*"""
+        return cls(
+            id="K50M Drum",
+            name="K-50M w/Drum",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SUBMACHINE_GUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KNIFE(cls) -> "HLLVWeapon":
+        """*Knife*"""
+        return cls(
+            id="Knife",
+            name="Knife",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MELEE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def LIGHT_MORTAR(cls) -> "HLLVWeapon":
+        """*Light Mortar*"""
+        return cls(
+            id="Light Mortar",
+            name="Wrench",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.WRENCH,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def LPO_50(cls) -> "HLLVWeapon":
+        """*LPO-50*"""
+        return cls(
+            id="LPO-50",
+            name="LPO-50 Flamethrower",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.FLAMETHROWER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M16A1(cls) -> "HLLVWeapon":
+        """*M16A1*"""
+        return cls(
+            id="M16A1",
+            name="M16A1",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.ASSAULT_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M16A1_M203(cls) -> "HLLVWeapon":
+        """*M16A1-M203*"""
+        return cls(
+            id="M16A1-M203",
+            name="M16A1 w/M203",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.ASSAULT_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M16A1_WITH_BAYONET(cls) -> "HLLVWeapon":
+        """*M16A1 With Bayonet*"""
+        return cls(
+            id="M16A1 With Bayonet",
+            name="M16A1 w/Bayonet",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.ASSAULT_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M183_DEMOLITION_CHARGE(cls) -> "HLLVWeapon":
+        """*M183 Demolition Charge*"""
+        return cls(
+            id="M183 Demolition Charge",
+            name="M183 Demolition Charge",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SATCHEL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_CLAYMORE(cls) -> "HLLVWeapon":
+        """*M18 Claymore*"""
+        return cls(
+            id="M18 Claymore",
+            name="M18 Claymore",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.AP_MINE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_SMOKE_GRENADE(cls) -> "HLLVWeapon":
+        """*M18 Smoke Grenade*"""
+        return cls(
+            id="M18 Smoke Grenade",
+            name="M18 Smoke Grenade",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SMOKE_GRENADE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M1911A1(cls) -> "HLLVWeapon":
+        """*M1911A1*"""
+        return cls(
+            id="M1911A1",
+            name="M1911A1",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.PISTOL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M21_AT_MINE(cls) -> "HLLVWeapon":
+        """*M21 AT Mine*"""
+        return cls(
+            id="M21 AT Mine",
+            name="M21 AT Mine",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.AT_MINE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M2A1_7(cls) -> "HLLVWeapon":
+        """*M2A1-7*"""
+        return cls(
+            id="M2A1-7",
+            name="M2 Flamethrower",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.FLAMETHROWER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M3_BINOCULARS(cls) -> "HLLVWeapon":
+        """*M3 Binoculars*"""
+        return cls(
+            id="M3 Binoculars",
+            name="M3 Binoculars",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.BINOCULARS,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M3_KNIFE(cls) -> "HLLVWeapon":
+        """*M3 Knife*"""
+        return cls(
+            id="M3 Knife",
+            name="M3 Knife",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.MELEE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M40(cls) -> "HLLVWeapon":
+        """*M40*"""
+        return cls(
+            id="M40",
+            name="M40",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M60(cls) -> "HLLVWeapon":
+        """*M60*"""
+        return cls(
+            id="M60",
+            name="M60",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.MACHINE_GUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M61_FRAG_GRENADE(cls) -> "HLLVWeapon":
+        """*M61 Frag Grenade*"""
+        return cls(
+            id="M61 Frag Grenade",
+            name="M61 Grenade",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.GRENADE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M72(cls) -> "HLLVWeapon":
+        """*M72 *"""
+        return cls(
+            id="M72 ",
+            name="M72 LAW",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.ROCKET_LAUNCHER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M79(cls) -> "HLLVWeapon":
+        """*M79 *"""
+        return cls(
+            id="M79 ",
+            name="M79 Grenade Launcher",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.GRENADE_LAUNCHER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def MEDICAL_SUPPLIES(cls) -> "HLLVWeapon":
+        """*Medical Supplies*"""
+        return cls(
+            id="Medical Supplies",
+            name="Medical Supplies",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.SUPPLIES,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def MODEL_77E(cls) -> "HLLVWeapon":
+        """*Model 77E*"""
+        return cls(
+            id="Model 77E",
+            name="Model 77E",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SHOTGUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def RDG_1(cls) -> "HLLVWeapon":
+        """*RDG-1*"""
+        return cls(
+            id="RDG-1",
+            name="RDG-1 Smoke Grenade",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SMOKE_GRENADE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REVIVE_NVA(cls) -> "HLLVWeapon":
+        """*Revive*"""
+        return cls(
+            id="Revive",
+            name="Revive",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.HEALING,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def REVIVE_US(cls) -> "HLLVWeapon":
+        """*REVIVE*"""
+        return cls(
+            id="REVIVE",
+            name="Revive",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.HEALING,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def RPD(cls) -> "HLLVWeapon":
+        """*RPD*"""
+        return cls(
+            id="RPD",
+            name="RPD",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MACHINE_GUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def RPG_02(cls) -> "HLLVWeapon":
+        """*RPG-02*"""
+        return cls(
+            id="RPG-02",
+            name="RPG-02",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ROCKET_LAUNCHER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SATCHEL_CHARGE(cls) -> "HLLVWeapon":
+        """*Satchel Charge*"""
+        return cls(
+            id="Satchel Charge",
+            name="Satchel Charge",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SATCHEL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMALL_AMMUNITION_BOX(cls) -> "HLLVWeapon":
+        """*Small Ammunition Box*"""
+        return cls(
+            id="Small Ammunition Box",
+            name="Small Ammo Box",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SUPPLIES,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SUPPLIES(cls) -> "HLLVWeapon":
+        """*Supplies*"""
+        return cls(
+            id="Supplies",
+            name="Supplies",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.SUPPLIES,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TM_46_AT_MINE(cls) -> "HLLVWeapon":
+        """*TM-46 AT Mine*"""
+        return cls(
+            id="TM-46 AT Mine",
+            name="TM-46 AT Mine",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.AT_MINE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TNT(cls) -> "HLLVWeapon":
+        """*TNT*"""
+        return cls(
+            id="TNT",
+            name="TNT",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SATCHEL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_53(cls) -> "HLLVWeapon":
+        """*Type 53*"""
+        return cls(
+            id="Type 53",
+            name="Type 53",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_53_PU(cls) -> "HLLVWeapon":
+        """*Type 53 PU*"""
+        return cls(
+            id="Type 53 PU",
+            name="Type 53",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=4,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_53_W_N4_RIFLE_LAUNCHER(cls) -> "HLLVWeapon":
+        """*Type 53 W/ N4 Rifle Launcher*"""
+        return cls(
+            id="Type 53 W/ N4 Rifle Launcher",
+            name="Type 53 w/N4",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_54(cls) -> "HLLVWeapon":
+        """*Type 54*"""
+        return cls(
+            id="Type 54",
+            name="Type 54",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.PISTOL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_56_W_BAYONET(cls) -> "HLLVWeapon":
+        """*Type 56 W/ Bayonet*"""
+        return cls(
+            id="Type 56 W/ Bayonet",
+            name="Type 56 w/Bayonet",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ASSAULT_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_67(cls) -> "HLLVWeapon":
+        """*Type 67*"""
+        return cls(
+            id="Type 67",
+            name="Type 67 Grenade",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.GRENADE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def WRENCH(cls) -> "HLLVWeapon":
+        """*Wrench*"""
+        return cls(
+            id="Wrench",
+            name="Wrench",
+            vehicle_id=None,
+            factions={HLLVFaction.US, HLLVFaction.NVA},
+            type=WeaponType.WRENCH,
+            magnification=None,
+        )
+
+    ### INJECT "hllv loadout items" END
 
     ### INJECT "hllv vehicles" START
 

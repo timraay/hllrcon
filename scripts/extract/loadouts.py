@@ -7,7 +7,12 @@ from pydantic import BaseModel, model_validator
 
 from hllrcon.data.factions import HLLFaction
 from hllrcon.data.roles import HLLRole
-from scripts.extract.utils import inject_code, stringify_list, to_method_name
+from scripts.extract.utils import (
+    inject_code,
+    stringify_list,
+    stringify_role,
+    to_method_name,
+)
 from scripts.extract.weapons import WeaponData
 from scripts.extractlib.loader import local_to_abs_path
 from scripts.extractlib.objects.blueprint_generated_class import BlueprintGeneratedClass
@@ -26,7 +31,7 @@ HLL_LOADOUT_CONSTRUCTOR_TEMPLATE = """\
         return cls(
             name="{self.name}",
             faction=HLLFaction.{self.faction.short_name},
-            role=HLLRole.{role},
+            role={role},
             requires_level={self.requires_level},
             items={items},
         )"""
@@ -73,7 +78,7 @@ class LoadoutData(BaseModel):
         items = [item.to_constructor() for item in self.items]
         return HLL_LOADOUT_CONSTRUCTOR_TEMPLATE.format(
             self=self,
-            role=self.role.pretty_name.replace(" ", "_").replace("-", "_").upper(),
+            role=stringify_role(self.role),
             items=stringify_list(items, indent=3 * 4).lstrip(),
         )
 

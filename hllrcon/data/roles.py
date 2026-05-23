@@ -1735,7 +1735,7 @@ class HLLVRole(_Role[HLLVRoleType]):
 
     @class_cached_property
     @classmethod
-    def OPERATOR(cls) -> "HLLVRole":
+    def GUNNER(cls) -> "HLLVRole":
         return cls(
             id=15,
             name="MortarGunner",

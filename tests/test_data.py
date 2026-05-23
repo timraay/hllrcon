@@ -10,12 +10,12 @@ from hllrcon.data import (
     HLLGameMode,
     HLLLayer,
     HLLLoadout,
+    HLLLoadoutId,
     HLLMap,
     HLLRole,
     HLLTeam,
     HLLVehicle,
     HLLWeapon,
-    LoadoutId,
     Strongpoint,
     TimeOfDay,
     Weather,
@@ -767,29 +767,29 @@ class TestDataVehicles:
 class TestDataLoadouts:
     def test_loadout_by_id(self) -> None:
         assert (
-            HLLLoadout.by_id(LoadoutId(HLLFaction.US.id, HLLRole.OFFICER.id, "NCO"))
+            HLLLoadout.by_id(HLLLoadoutId(HLLFaction.US.id, HLLRole.OFFICER.id, "NCO"))
             == HLLLoadout.US_OFFICER_NCO
         )
         assert (
             HLLLoadout.by_id(
-                LoadoutId(HLLFaction.CW.id, HLLRole.RIFLEMAN.id, "Standard Issue"),
+                HLLLoadoutId(HLLFaction.CW.id, HLLRole.RIFLEMAN.id, "Standard Issue"),
             )
             == HLLLoadout.CW_RIFLEMAN_STANDARD_ISSUE
         )
 
         assert (
             HLLLoadout.by_id(
-                LoadoutId(HLLFaction.CW.id, HLLRole.RIFLEMAN.id, "sTaNdArD iSsUe"),
+                HLLLoadoutId(HLLFaction.CW.id, HLLRole.RIFLEMAN.id, "sTaNdArD iSsUe"),
             )
             == HLLLoadout.CW_RIFLEMAN_STANDARD_ISSUE
         )
 
         with pytest.raises(ValueError, match="not found"):
             HLLLoadout.by_id(
-                LoadoutId(HLLFaction.US.id, HLLRole.RIFLEMAN.id, "invalid_loadout"),
+                HLLLoadoutId(HLLFaction.US.id, HLLRole.RIFLEMAN.id, "invalid_loadout"),
             )
         with pytest.raises(ValueError, match="not found"):
-            HLLLoadout.by_id(LoadoutId(HLLFaction.US.id, 69, "Standard Issue"))
+            HLLLoadout.by_id(HLLLoadoutId(HLLFaction.US.id, 69, "Standard Issue"))
 
     def test_loadout_by_name(self) -> None:
         assert (

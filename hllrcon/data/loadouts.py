@@ -1,8 +1,9 @@
 # mypy: disable-error-code="prop-decorator"
 # ruff: noqa: N802, RUF001
 
+from enum import StrEnum
 from functools import cached_property
-from typing import Annotated, ClassVar, Generic, NamedTuple, Self, TypeAlias, TypeVar
+from typing import Annotated, NamedTuple, Self
 
 from pydantic import BaseModel, Field
 
@@ -11,59 +12,41 @@ from hllrcon.data._utils import (
     class_cached_property,
     model_serializer,
 )
-from hllrcon.data.factions import HLLFaction, HLLVFaction, _Faction
-from hllrcon.data.roles import HLLRole, HLLVRole, _Role
-from hllrcon.data.weapons import HLLWeapon, _Weapon
-
-FactionT = TypeVar("FactionT", bound=_Faction)
-RoleT = TypeVar("RoleT", bound=_Role)
-WeaponT = TypeVar("WeaponT", bound=_Weapon)
-LoadoutItemT = TypeVar("LoadoutItemT", bound="_LoadoutItem")
+from hllrcon.data.factions import HLLFaction, HLLVFaction
+from hllrcon.data.roles import HLLRole, HLLVRole
+from hllrcon.data.weapons import HLLVWeapon, HLLWeapon
 
 
-class LoadoutId(NamedTuple):
+class HLLLoadoutId(NamedTuple):
     faction_id: int
     role_id: int
     name: str
 
 
-class _LoadoutItem(BaseModel, Generic[WeaponT], frozen=True):
-    _WEAPON_CLS: ClassVar[type[_Weapon]]
-
+class HLLLoadoutItem(BaseModel, frozen=True):
     name: str
     """The name of this item."""
     amount: int = 1
     """The amount of this item. For small arms, refers to the number of magazines."""
 
     @cached_property
-    def weapon(self) -> WeaponT | None:
+    def weapon(self) -> HLLWeapon | None:
         """The weapon corresponding to this item, if any."""
         try:
-            return self._WEAPON_CLS.by_id(self.name)  # type: ignore[return-value]
+            return HLLWeapon.by_id(self.name)  # type: ignore[return-value]
         except ValueError:
             return None
 
 
-class HLLLoadoutItem(_LoadoutItem[HLLWeapon], frozen=True):
-    _WEAPON_CLS: ClassVar[type[HLLWeapon]] = HLLWeapon
-
-
-class HLLVLoadoutItem(_LoadoutItem[HLLWeapon], frozen=True):
-    _WEAPON_CLS: ClassVar[type[HLLWeapon]] = HLLWeapon
-
-
-LoadoutItem: TypeAlias = HLLLoadoutItem | HLLVLoadoutItem
-
-
-class _Loadout(IndexedBaseModel[LoadoutId], Generic[FactionT, RoleT, LoadoutItemT]):
+class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
     name: str
     faction: Annotated[
-        FactionT,
+        HLLFaction,
         model_serializer(int),
     ]
-    role: RoleT
+    role: HLLRole
     requires_level: int = Field(ge=1, le=10)
-    items: list[LoadoutItemT]
+    items: list[HLLLoadoutItem]
 
     def __repr__(self) -> str:
         return (
@@ -73,20 +56,20 @@ class _Loadout(IndexedBaseModel[LoadoutId], Generic[FactionT, RoleT, LoadoutItem
 
     # @computed_field
     @cached_property  # type: ignore[misc]
-    def id(self) -> LoadoutId:  # type: ignore[override]
-        return LoadoutId(  # pragma: no cover
+    def id(self) -> HLLLoadoutId:  # type: ignore[override]
+        return HLLLoadoutId(  # pragma: no cover
             faction_id=self.faction.id,
             role_id=self.role.id,
             name=self.name,
         )
 
     @classmethod
-    def _lookup_register(cls, id_: LoadoutId, instance: Self) -> None:  # ty:ignore[invalid-method-override]
-        new_id = LoadoutId(*id_[:2], name=id_[2].lower())
+    def _lookup_register(cls, id_: HLLLoadoutId, instance: Self) -> None:  # ty:ignore[invalid-method-override]
+        new_id = HLLLoadoutId(*id_[:2], name=id_[2].lower())
         return super()._lookup_register(new_id, instance)
 
     @classmethod
-    def by_id(cls, id_: LoadoutId | tuple[int, int, str]) -> Self:
+    def by_id(cls, id_: HLLLoadoutId | tuple[int, int, str]) -> Self:
         """Look up a loadout by its identifier.
 
         An identifier consists of a faction ID, role ID, and name.
@@ -109,18 +92,18 @@ class _Loadout(IndexedBaseModel[LoadoutId], Generic[FactionT, RoleT, LoadoutItem
             If no loadout with the given identifier exists.
 
         """
-        new_id = LoadoutId(*id_[:2], name=id_[2].lower())
+        new_id = HLLLoadoutId(*id_[:2], name=id_[2].lower())
         return super().by_id(new_id)
 
     @classmethod
-    def by_name(cls, faction: FactionT, role: RoleT, name: str) -> Self:
+    def by_name(cls, faction: HLLFaction, role: HLLRole, name: str) -> Self:
         """Look up a loadout by its faction, role, and name.
 
         Parameters
         ----------
-        faction : Faction
+        faction : HLLFaction
             The faction of the loadout.
-        role : Role
+        role : HLLRole
             The role of the loadout.
         name : str
             The name of the loadout.
@@ -137,22 +120,11 @@ class _Loadout(IndexedBaseModel[LoadoutId], Generic[FactionT, RoleT, LoadoutItem
 
         """
         return cls.by_id(
-            LoadoutId(
+            HLLLoadoutId(
                 faction_id=faction.id,
                 role_id=role.id,
                 name=name,
             ),
-        )
-
-
-class HLLLoadout(_Loadout[HLLFaction, HLLRole, HLLLoadoutItem]):
-    # @computed_field
-    @cached_property  # type: ignore[misc]
-    def id(self) -> LoadoutId:  # type: ignore[override]
-        return LoadoutId(
-            faction_id=self.faction.id,
-            role_id=self.role.id,
-            name=self.name,
         )
 
     ### INJECT "hll loadouts" START
@@ -4780,15 +4752,2205 @@ class HLLLoadout(_Loadout[HLLFaction, HLLRole, HLLLoadoutItem]):
     ### INJECT "hll loadouts" END
 
 
-class HLLVLoadout(_Loadout[HLLVFaction, HLLVRole, HLLVLoadoutItem]):
-    # @computed_field
-    @cached_property  # type: ignore[misc]
-    def id(self) -> LoadoutId:  # type: ignore[override]
-        return LoadoutId(  # pragma: no cover
-            faction_id=self.faction.id,
-            role_id=self.role.id,
-            name=self.name,
+class HLLVLoadoutItemType(StrEnum):
+    PRIMARY = "Primary"
+    UTILITY = "Utility"
+    LETHAL = "Lethal"
+    VERSATILE = "Versatile"
+    """An item that can be equipped as either a primary or a secondary item."""
+    LOCKED_ITEM = "Locked Item"
+    """An item that, when unlocked, is automatically included in a loadout and cannot
+    manually be equipped or removed."""
+
+
+class HLLVLoadoutItem(IndexedBaseModel[str]):
+    id: str
+    name: str
+    faction: HLLVFaction
+    weapon: HLLVWeapon
+    type: HLLVLoadoutItemType
+    weight: int
+    description_tags: list[str]
+    base_ammo: int
+    max_ammo: int
+    ammo_weight: int
+    level_requirements: dict[HLLVRole, int]
+
+    ### INJECT "hllv loadout items" START
+
+    @class_cached_property
+    @classmethod
+    def _1911A1(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="1911A1",
+            name="M1911A1",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M1911A1,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=2,
+            description_tags=[
+                "Secondary",
+                "Pistol",
+                "Semi-Automatic",
+            ],
+            base_ammo=3,
+            max_ammo=6,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
         )
 
+    @class_cached_property
+    @classmethod
+    def DH10_AP(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="DH10_AP",
+            name="DH10 AP Mine",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.DH10_AP_MINE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=2,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.OBSERVER: 3,
+                HLLVRole.SUPPORT: 3,
+                HLLVRole.SPOTTER: 3,
+                HLLVRole.SNIPER: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.MACHINE_GUNNER: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.GRENADIER: 3,
+            },
+        )
 
-Loadout: TypeAlias = HLLLoadout | HLLVLoadout
+    @class_cached_property
+    @classmethod
+    def DH10_APX2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="DH10_APx2",
+            name="DH10 AP Mine x2",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.DH10_AP_MINE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=4,
+            description_tags=[],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.SUPPORT: 6,
+                HLLVRole.SPOTTER: 6,
+                HLLVRole.SNIPER: 6,
+                HLLVRole.ENGINEER: 6,
+                HLLVRole.GRENADIER: 6,
+                HLLVRole.OBSERVER: 6,
+                HLLVRole.MACHINE_GUNNER: 6,
+                HLLVRole.SPECIALIST: 6,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def IZH58(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="IZH58",
+            name="IZH 58",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.IZH_58,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=3,
+            description_tags=[
+                "Primary",
+                "Shotgun",
+                "Break Action",
+            ],
+            base_ammo=6,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 7,
+                HLLVRole.TANK_COMMANDER: 7,
+                HLLVRole.CREWMAN: 7,
+                HLLVRole.ENGINEER: 7,
+                HLLVRole.SPOTTER: 7,
+                HLLVRole.MACHINE_GUNNER: 7,
+                HLLVRole.GRENADIER: 7,
+                HLLVRole.SQUAD_LEADER: 7,
+                HLLVRole.SNIPER: 7,
+                HLLVRole.SUPPORT: 7,
+                HLLVRole.OBSERVER: 7,
+                HLLVRole.GUNNER: 7,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def K50M(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="K50M",
+            name="K50M",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.K50M,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=3,
+            description_tags=[
+                "Primary",
+                "Submachine Gun",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 3,
+                HLLVRole.TANK_COMMANDER: 3,
+                HLLVRole.CREWMAN: 3,
+                HLLVRole.OBSERVER: 3,
+                HLLVRole.SNIPER: 3,
+                HLLVRole.SQUAD_LEADER: 3,
+                HLLVRole.MEDIC: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.GRENADIER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def K50M_DRUM(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="K50M_Drum",
+            name="K50M Drum",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.K50M_DRUM,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Submachine Gun",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=3,
+            max_ammo=6,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.GRENADIER: 6,
+                HLLVRole.ENGINEER: 6,
+                HLLVRole.MACHINE_GUNNER: 6,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def LPO50(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="LPO50",
+            name="LPO-50",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.LPO_50,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=6,
+            description_tags=[
+                "Primary",
+                "Incendiary Weapon",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.SPECIALIST: 7,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M16A1(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M16A1",
+            name="M16A1",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M16A1,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.CREWMAN: 3,
+                HLLVRole.TANK_COMMANDER: 3,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 3,
+                HLLVRole.LOGISTICS_OFFICER: 3,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M16A1_BAYONET(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M16A1_Bayonet",
+            name="M16A1 With Bayonet",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M16A1_WITH_BAYONET,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=5,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 4,
+                HLLVRole.RIFLEMAN: 4,
+                HLLVRole.MEDIC: 4,
+                HLLVRole.SPOTTER: 4,
+                HLLVRole.SPECIALIST: 4,
+                HLLVRole.GRENADIER: 4,
+                HLLVRole.ENGINEER: 4,
+                HLLVRole.CREWMAN: 4,
+                HLLVRole.TANK_COMMANDER: 4,
+                HLLVRole.SUPPORT: 4,
+                HLLVRole.OBSERVER: 4,
+                HLLVRole.GUNNER: 4,
+                HLLVRole.PILOT: 4,
+                HLLVRole.LOGISTICS_OFFICER: 4,
+                HLLVRole.SQUAD_LEADER: 4,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M183_DEMO(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M183_Demo",
+            name="M183 Demolition Charge",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M183_DEMOLITION_CHARGE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=5,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 5,
+                HLLVRole.GRENADIER: 5,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_CLAYMORE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M18_Claymore",
+            name="M18 Claymore",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M18_CLAYMORE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=2,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.OBSERVER: 3,
+                HLLVRole.SUPPORT: 3,
+                HLLVRole.SPOTTER: 3,
+                HLLVRole.SNIPER: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.MACHINE_GUNNER: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.GRENADIER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_CLAYMOREX2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M18_Claymorex2",
+            name="M18 Claymore x2",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M18_CLAYMORE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.OBSERVER: 6,
+                HLLVRole.SUPPORT: 6,
+                HLLVRole.SPOTTER: 6,
+                HLLVRole.SNIPER: 6,
+                HLLVRole.ENGINEER: 6,
+                HLLVRole.MACHINE_GUNNER: 6,
+                HLLVRole.SPECIALIST: 6,
+                HLLVRole.GRENADIER: 6,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_SMOKE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M18_Smoke",
+            name="M18 Smoke Grenade",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M18_SMOKE_GRENADE,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_SMOKEX2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M18_Smokex2",
+            name="M18 Smoke Grenade x2",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M18_SMOKE_GRENADE,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=3,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 3,
+                HLLVRole.MEDIC: 3,
+                HLLVRole.SPOTTER: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.MACHINE_GUNNER: 3,
+                HLLVRole.GRENADIER: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.SQUAD_LEADER: 3,
+                HLLVRole.SNIPER: 3,
+                HLLVRole.CREWMAN: 3,
+                HLLVRole.TANK_COMMANDER: 3,
+                HLLVRole.SUPPORT: 3,
+                HLLVRole.OBSERVER: 3,
+                HLLVRole.GUNNER: 3,
+                HLLVRole.PILOT: 3,
+                HLLVRole.LOGISTICS_OFFICER: 3,
+                HLLVRole.COMMANDER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M18_SMOKEX3(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M18_Smokex3",
+            name="M18 Smoke Grenade x3",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M18_SMOKE_GRENADE,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=5,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=3,
+            max_ammo=3,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 5,
+                HLLVRole.MEDIC: 5,
+                HLLVRole.SPOTTER: 5,
+                HLLVRole.SPECIALIST: 5,
+                HLLVRole.MACHINE_GUNNER: 5,
+                HLLVRole.GRENADIER: 5,
+                HLLVRole.ENGINEER: 5,
+                HLLVRole.SQUAD_LEADER: 5,
+                HLLVRole.SNIPER: 5,
+                HLLVRole.CREWMAN: 5,
+                HLLVRole.TANK_COMMANDER: 5,
+                HLLVRole.SUPPORT: 5,
+                HLLVRole.OBSERVER: 5,
+                HLLVRole.GUNNER: 5,
+                HLLVRole.PILOT: 5,
+                HLLVRole.LOGISTICS_OFFICER: 5,
+                HLLVRole.COMMANDER: 5,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M203(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M203",
+            name="M16A1-M203",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M16A1_M203,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=6,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Automatic",
+                "Semi-Automatic",
+                "Grenade Launcher",
+            ],
+            base_ammo=4,
+            max_ammo=6,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 10,
+                HLLVRole.GRENADIER: 10,
+                HLLVRole.SPECIALIST: 10,
+                HLLVRole.ENGINEER: 10,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M2_FLAMETHROWER(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M2_FlameThrower",
+            name="M2A1-7",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M2A1_7,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=6,
+            description_tags=[
+                "Primary",
+                "Incendiary Weapon",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.SPECIALIST: 7,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M3_KNIFE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M3_Knife",
+            name="M3 Knife",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M3_KNIFE,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Melee",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M40(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M40",
+            name="M40",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M40,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Sniper",
+                "Bolt Action",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SNIPER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M60(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M60",
+            name="M60",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M60,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Machine Gun",
+                "Automatic",
+            ],
+            base_ammo=3,
+            max_ammo=6,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.MACHINE_GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M61(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M61",
+            name="M61 Frag Grenade",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M61_FRAG_GRENADE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=2,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M61X2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M61x2",
+            name="M61 Frag Grenade x2",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M61_FRAG_GRENADE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 5,
+                HLLVRole.MEDIC: 5,
+                HLLVRole.SPOTTER: 5,
+                HLLVRole.SPECIALIST: 5,
+                HLLVRole.MACHINE_GUNNER: 5,
+                HLLVRole.GRENADIER: 5,
+                HLLVRole.ENGINEER: 5,
+                HLLVRole.SQUAD_LEADER: 5,
+                HLLVRole.SNIPER: 5,
+                HLLVRole.CREWMAN: 5,
+                HLLVRole.TANK_COMMANDER: 5,
+                HLLVRole.SUPPORT: 5,
+                HLLVRole.OBSERVER: 5,
+                HLLVRole.GUNNER: 5,
+                HLLVRole.PILOT: 5,
+                HLLVRole.LOGISTICS_OFFICER: 5,
+                HLLVRole.COMMANDER: 5,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M61X3(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M61x3",
+            name="M61 Frag Grenade x3",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M61_FRAG_GRENADE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=6,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=3,
+            max_ammo=3,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.OBSERVER: 8,
+                HLLVRole.GUNNER: 8,
+                HLLVRole.SUPPORT: 8,
+                HLLVRole.SPOTTER: 8,
+                HLLVRole.SNIPER: 8,
+                HLLVRole.RIFLEMAN: 8,
+                HLLVRole.ENGINEER: 8,
+                HLLVRole.MACHINE_GUNNER: 8,
+                HLLVRole.SPECIALIST: 8,
+                HLLVRole.GRENADIER: 8,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M72(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M72",
+            name="M72 ",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M72,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=6,
+            description_tags=[
+                "Secondary",
+                "Launcher",
+            ],
+            base_ammo=2,
+            max_ammo=4,
+            ammo_weight=3,
+            level_requirements={
+                HLLVRole.GRENADIER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def M79(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M79",
+            name="M79 ",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M79,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=5,
+            description_tags=[
+                "Grenade Launcher",
+                "Secondary",
+            ],
+            base_ammo=3,
+            max_ammo=3,
+            ammo_weight=3,
+            level_requirements={
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 7,
+                HLLVRole.SPOTTER: 10,
+                HLLVRole.OBSERVER: 10,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def MODEL_77E_SHOTGUN(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Model_77E_Shotgun",
+            name="Model 77E",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.MODEL_77E,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=3,
+            description_tags=[
+                "Primary",
+                "Shotgun",
+                "Pump Action",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 7,
+                HLLVRole.SQUAD_LEADER: 7,
+                HLLVRole.SPECIALIST: 7,
+                HLLVRole.GRENADIER: 7,
+                HLLVRole.PILOT: 7,
+                HLLVRole.LOGISTICS_OFFICER: 7,
+                HLLVRole.SPOTTER: 7,
+                HLLVRole.COMMANDER: 7,
+                HLLVRole.OBSERVER: 7,
+                HLLVRole.SNIPER: 7,
+                HLLVRole.CREWMAN: 7,
+                HLLVRole.TANK_COMMANDER: 7,
+                HLLVRole.GUNNER: 7,
+                HLLVRole.SUPPORT: 7,
+                HLLVRole.MACHINE_GUNNER: 7,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def N4_RIFLE_LAUNCHER(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="N4_Rifle_Launcher",
+            name="Type 53 W/ N4 Rifle Launcher",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_53_W_N4_RIFLE_LAUNCHER,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=6,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Semi-Automatic",
+                "Grenade Launcher",
+            ],
+            base_ammo=6,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 10,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.RIFLEMAN: 10,
+                HLLVRole.ENGINEER: 10,
+                HLLVRole.SPOTTER: 10,
+                HLLVRole.OBSERVER: 10,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVAMORTARWRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="NVAMortarWrench",
+            name="Wrench",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.WRENCH,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVA_AAWRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="NVA_AAWrench",
+            name="Anti-Aircraft Gun Wrench",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.ANTI_AIRCRAFT_GUN_WRENCH,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=3,
+            description_tags=[
+                "Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MACHINE_GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVA_KNIFE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="NVA_Knife",
+            name="Knife",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.KNIFE,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Melee",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVA_MEDICAMMOBOX(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="NVA_MedicAmmoBox",
+            name="Medical Supplies",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.MEDICAL_SUPPLIES,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=2,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MEDIC: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVA_MORTARWRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="NVA_MortarWrench",
+            name="Wrench",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.WRENCH,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def NVA_WRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="NVA_Wrench",
+            name="Wrench",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.WRENCH,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def RPD(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="RPD",
+            name="RPD",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.RPD,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Machine Gun",
+                "Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=2,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.MACHINE_GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def RPG2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="RPG2",
+            name="RPG-02",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.RPG_02,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=6,
+            description_tags=[
+                "Secondary",
+                "Launcher",
+            ],
+            base_ammo=2,
+            max_ammo=4,
+            ammo_weight=3,
+            level_requirements={
+                HLLVRole.GRENADIER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def RUSTORCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="RUSTorch",
+            name="BLOW TORCH",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.BLOW_TORCH,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TM_46(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="TM-46",
+            name="TM-46 AT Mine",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TM_46_AT_MINE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=3,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.GRENADIER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TM_46X2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="TM-46x2",
+            name="TM-46 AT Mine x2",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TM_46_AT_MINE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=6,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.GRENADIER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE53_BAYONET(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type53_Bayonet",
+            name="Type 53",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_53,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.GRENADIER: 4,
+                HLLVRole.SPECIALIST: 4,
+                HLLVRole.MEDIC: 4,
+                HLLVRole.ENGINEER: 4,
+                HLLVRole.SQUAD_LEADER: 4,
+                HLLVRole.SPOTTER: 4,
+                HLLVRole.SUPPORT: 4,
+                HLLVRole.GUNNER: 4,
+                HLLVRole.RIFLEMAN: 4,
+                HLLVRole.OBSERVER: 4,
+                HLLVRole.COMMANDER: 4,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE53_PU(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type53_PU",
+            name="Type 53 PU",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_53_PU,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Sniper",
+                "Bolt Action",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SNIPER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE54(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type54",
+            name="Type 54",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_54,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=2,
+            description_tags=[
+                "Secondary",
+                "Pistol",
+                "Semi-Automatic",
+            ],
+            base_ammo=6,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE56_AK_BAYONET(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type56_AK_Bayonet",
+            name="Type 56 W/ Bayonet",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_56_W_BAYONET,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.CREWMAN: 3,
+                HLLVRole.TANK_COMMANDER: 3,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE67(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type67",
+            name="Type 67",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_67,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=2,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE67X2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type67x2",
+            name="Type 67 x2",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_67,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 5,
+                HLLVRole.MEDIC: 5,
+                HLLVRole.SPOTTER: 5,
+                HLLVRole.SPECIALIST: 5,
+                HLLVRole.MACHINE_GUNNER: 5,
+                HLLVRole.GRENADIER: 5,
+                HLLVRole.ENGINEER: 5,
+                HLLVRole.SQUAD_LEADER: 5,
+                HLLVRole.SNIPER: 5,
+                HLLVRole.CREWMAN: 5,
+                HLLVRole.TANK_COMMANDER: 5,
+                HLLVRole.SUPPORT: 5,
+                HLLVRole.OBSERVER: 5,
+                HLLVRole.GUNNER: 5,
+                HLLVRole.COMMANDER: 5,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE67X3(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="Type67x3",
+            name="Type 67 x3",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.TYPE_67,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=6,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=3,
+            max_ammo=3,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 8,
+                HLLVRole.SPOTTER: 8,
+                HLLVRole.SPECIALIST: 8,
+                HLLVRole.MACHINE_GUNNER: 8,
+                HLLVRole.GRENADIER: 8,
+                HLLVRole.ENGINEER: 8,
+                HLLVRole.SNIPER: 8,
+                HLLVRole.SUPPORT: 8,
+                HLLVRole.OBSERVER: 8,
+                HLLVRole.GUNNER: 8,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def USLIGHTMORTAR(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="USLightMortar",
+            name="Light Mortar",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.LIGHT_MORTAR,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def USMORTARWRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="USMortarWrench",
+            name="Wrench ",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.WRENCH,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def USTORCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="USTorch",
+            name="BLOW TORCH",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.BLOW_TORCH,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_M21_AT(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_M21_AT",
+            name="M21 AT Mine",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M21_AT_MINE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=3,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_M21_ATX2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_M21_ATx2",
+            name="M21 AT Mine x2",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M21_AT_MINE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=6,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.GRENADIER: 3,
+                HLLVRole.ENGINEER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAAMMOBOX(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAAmmoBox",
+            name="Ammo Box",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.AMMO_BOX,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=3,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.SPECIALIST: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVABANDAGE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVABandage",
+            name="Bandage",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.BANDAGE_NVA,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=2,
+            max_ammo=20,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVABINOCULARS(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVABinoculars",
+            name="Binoculars",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.BINOCULARS,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.SPECIALIST: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAFIELDPAD(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAFieldPad",
+            name="FIELD PAD",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.FIELD_PAD,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.SPOTTER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAFIELDPADCOMMANDER(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAFieldPadCommander",
+            name="FIELD PAD",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.FIELD_PAD,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAFLARE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAFlare",
+            name="Chi Com Signal Pistol",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.CHI_COM_SIGNAL_PISTOL,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.SPECIALIST: 9,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAHEAMMOBOX(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAHEAmmoBox",
+            name="HE Ammo Box",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.HE_AMMO_BOX,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAHAMMER(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAHammer",
+            name="Hammer",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.HAMMER,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.GUNNER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.GRENADIER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVAMEDICKIT(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVAMedicKit",
+            name="Revive",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.REVIVE_NVA,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=20,
+            max_ammo=20,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MEDIC: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVASATCHEL(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVASatchel",
+            name="Satchel Charge",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.SATCHEL_CHARGE,
+            type=HLLVLoadoutItemType.LETHAL,
+            weight=5,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 5,
+                HLLVRole.GRENADIER: 5,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVASUPPLY(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVASupply",
+            name="Supplies",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.SUPPLIES,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.SUPPORT: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_RDG1(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_RDG1",
+            name="RDG-1",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.RDG_1,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_RDG1X2(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_RDG1x2",
+            name="RDG-1 x2",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.RDG_1,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=3,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=2,
+            max_ammo=2,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 3,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.MACHINE_GUNNER: 3,
+                HLLVRole.GRENADIER: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.SQUAD_LEADER: 3,
+                HLLVRole.SNIPER: 3,
+                HLLVRole.CREWMAN: 3,
+                HLLVRole.TANK_COMMANDER: 3,
+                HLLVRole.SUPPORT: 3,
+                HLLVRole.OBSERVER: 3,
+                HLLVRole.GUNNER: 3,
+                HLLVRole.COMMANDER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_RDG1X3(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_RDG1x3",
+            name="RDG-1 x3",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.RDG_1,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=5,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=3,
+            max_ammo=3,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 5,
+                HLLVRole.MEDIC: 5,
+                HLLVRole.SPOTTER: 5,
+                HLLVRole.SPECIALIST: 5,
+                HLLVRole.MACHINE_GUNNER: 5,
+                HLLVRole.GRENADIER: 5,
+                HLLVRole.ENGINEER: 5,
+                HLLVRole.SQUAD_LEADER: 5,
+                HLLVRole.SNIPER: 5,
+                HLLVRole.CREWMAN: 5,
+                HLLVRole.TANK_COMMANDER: 5,
+                HLLVRole.SUPPORT: 5,
+                HLLVRole.OBSERVER: 5,
+                HLLVRole.GUNNER: 5,
+                HLLVRole.COMMANDER: 5,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_TNT(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_TNT",
+            name="WFL_TNT",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.TNT,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Lethal",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USAMMONBOX(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USAmmonbox",
+            name="Small Ammunition Box",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.SMALL_AMMUNITION_BOX,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=3,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.GRENADIER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USBANDAGE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USBandage",
+            name="BANDAGE",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.BANDAGE_US,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+            ],
+            base_ammo=2,
+            max_ammo=20,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USBINOCULARS(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USBinoculars",
+            name="M3 Binoculars",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M3_BINOCULARS,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.PILOT: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USFIELDPAD(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USFieldPad",
+            name="FIELD PAD",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.FIELD_PAD,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.OBSERVER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USFIELDPADCOMMANDER(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USFieldPadCommander",
+            name="FIELD PAD",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.FIELD_PAD,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USHAMMER(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USHAmmer",
+            name="Hammer",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.HAMMER,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 0,
+                HLLVRole.MEDIC: 0,
+                HLLVRole.SPOTTER: 0,
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+                HLLVRole.GRENADIER: 0,
+                HLLVRole.ENGINEER: 0,
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.SNIPER: 0,
+                HLLVRole.CREWMAN: 0,
+                HLLVRole.TANK_COMMANDER: 0,
+                HLLVRole.SUPPORT: 0,
+                HLLVRole.OBSERVER: 0,
+                HLLVRole.GUNNER: 0,
+                HLLVRole.PILOT: 0,
+                HLLVRole.LOGISTICS_OFFICER: 0,
+                HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USHEAMMOBOX(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USHEAmmoBox",
+            name="Explosive Ammo Box",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.EXPLOSIVE_AMMO_BOX,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SQUAD_LEADER: 0,
+                HLLVRole.MACHINE_GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USMEDICAMMOBOX(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USMedicAmmoBox",
+            name="Medical Supplies",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.MEDICAL_SUPPLIES,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=2,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MEDIC: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USMEDICKIT(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USMedicKit",
+            name="REVIVE",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.REVIVE_US,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=20,
+            max_ammo=20,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MEDIC: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USMORTARWRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USMortarWrench",
+            name="Wrench",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.WRENCH,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.GUNNER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USSUPPLY(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USSupply",
+            name="Supplies",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.SUPPLIES,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 0,
+                HLLVRole.SUPPORT: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USWRENCH(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USWrench",
+            name="Wrench",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.WRENCH,
+            type=HLLVLoadoutItemType.LOCKED_ITEM,
+            weight=1,
+            description_tags=[
+                "Role Equipment",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.ENGINEER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_US_FLARE(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_US_Flare",
+            name="AN-M8 Flare",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.AN_M8_FLARE,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=4,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=1,
+            max_ammo=1,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.SPECIALIST: 9,
+                HLLVRole.COMMANDER: 0,
+                HLLVRole.OBSERVER: 0,
+            },
+        )
+
+    ### INJECT "hllv loadout items" END

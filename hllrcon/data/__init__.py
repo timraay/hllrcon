@@ -14,12 +14,9 @@ from .layers import (
 )
 from .loadouts import (
     HLLLoadout,
+    HLLLoadoutId,
     HLLLoadoutItem,
-    HLLVLoadout,
     HLLVLoadoutItem,
-    Loadout,
-    LoadoutId,
-    LoadoutItem,
 )
 from .maps import CardinalDirection, HLLMap, HLLVMap, Map, Orientation
 from .roles import HLLRole, HLLRoleType, HLLVRole, HLLVRoleType, Role, RoleType
@@ -58,6 +55,7 @@ __all__ = (
     "HLLGameMode",
     "HLLLayer",
     "HLLLoadout",
+    "HLLLoadoutId",
     "HLLLoadoutItem",
     "HLLMap",
     "HLLRole",
@@ -66,7 +64,6 @@ __all__ = (
     "HLLVFaction",
     "HLLVGameMode",
     "HLLVLayer",
-    "HLLVLoadout",
     "HLLVLoadoutItem",
     "HLLVMap",
     "HLLVRole",
@@ -79,9 +76,6 @@ __all__ = (
     "HLLVehicleSeat",
     "HLLWeapon",
     "Layer",
-    "Loadout",
-    "LoadoutId",
-    "LoadoutItem",
     "Map",
     "Orientation",
     "Role",

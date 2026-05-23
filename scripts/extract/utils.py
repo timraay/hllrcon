@@ -2,8 +2,10 @@ import re
 from collections.abc import Collection
 from enum import Enum
 from pathlib import Path
+from typing import Any
 
 from hllrcon.data.factions import Faction
+from hllrcon.data.roles import Role
 
 
 def inject_code(fp: Path, marker: str, code: str) -> None:
@@ -54,6 +56,20 @@ def stringify_list(items: list[str], indent: int = 0) -> str:
     return indent_text(output, indent)
 
 
+def stringify_dict(d: dict[Any, Any], indent: int = 0) -> str:
+    if not d:
+        return indent_text("{}", indent)
+
+    output = "{\n"
+
+    for key, value in d.items():
+        output += indent_text(f"{key}: {value},", 4) + "\n"
+
+    output += "}"
+
+    return indent_text(output, indent)
+
+
 def stringify_enum_member(member: Enum) -> str:
     return f"{member.__class__.__name__}.{member.name}"
 
@@ -65,6 +81,11 @@ def stringify_factions(factions: Collection[Faction]) -> str:
     ]
 
     return "{" + ", ".join(factions_str) + "}"
+
+
+def stringify_role(role: Role) -> str:
+    role_name = role.pretty_name.replace(" ", "_").replace("-", "_").upper()
+    return f"{type(role).__name__}.{role_name}"
 
 
 def to_method_name(s: str) -> str:
