@@ -6,7 +6,7 @@ from pydantic import BaseModel, PrivateAttr, model_validator
 from hllrcon.data.maps import Orientation
 
 if TYPE_CHECKING:
-    from hllrcon.data.layers import Layer
+    from hllrcon.data.layers import AnyLayer
 
 GridPos = tuple[int, int]
 GridArea = tuple[GridPos, GridPos]
@@ -65,7 +65,7 @@ class Grid(BaseModel, frozen=True):
 
 
 class GridPositionalModel(BaseModel, frozen=True):
-    _layer: "Layer" = PrivateAttr()
+    _layer: "AnyLayer" = PrivateAttr()
     grid_from: GridPos
     grid_to: GridPos
 

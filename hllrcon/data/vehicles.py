@@ -94,7 +94,7 @@ class HLLVVehicleSeat(
     pass
 
 
-VehicleSeat: TypeAlias = HLLVehicleSeat | HLLVVehicleSeat
+AnyVehicleSeat: TypeAlias = HLLVehicleSeat | HLLVVehicleSeat
 
 
 class _Vehicle(IndexedBaseModel[str], Generic[FactionT, VehicleSeatT]):
@@ -2834,4 +2834,4 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
     ### INJECT "hllv vehicles" END
 
 
-Vehicle: TypeAlias = HLLVehicle | HLLVVehicle
+AnyVehicle: TypeAlias = HLLVehicle | HLLVVehicle

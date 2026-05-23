@@ -4725,4 +4725,4 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
     ### INJECT "hllv vehicles" END
 
 
-Weapon: TypeAlias = HLLWeapon | HLLVWeapon
+AnyWeapon: TypeAlias = HLLWeapon | HLLVWeapon

@@ -31,7 +31,7 @@ class HLLVRoleType(StrEnum):
     COMMANDER = "Commander"
 
 
-RoleType: TypeAlias = HLLRoleType | HLLVRoleType
+AnyRoleType: TypeAlias = HLLRoleType | HLLVRoleType
 
 
 class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
@@ -550,7 +550,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=3,
             assist_combat_score=2,
             ### INJECT "hllv progression Rifleman" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -633,7 +632,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression Rifleman" END
         )
 
@@ -649,7 +647,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=6,
             assist_combat_score=4,
             ### INJECT "hllv progression Medic" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -732,7 +729,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=4,
                 ),
             ],
-
             ### INJECT "hllv progression Medic" END
         )
 
@@ -748,7 +744,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=6,
             assist_combat_score=4,
             ### INJECT "hllv progression Spotter" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -831,7 +826,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=4,
                 ),
             ],
-
             ### INJECT "hllv progression Spotter" END
         )
 
@@ -847,7 +841,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=6,
             assist_combat_score=4,
             ### INJECT "hllv progression Specialist" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -930,7 +923,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=4,
                 ),
             ],
-
             ### INJECT "hllv progression Specialist" END
         )
 
@@ -946,7 +938,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression HeavyMachineGunner" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1029,7 +1020,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression HeavyMachineGunner" END
         )
 
@@ -1045,7 +1035,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression Grenadier" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1128,7 +1117,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression Grenadier" END
         )
 
@@ -1144,7 +1132,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression Engineer" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1227,7 +1214,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression Engineer" END
         )
 
@@ -1243,7 +1229,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression SquadLeader" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1326,7 +1311,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=4,
                 ),
             ],
-
             ### INJECT "hllv progression SquadLeader" END
         )
 
@@ -1342,7 +1326,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=6,
             assist_combat_score=4,
             ### INJECT "hllv progression Sniper" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1425,7 +1408,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression Sniper" END
         )
 
@@ -1441,7 +1423,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=3,
             assist_combat_score=2,
             ### INJECT "hllv progression Crewman" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1524,7 +1505,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression Crewman" END
         )
 
@@ -1540,7 +1520,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression TankCommander" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1623,7 +1602,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression TankCommander" END
         )
 
@@ -1639,7 +1617,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=12,  # TODO: Update
             assist_combat_score=8,
             ### INJECT "hllv progression MortarSupport" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1722,7 +1699,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=4,
                 ),
             ],
-
             ### INJECT "hllv progression MortarSupport" END
         )
 
@@ -1738,7 +1714,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression MortarObserver" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1821,7 +1796,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression MortarObserver" END
         )
 
@@ -1837,7 +1811,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression MortarGunner" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -1920,7 +1893,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=4,
                 ),
             ],
-
             ### INJECT "hllv progression MortarGunner" END
         )
 
@@ -1936,7 +1908,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=6,
             assist_combat_score=4,
             ### INJECT "hllv progression HelicopterPilot" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -2019,7 +1990,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression HelicopterPilot" END
         )
 
@@ -2035,7 +2005,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=9,
             assist_combat_score=6,
             ### INJECT "hllv progression HelicopterLogisticsOfficer" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -2118,7 +2087,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression HelicopterLogisticsOfficer" END
         )
 
@@ -2134,7 +2102,6 @@ class HLLVRole(_Role[HLLVRoleType]):
             kill_combat_score=12,
             assist_combat_score=8,
             ### INJECT "hllv progression ArmyCommander" START
-
             progression=[
                 HLLVRoleProgression(
                     level=1,
@@ -2217,7 +2184,6 @@ class HLLVRole(_Role[HLLVRoleType]):
                     utility_slots=2,
                 ),
             ],
-
             ### INJECT "hllv progression ArmyCommander" END
         )
 
@@ -2227,4 +2193,4 @@ class HLLVRole(_Role[HLLVRoleType]):
         return cls.COMMANDER
 
 
-Role: TypeAlias = HLLRole | HLLVRole
+AnyRole: TypeAlias = HLLRole | HLLVRole

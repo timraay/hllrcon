@@ -192,4 +192,4 @@ class HLLVFaction(_Faction[HLLVTeam]):
         )
 
 
-Faction: TypeAlias = HLLFaction | HLLVFaction
+AnyFaction: TypeAlias = HLLFaction | HLLVFaction

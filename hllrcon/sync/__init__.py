@@ -1,3 +1,3 @@
-from .rcon import HLLSyncRcon, HLLVSyncRcon, SyncRcon
+from .rcon import AnySyncRcon, HLLSyncRcon, HLLVSyncRcon
 
-__all__ = ("HLLSyncRcon", "HLLVSyncRcon", "SyncRcon")
+__all__ = ("AnySyncRcon", "HLLSyncRcon", "HLLVSyncRcon")

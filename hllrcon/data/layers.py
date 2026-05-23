@@ -61,9 +61,9 @@ from .maps import CardinalDirection, HLLMap, HLLVMap, _Map
 from .teams import HLLTeam, HLLVTeam, _Team
 
 __all__ = (
+    "AnyLayer",
     "HLLLayer",
     "HLLVLayer",
-    "Layer",
     "TimeOfDay",
     "Weather",
 )
@@ -2364,4 +2364,4 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
         )
 
 
-Layer: TypeAlias = HLLLayer | HLLVLayer
+AnyLayer: TypeAlias = HLLLayer | HLLVLayer

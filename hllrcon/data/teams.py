@@ -45,4 +45,4 @@ class HLLVTeam(_Team):
         return cls.NORTH
 
 
-Team: TypeAlias = HLLTeam | HLLVTeam
+AnyTeam: TypeAlias = HLLTeam | HLLVTeam

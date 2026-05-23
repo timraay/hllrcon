@@ -28,12 +28,12 @@ from hllrcon.data._utils import (
     model_sequence_serializer,
     model_serializer,
 )
-from hllrcon.data.factions import Faction, HLLVFaction
+from hllrcon.data.factions import AnyFaction, HLLVFaction
 from hllrcon.data.loadouts import HLLVLoadoutItem
 from hllrcon.data.maps import CardinalDirection, Orientation
-from hllrcon.data.roles import HLLVRole, Role
+from hllrcon.data.roles import AnyRole, HLLVRole
 from hllrcon.data.sectors import GridPositionalModel
-from hllrcon.data.weapons import HLLVWeapon, Weapon
+from hllrcon.data.weapons import AnyWeapon, HLLVWeapon
 from pydantic import BaseModel, ValidationError
 
 
@@ -216,7 +216,7 @@ class TestDataFactions:
         assert None not in HLLFaction.all()
 
     class FactionProperties(NamedTuple):
-        faction: Faction
+        faction: AnyFaction
         is_allied: bool
         is_axis: bool
 
@@ -637,7 +637,7 @@ class TestDataRoles:
             HLLTeam.by_id(14)
 
     class RoleProperties(NamedTuple):
-        roles: list[Role]
+        roles: list[AnyRole]
         is_infantry: bool
         is_tanker: bool
         is_artillery: bool
@@ -921,7 +921,7 @@ class TestDataWeapons:
             HLLWeapon.by_id("m1 garand")
 
     def test_weapon_resolve_vehicle(self) -> None:
-        weapon: Weapon
+        weapon: AnyWeapon
 
         for weapon in HLLWeapon.all():
             weapon.vehicle  # noqa: B018

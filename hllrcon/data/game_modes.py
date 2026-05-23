@@ -73,4 +73,4 @@ class HLLVGameMode(_GameMode):
         return cls(id="skirmish", scale=GameModeScale.SMALL)
 
 
-GameMode: TypeAlias = HLLGameMode | HLLVGameMode
+AnyGameMode: TypeAlias = HLLGameMode | HLLVGameMode

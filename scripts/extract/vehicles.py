@@ -8,7 +8,7 @@ from typing import Generic, TypedDict, cast
 
 from pydantic import BaseModel, TypeAdapter, model_validator
 
-from hllrcon.data.factions import Faction, HLLFaction, HLLVFaction
+from hllrcon.data.factions import AnyFaction, HLLFaction, HLLVFaction
 from hllrcon.data.vehicles import VehicleSeatType, VehicleType
 from hllrcon.data.weapons import WeaponType
 from scripts import HLL_METADATA_PATH, HLLV_METADATA_PATH
@@ -275,7 +275,7 @@ class VehicleData(BaseModel):
     id: str
     name: str
     type: VehicleType
-    factions: set[Faction]
+    factions: set[AnyFaction]
     hull: VehicleCompartmentData
     turret: VehicleCompartmentData
     tracks: VehicleCompartmentData
@@ -420,7 +420,7 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
         self,
         vehicle: HLLVehicle[HLLVehiclePropT_co],
         vehicle_type: VehicleType,
-        factions: set[Faction],
+        factions: set[AnyFaction],
     ) -> None:
         self.vehicle = vehicle
         self.vehicle_type = vehicle_type
@@ -870,7 +870,7 @@ class InfantryVehicleExtractor(
 
 with root_path_ctx(HLL_METADATA_PATH):
     HLL_ABILITIES_DIR = Path("HLL/Content/Blueprints/Abilities/Setup")
-    HLL_ABILITIES_FACTIONS: dict[Path, set[Faction]] = {
+    HLL_ABILITIES_FACTIONS: dict[Path, set[AnyFaction]] = {
         HLL_ABILITIES_DIR / "US_DefaultAbilities": {HLLFaction.US},
         HLL_ABILITIES_DIR / "US_DefaultAbilities_Winter": {HLLFaction.US},
         HLL_ABILITIES_DIR / "GER_DefaultAbilities": {HLLFaction.GER},
@@ -888,7 +888,7 @@ with root_path_ctx(HLL_METADATA_PATH):
     }
 
     HLL_ARTILLERY_DIR = Path("HLL/Content/Blueprints/Artillery")
-    HLL_ARTILLERY_FACTIONS: dict[Path, set[Faction]] = {
+    HLL_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
         HLL_ARTILLERY_DIR / "US/Anti-Tank/BP_USAntiTank": {HLLFaction.US},
         HLL_ARTILLERY_DIR / "RUS/Anti-Tank/BP_RUSAntiTank": {HLLFaction.RUS},
         HLL_ARTILLERY_DIR / "GER/Anti-Tank/BP_GERAntiTank": {
@@ -918,7 +918,7 @@ with root_path_ctx(HLL_METADATA_PATH):
 
 with root_path_ctx(HLLV_METADATA_PATH):
     HLLV_ABILITIES_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Abilities")
-    HLLV_ABILITIES_FACTIONS: dict[Path, set[Faction]] = {
+    HLLV_ABILITIES_FACTIONS: dict[Path, set[AnyFaction]] = {
         HLLV_ABILITIES_DIR / "US/Waterfall_US_DefaultAbilities": {HLLVFaction.US},
         HLLV_ABILITIES_DIR / "NVA/Waterfall_NVA_DefaultAbilities": {HLLVFaction.NVA},
     }
@@ -931,7 +931,7 @@ with root_path_ctx(HLLV_METADATA_PATH):
         "HLLVietnam/Content/_WFL/Blueprints/Weapons/MortarPrototypes",
     )
     HLLV_ANTI_AIR_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Weapons/AntiAircraft")
-    HLLV_ARTILLERY_FACTIONS: dict[Path, set[Faction]] = {
+    HLLV_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
         HLLV_MORTARS_DIR / "US/BP_Mortar_US_M29.json": {HLLVFaction.US},
         HLLV_MORTARS_DIR / "BP_Mortar_NVA_Type67.json": {HLLVFaction.NVA},
         HLLV_ANTI_AIR_DIR / "BP_DShKMAntiAircraftGun.json": {HLLVFaction.NVA},
@@ -942,7 +942,7 @@ with root_path_ctx(HLLV_METADATA_PATH):
     }
 
 
-def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[Faction]]]:
+def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[AnyFaction]]]:
     abilities_dir, abilities_factions_map = game_switch(
         (HLL_ABILITIES_DIR, HLL_ABILITIES_FACTIONS),
         (HLLV_ABILITIES_DIR, HLLV_ABILITIES_FACTIONS),
@@ -964,7 +964,7 @@ def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[Faction]]]
         yield ability_data, factions
 
 
-def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[Faction]]]:
+def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[AnyFaction]]]:
     for ability_table, factions in get_all_ability_tables():
         for ability in ability_table.properties.abilities:
             if a := ability.get_ability():
@@ -1106,7 +1106,7 @@ def get_vehicle_class_from_root_struct(
 
 
 def _get_all_vehicle_attributes() -> Iterator[
-    tuple[HLLVehicle, VehicleType, set[Faction]]
+    tuple[HLLVehicle, VehicleType, set[AnyFaction]]
 ]:
     for ability, factions in get_all_abilities():
         if not isinstance(
@@ -1147,9 +1147,9 @@ def _get_all_vehicle_attributes() -> Iterator[
 
 
 def get_all_vehicle_attributes() -> Iterator[
-    tuple[HLLVehicle, VehicleType, set[Faction]]
+    tuple[HLLVehicle, VehicleType, set[AnyFaction]]
 ]:
-    seen: dict[HLLVehicle, tuple[VehicleType, set[Faction]]] = {}
+    seen: dict[HLLVehicle, tuple[VehicleType, set[AnyFaction]]] = {}
 
     for vehicle, vehicle_type, factions in _get_all_vehicle_attributes():
         if vehicle in seen:

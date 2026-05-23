@@ -3,7 +3,7 @@ from pathlib import Path
 
 from pydantic import BaseModel
 
-from hllrcon.data.roles import HLLVRole, Role
+from hllrcon.data.roles import AnyRole, HLLVRole
 from scripts import HLLV_METADATA_PATH
 from scripts.extract.utils import indent_text, inject_code, stringify_list
 from scripts.extractlib.loader import (
@@ -44,7 +44,7 @@ class RoleProgressionEntryData(BaseModel):
 
 
 class RoleProgressionData(BaseModel):
-    role: Role
+    role: AnyRole
     progression: list[RoleProgressionEntryData]
 
     def to_constructor(self) -> str:

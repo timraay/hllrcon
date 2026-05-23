@@ -1,14 +1,14 @@
-from .factions import Faction, HLLFaction, HLLVFaction
+from .factions import AnyFaction, HLLFaction, HLLVFaction
 from .game_modes import (
-    GameMode,
+    AnyGameMode,
     GameModeScale,
     HLLGameMode,
     HLLVGameMode,
 )
 from .layers import (
+    AnyLayer,
     HLLLayer,
     HLLVLayer,
-    Layer,
     TimeOfDay,
     Weather,
 )
@@ -18,37 +18,45 @@ from .loadouts import (
     HLLLoadoutItem,
     HLLVLoadoutItem,
 )
-from .maps import CardinalDirection, HLLMap, HLLVMap, Map, Orientation
-from .roles import HLLRole, HLLRoleType, HLLVRole, HLLVRoleType, Role, RoleType
+from .maps import AnyMap, CardinalDirection, HLLMap, HLLVMap, Orientation
+from .roles import AnyRole, AnyRoleType, HLLRole, HLLRoleType, HLLVRole, HLLVRoleType
 from .sectors import (
     CaptureZone,
     Grid,
     Sector,
     Strongpoint,
 )
-from .teams import HLLTeam, HLLVTeam, Team
+from .teams import AnyTeam, HLLTeam, HLLVTeam
 from .vehicles import (
+    AnyVehicle,
+    AnyVehicleSeat,
     HLLVehicle,
     HLLVehicleSeat,
     HLLVVehicle,
     HLLVVehicleSeat,
-    Vehicle,
-    VehicleSeat,
     VehicleSeatType,
     VehicleType,
 )
 from .weapons import (
+    AnyWeapon,
     HLLVWeapon,
     HLLWeapon,
-    Weapon,
     WeaponType,
 )
 
 __all__ = (
+    "AnyFaction",
+    "AnyGameMode",
+    "AnyLayer",
+    "AnyMap",
+    "AnyRole",
+    "AnyRoleType",
+    "AnyTeam",
+    "AnyVehicle",
+    "AnyVehicleSeat",
+    "AnyWeapon",
     "CaptureZone",
     "CardinalDirection",
-    "Faction",
-    "GameMode",
     "GameModeScale",
     "Grid",
     "HLLFaction",
@@ -75,23 +83,15 @@ __all__ = (
     "HLLVehicle",
     "HLLVehicleSeat",
     "HLLWeapon",
-    "Layer",
-    "Map",
     "Orientation",
-    "Role",
-    "RoleType",
     "Sector",
     "Strongpoint",
-    "Team",
     "TimeOfDay",
-    "Vehicle",
-    "VehicleSeat",
     "VehicleSeatType",
     "VehicleSeatType",
     "VehicleType",
     "VehicleType",
     "VehicleType",
-    "Weapon",
     "WeaponType",
     "WeaponType",
     "WeaponType",

@@ -397,4 +397,4 @@ class HLLVMap(_Map[HLLVFaction]):
         )
 
 
-Map: TypeAlias = HLLMap | HLLVMap
+AnyMap: TypeAlias = HLLMap | HLLVMap

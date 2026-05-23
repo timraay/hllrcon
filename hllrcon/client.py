@@ -6,9 +6,9 @@ from typing import TypeAlias
 from hllrcon.commands import HLLRconCommands, HLLVRconCommands, _RconCommands
 
 __all__ = (
+    "AnyRconClient",
     "HLLRconClient",
     "HLLVRconClient",
-    "RconClient",
 )
 
 
@@ -70,4 +70,4 @@ class HLLVRconClient(HLLVRconCommands, _RconClient):
     pass
 
 
-RconClient: TypeAlias = HLLRconClient | HLLVRconClient
+AnyRconClient: TypeAlias = HLLRconClient | HLLVRconClient

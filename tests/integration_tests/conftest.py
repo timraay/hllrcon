@@ -5,13 +5,13 @@ from collections.abc import AsyncGenerator, Sequence
 import pytest
 import pytest_asyncio
 from hllrcon import (
-    GetMapRotationResponse,
-    GetPlayerResponse,
-    GetServerConfigResponse,
-    GetServerSessionResponse,
+    AnyGetMapRotationResponse,
+    AnyGetPlayerResponse,
+    AnyGetServerConfigResponse,
+    AnyGetServerSessionResponse,
+    AnyRcon,
     HLLRcon,
     HLLVRcon,
-    Rcon,
 )
 
 HLL_HOST = os.getenv("HLL_HOST")
@@ -26,7 +26,7 @@ pytestmark = pytest.mark.asyncio
 
 
 @pytest_asyncio.fixture(scope="function")
-async def rcon() -> AsyncGenerator[Rcon]:
+async def rcon() -> AsyncGenerator[AnyRcon]:
     hll_rcon_cls = HLLRcon if HLL_GAME == "hll" else HLLVRcon
 
     rcon = hll_rcon_cls(
@@ -40,7 +40,7 @@ async def rcon() -> AsyncGenerator[Rcon]:
 
 
 @pytest_asyncio.fixture
-async def players(rcon: Rcon) -> Sequence[GetPlayerResponse]:
+async def players(rcon: AnyRcon) -> Sequence[AnyGetPlayerResponse]:
     players = await rcon.get_players()
 
     if not players.players:
@@ -50,20 +50,20 @@ async def players(rcon: Rcon) -> Sequence[GetPlayerResponse]:
 
 
 @pytest_asyncio.fixture
-async def rotation(rcon: Rcon) -> GetMapRotationResponse:
+async def rotation(rcon: AnyRcon) -> AnyGetMapRotationResponse:
     return await rcon.get_map_rotation()
 
 
 @pytest_asyncio.fixture
-async def sequence(rcon: Rcon) -> GetMapRotationResponse:
+async def sequence(rcon: AnyRcon) -> AnyGetMapRotationResponse:
     return await rcon.get_map_sequence()
 
 
 @pytest_asyncio.fixture
-async def server_config(rcon: Rcon) -> GetServerConfigResponse:
+async def server_config(rcon: AnyRcon) -> AnyGetServerConfigResponse:
     return await rcon.get_server_config()
 
 
 @pytest_asyncio.fixture
-async def server_session(rcon: Rcon) -> GetServerSessionResponse:
+async def server_session(rcon: AnyRcon) -> AnyGetServerSessionResponse:
     return await rcon.get_server_session()

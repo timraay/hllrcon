@@ -12,9 +12,9 @@ from hllrcon.connection import HLLRconConnection, HLLVRconConnection, _RconConne
 from hllrcon.exceptions import RconConnectionClosedError
 
 __all__ = (
+    "AnyRcon",
     "HLLRcon",
     "HLLVRcon",
-    "Rcon",
 )
 
 RconConnectionT = TypeVar("RconConnectionT", bound=_RconConnection)
@@ -188,4 +188,4 @@ class HLLVRcon(HLLVRconClient, _Rcon[HLLVRconConnection]):
         )
 
 
-Rcon: TypeAlias = HLLRcon | HLLVRcon
+AnyRcon: TypeAlias = HLLRcon | HLLVRcon

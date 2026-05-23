@@ -13,54 +13,58 @@ from pydantic import (
 )
 from pydantic.alias_generators import to_camel
 
-from hllrcon.data import Faction, GameMode, Layer, Role, TimeOfDay
+from hllrcon.data import AnyFaction, AnyGameMode, AnyLayer, AnyRole, TimeOfDay
 from hllrcon.data.factions import HLLFaction, HLLVFaction, _Faction
 from hllrcon.data.game_modes import HLLGameMode, HLLVGameMode
 from hllrcon.data.layers import HLLLayer, HLLVLayer
 from hllrcon.data.roles import HLLRole, HLLVRole, _Role
 
-RoleT = TypeVar("RoleT", bound=Role)
-FactionT = TypeVar("FactionT", bound=Faction)
-GameModeT = TypeVar("GameModeT", bound=GameMode)
-LayerT = TypeVar("LayerT", bound=Layer)
+RoleT = TypeVar("RoleT", bound=AnyRole)
+FactionT = TypeVar("FactionT", bound=AnyFaction)
+GameModeT = TypeVar("GameModeT", bound=AnyGameMode)
+LayerT = TypeVar("LayerT", bound=AnyLayer)
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 SplitStringValidator = BeforeValidator(lambda x: str(x).split(",") if x else [])
 
 __all__ = (
+    "AnyGetAdminGroupsResponse",
+    "AnyGetAdminLogResponse",
+    "AnyGetAdminLogResponseEntry",
+    "AnyGetAdminUsersResponse",
+    "AnyGetAdminUsersResponseEntry",
+    "AnyGetAutoBalanceEnabledResponse",
+    "AnyGetAutoBalanceThresholdResponse",
+    "AnyGetBannedWordsResponse",
+    "AnyGetBansResponse",
+    "AnyGetBansResponseEntry",
+    "AnyGetCommandDetailsResponse",
+    "AnyGetCommandDetailsResponseParameter",
+    "AnyGetCommandsResponse",
+    "AnyGetCommandsResponseEntry",
+    "AnyGetHighPingThresholdResponse",
+    "AnyGetIdleKickDurationResponse",
+    "AnyGetMapRotationResponse",
+    "AnyGetMapRotationResponseEntry",
+    "AnyGetMapShuffleEnabledResponse",
+    "AnyGetPlayerResponse",
+    "AnyGetPlayerResponseScoreData",
+    "AnyGetPlayerResponseStats",
+    "AnyGetPlayerResponseWorldPosition",
+    "AnyGetPlayersResponse",
+    "AnyGetServerConfigResponse",
+    "AnyGetServerSessionResponse",
+    "AnyGetTeamSwitchCooldownResponse",
+    "AnyGetVipsResponse",
+    "AnyGetVipsResponseEntry",
+    "AnyGetVoteKickEnabledResponse",
+    "AnyGetVoteKickThresholdsResponse",
+    "AnyGetVoteKickThresholdsResponseEntry",
+    "AnyPlayerFactionId",
+    "AnyPlayerPlatform",
+    "AnyPlayerRoleId",
+    "AnySupportedPlatform",
     "ForceMode",
-    "GetAdminGroupsResponse",
-    "GetAdminLogResponse",
-    "GetAdminLogResponseEntry",
-    "GetAdminUsersResponse",
-    "GetAdminUsersResponseEntry",
-    "GetAutoBalanceEnabledResponse",
-    "GetAutoBalanceThresholdResponse",
-    "GetBannedWordsResponse",
-    "GetBansResponse",
-    "GetBansResponseEntry",
-    "GetCommandDetailsResponse",
-    "GetCommandDetailsResponseParameter",
-    "GetCommandsResponse",
-    "GetCommandsResponseEntry",
-    "GetHighPingThresholdResponse",
-    "GetIdleKickDurationResponse",
-    "GetMapRotationResponse",
-    "GetMapRotationResponseEntry",
-    "GetMapShuffleEnabledResponse",
-    "GetPlayerResponse",
-    "GetPlayerResponseScoreData",
-    "GetPlayerResponseStats",
-    "GetPlayerResponseWorldPosition",
-    "GetPlayersResponse",
-    "GetServerConfigResponse",
-    "GetServerSessionResponse",
-    "GetTeamSwitchCooldownResponse",
-    "GetVipsResponse",
-    "GetVipsResponseEntry",
-    "GetVoteKickEnabledResponse",
-    "GetVoteKickThresholdsResponse",
-    "GetVoteKickThresholdsResponseEntry",
     "HLLGetAdminGroupsResponse",
     "HLLGetAdminLogResponse",
     "HLLGetAdminLogResponseEntry",
@@ -133,11 +137,7 @@ __all__ = (
     "HLLVPlayerPlatform",
     "HLLVPlayerRoleId",
     "HLLVSupportedPlatform",
-    "PlayerFactionId",
-    "PlayerPlatform",
-    "PlayerRoleId",
     "Response",
-    "SupportedPlatform",
 )
 
 
@@ -174,7 +174,7 @@ class HLLVPlayerPlatform(StrEnum):
     STEAM = "EPlatformFamily::Steam"
 
 
-PlayerPlatform: TypeAlias = HLLPlayerPlatform | HLLVPlayerPlatform
+AnyPlayerPlatform: TypeAlias = HLLPlayerPlatform | HLLVPlayerPlatform
 
 
 class HLLSupportedPlatform(StrEnum):
@@ -194,7 +194,7 @@ class HLLVSupportedPlatform(StrEnum):
     PS5_PRO = "EPlatform::PS5_Pro"
 
 
-SupportedPlatform: TypeAlias = HLLSupportedPlatform | HLLVSupportedPlatform
+AnySupportedPlatform: TypeAlias = HLLSupportedPlatform | HLLVSupportedPlatform
 
 
 class HLLPlayerFactionId(IntEnum):
@@ -213,7 +213,7 @@ class HLLVPlayerFactionId(IntEnum):
     UNASSIGNED = 8
 
 
-PlayerFactionId: TypeAlias = HLLPlayerFactionId | HLLVPlayerFactionId
+AnyPlayerFactionId: TypeAlias = HLLPlayerFactionId | HLLVPlayerFactionId
 
 
 class HLLPlayerRoleId(IntEnum):
@@ -260,7 +260,7 @@ class HLLVPlayerRoleId(IntEnum):
     COMMANDER = 20
 
 
-PlayerRoleId: TypeAlias = HLLPlayerRoleId | HLLVPlayerRoleId
+AnyPlayerRoleId: TypeAlias = HLLPlayerRoleId | HLLVPlayerRoleId
 
 
 class ForceMode(StrEnum):
@@ -285,7 +285,7 @@ class HLLVGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
     pass
 
 
-GetAdminLogResponseEntry: TypeAlias = (
+AnyGetAdminLogResponseEntry: TypeAlias = (
     HLLGetAdminLogResponseEntry | HLLVGetAdminLogResponseEntry
 )
 
@@ -303,7 +303,7 @@ class HLLVGetAdminLogResponse(_GetAdminLogResponse):
     entries: list[HLLVGetAdminLogResponseEntry]
 
 
-GetAdminLogResponse: TypeAlias = HLLGetAdminLogResponse | HLLVGetAdminLogResponse
+AnyGetAdminLogResponse: TypeAlias = HLLGetAdminLogResponse | HLLVGetAdminLogResponse
 
 
 class _GetCommandsResponseEntry(Response):
@@ -320,7 +320,7 @@ class HLLVGetCommandsResponseEntry(_GetCommandsResponseEntry):
     pass
 
 
-GetCommandsResponseEntry: TypeAlias = (
+AnyGetCommandsResponseEntry: TypeAlias = (
     HLLGetCommandsResponseEntry | HLLVGetCommandsResponseEntry
 )
 
@@ -337,7 +337,7 @@ class HLLVGetCommandsResponse(_GetCommandsResponse):
     entries: list[HLLVGetCommandsResponseEntry]
 
 
-GetCommandsResponse: TypeAlias = HLLGetCommandsResponse | HLLVGetCommandsResponse
+AnyGetCommandsResponse: TypeAlias = HLLGetCommandsResponse | HLLVGetCommandsResponse
 
 
 class _GetAdminGroupsResponse(Response):
@@ -352,7 +352,7 @@ class HLLVGetAdminGroupsResponse(_GetAdminGroupsResponse):
     pass
 
 
-GetAdminGroupsResponse: TypeAlias = (
+AnyGetAdminGroupsResponse: TypeAlias = (
     HLLGetAdminGroupsResponse | HLLVGetAdminGroupsResponse
 )
 
@@ -371,13 +371,13 @@ class HLLVGetAdminUsersResponseEntry(_GetAdminUsersResponseEntry):
     pass
 
 
-GetAdminUsersResponseEntry: TypeAlias = (
+AnyGetAdminUsersResponseEntry: TypeAlias = (
     HLLGetAdminUsersResponseEntry | HLLVGetAdminUsersResponseEntry
 )
 
 
 class _GetAdminUsersResponse(Response):
-    admin_users: list[GetAdminUsersResponseEntry]
+    admin_users: list[AnyGetAdminUsersResponseEntry]
 
 
 class HLLGetAdminUsersResponse(_GetAdminUsersResponse):
@@ -388,7 +388,9 @@ class HLLVGetAdminUsersResponse(_GetAdminUsersResponse):
     pass
 
 
-GetAdminUsersResponse: TypeAlias = HLLGetAdminUsersResponse | HLLVGetAdminUsersResponse
+AnyGetAdminUsersResponse: TypeAlias = (
+    HLLGetAdminUsersResponse | HLLVGetAdminUsersResponse
+)
 
 
 class _GetAutoBalanceEnabledResponse(Response):
@@ -403,7 +405,7 @@ class HLLVGetAutoBalanceEnabledResponse(_GetAutoBalanceEnabledResponse):
     pass
 
 
-GetAutoBalanceEnabledResponse: TypeAlias = (
+AnyGetAutoBalanceEnabledResponse: TypeAlias = (
     HLLGetAutoBalanceEnabledResponse | HLLVGetAutoBalanceEnabledResponse
 )
 
@@ -420,7 +422,7 @@ class HLLVGetAutoBalanceThresholdResponse(_GetAutoBalanceThresholdResponse):
     pass
 
 
-GetAutoBalanceThresholdResponse: TypeAlias = (
+AnyGetAutoBalanceThresholdResponse: TypeAlias = (
     HLLGetAutoBalanceThresholdResponse | HLLVGetAutoBalanceThresholdResponse
 )
 
@@ -437,7 +439,7 @@ class HLLVGetTeamSwitchCooldownResponse(_GetTeamSwitchCooldownResponse):
     pass
 
 
-GetTeamSwitchCooldownResponse: TypeAlias = (
+AnyGetTeamSwitchCooldownResponse: TypeAlias = (
     HLLGetTeamSwitchCooldownResponse | HLLVGetTeamSwitchCooldownResponse
 )
 
@@ -454,7 +456,7 @@ class HLLVGetIdleKickDurationResponse(_GetIdleKickDurationResponse):
     pass
 
 
-GetIdleKickDurationResponse: TypeAlias = (
+AnyGetIdleKickDurationResponse: TypeAlias = (
     HLLGetIdleKickDurationResponse | HLLVGetIdleKickDurationResponse
 )
 
@@ -471,7 +473,7 @@ class HLLVGetHighPingThresholdResponse(_GetHighPingThresholdResponse):
     pass
 
 
-GetHighPingThresholdResponse: TypeAlias = (
+AnyGetHighPingThresholdResponse: TypeAlias = (
     HLLGetHighPingThresholdResponse | HLLVGetHighPingThresholdResponse
 )
 
@@ -488,7 +490,7 @@ class HLLVGetVoteKickEnabledResponse(_GetVoteKickEnabledResponse):
     pass
 
 
-GetVoteKickEnabledResponse: TypeAlias = (
+AnyGetVoteKickEnabledResponse: TypeAlias = (
     HLLGetVoteKickEnabledResponse | HLLVGetVoteKickEnabledResponse
 )
 
@@ -506,7 +508,7 @@ class HLLVGetVoteKickThresholdsResponseEntry(_GetVoteKickThresholdsResponseEntry
     pass
 
 
-GetVoteKickThresholdsResponseEntry: TypeAlias = (
+AnyGetVoteKickThresholdsResponseEntry: TypeAlias = (
     HLLGetVoteKickThresholdsResponseEntry | HLLVGetVoteKickThresholdsResponseEntry
 )
 
@@ -523,7 +525,7 @@ class HLLVGetVoteKickThresholdsResponse(_GetVoteKickThresholdsResponse):
     entries: list[HLLVGetVoteKickThresholdsResponseEntry]
 
 
-GetVoteKickThresholdsResponse: TypeAlias = (
+AnyGetVoteKickThresholdsResponse: TypeAlias = (
     HLLGetVoteKickThresholdsResponse | HLLVGetVoteKickThresholdsResponse
 )
 
@@ -545,7 +547,7 @@ class HLLVGetBansResponseEntry(_GetBansResponseEntry):
     pass
 
 
-GetBansResponseEntry: TypeAlias = HLLGetBansResponseEntry | HLLVGetBansResponseEntry
+AnyGetBansResponseEntry: TypeAlias = HLLGetBansResponseEntry | HLLVGetBansResponseEntry
 
 
 class _GetBansResponse(Response):
@@ -560,7 +562,7 @@ class HLLVGetBansResponse(_GetBansResponse):
     ban_list: list[HLLVGetBansResponseEntry]
 
 
-GetBansResponse: TypeAlias = HLLGetBansResponse | HLLVGetBansResponse
+AnyGetBansResponse: TypeAlias = HLLGetBansResponse | HLLVGetBansResponse
 
 
 class _GetPlayerResponseScoreData(Response):
@@ -578,7 +580,7 @@ class HLLVGetPlayerResponseScoreData(_GetPlayerResponseScoreData):
     pass
 
 
-GetPlayerResponseScoreData: TypeAlias = (
+AnyGetPlayerResponseScoreData: TypeAlias = (
     HLLGetPlayerResponseScoreData | HLLVGetPlayerResponseScoreData
 )
 
@@ -599,7 +601,7 @@ class HLLVGetPlayerResponseStats(_GetPlayerResponseStats):
     pass
 
 
-GetPlayerResponseStats: TypeAlias = (
+AnyGetPlayerResponseStats: TypeAlias = (
     HLLGetPlayerResponseStats | HLLVGetPlayerResponseStats
 )
 
@@ -623,7 +625,7 @@ class HLLVGetPlayerResponseWorldPosition(_GetPlayerResponseWorldPosition):
     pass
 
 
-GetPlayerResponseWorldPosition: TypeAlias = (
+AnyGetPlayerResponseWorldPosition: TypeAlias = (
     HLLGetPlayerResponseWorldPosition | HLLVGetPlayerResponseWorldPosition
 )
 
@@ -641,7 +643,7 @@ class _GetPlayerResponse(Response, Generic[FactionT, RoleT]):
     id: str = Field(validation_alias="iD")
     """The player's ID"""
 
-    platform: PlayerPlatform
+    platform: AnyPlayerPlatform
     """The player's platform"""
 
     eos_id: str = Field(validation_alias="eosId")
@@ -650,12 +652,12 @@ class _GetPlayerResponse(Response, Generic[FactionT, RoleT]):
     level: int
     """The player's level"""
 
-    faction_id: PlayerFactionId = Field(
+    faction_id: AnyPlayerFactionId = Field(
         validation_alias="team",
     )
     """The ID of the player's faction."""
 
-    role_id: PlayerRoleId = Field(validation_alias="role")
+    role_id: AnyPlayerRoleId = Field(validation_alias="role")
     """The ID of the player's role."""
 
     platoon: Annotated[str | None, EmptyStringToNoneValidator]
@@ -706,7 +708,7 @@ class HLLVGetPlayerResponse(_GetPlayerResponse[HLLVFaction, HLLVRole]):
     world_position: HLLVGetPlayerResponseWorldPosition
 
 
-GetPlayerResponse: TypeAlias = HLLGetPlayerResponse | HLLVGetPlayerResponse
+AnyGetPlayerResponse: TypeAlias = HLLGetPlayerResponse | HLLVGetPlayerResponse
 
 
 class _GetPlayersResponse(Response):
@@ -721,12 +723,12 @@ class HLLVGetPlayersResponse(_GetPlayersResponse):
     players: list[HLLVGetPlayerResponse]
 
 
-GetPlayersResponse: TypeAlias = HLLGetPlayersResponse | HLLVGetPlayersResponse
+AnyGetPlayersResponse: TypeAlias = HLLGetPlayersResponse | HLLVGetPlayersResponse
 
 
 class _GetMapRotationResponseEntry(Response, Generic[GameModeT, LayerT]):
-    _GAME_MODE_CLS: ClassVar[type[GameMode]]
-    _LAYER_CLS: ClassVar[type[Layer]]
+    _GAME_MODE_CLS: ClassVar[type[AnyGameMode]]
+    _LAYER_CLS: ClassVar[type[AnyLayer]]
 
     name: str
     game_mode_name: str = Field(validation_alias="gameMode")
@@ -795,7 +797,7 @@ class HLLVGetMapRotationResponseEntry(
         return super()._get_game_mode()
 
 
-GetMapRotationResponseEntry: TypeAlias = (
+AnyGetMapRotationResponseEntry: TypeAlias = (
     HLLGetMapRotationResponseEntry | HLLVGetMapRotationResponseEntry
 )
 
@@ -813,14 +815,14 @@ class HLLVGetMapRotationResponse(_GetMapRotationResponse):
     maps: list[HLLVGetMapRotationResponseEntry] = Field(validation_alias="mAPS")
 
 
-GetMapRotationResponse: TypeAlias = (
+AnyGetMapRotationResponse: TypeAlias = (
     HLLGetMapRotationResponse | HLLVGetMapRotationResponse
 )
 
 
 class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT]):
-    _GAME_MODE_CLS: ClassVar[type[GameMode]]
-    _LAYER_CLS: ClassVar[type[Layer]]
+    _GAME_MODE_CLS: ClassVar[type[AnyGameMode]]
+    _LAYER_CLS: ClassVar[type[AnyLayer]]
 
     server_name: str
     map_name: str
@@ -882,7 +884,7 @@ class HLLVGetServerSessionResponse(_GetServerSessionResponse[HLLVGameMode, HLLVL
     _LAYER_CLS = HLLVLayer
 
 
-GetServerSessionResponse: TypeAlias = (
+AnyGetServerSessionResponse: TypeAlias = (
     HLLGetServerSessionResponse | HLLVGetServerSessionResponse
 )
 
@@ -891,7 +893,7 @@ class _GetServerConfigResponse(Response):
     server_name: str
     build_number: int
     build_revision: int
-    supported_platforms: Sequence[SupportedPlatform]
+    supported_platforms: Sequence[AnySupportedPlatform]
     password_protected: bool
 
 
@@ -903,7 +905,7 @@ class HLLVGetServerConfigResponse(_GetServerConfigResponse):
     supported_platforms: list[HLLVSupportedPlatform]
 
 
-GetServerConfigResponse: TypeAlias = (
+AnyGetServerConfigResponse: TypeAlias = (
     HLLGetServerConfigResponse | HLLVGetServerConfigResponse
 )
 
@@ -920,7 +922,7 @@ class HLLVGetBannedWordsResponse(_GetBannedWordsResponse):
     pass
 
 
-GetBannedWordsResponse: TypeAlias = (
+AnyGetBannedWordsResponse: TypeAlias = (
     HLLGetBannedWordsResponse | HLLVGetBannedWordsResponse
 )
 
@@ -938,7 +940,7 @@ class HLLVGetVipsResponseEntry(_GetVipsResponseEntry):
     pass
 
 
-GetVipsResponseEntry: TypeAlias = HLLGetVipsResponseEntry | HLLVGetVipsResponseEntry
+AnyGetVipsResponseEntry: TypeAlias = HLLGetVipsResponseEntry | HLLVGetVipsResponseEntry
 
 
 class _GetVipsResponse(Response):
@@ -953,7 +955,7 @@ class HLLVGetVipsResponse(_GetVipsResponse):
     vips: list[HLLVGetVipsResponseEntry] = Field(validation_alias="vipPlayers")
 
 
-GetVipsResponse: TypeAlias = HLLGetVipsResponse | HLLVGetVipsResponse
+AnyGetVipsResponse: TypeAlias = HLLGetVipsResponse | HLLVGetVipsResponse
 
 
 class _GetCommandDetailsResponseParameter(Response):
@@ -982,7 +984,7 @@ class HLLVGetCommandDetailsResponseParameter(_GetCommandDetailsResponseParameter
     pass
 
 
-GetCommandDetailsResponseParameter: TypeAlias = (
+AnyGetCommandDetailsResponseParameter: TypeAlias = (
     HLLGetCommandDetailsResponseParameter | HLLVGetCommandDetailsResponseParameter
 )
 
@@ -1009,7 +1011,7 @@ class HLLVGetCommandDetailsResponse(_GetCommandDetailsResponse):
     dialogue_parameters: list[HLLVGetCommandDetailsResponseParameter]
 
 
-GetCommandDetailsResponse: TypeAlias = (
+AnyGetCommandDetailsResponse: TypeAlias = (
     HLLGetCommandDetailsResponse | HLLVGetCommandDetailsResponse
 )
 
@@ -1026,6 +1028,6 @@ class HLLVGetMapShuffleEnabledResponse(_GetMapShuffleEnabledResponse):
     pass
 
 
-GetMapShuffleEnabledResponse: TypeAlias = (
+AnyGetMapShuffleEnabledResponse: TypeAlias = (
     HLLGetMapShuffleEnabledResponse | HLLVGetMapShuffleEnabledResponse
 )

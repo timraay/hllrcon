@@ -4,8 +4,8 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from hllrcon.data.factions import Faction
-from hllrcon.data.roles import Role
+from hllrcon.data.factions import AnyFaction
+from hllrcon.data.roles import AnyRole
 
 
 def inject_code(fp: Path, marker: str, code: str) -> None:
@@ -74,7 +74,7 @@ def stringify_enum_member(member: Enum) -> str:
     return f"{member.__class__.__name__}.{member.name}"
 
 
-def stringify_factions(factions: Collection[Faction]) -> str:
+def stringify_factions(factions: Collection[AnyFaction]) -> str:
     factions_str = [
         f"{type(f).__name__}.{f.short_name}"
         for f in sorted(factions, key=lambda x: x.id)
@@ -83,7 +83,7 @@ def stringify_factions(factions: Collection[Faction]) -> str:
     return "{" + ", ".join(factions_str) + "}"
 
 
-def stringify_role(role: Role) -> str:
+def stringify_role(role: AnyRole) -> str:
     role_name = role.pretty_name.replace(" ", "_").replace("-", "_").upper()
     return f"{type(role).__name__}.{role_name}"
 

@@ -7,7 +7,7 @@ from pydantic import BaseModel, model_validator
 
 from hllrcon.data.factions import HLLVFaction
 from hllrcon.data.loadouts import HLLVLoadoutItemType
-from hllrcon.data.roles import HLLVRole, Role
+from hllrcon.data.roles import AnyRole, HLLVRole
 from scripts import HLLV_METADATA_PATH
 from scripts.extract.utils import (
     inject_code,
@@ -69,7 +69,7 @@ class LoadoutItemData(BaseModel):
     base_ammo: int
     max_ammo: int
     ammo_weight: int
-    level_requirements: dict[Role, int]
+    level_requirements: dict[AnyRole, int]
 
     @model_validator(mode="after")
     def set_meth_name(self) -> "LoadoutItemData":
@@ -96,11 +96,11 @@ class LoadoutItemData(BaseModel):
 
 def get_loadout_item_level_requirements(
     item: HLLVLoadoutItem,
-) -> dict[Role, int]:
+) -> dict[AnyRole, int]:
     if item.availability == HLLVLoadoutItemAvailability.DISABLED:
         return {}
 
-    level_requirements: dict[Role, int] = {}
+    level_requirements: dict[AnyRole, int] = {}
 
     if not item.role_level_requirements:
         level_requirements = dict.fromkeys(

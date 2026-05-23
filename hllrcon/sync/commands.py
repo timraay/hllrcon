@@ -19,11 +19,12 @@ from typing import (
 from pydantic import BaseModel
 from typing_extensions import override
 
-from hllrcon.data.factions import Faction
-from hllrcon.data.game_modes import GameMode
-from hllrcon.data.layers import Layer
+from hllrcon.data.factions import AnyFaction
+from hllrcon.data.game_modes import AnyGameMode
+from hllrcon.data.layers import AnyLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
+    AnyPlayerFactionId,
     ForceMode,
     HLLGetAdminGroupsResponse,
     HLLGetAdminLogResponse,
@@ -69,7 +70,6 @@ from hllrcon.responses import (
     HLLVGetVoteKickEnabledResponse,
     HLLVGetVoteKickThresholdsResponse,
     HLLVPlayerFactionId,
-    PlayerFactionId,
     _GetAdminGroupsResponse,
     _GetAdminLogResponse,
     _GetAdminUsersResponse,
@@ -94,12 +94,12 @@ from hllrcon.responses import (
 )
 
 __all__ = (
+    "AnySyncRconCommands",
     "GameModeLiteral",
     "HLLGameModeLiteral",
     "HLLSyncRconCommands",
     "HLLVGameModeLiteral",
     "HLLVSyncRconCommands",
-    "SyncRconCommands",
 )
 
 P = ParamSpec("P")
@@ -178,7 +178,7 @@ def cast_response_to_bool(
     return decorator
 
 
-def get_game_mode_id(game_mode: GameMode | GameModeLiteral) -> str:
+def get_game_mode_id(game_mode: AnyGameMode | GameModeLiteral) -> str:
     if isinstance(game_mode, str):
         return game_mode
     return game_mode.id
@@ -286,7 +286,7 @@ class _SyncRconCommands(ABC):
         """
         return self._get_admin_log(seconds_span, filter_)
 
-    def change_map(self, map_name: str | Layer) -> None:
+    def change_map(self, map_name: str | AnyLayer) -> None:
         """Change the current map to the specified map.
 
         Map changes are not immediate. Instead, a 60 second countdown is started.
@@ -369,7 +369,7 @@ class _SyncRconCommands(ABC):
 
     def add_map_to_rotation(
         self,
-        map_name: str | Layer,
+        map_name: str | AnyLayer,
         index: int,
     ) -> None:
         """Add a map to the map rotation.
@@ -410,7 +410,7 @@ class _SyncRconCommands(ABC):
 
     def add_map_to_sequence(
         self,
-        map_name: str | Layer,
+        map_name: str | AnyLayer,
         index: int,
     ) -> None:
         """Add a map to the map sequence.
@@ -599,7 +599,7 @@ class _SyncRconCommands(ABC):
     @cast_response_to_bool({400})
     def disband_squad(
         self,
-        faction: Faction | PlayerFactionId | int,
+        faction: AnyFaction | AnyPlayerFactionId | int,
         squad_index: int,
         reason: str,
     ) -> None:
@@ -615,7 +615,7 @@ class _SyncRconCommands(ABC):
             The reason for disbanding the squad. This will be displayed to the players.
 
         """
-        team_index = faction.id if isinstance(faction, Faction) else int(faction)
+        team_index = faction.id if isinstance(faction, AnyFaction) else int(faction)
         self.execute(
             "DisbandPlatoon",
             2,
@@ -1471,7 +1471,7 @@ class _SyncRconCommands(ABC):
 
     def set_match_timer(
         self,
-        game_mode: GameMode | _GameModeLiteral,
+        game_mode: AnyGameMode | _GameModeLiteral,
         minutes: int,
     ) -> None:
         """Set the match timer for a specific game mode.
@@ -1496,7 +1496,10 @@ class _SyncRconCommands(ABC):
             },
         )
 
-    def reset_match_timer(self, game_mode: GameMode | _GameModeLiteral) -> None:
+    def reset_match_timer(
+        self,
+        game_mode: AnyGameMode | _GameModeLiteral,
+    ) -> None:
         """Reset the match timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1518,7 +1521,7 @@ class _SyncRconCommands(ABC):
 
     def set_warmup_timer(
         self,
-        game_mode: GameMode | _GameModeLiteral,
+        game_mode: AnyGameMode | _GameModeLiteral,
         minutes: int,
     ) -> None:
         """Set the warmup timer for a specific game mode.
@@ -1544,7 +1547,10 @@ class _SyncRconCommands(ABC):
             },
         )
 
-    def reset_warmup_timer(self, game_mode: GameMode | _GameModeLiteral) -> None:
+    def reset_warmup_timer(
+        self,
+        game_mode: AnyGameMode | _GameModeLiteral,
+    ) -> None:
         """Reset the warmup timer for a specific game mode.
 
         This does not affect the current match, but will apply to all future matches
@@ -1566,7 +1572,7 @@ class _SyncRconCommands(ABC):
 
     def set_dynamic_weather_enabled(
         self,
-        layer: Layer | str,
+        layer: AnyLayer | str,
         *,
         enabled: bool,
     ) -> None:
@@ -1718,38 +1724,38 @@ class HLLSyncRconCommands(_SyncRconCommands):
         @override
         def disband_squad(
             self,
-            faction: Faction | HLLPlayerFactionId | int,
+            faction: AnyFaction | HLLPlayerFactionId | int,
             squad_index: int,
             reason: str,
         ) -> bool: ...
 
         @override
-        def change_map(self, map_name: str | Layer) -> None: ...
+        def change_map(self, map_name: str | AnyLayer) -> None: ...
 
         @override
         def set_match_timer(
             self,
-            game_mode: GameMode | HLLGameModeLiteral,
+            game_mode: AnyGameMode | HLLGameModeLiteral,
             minutes: int,
         ) -> None: ...
 
         @override
         def reset_match_timer(
             self,
-            game_mode: GameMode | HLLGameModeLiteral,
+            game_mode: AnyGameMode | HLLGameModeLiteral,
         ) -> None: ...
 
         @override
         def set_warmup_timer(
             self,
-            game_mode: GameMode | HLLGameModeLiteral,
+            game_mode: AnyGameMode | HLLGameModeLiteral,
             minutes: int,
         ) -> None: ...
 
         @override
         def reset_warmup_timer(
             self,
-            game_mode: GameMode | HLLGameModeLiteral,
+            game_mode: AnyGameMode | HLLGameModeLiteral,
         ) -> None: ...
 
 
@@ -1874,39 +1880,39 @@ class HLLVSyncRconCommands(_SyncRconCommands):
         @override
         def disband_squad(
             self,
-            faction: Faction | HLLVPlayerFactionId | int,
+            faction: AnyFaction | HLLVPlayerFactionId | int,
             squad_index: int,
             reason: str,
         ) -> bool: ...
 
         @override
-        def change_map(self, map_name: str | Layer) -> None: ...
+        def change_map(self, map_name: str | AnyLayer) -> None: ...
 
         @override
         def set_match_timer(
             self,
-            game_mode: GameMode | HLLVGameModeLiteral,
+            game_mode: AnyGameMode | HLLVGameModeLiteral,
             minutes: int,
         ) -> None: ...
 
         @override
         def reset_match_timer(
             self,
-            game_mode: GameMode | HLLVGameModeLiteral,
+            game_mode: AnyGameMode | HLLVGameModeLiteral,
         ) -> None: ...
 
         @override
         def set_warmup_timer(
             self,
-            game_mode: GameMode | HLLVGameModeLiteral,
+            game_mode: AnyGameMode | HLLVGameModeLiteral,
             minutes: int,
         ) -> None: ...
 
         @override
         def reset_warmup_timer(
             self,
-            game_mode: GameMode | HLLVGameModeLiteral,
+            game_mode: AnyGameMode | HLLVGameModeLiteral,
         ) -> None: ...
 
 
-SyncRconCommands: TypeAlias = HLLSyncRconCommands | HLLVSyncRconCommands
+AnySyncRconCommands: TypeAlias = HLLSyncRconCommands | HLLVSyncRconCommands

@@ -263,4 +263,4 @@ class HLLVSyncRcon(_SyncRcon[HLLVRcon]):
         )
 
 
-SyncRcon: TypeAlias = HLLSyncRcon | HLLVSyncRcon
+AnySyncRcon: TypeAlias = HLLSyncRcon | HLLVSyncRcon

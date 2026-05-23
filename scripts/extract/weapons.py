@@ -5,7 +5,7 @@ from typing import TypedDict
 
 from pydantic import BaseModel, model_validator
 
-from hllrcon.data.factions import Faction
+from hllrcon.data.factions import AnyFaction
 from hllrcon.data.weapons import WeaponType
 from scripts.extract.utils import (
     stringify_enum_member,
@@ -52,7 +52,7 @@ class WeaponData(BaseModel):
     id: str
     name: str = ""
     vehicle_id: str | None = None
-    factions: set[Faction]
+    factions: set[AnyFaction]
     type: WeaponType = WeaponType.UNKNOWN
     magnification: int | None = None
 

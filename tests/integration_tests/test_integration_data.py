@@ -1,9 +1,9 @@
 import pytest
 from hllrcon import (
-    GetServerConfigResponse,
+    AnyGetServerConfigResponse,
+    AnyRcon,
     HLLLayer,
     HLLVLayer,
-    Rcon,
     __min_server_version__,
 )
 
@@ -15,11 +15,11 @@ pytestmark = pytest.mark.asyncio
 class TestIntegratedServer:
     async def test_min_server_version_satisfied(
         self,
-        server_config: GetServerConfigResponse,
+        server_config: AnyGetServerConfigResponse,
     ) -> None:
         assert server_config.build_revision >= __min_server_version__
 
-    async def test_data_layers_all_exist(self, rcon: Rcon) -> None:
+    async def test_data_layers_all_exist(self, rcon: AnyRcon) -> None:
         live_layer_ids = set(await rcon.get_available_maps())
         mapped_layer_ids = {
             layer.id
@@ -27,7 +27,7 @@ class TestIntegratedServer:
         }
         assert live_layer_ids == mapped_layer_ids
 
-    async def test_data_valid_strongpoints(self, rcon: Rcon) -> None:
+    async def test_data_valid_strongpoints(self, rcon: AnyRcon) -> None:
         session = await rcon.get_server_session()
         configured_strongpoints = tuple(
             [capture_zone.strongpoint.id for capture_zone in sector.capture_zones]

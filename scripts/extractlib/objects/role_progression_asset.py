@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from hllrcon.data.roles import Role
+from hllrcon.data.roles import AnyRole
 from scripts.extractlib.loader import Model, Object
 from scripts.extractlib.structs.player_role import EPlayerRole
 
@@ -30,7 +30,7 @@ class RoleProgressionAssetProperties(Model):
 
 
 class RoleProgressionAsset(Object[RoleProgressionAssetProperties]):
-    def get_unlocks_for_role(self, role: Role) -> RoleProgressionAssetLevelUnlocks:
+    def get_unlocks_for_role(self, role: AnyRole) -> RoleProgressionAssetLevelUnlocks:
         for role_progression in self.properties.role_progression:
             if role_progression.key.to_hllv_role() == role:
                 return role_progression.value
