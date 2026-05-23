@@ -5,7 +5,7 @@ from enum import StrEnum
 from functools import cached_property
 from typing import Annotated, NamedTuple, Self
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_serializer
 
 from hllrcon.data._utils import (
     IndexedBaseModel,
@@ -24,7 +24,7 @@ class HLLLoadoutId(NamedTuple):
 
 
 class HLLLoadoutItem(BaseModel, frozen=True):
-    weapon: HLLWeapon
+    weapon: Annotated[HLLWeapon, model_serializer(str)]
     """The weapon corresponding to this item."""
     ammo: int = 1
     """The amount of this item. For small arms, refers to the number of magazines."""
@@ -36,7 +36,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
         HLLFaction,
         model_serializer(int),
     ]
-    role: HLLRole
+    role: Annotated[
+        HLLRole,
+        model_serializer(int),
+    ]
     requires_level: int = Field(ge=1, le=10)
     items: list[HLLLoadoutItem]
 
@@ -9711,11 +9714,16 @@ class HLLVLoadoutItemType(StrEnum):
     manually be equipped or removed."""
 
 
+class HLLVLoadoutItemLevelRequirementsSerializedEntry(BaseModel, frozen=True):
+    role: Annotated[HLLVRole, model_serializer(int)]
+    level: int
+
+
 class HLLVLoadoutItem(IndexedBaseModel[str]):
     id: str
     name: str
-    faction: HLLVFaction
-    weapon: HLLVWeapon
+    faction: Annotated[HLLVFaction, model_serializer(int)]
+    weapon: Annotated[HLLVWeapon, model_serializer(str)]
     type: HLLVLoadoutItemType
     weight: int
     """The base weight of this item."""
@@ -9732,6 +9740,22 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
 
     If a role is not present in this dictionary, the item is not available to that role.
     """
+
+    @field_serializer(
+        "level_requirements",
+        return_type=list[HLLVLoadoutItemLevelRequirementsSerializedEntry],
+    )
+    def serialize_level_requirements(
+        self,
+        value: dict[HLLVRole, int],
+    ) -> list[HLLVLoadoutItemLevelRequirementsSerializedEntry]:
+        return [
+            HLLVLoadoutItemLevelRequirementsSerializedEntry(
+                role=role,
+                level=level,
+            )
+            for role, level in value.items()
+        ]
 
     def calculate_weight(self, total_ammo: int) -> int:
         """Calculate the total weight of this item based on the total ammo equipped.

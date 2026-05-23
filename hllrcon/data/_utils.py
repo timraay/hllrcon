@@ -15,7 +15,13 @@ from typing import (
     cast,
 )
 
-from pydantic import BaseModel, ConfigDict, PlainSerializer, PrivateAttr, computed_field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    PlainSerializer,
+    PrivateAttr,
+    computed_field,
+)
 from pydantic.alias_generators import to_snake
 from typing_extensions import TypeVar
 
@@ -180,7 +186,10 @@ class CaseInsensitiveIndexedBaseModel(IndexedBaseModel[str, R]):
 class IndexedBaseModelProxy(BaseModel, Generic[H]):
     type: Annotated[
         str,
-        PlainSerializer(to_snake, return_type=str),
+        PlainSerializer(
+            lambda x: to_snake(x).removeprefix("hll_").removeprefix("hllv_"),
+            return_type=str,
+        ),
     ]
     id: H
 

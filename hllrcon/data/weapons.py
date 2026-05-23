@@ -4,12 +4,12 @@ from enum import StrEnum
 from functools import cached_property
 from typing import TYPE_CHECKING, Annotated, Generic, TypeAlias, TypeVar
 
-from pydantic import Field
+from pydantic import Field, PlainSerializer
 
 from hllrcon.data._utils import (
     IndexedBaseModel,
     class_cached_property,
-    model_sequence_serializer,
+    serialize_model_sequence,
 )
 from hllrcon.data.factions import HLLFaction, HLLVFaction, _Faction
 
@@ -70,7 +70,9 @@ class _Weapon(IndexedBaseModel[str], Generic[FactionT, VehicleT]):
     factions: Annotated[
         set[FactionT],
         Field(min_length=1),
-        model_sequence_serializer(int),
+        PlainSerializer(
+            lambda x, i: list(x) if i.mode == "python" else serialize_model_sequence(x),
+        ),
     ]
     magnification: int | None = None
 

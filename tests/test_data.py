@@ -407,21 +407,21 @@ class TestDataLayers:
         assert json.loads(layer.model_dump_json(exclude=exclude)) == {
             **layer.model_dump(exclude=exclude),
             "map": {
-                "type": "hll_map",
+                "type": "map",
                 "id": "kursk",
                 "key": "kursk",
             },
             "game_mode": {
-                "type": "hll_game_mode",
+                "type": "game_mode",
                 "id": "offensive",
                 "key": "offensive",
             },
             "time_of_day": "Day",
             "weather": "Clear",
-            "attacking_team": {"type": "hll_team", "id": 2, "key": "2"},
-            "attacking_faction": {"type": "hll_faction", "id": 0, "key": "0"},
-            "defending_team": {"type": "hll_team", "id": 1, "key": "1"},
-            "defending_faction": {"type": "hll_faction", "id": 2, "key": "2"},
+            "attacking_team": {"type": "team", "id": 2, "key": "2"},
+            "attacking_faction": {"type": "faction", "id": 0, "key": "0"},
+            "defending_team": {"type": "team", "id": 1, "key": "1"},
+            "defending_faction": {"type": "faction", "id": 2, "key": "2"},
         }
 
 
@@ -1026,9 +1026,35 @@ class TestDataLoadouts:
 
 
 class TestDataLoadoutItems:
-    def test_loadout_calculate_weight(self) -> None:
+    def test_loadoutitem_calculate_weight(self) -> None:
         loadout = HLLVLoadoutItem.RPG2
         # Base is weight 6 with 2 ammo. Each rocket adds 3 weight.
         assert loadout.calculate_weight(1) == 6
         assert loadout.calculate_weight(2) == 6
         assert loadout.calculate_weight(3) == 9
+
+    def test_loadoutitem_field_serializers(self) -> None:
+        loadout = HLLVLoadoutItem.M40
+        assert json.loads(loadout.model_dump_json()) == {
+            **loadout.model_dump(),
+            "faction": {
+                "type": "faction",
+                "id": 1,
+                "key": "1",
+            },
+            "weapon": {
+                "type": "weapon",
+                "id": "M40",
+                "key": "M40",
+            },
+            "level_requirements": [
+                {
+                    "role": {
+                        "type": "role",
+                        "id": 10,
+                        "key": "10",
+                    },
+                    "level": 0,
+                },
+            ],
+        }
