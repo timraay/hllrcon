@@ -27,7 +27,7 @@ async def main() -> None:
         raise ValueError(msg)
 
     rcon = HLLRcon(**HLL_SERVER_CREDENTIALS)
-    await rcon.wait_until_connected()
+    await rcon.connect()
 
     all_commands = await rcon.get_commands()
     all_command_details = AllCommandDetails(

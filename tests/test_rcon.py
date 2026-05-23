@@ -111,7 +111,7 @@ async def test_get_connection_failure(
 async def test_is_connected(rcon: HLLRcon, connection: mock.Mock) -> None:
     assert rcon.is_connected() is False, "Should be disconnected initially"
 
-    await rcon.wait_until_connected()
+    await rcon.connect()
     assert rcon.is_connected() is True, "Should be connected after getting connection"
 
     connection.is_connected.return_value = False
@@ -129,7 +129,7 @@ async def test_is_connected(rcon: HLLRcon, connection: mock.Mock) -> None:
 async def test_enter_exit(rcon: HLLRcon, connection: mock.Mock) -> None:
     assert rcon._connection is None, "Initial connection should be None"
 
-    async with rcon.connect():
+    async with rcon.connection():
         assert rcon._connection is not None, "Connection should be established"
 
     connection.disconnect.assert_called_once()
@@ -138,7 +138,7 @@ async def test_enter_exit(rcon: HLLRcon, connection: mock.Mock) -> None:
     connection.disconnect.reset_mock()
 
     with contextlib.suppress(RuntimeError):
-        async with rcon.connect():
+        async with rcon.connection():
             assert rcon._connection is not None, (
                 "Connection should be established again"
             )
@@ -151,7 +151,7 @@ async def test_enter_exit(rcon: HLLRcon, connection: mock.Mock) -> None:
 
 
 async def test_aexit_no_connection(rcon: HLLRcon) -> None:
-    async with rcon.connect():
+    async with rcon.connection():
         rcon._connection = None
 
     assert rcon._connection is None
@@ -160,7 +160,7 @@ async def test_aexit_no_connection(rcon: HLLRcon) -> None:
 async def test_aexit_reconnecting(rcon: HLLRcon) -> None:
     fut: asyncio.Future[HLLRconConnection] = asyncio.Future()
 
-    async with rcon.connect():
+    async with rcon.connection():
         rcon._connection = fut
 
     assert rcon._connection is None
@@ -171,7 +171,7 @@ async def test_aexit_connection_failure(rcon: HLLRcon) -> None:
     fut: asyncio.Future[HLLRconConnection] = asyncio.Future()
     fut.set_exception(RconError("Connection failed"))
 
-    async with rcon.connect():
+    async with rcon.connection():
         rcon._connection = fut
 
     assert rcon._connection is None
@@ -331,7 +331,7 @@ async def test_reconnect_after_failures_triggers_disconnect(
     )
 
     # Ensure connection is established
-    await rcon.wait_until_connected()
+    await rcon.connect()
     assert rcon._connection is not None
 
     # Mock connection.execute to raise TimeoutError
@@ -423,7 +423,7 @@ async def test_reconnect_threshold_exact_match(
     )
 
     # Ensure connection is established
-    await rcon.wait_until_connected()
+    await rcon.connect()
     connection.execute.side_effect = TimeoutError("Connection timeout")
 
     # First two failures should not trigger disconnect

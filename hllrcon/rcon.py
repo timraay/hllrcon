@@ -124,7 +124,7 @@ class _Rcon(_RconClient, ABC, Generic[RconConnectionT]):
 
     @override
     @asynccontextmanager
-    async def connect(self) -> AsyncGenerator[None]:
+    async def connection(self) -> AsyncGenerator[None]:
         await self._get_connection()
         try:
             yield
@@ -132,7 +132,7 @@ class _Rcon(_RconClient, ABC, Generic[RconConnectionT]):
             self.disconnect()
 
     @override
-    async def wait_until_connected(self) -> None:
+    async def connect(self) -> None:
         await self._get_connection()
 
     @override

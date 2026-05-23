@@ -32,16 +32,29 @@ class _RconClient(_RconCommands, ABC):
 
     @abstractmethod
     @asynccontextmanager
-    async def connect(self) -> AsyncGenerator[None]:
-        """Establish a connection to the RCON server."""
+    async def connection(self) -> AsyncGenerator[None]:
+        """Establish a connection to the RCON server and disconnect when done.
+
+        This method is equivalent to the following code.
+
+        .. code-block:: python
+
+            await self.connect()
+            try:
+                yield
+            finally:
+                self.disconnect()
+        """
         yield
 
     @abstractmethod
-    async def wait_until_connected(self) -> None:
-        """Wait until the client is connected to the RCON server.
+    async def connect(self) -> None:
+        """Connect to the RCON server.
 
-        This might be useful to verify that a connection can be established before
-        continuing with other operations.
+        This method can be used to explicitly establish a connection and might be useful
+        to verify that a connection can be established before continuing with other
+        operations. However, it is not strictly necessary as the client will also
+        connect on demand.
         """
 
     @abstractmethod

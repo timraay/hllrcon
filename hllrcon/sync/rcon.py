@@ -170,7 +170,7 @@ class _SyncRcon(_SyncRconCommands, ABC, Generic[RconT]):
             raise RuntimeError(msg)
 
         asyncio.run_coroutine_threadsafe(
-            self._rcon.wait_until_connected(),
+            self._rcon.connect(),
             loop=self._loop,
         ).result()
 

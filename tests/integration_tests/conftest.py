@@ -35,7 +35,7 @@ async def rcon() -> AsyncGenerator[Rcon]:
         password=str(HLL_PASSWORD),
     )
     await asyncio.sleep(0.1)
-    async with rcon.connect():
+    async with rcon.connection():
         yield rcon
 
 
