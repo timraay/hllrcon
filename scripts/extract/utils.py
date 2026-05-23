@@ -16,6 +16,12 @@ def inject_code(fp: Path, marker: str, code: str) -> None:
     )
 
     content = fp.read_text("utf-8")
+
+    # First assert that the marker exists in the file
+    if not regexp.search(content):
+        msg = f'Marker "{marker}" not found in file {fp}.'
+        raise ValueError(msg)
+
     new_content = regexp.sub(
         f'\\1### INJECT "{marker}" START\n\n{code}\n\n\\1### INJECT "{marker}" END',
         content,

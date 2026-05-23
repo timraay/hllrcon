@@ -1,5 +1,7 @@
 from enum import StrEnum
 
+from hllrcon.data.roles import HLLRole, HLLVRole
+
 
 class EPlayerRole(StrEnum):
     RIFLEMAN = "EPlayerRole::Rifleman"
@@ -24,3 +26,20 @@ class EPlayerRole(StrEnum):
     FLIGHT_ENGINEER = "EPlayerRole::HelicopterFlightEngineer"
     HELI_MEDIC = "EPlayerRole::HelicopterMedic"
     COMMANDER = "EPlayerRole::ArmyCommander"
+
+    def get_role_name(self) -> str:
+        return self.value.split("::")[1]
+
+    def to_hll_role(self) -> "HLLRole":
+        for role in HLLRole.all():
+            if role.name == self.get_role_name():
+                return role
+        msg = f"No matching HLLRole found for {self}."
+        raise ValueError(msg)
+
+    def to_hllv_role(self) -> "HLLVRole":
+        for role in HLLVRole.all():
+            if role.name == self.get_role_name():
+                return role
+        msg = f"No matching HLLVRole found for {self}."
+        raise ValueError(msg)
