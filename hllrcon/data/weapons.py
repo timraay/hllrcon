@@ -2010,7 +2010,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Sten Gun Mk.II",
             name="Sten Mk II",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.SUBMACHINE_GUN,
         )
 
@@ -2028,17 +2028,6 @@ class Weapon(IndexedBaseModel[str]):
             id="Sten Gun Mk.V",
             name="Sten Mk V",
             factions={Faction.CW},
-            type=WeaponType.SUBMACHINE_GUN,
-        )
-
-    @class_cached_property
-    @classmethod
-    def CANADIAN_STEN_GUN(cls) -> "Weapon":
-        """*Canadian Sten Mk.II*"""
-        return cls(
-            id="Canadian Sten Mk.II",
-            name="Sten Mk II",
-            factions={Faction.CAN},
             type=WeaponType.SUBMACHINE_GUN,
         )
 
@@ -2134,9 +2123,9 @@ class Weapon(IndexedBaseModel[str]):
     @class_cached_property
     @classmethod
     def FN_INGLIS_NO_2_MK_I(cls) -> "Weapon":
-        """*FN-Inglis No 2 MK I*"""
+        """*FN-Inglis No.2 MK I*"""
         return cls(
-            id="FN-Inglis No 2 MK I",
+            id="FN-Inglis No.2 MK I",
             name="Inglis Hi-Power",
             factions={Faction.CAN},
             type=WeaponType.PISTOL,
