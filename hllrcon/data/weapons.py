@@ -1469,6 +1469,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def WRENCH_57MM_M1(cls) -> "HLLWeapon":
+        """*57MM M1*"""
+        return cls(
+            id="57MM M1",
+            name="Wrench",
+            vehicle_id=None,
+            factions={HLLFaction.US},
+            type=WeaponType.WRENCH,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def ZIS_2(cls) -> "HLLWeapon":
         """*ZiS-2*"""
         return cls(
@@ -1476,19 +1489,6 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             name="ZiS-2",
             vehicle_id=None,
             factions={HLLFaction.SOV},
-            type=WeaponType.WRENCH,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def _57MM_M1(cls) -> "HLLWeapon":
-        """*57MM M1*"""
-        return cls(
-            id="57MM M1",
-            name="Wrench",
-            vehicle_id=None,
-            factions={HLLFaction.US},
             type=WeaponType.WRENCH,
             magnification=None,
         )
@@ -4117,7 +4117,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id=None,
             factions={HLLVFaction.US},
             type=WeaponType.BOLT_ACTION_RIFLE,
-            magnification=None,
+            magnification=4,
         )
 
     @class_cached_property

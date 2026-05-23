@@ -915,6 +915,7 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "type": WeaponType.BINOCULARS,
     },
     "57MM M1": {
+        "meth_name": "WRENCH_57MM_M1",
         "name": "Wrench",
         "type": WeaponType.WRENCH,
     },

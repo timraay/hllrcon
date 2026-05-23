@@ -7,6 +7,7 @@ from pydantic import BaseModel, model_validator
 
 from hllrcon.data.factions import HLLFaction
 from hllrcon.data.roles import HLLRole
+from scripts import HLL_METADATA_PATH
 from scripts.extract.utils import (
     inject_code,
     stringify_list,
@@ -14,7 +15,7 @@ from scripts.extract.utils import (
     to_method_name,
 )
 from scripts.extract.weapons import WeaponData
-from scripts.extractlib.loader import local_to_abs_path
+from scripts.extractlib.loader import local_to_abs_path, set_root_path
 from scripts.extractlib.objects.blueprint_generated_class import BlueprintGeneratedClass
 from scripts.extractlib.objects.hll_team_loadouts import HLLTeamLoadouts
 from scripts.extractlib.objects.hll_weapon import HLLWeapon
@@ -138,6 +139,8 @@ def get_loadout_data() -> Iterator[LoadoutData]:
 
 
 def main() -> None:
+    set_root_path(HLL_METADATA_PATH)
+
     loadouts = sorted(
         get_loadout_data(),
         key=lambda data: (

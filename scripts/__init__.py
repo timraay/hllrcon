@@ -1,8 +1,12 @@
+import logging
 import os
 from pathlib import Path
 from typing import TypedDict
 
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
+
 
 ENV_PATH = Path(".env")
 if ENV_PATH.exists():

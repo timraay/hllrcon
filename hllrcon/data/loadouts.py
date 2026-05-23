@@ -1,5 +1,5 @@
 # mypy: disable-error-code="prop-decorator"
-# ruff: noqa: N802, SLF001
+# ruff: noqa: N802
 
 from enum import StrEnum
 from functools import cached_property
@@ -2407,7 +2407,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=2,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon._57MM_M1,
+                    weapon=HLLWeapon.WRENCH_57MM_M1,
                     ammo=1,
                 ),
                 HLLLoadoutItem(
