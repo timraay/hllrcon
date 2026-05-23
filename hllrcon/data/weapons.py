@@ -2357,7 +2357,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Churchill Mk.VII",
             name="Roadkill",
             vehicle_id="Churchill Mk.VII",
-            factions={Faction.CW, Faction.CAN},
+            factions={Faction.CW},
             type=WeaponType.ROADKILL,
         )
 
@@ -2673,7 +2673,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 75MM [Churchill Mk.VII]",
             name="QF 75mm",
             vehicle_id="Churchill Mk.VII",
-            factions={Faction.CW, Faction.CAN},
+            factions={Faction.CW},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2685,7 +2685,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA 7.92mm [Churchill Mk.VII]",
             name="BESA",
             vehicle_id="Churchill Mk.VII",
-            factions={Faction.CW, Faction.CAN},
+            factions={Faction.CW},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2697,7 +2697,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA 7.92mm [Churchill Mk.VII]",
             name="BESA",
             vehicle_id="Churchill Mk.VII",
-            factions={Faction.CW, Faction.CAN},
+            factions={Faction.CW},
             type=WeaponType.TANK_HULL_MG,
         )
 

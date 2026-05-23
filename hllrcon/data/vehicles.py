@@ -1902,7 +1902,7 @@ class Vehicle(IndexedBaseModel[str]):
             id="Churchill Mk.VII",
             name="Churchill Mk VII",
             type=VehicleType.HEAVY_TANK,
-            factions={Faction.CW, Faction.CAN},
+            factions={Faction.CW},
             seats=[
                 VehicleSeat(
                     index=0,
