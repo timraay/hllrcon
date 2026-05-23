@@ -4770,11 +4770,39 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     weapon: HLLVWeapon
     type: HLLVLoadoutItemType
     weight: int
+    """The base weight of this item."""
     description_tags: list[str]
     base_ammo: int
+    """The minimum amount of ammo that this item is equipped with."""
     max_ammo: int
+    """The maximum amount of ammo that this item can be equipped with."""
     ammo_weight: int
+    """The weight added for each additional ammo equipped beyond the base ammo."""
     level_requirements: dict[HLLVRole, int]
+    """The level a role must reach in order for the player to be able to equip this
+    item.
+
+    If a role is not present in this dictionary, the item is not available to that role.
+    """
+
+    def calculate_weight(self, total_ammo: int) -> int:
+        """Calculate the total weight of this item based on the total ammo equipped.
+
+        Parameters
+        ----------
+        total_ammo : int
+            The total amount of ammo equipped for this item.
+
+        Returns
+        -------
+        int
+            The total weight of this item based on the total ammo.
+
+        """
+        if total_ammo <= self.base_ammo:
+            return self.weight
+        extra_ammo = total_ammo - self.base_ammo
+        return self.weight + extra_ammo * self.ammo_weight
 
     ### INJECT "hllv loadout items" START
 
