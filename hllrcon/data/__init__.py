@@ -14,12 +14,9 @@ from .layers import (
 )
 from .loadouts import (
     HLLLoadout,
+    HLLLoadoutId,
     HLLLoadoutItem,
-    HLLVLoadout,
     HLLVLoadoutItem,
-    Loadout,
-    LoadoutId,
-    LoadoutItem,
 )
 from .maps import CardinalDirection, HLLMap, HLLVMap, Map, Orientation
 from .roles import HLLRole, HLLRoleType, HLLVRole, HLLVRoleType, Role, RoleType
@@ -33,12 +30,8 @@ from .teams import HLLTeam, HLLVTeam, Team
 from .vehicles import (
     HLLVehicle,
     HLLVehicleSeat,
-    HLLVehicleSeatType,
-    HLLVehicleType,
     HLLVVehicle,
     HLLVVehicleSeat,
-    HLLVVehicleSeatType,
-    HLLVVehicleType,
     Vehicle,
     VehicleSeat,
     VehicleSeatType,
@@ -46,9 +39,7 @@ from .vehicles import (
 )
 from .weapons import (
     HLLVWeapon,
-    HLLVWeaponType,
     HLLWeapon,
-    HLLWeaponType,
     Weapon,
     WeaponType,
 )
@@ -64,6 +55,7 @@ __all__ = (
     "HLLGameMode",
     "HLLLayer",
     "HLLLoadout",
+    "HLLLoadoutId",
     "HLLLoadoutItem",
     "HLLMap",
     "HLLRole",
@@ -72,7 +64,6 @@ __all__ = (
     "HLLVFaction",
     "HLLVGameMode",
     "HLLVLayer",
-    "HLLVLoadout",
     "HLLVLoadoutItem",
     "HLLVMap",
     "HLLVRole",
@@ -80,20 +71,11 @@ __all__ = (
     "HLLVTeam",
     "HLLVVehicle",
     "HLLVVehicleSeat",
-    "HLLVVehicleSeatType",
-    "HLLVVehicleType",
     "HLLVWeapon",
-    "HLLVWeaponType",
     "HLLVehicle",
     "HLLVehicleSeat",
-    "HLLVehicleSeatType",
-    "HLLVehicleType",
     "HLLWeapon",
-    "HLLWeaponType",
     "Layer",
-    "Loadout",
-    "LoadoutId",
-    "LoadoutItem",
     "Map",
     "Orientation",
     "Role",
@@ -105,8 +87,13 @@ __all__ = (
     "Vehicle",
     "VehicleSeat",
     "VehicleSeatType",
+    "VehicleSeatType",
+    "VehicleType",
+    "VehicleType",
     "VehicleType",
     "Weapon",
+    "WeaponType",
+    "WeaponType",
     "WeaponType",
     "Weather",
 )

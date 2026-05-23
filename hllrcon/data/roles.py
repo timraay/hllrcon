@@ -6,6 +6,11 @@ from pydantic import BaseModel
 
 from hllrcon.data._utils import IndexedBaseModel, class_cached_property
 
+if TYPE_CHECKING:
+    from hllrcon.data.factions import HLLVFaction
+    from hllrcon.data.loadouts import HLLVLoadoutItem
+    from hllrcon.data.weapons import HLLVWeapon
+
 RoleTypeT = TypeVar("RoleTypeT", bound=StrEnum)
 
 
@@ -79,6 +84,15 @@ class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
     def is_helicopter(self) -> bool:
         """Whether the role is associated with helicopter units."""
         return self.type == HLLVRoleType.HELICOPTER
+
+    @staticmethod
+    def clamp_level(level: int) -> int:
+        """Clamp a role level to the valid range of 1 to 10 inclusive."""
+        if level < 1:
+            return 1
+        if level > 10:
+            return 10
+        return level
 
 
 class HLLRole(_Role[HLLRoleType]):
@@ -382,6 +396,17 @@ class HLLVRole(_Role[HLLVRoleType]):
     progression: list[HLLVRoleProgression]
 
     if TYPE_CHECKING:
+        is_squad_leader: bool
+        """Whether this role is exclusive to the squad leader.
+
+        Roles included are:
+        - Commander
+        - Squad Leader
+        - Tank Commander
+        - Spotter
+        - Observer
+        - Logistics Officer
+        """
 
         @property
         def is_infantry(self) -> bool:
@@ -441,6 +466,78 @@ class HLLVRole(_Role[HLLVRoleType]):
             - Pilot
             """
 
+    def get_available_capacity(self, level: int) -> HLLVRoleProgression:
+        """Get a role's available capacity at a given level.
+
+        Parameters
+        ----------
+        level : int
+            The role level to get the unlocks for. Must be between 1 and 10 inclusive.
+
+        Returns
+        -------
+        HLLVRoleProgression
+            The unlocks available at the given level.
+
+        """
+        return self.progression[self.clamp_level(level) - 1]
+
+    def get_available_items(
+        self,
+        level: int,
+        faction: "HLLVFaction",
+    ) -> set["HLLVLoadoutItem"]:
+        """Get the loadout items available to a role at a given level.
+
+        Parameters
+        ----------
+        level : int
+            The role level to get the unlocks for. Must be between 1 and 10 inclusive.
+        faction : HLLVFaction
+            The faction to get the unlocks for.
+
+        Returns
+        -------
+        set[HLLVLoadoutItem]
+            The loadout items available to the role at the given level.
+
+        """
+        from hllrcon.data.loadouts import HLLVLoadoutItem  # noqa: PLC0415
+
+        clamped_level = self.clamp_level(level)
+
+        return {
+            item
+            for item in HLLVLoadoutItem.all()
+            if (
+                item.faction is faction
+                and self in item.level_requirements
+                and item.level_requirements[self] <= clamped_level
+            )
+        }
+
+    def get_available_weapons(
+        self,
+        level: int,
+        faction: "HLLVFaction",
+    ) -> set["HLLVWeapon"]:
+        """Get the weapons available to a role at a given level.
+
+        Parameters
+        ----------
+        level : int
+            The role level to get the unlocks for. Must be between 1 and 10 inclusive.
+        faction : HLLVFaction
+            The faction to get the unlocks for.
+
+        Returns
+        -------
+        set[HLLVWeapon]
+            The weapons available to the role at the given level.
+
+        """
+        return {item.weapon for item in self.get_available_items(level, faction)}
+
     @class_cached_property
     @classmethod
     def RIFLEMAN(cls) -> "HLLVRole":
@@ -452,7 +549,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
-            progression=[],
+            ### INJECT "hllv progression Rifleman" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression Rifleman" END
         )
 
     @class_cached_property
@@ -466,7 +648,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
-            progression=[],
+            ### INJECT "hllv progression Medic" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+            ],
+
+            ### INJECT "hllv progression Medic" END
         )
 
     @class_cached_property
@@ -480,7 +747,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=True,
             kill_combat_score=6,
             assist_combat_score=4,
-            progression=[],
+            ### INJECT "hllv progression Spotter" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+            ],
+
+            ### INJECT "hllv progression Spotter" END
         )
 
     @class_cached_property
@@ -494,7 +846,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
-            progression=[],
+            ### INJECT "hllv progression Specialist" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+            ],
+
+            ### INJECT "hllv progression Specialist" END
         )
 
     @class_cached_property
@@ -508,7 +945,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression HeavyMachineGunner" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=0,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression HeavyMachineGunner" END
         )
 
     @class_cached_property
@@ -522,7 +1044,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression Grenadier" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=0,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression Grenadier" END
         )
 
     @class_cached_property
@@ -536,7 +1143,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression Engineer" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=0,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression Engineer" END
         )
 
     @class_cached_property
@@ -550,7 +1242,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression SquadLeader" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+            ],
+
+            ### INJECT "hllv progression SquadLeader" END
         )
 
     @class_cached_property
@@ -564,7 +1341,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
-            progression=[],
+            ### INJECT "hllv progression Sniper" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=0,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression Sniper" END
         )
 
     @class_cached_property
@@ -578,7 +1440,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
-            progression=[],
+            ### INJECT "hllv progression Crewman" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression Crewman" END
         )
 
     @class_cached_property
@@ -592,7 +1539,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression TankCommander" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression TankCommander" END
         )
 
     @class_cached_property
@@ -603,10 +1635,95 @@ class HLLVRole(_Role[HLLVRoleType]):
             name="MortarSupport",
             pretty_name="Support",
             type=HLLVRoleType.MORTAR,
-            is_squad_leader=True,
+            is_squad_leader=False,
             kill_combat_score=12,  # TODO: Update
             assist_combat_score=8,
-            progression=[],
+            ### INJECT "hllv progression MortarSupport" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+            ],
+
+            ### INJECT "hllv progression MortarSupport" END
         )
 
     @class_cached_property
@@ -615,26 +1732,196 @@ class HLLVRole(_Role[HLLVRoleType]):
         return cls(
             id=14,
             name="MortarObserver",
-            pretty_name="Artillery Observer",
+            pretty_name="Observer",
             type=HLLVRoleType.MORTAR,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression MortarObserver" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=0,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=3,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=4,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression MortarObserver" END
         )
 
     @class_cached_property
     @classmethod
-    def OPERATOR(cls) -> "HLLVRole":
+    def GUNNER(cls) -> "HLLVRole":
         return cls(
             id=15,
             name="MortarGunner",
-            pretty_name="Operator",
+            pretty_name="Gunner",
             type=HLLVRoleType.MORTAR,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression MortarGunner" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=3,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=4,
+                ),
+            ],
+
+            ### INJECT "hllv progression MortarGunner" END
         )
 
     @class_cached_property
@@ -648,7 +1935,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
-            progression=[],
+            ### INJECT "hllv progression HelicopterPilot" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression HelicopterPilot" END
         )
 
     @class_cached_property
@@ -662,7 +2034,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
-            progression=[],
+            ### INJECT "hllv progression HelicopterLogisticsOfficer" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression HelicopterLogisticsOfficer" END
         )
 
     @class_cached_property
@@ -676,7 +2133,92 @@ class HLLVRole(_Role[HLLVRoleType]):
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,
-            progression=[],
+            ### INJECT "hllv progression ArmyCommander" START
+
+            progression=[
+                HLLVRoleProgression(
+                    level=1,
+                    max_weight=6,
+                    secondary_slot_unlocked=False,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=0,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=2,
+                    max_weight=7,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=False,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=3,
+                    max_weight=8,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=4,
+                    max_weight=9,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=1,
+                ),
+                HLLVRoleProgression(
+                    level=5,
+                    max_weight=10,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=6,
+                    max_weight=11,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=1,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=7,
+                    max_weight=12,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=8,
+                    max_weight=13,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=9,
+                    max_weight=14,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+                HLLVRoleProgression(
+                    level=10,
+                    max_weight=15,
+                    secondary_slot_unlocked=True,
+                    extra_ammo_unlocked=True,
+                    lethal_slots=2,
+                    utility_slots=2,
+                ),
+            ],
+
+            ### INJECT "hllv progression ArmyCommander" END
         )
 
     @class_cached_property

@@ -11,13 +11,24 @@ from pydantic_core import CoreSchema, core_schema
 from typing_extensions import TypeVar
 
 from scripts import HLL_METADATA_PATH
-from scripts.extractlib.utils import merge_dicts
 
 RE_OBJECT_PATH = re.compile(r"^(?P<path>.+?)(?:\.(?P<index>\d+))?$")
 RE_ASSET_PATH = re.compile(r"^(?P<path>.+)\.(?P<name>.+)$")
 
 ModelT = TypeVar("ModelT", bound="Model", default="Model")
-ObjectT = TypeVar("ObjectT", bound="Object[Any]", default="Object[Any]")
+ModelT_co = TypeVar("ModelT_co", bound="Model", default="Model", covariant=True)
+ObjectT = TypeVar(
+    "ObjectT",
+    bound="Object[Any]",
+    default="Object[Any]",
+)
+ObjectT_co = TypeVar(
+    "ObjectT_co",
+    bound="Object[Any]",
+    default="Object[Any]",
+    covariant=True,
+)
+
 
 _root_path = HLL_METADATA_PATH
 
@@ -31,16 +42,34 @@ def get_root_path() -> Path:
     return _root_path
 
 
-def local_to_abs_path(local_path: str | PathLike) -> Path:
+def merge_dicts(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged = base.copy()
+    for key, value in override.items():
+        if key in merged and isinstance(merged[key], dict) and isinstance(value, dict):
+            merged[key] = merge_dicts(merged[key], value)
+        else:
+            merged[key] = value
+    return merged
+
+
+def local_to_abs_path(local_path: str | PathLike, *, add_ext: bool = True) -> Path:
     local_path_str = Path(local_path).as_posix()
 
+    from scripts.extractlib.utils import game_switch  # noqa: PLC0415
+
     if local_path_str.startswith("/Game/"):
-        local_path_str = "./HLL/Content/" + local_path_str.removeprefix("/Game/")
+        game_name = game_switch("HLL", "HLLVietnam")
+        local_path_str = f"./{game_name}/Content/" + local_path_str.removeprefix(
+            "/Game/",
+        )
 
     if local_path_str.startswith("/"):
         local_path_str = "." + local_path_str
 
-    return get_root_path() / (local_path_str + ".json")
+    if add_ext and not local_path_str.endswith(".json"):
+        local_path_str += ".json"
+
+    return get_root_path() / local_path_str
 
 
 @cache
@@ -55,13 +84,35 @@ def read_file(abs_path: Path) -> list[Any]:
 
 def load_raw_from_file(
     abs_path: Path,
-    index: int,
+    index_or_name: int | str,
 ) -> dict[str, Any]:
     json_content = read_file(abs_path)
-    if not 0 <= index < len(json_content):
-        msg = f"Index {index} is out of bounds for the JSON file: {abs_path}"
-        raise IndexError(msg)
-    raw_obj: dict[str, Any] = json_content[index]
+
+    raw_obj: dict[str, Any]
+    if isinstance(index_or_name, str):
+        for raw_obj in json_content:
+            if raw_obj.get("Name") == index_or_name:
+                break
+        else:
+            msg = f"Name '{index_or_name}' not found in the JSON file: {abs_path}"
+            raise ValueError(msg)
+    elif isinstance(index_or_name, int):
+        if not 0 <= index_or_name < len(json_content):
+            msg = (
+                f"Index {index_or_name} is out of bounds for the JSON file: {abs_path}"
+            )
+            raise IndexError(msg)
+        raw_obj = json_content[index_or_name]
+    else:
+        msg = f"index_or_name must be either an int or a str, got {type(index_or_name)}"
+        raise TypeError(msg)
+
+    raw_obj.setdefault("Properties", {})
+
+    plain_obj = Object[Any].model_validate(raw_obj)
+    if plain_obj.super is not None:
+        raw_super_obj = plain_obj.super.object_path.load_raw()
+        raw_obj = merge_dicts(raw_super_obj, raw_obj)
 
     plain_obj = Object[Any].model_validate(raw_obj)
     if plain_obj.template is not None:
@@ -73,28 +124,37 @@ def load_raw_from_file(
 
 def load_object_from_file(
     abs_path: Path,
-    index: int,
+    index_or_name: int | str,
     obj_type: type["ObjectT"],
 ) -> ObjectT:
-    raw_obj = load_raw_from_file(abs_path, index)
+    raw_obj = load_raw_from_file(abs_path, index_or_name)
     return obj_type.model_validate(raw_obj)
 
 
-def load_asset(abs_path: Path, obj_type: type[ObjectT]) -> ObjectT:
-    return load_object_from_file(abs_path, 0, obj_type)
+def load_local(
+    local_path: Path,
+    index_or_name: int | str,
+    obj_type: type["ObjectT"],
+) -> ObjectT:
+    abs_path = local_to_abs_path(local_path)
+    return load_object_from_file(abs_path, index_or_name, obj_type)
 
 
 class Model(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_pascal,
         validate_by_name=True,
+        frozen=True,
     )
 
 
 class ObjectPath(str):
     __slots__ = ("obj_index", "obj_path")
 
-    def __init__(self, value: str) -> None:
+    obj_path: str | None
+    obj_index: str | int
+
+    def _parse_value(self, value: str) -> None:
         match = RE_OBJECT_PATH.match(value)
         if not match:
             msg = f"Invalid object path: {value}"
@@ -104,16 +164,37 @@ class ObjectPath(str):
         self.obj_path = str(groupdict["path"])
         self.obj_index = int(groupdict["index"] or "0")
 
+    def __init__(self, value: str) -> None:
+        if value == "None":
+            self.obj_path = None
+            self.obj_index = 0
+
+        else:
+            self._parse_value(value)
+
+    def is_none(self) -> bool:
+        return self.obj_path is None
+
     def load_raw(self) -> dict[str, Any]:
-        path = get_root_path() / (self.obj_path + ".json")
+        if self.obj_path is None:
+            msg = "Cannot load object from 'None' path"
+            raise ValueError(msg)
+
+        path = local_to_abs_path(self.obj_path)
         return load_raw_from_file(path, self.obj_index)
 
     def load(self, obj_type: type[ObjectT]) -> ObjectT:
-        path = get_root_path() / (self.obj_path + ".json")
+        if self.obj_path is None:
+            msg = "Cannot load object from 'None' path"
+            raise ValueError(msg)
+
+        path = local_to_abs_path(self.obj_path)
         return load_object_from_file(path, self.obj_index, obj_type)
 
     def __str__(self) -> str:
-        return f"{self.obj_path}.{self.obj_index}"
+        return (
+            f"{self.obj_path}.{self.obj_index}" if self.obj_path is not None else "None"
+        )
 
     @classmethod
     def __get_pydantic_core_schema__(
@@ -124,70 +205,52 @@ class ObjectPath(str):
         return core_schema.no_info_after_validator_function(cls, handler(str))
 
 
-class ObjectReference(Model, Generic[ObjectT]):
+class ObjectReference(Model, Generic[ObjectT_co]):
     object_name: str
     object_path: ObjectPath
 
-    def get(self, obj_type: type[ObjectT]) -> ObjectT:
+    def is_none(self) -> bool:
+        return self.object_path.is_none()
+
+    def is_script(self) -> bool:
+        return self.object_path.startswith("/Script/")
+
+    def get(self, obj_type: type[ObjectT_co]) -> ObjectT_co:
         return self.object_path.load(obj_type)
 
 
-class Object(Model, Generic[ModelT]):
+class Object(Model, Generic[ModelT_co]):
     type: str
     name: str
     flags: str
     class_: Annotated[str, Field(validation_alias="Class")]
     outer: ObjectReference | None = None
+    super: ObjectReference | None = None
     template: ObjectReference | None = None
-    properties: ModelT
+    properties: ModelT_co
+
+    def get_name(self) -> str:
+        return f"{self.type}'{self.name}'"
 
 
-class AssetPath(str):
-    __slots__ = ("asset_name", "asset_path")
-
-    def __init__(self, value: str) -> None:
+class AssetPath(ObjectPath):
+    def _parse_value(self, value: str) -> None:
         match = RE_ASSET_PATH.match(value)
         if not match:
             msg = f"Invalid asset path: {value}"
             raise ValueError(msg)
         groupdict = match.groupdict()
 
-        self.asset_path = str(groupdict["path"])
-        self.asset_name = str(groupdict["name"])
-
-    def load_raw(self) -> dict[str, Any]:
-        abs_path = local_to_abs_path(self.asset_path)
-        return load_raw_from_file(abs_path, 0)
-
-    def load(self, obj_type: type[ObjectT]) -> ObjectT:
-        abs_path = local_to_abs_path(self.asset_path)
-        return load_object_from_file(abs_path, 0, obj_type)
-
-    def __str__(self) -> str:
-        return f"{self.asset_path}.{self.asset_name}"
-
-    @classmethod
-    def __get_pydantic_core_schema__(
-        cls,
-        source_type: Any,  # noqa: ANN401
-        handler: GetCoreSchemaHandler,
-    ) -> CoreSchema:
-        return core_schema.no_info_after_validator_function(cls, handler(str))
+        self.obj_path = str(groupdict["path"])
+        self.obj_index = str(groupdict["name"])
 
 
-class AssetReference(Model, Generic[ObjectT]):
+class AssetReference(Model, Generic[ObjectT_co]):
     asset_path_name: AssetPath
     sub_path_string: str | None = None
 
-    def load(self, asset_type: type[ObjectT]) -> ObjectT:
-        abs_path = local_to_abs_path(self.asset_path_name.asset_path)
-        obj = load_object_from_file(abs_path, 0, asset_type)
-        if obj.name != self.asset_path_name.asset_name:
-            # Currently we assume that the asset is always the first object.
-            # That might be a false assumption.
-            msg = (
-                f"Asset name mismatch: expected {self.asset_path_name.asset_name}, "
-                f"got {obj.name} in asset path {abs_path}"
-            )
-            raise ValueError(msg)
-        return obj
+    def is_none(self) -> bool:
+        return self.asset_path_name.is_none()
+
+    def get(self, asset_type: type[ObjectT_co]) -> ObjectT_co:
+        return self.asset_path_name.load(asset_type)

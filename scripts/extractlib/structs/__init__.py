@@ -1,3 +1,3 @@
-from .loadout_item import LoadoutItem
+from .loadout_item import HLLLoadoutItem
 
-LoadoutItem.model_rebuild()
+HLLLoadoutItem.model_rebuild()
