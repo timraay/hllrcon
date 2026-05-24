@@ -624,6 +624,7 @@ class TestCommands:
                     "team": 1,
                     "role": 4,
                     "platoon": "ABLE",
+                    "platoonIndex": 0,
                     "loadout": "Combat Medic",
                     "stats": {
                         "deaths": 50,
@@ -665,6 +666,7 @@ class TestCommands:
                             "team": 1,
                             "role": 4,
                             "platoon": "ABLE",
+                            "platoonIndex": 0,
                             "loadout": "Combat Medic",
                             "stats": {
                                 "deaths": 50,
@@ -769,6 +771,11 @@ class TestCommands:
                     "maxQueueCount": 6,
                     "vipQueueCount": 1,
                     "maxVipQueueCount": 2,
+                    "alliedFaction": 1,
+                    "axisFaction": 0,
+                    "alliedMorale": 0,
+                    "axisMorale": 0,
+                    "initialMorale": 0,
                 },
             ),
         ).get_server_session()

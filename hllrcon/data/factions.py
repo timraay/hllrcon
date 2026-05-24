@@ -52,7 +52,7 @@ class _Faction(IndexedBaseModel[int, None], Generic[TeamT]):
 
 
 class HLLFaction(_Faction[HLLTeam]):
-    UNASSIGNED_ID: ClassVar[int] = 6
+    UNASSIGNED_ID: ClassVar[int] = 7
 
     @property
     def is_allied(self) -> bool:
@@ -63,6 +63,7 @@ class HLLFaction(_Faction[HLLTeam]):
         - Soviet Union (`SOV`)
         - Commonwealth (`CW`)
         - British 8th Army (`B8A`)
+        - Canada (`CAN`)
         """
         return self.team == HLLTeam.ALLIES
 
@@ -143,6 +144,16 @@ class HLLFaction(_Faction[HLLTeam]):
             id=5,
             name="British Eighth Army",
             short_name="B8A",
+            team=HLLTeam.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN(cls) -> "HLLFaction":
+        return cls(
+            id=6,
+            name="Canada",
+            short_name="CAN",
             team=HLLTeam.ALLIES,
         )
 

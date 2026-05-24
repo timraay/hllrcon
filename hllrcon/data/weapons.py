@@ -112,7 +112,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="A.P. Shrapnel Mine Mk II",
             name="AP Shrapnel Mine Mk II",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.AP_MINE,
             magnification=None,
         )
@@ -125,7 +125,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="A.T. Mine G.S. Mk V",
             name="AT Mine G.S. Mk V",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.AT_MINE,
             magnification=None,
         )
@@ -151,7 +151,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Bandage",
             name="Bandage",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.HEALING,
             magnification=None,
         )
@@ -190,7 +190,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Bren Gun",
             name="Bren Gun",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.ASSAULT_RIFLE,
             magnification=None,
         )
@@ -249,6 +249,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def ENFIELD_NO_2_MK_I(cls) -> "HLLWeapon":
+        """*Enfield No.2 Mk I*"""
+        return cls(
+            id="Enfield No.2 Mk I",
+            name="Enfield No.2 Mk I",
+            vehicle_id=None,
+            factions={HLLFaction.CAN},
+            type=WeaponType.REVOLVER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def EXPLOSIVE_AMMO_BOX(cls) -> "HLLWeapon":
         """*EXPLOSIVE AMMO BOX*"""
         return cls(
@@ -268,7 +281,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Explosive Ammo Box",
             name="Explosive Ammo Box",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SUPPLIES,
             magnification=None,
         )
@@ -294,7 +307,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Fairbairn–Sykes",
             name="Fairbairn-Sykes",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.MELEE,
             magnification=None,
         )
@@ -346,7 +359,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="FLAMETHROWER",
             name="Lifebuoy Flamethrower",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.FLAMETHROWER,
             magnification=None,
         )
@@ -374,6 +387,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.US, HLLFaction.SOV, HLLFaction.DAK},
             type=WeaponType.RECON_FLARE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FN_INGLIS_NO_2_MK_I(cls) -> "HLLWeapon":
+        """*FN-Inglis No.2 MK I*"""
+        return cls(
+            id="FN-Inglis No.2 MK I",
+            name="Inglis Hi-Power",
+            vehicle_id=None,
+            factions={HLLFaction.CAN},
+            type=WeaponType.PISTOL,
             magnification=None,
         )
 
@@ -411,7 +437,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Hammer",
             name="Hammer",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.HAMMER,
             magnification=None,
         )
@@ -440,6 +466,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             factions={HLLFaction.GER, HLLFaction.DAK},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=8,
+        )
+
+    @class_cached_property
+    @classmethod
+    def LANCHESTER(cls) -> "HLLWeapon":
+        """*Lanchester*"""
+        return cls(
+            id="Lanchester",
+            name="Lanchester",
+            vehicle_id=None,
+            factions={HLLFaction.CAN},
+            type=WeaponType.SUBMACHINE_GUN,
+            magnification=None,
         )
 
     @class_cached_property
@@ -684,7 +723,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Medical Supplies",
             name="Medical Supplies",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SUPPLIES,
             magnification=None,
         )
@@ -723,7 +762,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Mills Bomb",
             name="Mills Bomb",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.GRENADE,
             magnification=None,
         )
@@ -762,7 +801,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Morphine",
             name="Morphine",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.HEALING,
             magnification=None,
         )
@@ -892,7 +931,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="No.2 Mk 5 Flare Pistol",
             name="No.2 Mk V Flare Gun",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.RECON_FLARE,
             magnification=None,
         )
@@ -905,7 +944,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="No.77",
             name="No.77 WP Grenade",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
@@ -918,7 +957,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="No.82 Grenade",
             name="Gammon Bomb",
             vehicle_id=None,
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.GRENADE,
             magnification=None,
         )
@@ -931,7 +970,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Ordnance QF 6-pounder",
             name="Ordnance QF 6-pounder",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.WRENCH,
             magnification=None,
         )
@@ -970,7 +1009,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="PIAT",
             name="PIAT",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.ROCKET_LAUNCHER,
             magnification=None,
         )
@@ -1022,7 +1061,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Prism No.2 Mk II x6",
             name="Prism No.2 Mk II x6",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.BINOCULARS,
             magnification=None,
         )
@@ -1087,7 +1126,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Rifle No.4 Mk I",
             name="No.4 Rifle Mk I",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
@@ -1100,7 +1139,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Rifle No.4 Mk I Sniper",
             name="No.4 Rifle Mk I",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=8,
         )
@@ -1139,7 +1178,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Satchel",
             name="Satchel Charge",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SATCHEL,
             magnification=None,
         )
@@ -1204,7 +1243,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Small Ammunition Box",
             name="Small Ammunition Box",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SUPPLIES,
             magnification=None,
         )
@@ -1217,7 +1256,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="SMLE No.1 Mk III",
             name="SMLE Mk III",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
@@ -1230,7 +1269,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Sten Gun Mk.II",
             name="Sten Mk II",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
@@ -1282,7 +1321,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Supplies",
             name="Supplies",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.SUPPLIES,
             magnification=None,
         )
@@ -1373,7 +1412,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Torch",
             name="Torch",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.TORCH,
             magnification=None,
         )
@@ -1412,7 +1451,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Watch",
             name="Watch",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.WATCH,
             magnification=None,
         )
@@ -1464,7 +1503,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Wrench",
             name="Wrench",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={HLLFaction.CW, HLLFaction.B8A, HLLFaction.CAN},
             type=WeaponType.WRENCH,
             magnification=None,
         )

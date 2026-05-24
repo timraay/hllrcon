@@ -145,6 +145,7 @@ class Response(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         validate_by_name=True,
+        extra="allow",
     )
 
 
@@ -204,7 +205,8 @@ class HLLPlayerFactionId(IntEnum):
     CW = 3
     DAK = 4
     B8A = 5
-    UNASSIGNED = 6
+    CAN = 6
+    UNASSIGNED = 7
 
 
 class HLLVPlayerFactionId(IntEnum):
@@ -663,6 +665,9 @@ class _GetPlayerResponse(Response, Generic[FactionT, RoleT]):
     platoon: Annotated[str | None, EmptyStringToNoneValidator]
     """The name of the player's squad."""
 
+    platoon_index: int
+    """The index of the player's squad. Used by ``Rcon.disband_squad``."""
+
     loadout: str
     """The player's current loadout. Might not be accurate if not spawned in."""
 
@@ -820,9 +825,10 @@ AnyGetMapRotationResponse: TypeAlias = (
 )
 
 
-class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT]):
+class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT, FactionT]):
     _GAME_MODE_CLS: ClassVar[type[AnyGameMode]]
     _LAYER_CLS: ClassVar[type[AnyLayer]]
+    _FACTION_CLS: ClassVar[type[AnyFaction]]
 
     server_name: str
     map_name: str
@@ -845,10 +851,37 @@ class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT]):
     max_queue_count: int
     vip_queue_count: int
     max_vip_queue_count: int
+    allied_faction_id: Annotated[
+        AnyPlayerFactionId,
+        Field(validation_alias="alliedFaction"),
+    ]
+    axis_faction_id: Annotated[
+        AnyPlayerFactionId,
+        Field(validation_alias="axisFaction"),
+    ]
+    allied_morale: int
+    axis_morale: int
+    initial_morale: int
 
     @property
     def game_mode(self) -> GameModeT:
         return self._GAME_MODE_CLS.by_id(self.game_mode_id)  # type: ignore[return-value]
+
+    @property
+    def allied_faction(self) -> FactionT:
+        faction = self._FACTION_CLS.by_id(self.allied_faction_id)
+        if not faction:  # pragma: no cover
+            msg = f"Unknown faction ID: {self.allied_faction_id}"
+            raise ValueError(msg)
+        return faction  # type: ignore[return-value]
+
+    @property
+    def axis_faction(self) -> FactionT:
+        faction = self._FACTION_CLS.by_id(self.axis_faction_id)
+        if not faction:  # pragma: no cover
+            msg = f"Unknown faction ID: {self.axis_faction_id}"
+            raise ValueError(msg)
+        return faction  # type: ignore[return-value]
 
     def find_layer(self, *, strict: bool = True) -> LayerT:
         """Attempt to find the layer associated with this map rotation entry.
@@ -874,14 +907,38 @@ class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT]):
         return self._LAYER_CLS.by_id(self.map_id, strict=strict)  # type: ignore[return-value]
 
 
-class HLLGetServerSessionResponse(_GetServerSessionResponse[HLLGameMode, HLLLayer]):
+class HLLGetServerSessionResponse(
+    _GetServerSessionResponse[HLLGameMode, HLLLayer, HLLFaction],
+):
     _GAME_MODE_CLS = HLLGameMode
     _LAYER_CLS = HLLLayer
+    _FACTION_CLS = HLLFaction
+
+    allied_faction_id: Annotated[
+        HLLPlayerFactionId,
+        Field(validation_alias="alliedFaction"),
+    ]
+    axis_faction_id: Annotated[
+        HLLPlayerFactionId,
+        Field(validation_alias="axisFaction"),
+    ]
 
 
-class HLLVGetServerSessionResponse(_GetServerSessionResponse[HLLVGameMode, HLLVLayer]):
+class HLLVGetServerSessionResponse(
+    _GetServerSessionResponse[HLLVGameMode, HLLVLayer, HLLVFaction],
+):
     _GAME_MODE_CLS = HLLVGameMode
     _LAYER_CLS = HLLVLayer
+    _FACTION_CLS = HLLVFaction
+
+    axis_faction_id: Annotated[
+        HLLVPlayerFactionId,
+        Field(validation_alias="axisFaction"),
+    ]
+    allied_faction_id: Annotated[
+        HLLVPlayerFactionId,
+        Field(validation_alias="alliedFaction"),
+    ]
 
 
 AnyGetServerSessionResponse: TypeAlias = (

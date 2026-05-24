@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING, Any, cast
 
 import pytest
 from hllrcon.data import HLLGameMode, HLLLayer, HLLRole
+from hllrcon.data.factions import HLLFaction
 from hllrcon.data.game_modes import HLLVGameMode
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
@@ -55,6 +56,7 @@ def test_get_player_response_team_unassigned() -> None:
             "team": HLLPlayerFactionId.UNASSIGNED.value,
             "role": HLLPlayerRoleId.RIFLEMAN.value,
             "platoon": "",
+            "platoonIndex": 0,
             "loadout": "Standard Issue",
             "stats": {
                 "deaths": 50,
@@ -103,8 +105,15 @@ def test_get_server_session_game_mode_and_layer() -> None:
         max_queue_count=6,
         vip_queue_count=0,
         max_vip_queue_count=6,
+        allied_faction_id=HLLPlayerFactionId.US,
+        axis_faction_id=HLLPlayerFactionId.GER,
+        allied_morale=0,
+        axis_morale=0,
+        initial_morale=0,
     )
     assert response.game_mode == HLLGameMode.WARFARE
+    assert response.allied_faction == HLLFaction.US
+    assert response.axis_faction == HLLFaction.GER
     assert response.find_layer() == HLLLayer.FOY_WARFARE_DAY
 
 

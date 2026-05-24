@@ -208,10 +208,20 @@ class TestDataFactions:
         assert HLLFaction.by_id(3) == HLLFaction.CW
         assert HLLFaction.by_id(4) == HLLFaction.DAK
         assert HLLFaction.by_id(5) == HLLFaction.B8A
-        assert HLLFaction.by_id(6) is None
+        assert HLLFaction.by_id(6) == HLLFaction.CAN
+        assert HLLFaction.by_id(7) is None
 
         with pytest.raises(ValueError, match="not found"):
-            HLLFaction.by_id(7)
+            HLLFaction.by_id(8)
+
+        assert HLLVFaction.by_id(1) == HLLVFaction.US
+        assert HLLVFaction.by_id(6) == HLLVFaction.NVA
+        assert HLLVFaction.by_id(8) is None
+
+        with pytest.raises(ValueError, match="not found"):
+            HLLVFaction.by_id(2)
+        with pytest.raises(ValueError, match="not found"):
+            HLLVFaction.by_id(7)
 
         assert None not in HLLFaction.all()
 

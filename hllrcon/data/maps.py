@@ -201,6 +201,21 @@ class HLLMap(_Map[HLLFaction]):
 
     @class_cached_property
     @classmethod
+    def JUNO_BEACH(cls) -> "HLLMap":
+        return cls(
+            id="junobeach",
+            name="JUNO BEACH",
+            tag="JUN",
+            year=1944,
+            pretty_name="Juno Beach",
+            short_name="Juno",
+            allies=HLLFaction.CAN,
+            axis=HLLFaction.GER,
+            allies_direction=CardinalDirection.TOP_TO_BOTTOM,
+        )
+
+    @class_cached_property
+    @classmethod
     def KHARKOV(cls) -> "HLLMap":
         return cls(
             id="kharkov",
