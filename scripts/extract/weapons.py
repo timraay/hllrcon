@@ -118,7 +118,7 @@ class WeaponData(BaseModel):
             id=self.id,
             name=self.name,
             vehicle_id=f'"{self.vehicle_id}"' if self.vehicle_id else "None",
-            factions_str=stringify_factions(self.factions),
+            factions_str=stringify_factions(self.factions, indent=3 * 4).lstrip(),
             weapon_type=stringify_enum_member(self.type),
             magnification=self.magnification,
         )
@@ -1004,9 +1004,6 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "PRIMARY [Daimler]": {
         "name": "Receive Intel",
     },
-    "Exhaust Fuel Injection [IS-1]": {
-        "name": "Smoke Screen",
-    },
     "PRIMARY [M8 Greyhound]": {
         "name": "Receive Intel",
     },
@@ -1027,6 +1024,36 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     },
     "StuH 43 L/12": {
         "name": "StuH 43 L/12",
+    },
+    "SMOKE GRENADE [Churchill Mk.III]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE [Churchill Mk.VII]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE [Cromwell]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE [Firefly]": {
+        "name": "Smoke Grenade",
+    },
+    "FUEL INJECTION [IS-1]": {
+        "name": "Smoke Screen",
+    },
+    "SMOKE GRENADE [Sd.Kfz.171 Panther]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE [Sd.Kfz.181 Tiger 1]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE [Sherman M4A3E2]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE [Tetrarch]": {
+        "name": "Smoke Grenade",
+    },
+    "SMOKE GRENADE": {
+        "name": "Smoke Grenade",
     },
 }
 

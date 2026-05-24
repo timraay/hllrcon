@@ -10,6 +10,7 @@ from scripts.extractlib.objects.blueprint_generated_class import (
 from scripts.extractlib.objects.hll_armor_weapon import (
     HLLArmorWeapon,
     HLLArmorWeaponBallistic,
+    HLLArmorWeaponGrenade,
     HLLArmorWeaponHowitzer,
     HLLArmorWeaponMortar,
     HLLArmorWeaponMountedHowitzer,
@@ -48,6 +49,8 @@ class HLLArmorInventoryPropertiesDefaultInventoryItem(Model):
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponSmokeScreen)
         elif super_class_name == "Class'HLLArmourWeapon_Mortar'":
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponMortar)
+        elif super_class_name == "Class'HLLArmourWeapon_Grenade'":
+            weapon = weapon_bgc.get_default_object(HLLArmorWeaponGrenade)
         else:
             msg = f"Unexpected super struct {super_class_name} for weapon {weapon_bgc}"
             raise ValueError(msg)

@@ -74,13 +74,19 @@ def stringify_enum_member(member: Enum) -> str:
     return f"{member.__class__.__name__}.{member.name}"
 
 
-def stringify_factions(factions: Collection[AnyFaction]) -> str:
+def stringify_factions(factions: Collection[AnyFaction], indent: int = 0) -> str:
+    if len(factions) == 0:
+        return indent_text("{}", indent)
+
     factions_str = [
         f"{type(f).__name__}.{f.short_name}"
         for f in sorted(factions, key=lambda x: x.id)
     ]
 
-    return "{" + ", ".join(factions_str) + "}"
+    if len(factions) <= 2:
+        return indent_text("{" + ", ".join(factions_str) + "}", indent)
+
+    return indent_text("{\n    " + ",\n    ".join(factions_str) + ",\n}", indent)
 
 
 def stringify_role(role: AnyRole) -> str:

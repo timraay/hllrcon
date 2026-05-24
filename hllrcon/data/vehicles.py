@@ -458,7 +458,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__CHURCHILL_MK_III,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -497,7 +499,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__CHURCHILL_MK_VII,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -536,7 +540,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__CROMWELL,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -663,7 +669,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__FIREFLY,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -868,7 +876,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                     index=2,
                     type=VehicleSeatType.COMMANDER,
                     weapons=[
-                        HLLWeapon.V_EXHAUST_FUEL_INJECTION__IS_1,
+                        HLLWeapon.V_FUEL_INJECTION__IS_1,
                     ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
@@ -883,7 +891,11 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="Jeep Willys",
             name="Willy's Jeep",
-            factions={HLLFaction.US, HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.US,
+                HLLFaction.CW,
+                HLLFaction.B8A,
+            },
             type=VehicleType.JEEP,
             seats=[
                 HLLVehicleSeat(
@@ -1090,7 +1102,12 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="M3 Half-track",
             name="M3 Half-track",
-            factions={HLLFaction.US, HLLFaction.SOV, HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.US,
+                HLLFaction.SOV,
+                HLLFaction.CW,
+                HLLFaction.B8A,
+            },
             type=VehicleType.HALF_TRACK,
             seats=[
                 HLLVehicleSeat(
@@ -1714,7 +1731,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__SD_KFZ_171_PANTHER,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1753,7 +1772,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__SD_KFZ_181_TIGER_1,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -1884,7 +1905,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__SHERMAN_M4A3E2,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),
@@ -2111,7 +2134,9 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                 HLLVehicleSeat(
                     index=2,
                     type=VehicleSeatType.COMMANDER,
-                    weapons=[],
+                    weapons=[
+                        HLLWeapon.V_SMOKE_GRENADE__TETRARCH,
+                    ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
                 ),

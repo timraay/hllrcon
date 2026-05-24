@@ -36,6 +36,7 @@ from scripts.extractlib.objects.hll_armor_weapon import (
     EShellType,
     HLLArmorWeapon,
     HLLArmorWeaponBallistic,
+    HLLArmorWeaponGrenade,
     HLLArmorWeaponHowitzer,
     HLLArmorWeaponMortar,
     HLLArmorWeaponMountedHowitzer,
@@ -363,7 +364,7 @@ class VehicleData(BaseModel):
 
         return template.format(
             vehicle=self,
-            factions=stringify_factions(self.factions),
+            factions=stringify_factions(self.factions, indent=3 * 4).lstrip(),
             seats=stringify_list(seats, indent=3 * 4).lstrip(),
         )
 
@@ -639,6 +640,35 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
             ),
         )
 
+    def _get_weapon_ammo_grenade(
+        self,
+        weapon_data: VehicleWeapon,
+        weapon: HLLArmorWeaponGrenade,
+    ) -> None:
+        ammo_sources = weapon.properties.ammo_info.ammo_sources
+
+        if len(ammo_sources) != 1:
+            logger.error(
+                "Unexpected number of ammo sources for grenade weapon %s:"
+                " Expected 1, got %s",
+                weapon.properties.weapon_name,
+                len(ammo_sources),
+            )
+
+        ammo_source = ammo_sources[0]
+
+        weapon_data.ammo.append(
+            VehicleWeaponAmmo(
+                munitions_cost=0,
+                clip_size=ammo_source.clip_size,
+                max_clips=ammo_source.max_clips,
+                name=str(ammo_source.display_name),
+                type=VehicleWeaponAmmoType.HE,
+                explosion_damage=0,
+                explosion_radius=0,
+            ),
+        )
+
     def get_weapon(
         self,
         inventory_item: HLLArmorInventoryPropertiesDefaultInventoryItem,
@@ -676,11 +706,13 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
             self._get_weapon_ammo_smoke_screen(weapon_data, weapon)
         elif isinstance(weapon, HLLArmorWeaponMortar):
             self._get_weapon_ammo_mortar(weapon_data, weapon)
+        elif isinstance(weapon, HLLArmorWeaponGrenade):
+            self._get_weapon_ammo_grenade(weapon_data, weapon)
         else:
             logger.warning(
                 "Unexpected weapon type %s for weapon %s",
-                type(weapon),
-                weapon,
+                type(weapon).__name__,
+                weapon.name,
             )
 
         return weapon_data
@@ -708,7 +740,7 @@ class ArmoredVehicleExtractor(
         if isinstance(weapon, HLLArmorWeaponReconGun):
             return WeaponType.TANK_RECON
 
-        if isinstance(weapon, HLLArmorWeaponSmokeScreen):
+        if isinstance(weapon, HLLArmorWeaponSmokeScreen | HLLArmorWeaponGrenade):
             return WeaponType.TANK_SMOKE_SCREEN
 
         return super().get_weapon_type(weapon, seat_index)

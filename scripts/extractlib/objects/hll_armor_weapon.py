@@ -131,6 +131,10 @@ class HLLArmorWeaponMortarProperties(HLLArmorWeaponProperties):
     ]
 
 
+class HLLArmorWeaponGrenadeProperties(HLLArmorWeaponProperties):
+    armour_grenade_modifiers: list[Model]
+
+
 class HLLArmorWeaponBallistic(Object[HLLArmorWeaponBallisticProperties]):
     shot_delay: float = 0.1
 
@@ -179,6 +183,10 @@ class HLLArmorWeaponMortar(Object[HLLArmorWeaponMortarProperties]):
         ]
 
 
+class HLLArmorWeaponGrenade(Object[HLLArmorWeaponGrenadeProperties]):
+    pass
+
+
 HLLArmorWeapon = (
     HLLArmorWeaponBallistic
     | HLLArmorWeaponProjectile
@@ -187,4 +195,5 @@ HLLArmorWeapon = (
     | HLLArmorWeaponMountedHowitzer
     | HLLArmorWeaponSmokeScreen
     | HLLArmorWeaponMortar
+    | HLLArmorWeaponGrenade
 )
