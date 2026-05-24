@@ -2,6 +2,7 @@ from datetime import UTC, datetime, timedelta
 from typing import TYPE_CHECKING, Any, cast
 
 import pytest
+from hllrcon import Faction
 from hllrcon.data import GameMode, Layer, Role
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
@@ -53,6 +54,7 @@ def test_get_player_response_team_unassigned() -> None:
             "team": PlayerFactionId.UNASSIGNED.value,
             "role": PlayerRoleId.RIFLEMAN.value,
             "platoon": "",
+            "platoonIndex": 0,
             "loadout": "Standard Issue",
             "stats": {
                 "deaths": 50,
@@ -101,8 +103,15 @@ def test_get_server_session_game_mode_and_layer() -> None:
         max_queue_count=6,
         vip_queue_count=0,
         max_vip_queue_count=6,
+        allied_faction_id=PlayerFactionId.US,
+        axis_faction_id=PlayerFactionId.GER,
+        allied_morale=0,
+        axis_morale=0,
+        initial_morale=0,
     )
     assert response.game_mode == GameMode.WARFARE
+    assert response.allied_faction == Faction.US
+    assert response.axis_faction == Faction.GER
     assert response.find_layer() == Layer.FOY_WARFARE_DAY
 
 

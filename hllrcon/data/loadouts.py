@@ -618,6 +618,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="COLT M1911", amount=4),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="M3 KNIFE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -636,6 +637,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="WESTINGHOUSE M3 6×30", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="M3 KNIFE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -652,6 +654,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="COLT M1911", amount=4),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="M3 KNIFE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -670,9 +673,10 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="M18 SMOKE GRENADE", amount=2),
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="HAMMER", amount=1),
+                LoadoutItem(name="SUPPLIES", amount=1),
                 LoadoutItem(name="M3 KNIFE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
-                LoadoutItem(name="SUPPLIES", amount=1),
             ],
         )
 
@@ -1394,6 +1398,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="LUGER P08", amount=6),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="DIENSTGLAS 6×30", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -1412,6 +1417,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="DIENSTGLAS 6×30", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -1428,6 +1434,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="WALTHER P38", amount=6),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -1446,9 +1453,10 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="HAMMER", amount=1),
+                LoadoutItem(name="SUPPLIES", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
-                LoadoutItem(name="SUPPLIES", amount=1),
             ],
         )
 
@@ -2134,6 +2142,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="NAGANT M1895", amount=4),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="RKKA 8×40", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="MPL-50 SPADE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -2152,6 +2161,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="RKKA 8×40", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="MPL-50 SPADE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -2168,6 +2178,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="NAGANT M1895", amount=4),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="MPL-50 SPADE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -2186,8 +2197,9 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="RDG-2 SMOKE", amount=2),
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
-                LoadoutItem(name="MPL-50 SPADE", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="SUPPLIES", amount=1),
+                LoadoutItem(name="MPL-50 SPADE", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
         )
@@ -2930,6 +2942,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
@@ -2947,6 +2960,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
@@ -2962,6 +2976,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
@@ -2979,8 +2994,9 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
-                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
 
@@ -3684,6 +3700,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="LUGER P08", amount=6),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="DIENSTGLAS 6×30", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
             ],
         )
@@ -3701,6 +3718,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
                 LoadoutItem(name="DIENSTGLAS 6×30", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
             ],
         )
@@ -3716,6 +3734,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="WALTHER P38", amount=6),
                 LoadoutItem(name="BANDAGE", amount=2),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="FELDSPATEN", amount=1),
             ],
         )
@@ -3733,8 +3752,9 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="NB39 NEBELHANDGRANATE", amount=2),
                 LoadoutItem(name="TORCH", amount=1),
                 LoadoutItem(name="BANDAGE", amount=2),
-                LoadoutItem(name="FELDSPATEN", amount=1),
+                LoadoutItem(name="HAMMER", amount=1),
                 LoadoutItem(name="SUPPLIES", amount=1),
+                LoadoutItem(name="FELDSPATEN", amount=1),
             ],
         )
 
@@ -4478,6 +4498,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -4496,6 +4517,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -4512,6 +4534,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="Webley MK VI", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
@@ -4530,8 +4553,9 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
-                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Supplies", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
                 LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
         )
@@ -4776,8 +4800,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.COMMANDER,
             requires_level=3,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
-                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
+                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Watch", amount=1),
@@ -4795,7 +4819,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.OFFICER,
             requires_level=1,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Enfield No.2 Mk I", amount=4),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
@@ -4816,7 +4840,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
@@ -4908,7 +4932,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ASSAULT,
             requires_level=1,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=8),
+                LoadoutItem(name="Sten Gun Mk.II", amount=8),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
@@ -4963,8 +4987,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=9,
             items=[
                 LoadoutItem(name="Lanchester", amount=8),
-                LoadoutItem(name="Mills Bomb", amount=6),
-                LoadoutItem(name="No.77", amount=4),
+                LoadoutItem(name="Mills Bomb", amount=1),
+                LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Satchel", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
@@ -4998,7 +5022,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.AUTOMATIC_RIFLEMAN,
             requires_level=3,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=8),
+                LoadoutItem(name="Sten Gun Mk.II", amount=8),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
@@ -5033,7 +5057,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.MEDIC,
             requires_level=3,
             items=[
-                LoadoutItem(name="FN-Inglis No 2 MK I", amount=21),
+                LoadoutItem(name="FN-Inglis No.2 MK I", amount=21),
                 LoadoutItem(name="No.77", amount=6),
                 LoadoutItem(name="Morphine", amount=20),
                 LoadoutItem(name="Bandage", amount=20),
@@ -5089,7 +5113,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=8,
             items=[
                 LoadoutItem(name="FLAMETHROWER", amount=1),
-                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
@@ -5108,7 +5132,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="Bren Gun", amount=14),
-                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
@@ -5159,7 +5183,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ANTI_TANK,
             requires_level=6,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=8),
+                LoadoutItem(name="Sten Gun Mk.II", amount=8),
                 LoadoutItem(name="No.82 Grenade", amount=2),
                 LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
                 LoadoutItem(name="A.T. Mine G.S. Mk V", amount=4),
@@ -5218,7 +5242,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ENGINEER,
             requires_level=6,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Wrench", amount=1),
@@ -5238,12 +5262,12 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.TANK_COMMANDER,
             requires_level=1,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=4),
+                LoadoutItem(name="Sten Gun Mk.II", amount=4),
                 LoadoutItem(name="Enfield No.2 Mk I", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
-                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
         )
 
@@ -5260,8 +5284,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Prism No.2 Mk II x6", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
-                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
         )
 
@@ -5276,8 +5300,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             items=[
                 LoadoutItem(name="Enfield No.2 Mk I", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
-                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
         )
 
@@ -5294,9 +5318,9 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
-                LoadoutItem(name="Fairbairn–Sykes", amount=1),
+                LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Supplies", amount=1),
-                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
+                LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
 
@@ -5314,7 +5338,6 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Wrench", amount=1),
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
-                LoadoutItem(name="EXTERIOR CUSTOMIZATION", amount=1),
             ],
         )
 
@@ -5327,7 +5350,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ARTILLERY_OBSERVER,
             requires_level=1,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Watch", amount=1),
@@ -5388,7 +5411,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ARTILLERY_ENGINEER,
             requires_level=3,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=2),
                 LoadoutItem(name="No.77", amount=2),
@@ -5425,7 +5448,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.ARTILLERY_SUPPORT,
             requires_level=3,
             items=[
-                LoadoutItem(name="Canadian Sten Mk.II", amount=5),
+                LoadoutItem(name="Sten Gun Mk.II", amount=5),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Supplies", amount=1),
@@ -5486,7 +5509,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
-                LoadoutItem(name="FN-Inglis No 2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
