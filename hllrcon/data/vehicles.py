@@ -176,6 +176,130 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
 
     @class_cached_property
     @classmethod
+    def FORD_F60L_SUPPLY(cls) -> "HLLVehicle":
+        """*60L (Supply)*"""
+        return cls(
+            id="60L (Supply)",
+            name="Ford F60L",
+            factions={HLLFaction.CAN},
+            type=VehicleType.SUPPLY_TRUCK,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def FORD_F60L_TRANSPORT(cls) -> "HLLVehicle":
+        """*60L (Transport)*"""
+        return cls(
+            id="60L (Transport)",
+            name="Ford F60L",
+            factions={HLLFaction.CAN},
+            type=VehicleType.TRANSPORT_TRUCK,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=4,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=5,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=6,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=7,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=8,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=9,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=10,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=11,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def BA_10(cls) -> "HLLVehicle":
         """*BA-10*"""
         return cls(
@@ -394,7 +518,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="Churchill Mk III A.V.R.E.",
             name="Churchill AVRE",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=VehicleType.SELF_PROPELLED_ARTILLERY,
             seats=[
                 HLLVehicleSeat(
@@ -593,7 +717,11 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="Daimler",
             name="Daimler",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=VehicleType.RECON_VEHICLE,
             seats=[
                 HLLVehicleSeat(
@@ -646,7 +774,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="Firefly",
             name="Sherman Firefly",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=VehicleType.HEAVY_TANK,
             seats=[
                 HLLVehicleSeat(
@@ -845,6 +973,77 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
 
     @class_cached_property
     @classmethod
+    def HALF_TRACK(cls) -> "HLLVehicle":
+        """*Half-track*"""
+        return cls(
+            id="Half-track",
+            name="M3 Half-track",
+            factions={HLLFaction.CAN},
+            type=VehicleType.HALF_TRACK,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLWeapon.V_M2_BROWNING__HALF_TRACK,
+                    ],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=4,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=5,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=6,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=7,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def IS_1(cls) -> "HLLVehicle":
         """*IS-1*"""
         return cls(
@@ -880,6 +1079,47 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
                     ],
                     requires_roles=_HLL_TANK_CREW_ROLES,
                     exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def JEEP(cls) -> "HLLVehicle":
+        """*Jeep*"""
+        return cls(
+            id="Jeep",
+            name="Willy's Jeep",
+            factions={HLLFaction.CAN},
+            type=VehicleType.JEEP,
+            seats=[
+                HLLVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVehicleSeat(
+                    index=3,
+                    type=VehicleSeatType.PASSENGER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
                 ),
             ],
         )
@@ -1433,7 +1673,11 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="PAK 40",
             name="Pak 40",
-            factions={HLLFaction.GER, HLLFaction.DAK},
+            factions={
+                HLLFaction.GER,
+                HLLFaction.DAK,
+                HLLFaction.CAN,
+            },
             type=VehicleType.ANTI_TANK_GUN,
             seats=[
                 HLLVehicleSeat(
@@ -1530,7 +1774,11 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="QF 6-Pounder",
             name="QF 6-Pounder",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=VehicleType.ANTI_TANK_GUN,
             seats=[
                 HLLVehicleSeat(
@@ -1841,7 +2089,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="Sherman M4A3(75)W",
             name="M4A3(75)W Sherman",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=VehicleType.MEDIUM_TANK,
             seats=[
                 HLLVehicleSeat(
@@ -1960,7 +2208,7 @@ class HLLVehicle(_Vehicle[HLLFaction, HLLVehicleSeat]):
         return cls(
             id="Stuart M5A1",
             name="M5A1 Stuart",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=VehicleType.LIGHT_TANK,
             seats=[
                 HLLVehicleSeat(

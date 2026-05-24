@@ -113,6 +113,82 @@ HLLVVehicleSeat(
     exposed={exposed},
 )"""
 
+with root_path_ctx(HLL_METADATA_PATH):
+    HLL_ABILITIES_DIR = Path("HLL/Content/Blueprints/Abilities/Setup")
+    HLL_ABILITIES_FACTIONS: dict[Path, set[AnyFaction]] = {
+        HLL_ABILITIES_DIR / "US_DefaultAbilities": {HLLFaction.US},
+        HLL_ABILITIES_DIR / "US_DefaultAbilities_Winter": {HLLFaction.US},
+        HLL_ABILITIES_DIR / "GER_DefaultAbilities": {HLLFaction.GER},
+        HLL_ABILITIES_DIR / "GER_DefaultAbilities_Winter": {HLLFaction.GER},
+        HLL_ABILITIES_DIR / "GER_DefaultAbilities_STA": {HLLFaction.GER},
+        HLL_ABILITIES_DIR / "RU_DefaultAbilities": {HLLFaction.RUS},
+        HLL_ABILITIES_DIR / "RU_DefaultAbilities_Winter": {HLLFaction.RUS},
+        HLL_ABILITIES_DIR / "COM_DefaultAbilities": {HLLFaction.CW},
+        HLL_ABILITIES_DIR / "CAN_DefaultAbilities": {HLLFaction.CAN},
+        HLL_ABILITIES_DIR / "NA_Variant/GER_DefaultAbilities_NA": {HLLFaction.DAK},
+        HLL_ABILITIES_DIR / "NA_Variant/COM_DefaultAbilities_NA": {HLLFaction.B8A},
+    }
+    HLL_ABILITIES_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLL_ABILITIES_FACTIONS.items()
+    }
+
+    HLL_ARTILLERY_DIR = Path("HLL/Content/Blueprints/Artillery")
+    HLL_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
+        HLL_ARTILLERY_DIR / "US/Anti-Tank/BP_USAntiTank": {HLLFaction.US},
+        HLL_ARTILLERY_DIR / "RUS/Anti-Tank/BP_RUSAntiTank": {HLLFaction.RUS},
+        HLL_ARTILLERY_DIR / "GER/Anti-Tank/BP_GERAntiTank": {
+            HLLFaction.GER,
+            HLLFaction.DAK,
+            HLLFaction.CAN,
+        },
+        HLL_ARTILLERY_DIR / "COM/Anti-Tank/BP_COMAntiTank": {
+            HLLFaction.CW,
+            HLLFaction.B8A,
+            HLLFaction.CAN,
+        },
+        HLL_ARTILLERY_DIR / "US/Howitzer/BP_US_M114": {HLLFaction.US},
+        HLL_ARTILLERY_DIR / "RUS/Artillery/BP_RUS_M30": {HLLFaction.RUS},
+        HLL_ARTILLERY_DIR / "GER/Howitzer/BP_GER_SFH18": {
+            HLLFaction.GER,
+            HLLFaction.DAK,
+        },
+        HLL_ARTILLERY_DIR / "COM/Howitzer/BP_COM_Howitzer": {
+            HLLFaction.CW,
+            HLLFaction.B8A,
+        },
+    }
+    HLL_ARTILLERY_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLL_ARTILLERY_FACTIONS.items()
+    }
+
+
+with root_path_ctx(HLLV_METADATA_PATH):
+    HLLV_ABILITIES_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Abilities")
+    HLLV_ABILITIES_FACTIONS: dict[Path, set[AnyFaction]] = {
+        HLLV_ABILITIES_DIR / "US/Waterfall_US_DefaultAbilities": {HLLVFaction.US},
+        HLLV_ABILITIES_DIR / "NVA/Waterfall_NVA_DefaultAbilities": {HLLVFaction.NVA},
+    }
+    HLLV_ABILITIES_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLLV_ABILITIES_FACTIONS.items()
+    }
+
+    HLLV_MORTARS_DIR = Path(
+        "HLLVietnam/Content/_WFL/Blueprints/Weapons/MortarPrototypes",
+    )
+    HLLV_ANTI_AIR_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Weapons/AntiAircraft")
+    HLLV_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
+        HLLV_MORTARS_DIR / "US/BP_Mortar_US_M29.json": {HLLVFaction.US},
+        HLLV_MORTARS_DIR / "BP_Mortar_NVA_Type67.json": {HLLVFaction.NVA},
+        HLLV_ANTI_AIR_DIR / "BP_DShKMAntiAircraftGun.json": {HLLVFaction.NVA},
+    }
+    HLLV_ARTILLERY_FACTIONS = {
+        local_to_abs_path(fp): factions
+        for fp, factions in HLLV_ARTILLERY_FACTIONS.items()
+    }
+
 
 class VehicleWeaponAmmoType(StrEnum):
     AP = "AP"
@@ -310,7 +386,7 @@ class VehicleData(BaseModel):
         ):
             weapons.append(
                 WeaponData(
-                    meth_name="V_ROADKILL__" + to_method_name(self.id),
+                    meth_name=to_method_name("V_ROADKILL__" + self.id),
                     id=self.id,
                     name=self.id,
                     vehicle_id=self.id,
@@ -900,80 +976,6 @@ class InfantryVehicleExtractor(
         )
 
 
-with root_path_ctx(HLL_METADATA_PATH):
-    HLL_ABILITIES_DIR = Path("HLL/Content/Blueprints/Abilities/Setup")
-    HLL_ABILITIES_FACTIONS: dict[Path, set[AnyFaction]] = {
-        HLL_ABILITIES_DIR / "US_DefaultAbilities": {HLLFaction.US},
-        HLL_ABILITIES_DIR / "US_DefaultAbilities_Winter": {HLLFaction.US},
-        HLL_ABILITIES_DIR / "GER_DefaultAbilities": {HLLFaction.GER},
-        HLL_ABILITIES_DIR / "GER_DefaultAbilities_Winter": {HLLFaction.GER},
-        HLL_ABILITIES_DIR / "GER_DefaultAbilities_STA": {HLLFaction.GER},
-        HLL_ABILITIES_DIR / "RU_DefaultAbilities": {HLLFaction.RUS},
-        HLL_ABILITIES_DIR / "RU_DefaultAbilities_Winter": {HLLFaction.RUS},
-        HLL_ABILITIES_DIR / "COM_DefaultAbilities": {HLLFaction.CW},
-        HLL_ABILITIES_DIR / "NA_Variant/GER_DefaultAbilities_NA": {HLLFaction.DAK},
-        HLL_ABILITIES_DIR / "NA_Variant/COM_DefaultAbilities_NA": {HLLFaction.B8A},
-    }
-    HLL_ABILITIES_FACTIONS = {
-        local_to_abs_path(fp): factions
-        for fp, factions in HLL_ABILITIES_FACTIONS.items()
-    }
-
-    HLL_ARTILLERY_DIR = Path("HLL/Content/Blueprints/Artillery")
-    HLL_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
-        HLL_ARTILLERY_DIR / "US/Anti-Tank/BP_USAntiTank": {HLLFaction.US},
-        HLL_ARTILLERY_DIR / "RUS/Anti-Tank/BP_RUSAntiTank": {HLLFaction.RUS},
-        HLL_ARTILLERY_DIR / "GER/Anti-Tank/BP_GERAntiTank": {
-            HLLFaction.GER,
-            HLLFaction.DAK,
-        },
-        HLL_ARTILLERY_DIR / "COM/Anti-Tank/BP_COMAntiTank": {
-            HLLFaction.CW,
-            HLLFaction.B8A,
-        },
-        HLL_ARTILLERY_DIR / "US/Howitzer/BP_US_M114": {HLLFaction.US},
-        HLL_ARTILLERY_DIR / "RUS/Artillery/BP_RUS_M30": {HLLFaction.RUS},
-        HLL_ARTILLERY_DIR / "GER/Howitzer/BP_GER_SFH18": {
-            HLLFaction.GER,
-            HLLFaction.DAK,
-        },
-        HLL_ARTILLERY_DIR / "COM/Howitzer/BP_COM_Howitzer": {
-            HLLFaction.CW,
-            HLLFaction.B8A,
-        },
-    }
-    HLL_ARTILLERY_FACTIONS = {
-        local_to_abs_path(fp): factions
-        for fp, factions in HLL_ARTILLERY_FACTIONS.items()
-    }
-
-
-with root_path_ctx(HLLV_METADATA_PATH):
-    HLLV_ABILITIES_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Abilities")
-    HLLV_ABILITIES_FACTIONS: dict[Path, set[AnyFaction]] = {
-        HLLV_ABILITIES_DIR / "US/Waterfall_US_DefaultAbilities": {HLLVFaction.US},
-        HLLV_ABILITIES_DIR / "NVA/Waterfall_NVA_DefaultAbilities": {HLLVFaction.NVA},
-    }
-    HLLV_ABILITIES_FACTIONS = {
-        local_to_abs_path(fp): factions
-        for fp, factions in HLLV_ABILITIES_FACTIONS.items()
-    }
-
-    HLLV_MORTARS_DIR = Path(
-        "HLLVietnam/Content/_WFL/Blueprints/Weapons/MortarPrototypes",
-    )
-    HLLV_ANTI_AIR_DIR = Path("HLLVietnam/Content/_WFL/Blueprints/Weapons/AntiAircraft")
-    HLLV_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
-        HLLV_MORTARS_DIR / "US/BP_Mortar_US_M29.json": {HLLVFaction.US},
-        HLLV_MORTARS_DIR / "BP_Mortar_NVA_Type67.json": {HLLVFaction.NVA},
-        HLLV_ANTI_AIR_DIR / "BP_DShKMAntiAircraftGun.json": {HLLVFaction.NVA},
-    }
-    HLLV_ARTILLERY_FACTIONS = {
-        local_to_abs_path(fp): factions
-        for fp, factions in HLLV_ARTILLERY_FACTIONS.items()
-    }
-
-
 def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[AnyFaction]]]:
     abilities_dir, abilities_factions_map = game_switch(
         (HLL_ABILITIES_DIR, HLL_ABILITIES_FACTIONS),
@@ -1271,6 +1273,78 @@ class VehicleMetaData(TypedDict, total=False):
     exposed: bool
 
 
+def get_all_vehicles() -> Iterator[VehicleData]:
+    vehicle_data = sorted(get_all_vehicle_data(), key=lambda v: v.id)
+    vehicle_ids = itertools.groupby(vehicle_data, lambda v: v.id)
+    for _, vd_seq in vehicle_ids:
+        yield VehicleData.merge(*vd_seq)
+
+
+def get_all_vehicle_weapons(vehicles: list[VehicleData]) -> Iterator[WeaponData]:
+    weapon_data = sorted(
+        (
+            weapon
+            for vehicle in vehicles
+            for weapon in vehicle.get_weapons(include_generic=True)
+        ),
+        key=lambda w: w.id,
+    )
+    weapon_ids = itertools.groupby(weapon_data, lambda w: w.id)
+    for _, wd_seq in weapon_ids:
+        yield WeaponData.merge(*wd_seq)
+
+
+def main() -> None:
+
+    with root_path_ctx(HLL_METADATA_PATH):
+        vehicles = list(get_all_vehicles())
+        vehicle_constructors = [v.to_constructor() for v in vehicles]
+
+        inject_code(
+            Path("hllrcon/data/vehicles.py"),
+            "hll vehicles",
+            "\n\n".join(vehicle_constructors),
+        )
+
+        Path("dist").mkdir(exist_ok=True)
+        Path("dist/vehicles.json").write_bytes(
+            TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
+        )
+
+        weapons = list(get_all_vehicle_weapons(vehicles))
+        weapon_constructors = [w.to_constructor() for w in weapons]
+
+        inject_code(
+            Path("hllrcon/data/weapons.py"),
+            "hll vehicles",
+            "\n\n".join(weapon_constructors),
+        )
+
+    with root_path_ctx(HLLV_METADATA_PATH):
+        vehicles = list(get_all_vehicles())
+        vehicle_constructors = [v.to_constructor() for v in vehicles]
+
+        inject_code(
+            Path("hllrcon/data/vehicles.py"),
+            "hllv vehicles",
+            "\n\n".join(vehicle_constructors),
+        )
+
+        Path("dist").mkdir(exist_ok=True)
+        Path("dist/vehicles_vietnam.json").write_bytes(
+            TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
+        )
+
+        weapons = list(get_all_vehicle_weapons(vehicles))
+        weapon_constructors = [w.to_constructor() for w in weapons]
+
+        inject_code(
+            Path("hllrcon/data/weapons.py"),
+            "hllv vehicles",
+            "\n\n".join(weapon_constructors),
+        )
+
+
 HLL_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
     "Daimler": {
         "name": "Daimler",
@@ -1469,6 +1543,24 @@ HLL_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
         "name": "QF 6-Pounder",
         "exposed": True,
     },
+    "Jeep": {
+        "name": "Willy's Jeep",
+        "exposed": True,
+    },
+    "60L (Supply)": {
+        "meth_name": "FORD_F60L_SUPPLY",
+        "name": "Ford F60L",
+        "exposed": True,
+    },
+    "60L (Transport)": {
+        "meth_name": "FORD_F60L_TRANSPORT",
+        "name": "Ford F60L",
+        "exposed": True,
+    },
+    "Half-track": {
+        "name": "M3 Half-track",
+        "exposed": True,
+    },
 }
 
 HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
@@ -1517,79 +1609,6 @@ HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
         "exposed": True,
     },
 }
-
-
-def get_all_vehicles() -> Iterator[VehicleData]:
-    vehicle_data = sorted(get_all_vehicle_data(), key=lambda v: v.id)
-    vehicle_ids = itertools.groupby(vehicle_data, lambda v: v.id)
-    for _, vd_seq in vehicle_ids:
-        yield VehicleData.merge(*vd_seq)
-
-
-def get_all_vehicle_weapons(vehicles: list[VehicleData]) -> Iterator[WeaponData]:
-    weapon_data = sorted(
-        (
-            weapon
-            for vehicle in vehicles
-            for weapon in vehicle.get_weapons(include_generic=True)
-        ),
-        key=lambda w: w.id,
-    )
-    weapon_ids = itertools.groupby(weapon_data, lambda w: w.id)
-    for _, wd_seq in weapon_ids:
-        yield WeaponData.merge(*wd_seq)
-
-
-def main() -> None:
-
-    with root_path_ctx(HLL_METADATA_PATH):
-        vehicles = list(get_all_vehicles())
-        vehicle_constructors = [v.to_constructor() for v in vehicles]
-
-        inject_code(
-            Path("hllrcon/data/vehicles.py"),
-            "hll vehicles",
-            "\n\n".join(vehicle_constructors),
-        )
-
-        Path("dist").mkdir(exist_ok=True)
-        Path("dist/vehicles.json").write_bytes(
-            TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
-        )
-
-        weapons = list(get_all_vehicle_weapons(vehicles))
-        weapon_constructors = [w.to_constructor() for w in weapons]
-
-        inject_code(
-            Path("hllrcon/data/weapons.py"),
-            "hll vehicles",
-            "\n\n".join(weapon_constructors),
-        )
-
-    with root_path_ctx(HLLV_METADATA_PATH):
-        vehicles = list(get_all_vehicles())
-        vehicle_constructors = [v.to_constructor() for v in vehicles]
-
-        inject_code(
-            Path("hllrcon/data/vehicles.py"),
-            "hllv vehicles",
-            "\n\n".join(vehicle_constructors),
-        )
-
-        Path("dist").mkdir(exist_ok=True)
-        Path("dist/vehicles_vietnam.json").write_bytes(
-            TypeAdapter(list[VehicleData]).dump_json(vehicles, indent=2),
-        )
-
-        weapons = list(get_all_vehicle_weapons(vehicles))
-        weapon_constructors = [w.to_constructor() for w in weapons]
-
-        inject_code(
-            Path("hllrcon/data/weapons.py"),
-            "hllv vehicles",
-            "\n\n".join(weapon_constructors),
-        )
-
 
 if __name__ == "__main__":
     main()

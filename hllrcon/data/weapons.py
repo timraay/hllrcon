@@ -1890,7 +1890,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="230MM PETARD",
             name="230mm Petard",
             vehicle_id=None,
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -1903,7 +1903,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="230MM PETARD [Churchill Mk III A.V.R.E.]",
             name="230mm Petard",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -1916,7 +1916,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="37MM CANNON",
             name="37mm Cannon",
             vehicle_id=None,
-            factions={HLLFaction.US, HLLFaction.B8A},
+            factions={
+                HLLFaction.US,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -1942,7 +1946,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="37MM CANNON [Stuart M5A1]",
             name="37mm Cannon",
             vehicle_id="Stuart M5A1",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -2040,6 +2044,32 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_ROADKILL__60L_SUPPLY(cls) -> "HLLWeapon":
+        """*60L (Supply)*"""
+        return cls(
+            id="60L (Supply)",
+            name="60L (Supply)",
+            vehicle_id="60L (Supply)",
+            factions={HLLFaction.CAN},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__60L_TRANSPORT(cls) -> "HLLWeapon":
+        """*60L (Transport)*"""
+        return cls(
+            id="60L (Transport)",
+            name="60L (Transport)",
+            vehicle_id="60L (Transport)",
+            factions={HLLFaction.CAN},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_7_5CM_KWK_37__UNKNOWN(cls) -> "HLLWeapon":
         """*7.5CM KwK 37*"""
         return cls(
@@ -2076,6 +2106,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
                 HLLFaction.GER,
                 HLLFaction.US,
                 HLLFaction.DAK,
+                HLLFaction.CAN,
             },
             type=WeaponType.UNKNOWN,
             magnification=None,
@@ -2089,7 +2120,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="75MM CANNON [PAK 40]",
             name="75mm Cannon",
             vehicle_id="PAK 40",
-            factions={HLLFaction.GER, HLLFaction.DAK},
+            factions={
+                HLLFaction.GER,
+                HLLFaction.DAK,
+                HLLFaction.CAN,
+            },
             type=WeaponType.AT_GUN,
             magnification=None,
         )
@@ -2128,7 +2163,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="75MM CANNON [Sherman M4A3(75)W]",
             name="75mm Cannon",
             vehicle_id="Sherman M4A3(75)W",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -2297,7 +2332,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL BESA",
             name="BESA",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2310,7 +2349,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL BESA 7.92mm",
             name="BESA",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2323,7 +2366,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL BESA 7.92mm [Churchill Mk III A.V.R.E.]",
             name="BESA",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2388,7 +2431,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL BESA [Daimler]",
             name="BESA",
             vehicle_id="Daimler",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2483,6 +2530,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
                 HLLFaction.US,
                 HLLFaction.CW,
                 HLLFaction.B8A,
+                HLLFaction.CAN,
             },
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
@@ -2496,7 +2544,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL M1919 [Firefly]",
             name="M1919 Browning",
             vehicle_id="Firefly",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2548,7 +2596,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL M1919 [Sherman M4A3(75)W]",
             name="M1919 Browning",
             vehicle_id="Sherman M4A3(75)W",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2587,7 +2635,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="COAXIAL M1919 [Stuart M5A1]",
             name="M1919 Browning",
             vehicle_id="Stuart M5A1",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
@@ -2691,7 +2739,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Churchill Mk III A.V.R.E.",
             name="Churchill Mk III A.V.R.E.",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.ROADKILL,
             magnification=None,
         )
@@ -2782,7 +2830,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Daimler",
             name="Daimler",
             vehicle_id="Daimler",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.ROADKILL,
             magnification=None,
         )
@@ -2808,7 +2860,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Firefly",
             name="Firefly",
             vehicle_id="Firefly",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.ROADKILL,
             magnification=None,
         )
@@ -2873,7 +2925,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="HULL BESA 7.92mm",
             name="7.92mm",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
@@ -2886,7 +2942,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="HULL BESA 7.92mm [Churchill Mk III A.V.R.E.]",
             name="BESA",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
@@ -2990,7 +3046,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="HULL M1919",
             name="M1919 Browning",
             vehicle_id=None,
-            factions={HLLFaction.US, HLLFaction.B8A},
+            factions={
+                HLLFaction.US,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
@@ -3029,7 +3089,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="HULL M1919 [Sherman M4A3(75)W]",
             name="M1919 Browning",
             vehicle_id="Sherman M4A3(75)W",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
@@ -3068,7 +3128,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="HULL M1919 [Stuart M5A1]",
             name="M1919 Browning",
             vehicle_id="Stuart M5A1",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.TANK_HULL_MG,
             magnification=None,
         )
@@ -3140,6 +3200,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_ROADKILL__HALF_TRACK(cls) -> "HLLWeapon":
+        """*Half-track*"""
+        return cls(
+            id="Half-track",
+            name="Half-track",
+            vehicle_id="Half-track",
+            factions={HLLFaction.CAN},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_ROADKILL__IS_1(cls) -> "HLLWeapon":
         """*IS-1*"""
         return cls(
@@ -3147,6 +3220,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             name="IS-1",
             vehicle_id="IS-1",
             factions={HLLFaction.SOV},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__JEEP(cls) -> "HLLWeapon":
+        """*Jeep*"""
+        return cls(
+            id="Jeep",
+            name="Jeep",
+            vehicle_id="Jeep",
+            factions={HLLFaction.CAN},
             type=WeaponType.ROADKILL,
             magnification=None,
         )
@@ -3191,6 +3277,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             vehicle_id="Kubelwagen",
             factions={HLLFaction.GER, HLLFaction.DAK},
             type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_M2_BROWNING__HALF_TRACK(cls) -> "HLLWeapon":
+        """*M2 Browning [Half-track]*"""
+        return cls(
+            id="M2 Browning [Half-track]",
+            name="M2 Browning",
+            vehicle_id="Half-track",
+            factions={HLLFaction.CAN},
+            type=WeaponType.MOUNTED_MG,
             magnification=None,
         )
 
@@ -3433,7 +3532,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="PRIMARY [Daimler]",
             name="Receive Intel",
             vehicle_id="Daimler",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_RECON,
             magnification=None,
         )
@@ -3485,7 +3588,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="QF 17-POUNDER",
             name="QF 17-Pounder",
             vehicle_id=None,
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -3498,7 +3601,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="QF 17-POUNDER [Firefly]",
             name="QF 17-Pounder",
             vehicle_id="Firefly",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -3511,7 +3614,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="QF 2-POUNDER",
             name="QF 2-Pounder",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -3524,7 +3631,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="QF 2-POUNDER [Daimler]",
             name="QF 2-Pounder",
             vehicle_id="Daimler",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -3602,7 +3713,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="QF 6-POUNDER",
             name="57mm Cannon",
             vehicle_id=None,
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.AT_GUN,
             magnification=None,
         )
@@ -3615,7 +3730,11 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="QF 6-POUNDER [QF 6-Pounder]",
             name="57mm Cannon",
             vehicle_id="QF 6-Pounder",
-            factions={HLLFaction.CW, HLLFaction.B8A},
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
             type=WeaponType.AT_GUN,
             magnification=None,
         )
@@ -3634,6 +3753,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
                 HLLFaction.CW,
                 HLLFaction.DAK,
                 HLLFaction.B8A,
+                HLLFaction.CAN,
             },
             type=WeaponType.TANK_SMOKE_SCREEN,
             magnification=None,
@@ -3686,7 +3806,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="SMOKE GRENADE [Firefly]",
             name="Smoke Grenade",
             vehicle_id="Firefly",
-            factions={HLLFaction.CW},
+            factions={HLLFaction.CW, HLLFaction.CAN},
             type=WeaponType.TANK_SMOKE_SCREEN,
             magnification=None,
         )
@@ -3829,7 +3949,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Sherman M4A3(75)W",
             name="Sherman M4A3(75)W",
             vehicle_id="Sherman M4A3(75)W",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.ROADKILL,
             magnification=None,
         )
@@ -3894,7 +4014,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="Stuart M5A1",
             name="Stuart M5A1",
             vehicle_id="Stuart M5A1",
-            factions={HLLFaction.US},
+            factions={HLLFaction.US, HLLFaction.CAN},
             type=WeaponType.ROADKILL,
             magnification=None,
         )

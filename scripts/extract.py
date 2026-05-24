@@ -18,7 +18,7 @@ def main() -> None:
 
     # Run ruff to format the generated files
     subprocess.run(
-        ["ruff", "check", "--fix", "hllrcon/data"],  # noqa: S607
+        ["ruff", "format", "hllrcon/data"],  # noqa: S607
         check=True,
     )
 

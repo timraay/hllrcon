@@ -1055,6 +1055,13 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "SMOKE GRENADE": {
         "name": "Smoke Grenade",
     },
+    "M2 Browning [Half-track]": {
+        "name": "M2 Browning",
+    },
+    "60L (Supply)": {},
+    "60L (Transport)": {},
+    "Half-track": {},
+    "Jeep": {},
 }
 
 HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
