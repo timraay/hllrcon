@@ -1182,6 +1182,7 @@ class TestHLLVCommands(TestCommands):
                     "team": 1,
                     "role": 4,
                     "platoon": "ABLE",
+                    "platoonIndex": 0,
                     "loadout": "Combat Medic",
                     "stats": {
                         "deaths": 50,
@@ -1223,6 +1224,7 @@ class TestHLLVCommands(TestCommands):
                             "team": 1,
                             "role": 4,
                             "platoon": "ABLE",
+                            "platoonIndex": 0,
                             "loadout": "Combat Medic",
                             "stats": {
                                 "deaths": 50,
@@ -1247,6 +1249,38 @@ class TestHLLVCommands(TestCommands):
                 },
             ),
         ).get_players()
+
+    def test_commands_get_server_session(self) -> None:
+        self.stub(
+            "GetServerInformation",
+            2,
+            {"Name": "session", "Value": ""},
+            json.dumps(
+                {
+                    "serverName": "My Server",
+                    "mapName": "Map1",
+                    "mapId": "map1",
+                    "gameMode": "Warfare",
+                    "remainingMatchTime": 0,
+                    "matchTime": 6000,
+                    "alliedScore": 2,
+                    "axisScore": 2,
+                    "playerCount": 98,
+                    "alliedPlayerCount": 0,
+                    "axisPlayerCount": 0,
+                    "maxPlayerCount": 100,
+                    "queueCount": 5,
+                    "maxQueueCount": 6,
+                    "vipQueueCount": 1,
+                    "maxVipQueueCount": 2,
+                    "alliedFaction": 1,
+                    "axisFaction": 6,
+                    "alliedMorale": 0,
+                    "axisMorale": 0,
+                    "initialMorale": 0,
+                },
+            ),
+        ).get_server_session()
 
     def test_commands_get_server_config(self) -> None:
         self.stub(
