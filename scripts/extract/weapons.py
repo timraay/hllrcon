@@ -700,6 +700,17 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "No.2 Mk V Flare Gun",
         "type": WeaponType.RECON_FLARE,
     },
+    "Enfield No.2 Mk I": {
+        "name": "Enfield No.2 Mk I",
+        "type": WeaponType.REVOLVER,
+    },
+    "FN-Inglis No.2 MK I": {
+        "name": "Inglis Hi-Power",
+        "type": WeaponType.PISTOL,
+    },
+    "Lanchester": {
+        "type": WeaponType.SUBMACHINE_GUN,
+    },
     "QF 6-POUNDER [QF 6-Pounder]": {
         "name": "57mm Cannon",
     },
