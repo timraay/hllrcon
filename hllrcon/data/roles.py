@@ -74,7 +74,7 @@ class _Role(IndexedBaseModel[int]):
         return self.type == RoleType.HELICOPTER
 
     @staticmethod
-    def clamp_level(level: int) -> int:
+    def _clamp_level(level: int) -> int:
         """Clamp a role level to the valid range of 1 to 10 inclusive."""
         if level < 1:
             return 1
@@ -468,7 +468,7 @@ class HLLVRole(_Role):
             The unlocks available at the given level.
 
         """
-        return self.progression[self.clamp_level(level) - 1]
+        return self.progression[self._clamp_level(level) - 1]
 
     def get_available_items(
         self,
@@ -492,7 +492,7 @@ class HLLVRole(_Role):
         """
         from hllrcon.data.loadouts import HLLVLoadoutItem  # noqa: PLC0415
 
-        clamped_level = self.clamp_level(level)
+        clamped_level = self._clamp_level(level)
 
         return {
             item
