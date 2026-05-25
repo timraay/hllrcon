@@ -2376,24 +2376,24 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__3_TON_GS_SUPPLY(cls) -> "Weapon":
-        """*3-Ton GS (Supply)*"""
+    def V_ROADKILL__60L_SUPPLY(cls) -> "Weapon":
+        """*60L (Supply)*"""
         return cls(
-            id="3-Ton GS (Supply)",
+            id="60L (Supply)",
             name="Roadkill",
-            vehicle_id="3-Ton GS (Supply)",
+            vehicle_id="60L (Supply)",
             factions={Faction.CAN},
             type=WeaponType.ROADKILL,
         )
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__3_TON_GS_TRANSPORT(cls) -> "Weapon":
-        """*3-Ton GS (Transport)*"""
+    def V_ROADKILL__60L_TRANSPORT(cls) -> "Weapon":
+        """*60L (Transport)*"""
         return cls(
-            id="3-Ton GS (Transport)",
+            id="60L (Transport)",
             name="Roadkill",
-            vehicle_id="3-Ton GS (Transport)",
+            vehicle_id="60L (Transport)",
             factions={Faction.CAN},
             type=WeaponType.ROADKILL,
         )
