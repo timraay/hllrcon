@@ -2045,11 +2045,11 @@ class Vehicle(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def THREE_TON_GS_SUPPLY(cls) -> "Vehicle":
-        """*3-Ton GS (Supply)*"""
+    def FORD_F60L_SUPPLY(cls) -> "Vehicle":
+        """*60L (Supply)*"""
         return cls(
-            id="3-Ton GS (Supply)",
-            name="Bedford OYD",
+            id="60L (Supply)",
+            name="Ford F60L",
             type=VehicleType.SUPPLY_TRUCK,
             factions={Faction.CAN},
             seats=[
@@ -2070,11 +2070,11 @@ class Vehicle(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
-    def THREE_TON_GS_TRANSPORT(cls) -> "Vehicle":
-        """*3-Ton GS (Transport)*"""
+    def FORD_F60L_TRANSPORT(cls) -> "Vehicle":
+        """*60L (Transport)*"""
         return cls(
-            id="3-Ton GS (Transport)",
-            name="Bedford OYD",
+            id="60L (Transport)",
+            name="Ford F60L",
             type=VehicleType.TRANSPORT_TRUCK,
             factions={Faction.CAN},
             seats=[
