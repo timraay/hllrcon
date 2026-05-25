@@ -159,10 +159,12 @@ class _Vehicle(IndexedBaseModel[str], Generic[FactionT, VehicleSeatT]):
         Vehicle types included are:
         - Artillery
         - Anti-Tank Gun
+        - Anti-Aircraft Gun
         """
         return self.type in {
             VehicleType.ARTILLERY,
             VehicleType.ANTI_TANK_GUN,
+            VehicleType.ANTI_AIRCRAFT_GUN,
         }
 
 
