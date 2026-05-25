@@ -5,6 +5,7 @@ from functools import wraps
 from typing import (
     TYPE_CHECKING,
     Any,
+    ClassVar,
     Literal,
     ParamSpec,
     TypeAlias,
@@ -181,6 +182,12 @@ def get_game_mode_id(game_mode: AnyGameMode | GameModeLiteral) -> str:
 
 
 class _RconCommands(ABC):
+    __min_server_version__: ClassVar[int]
+    """The minimum supported game server version (build revision). This is the minimum
+    version that is required for the library to be fully functional. No guarantees can
+    be made about future versions.
+    """
+
     @abstractmethod
     async def execute(
         self,
@@ -1600,6 +1607,15 @@ class _RconCommands(ABC):
 
 
 class HLLRconCommands(_RconCommands):
+    __min_server_version__: ClassVar[int] = 1128031
+    """The minimum supported game server version (build revision). This is the minimum
+    version that is required for the library to be fully functional. No guarantees can
+    be made about future versions.
+
+    The server's current build revision can be obtained using
+    `HLLRcon.get_server_config()`.
+    """
+
     @override
     @cast_response_to_model(HLLGetAdminLogResponse)
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
@@ -1756,6 +1772,15 @@ class HLLRconCommands(_RconCommands):
 
 
 class HLLVRconCommands(_RconCommands):
+    __min_server_version__: ClassVar[int] = 0
+    """The minimum supported game server version (build revision). This is the minimum
+    version that is required for the library to be fully functional. No guarantees can
+    be made about future versions.
+
+    The server's current build revision can be obtained using
+    `HLLVRcon.get_server_config()`.
+    """
+
     @override
     @cast_response_to_model(HLLVGetAdminLogResponse)
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:

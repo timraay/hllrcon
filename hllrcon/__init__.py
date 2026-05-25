@@ -189,11 +189,3 @@ __all__ = (
 
 # Don't forget to also bump in pyproject.toml
 __version__ = "1.2.1.0-beta.1128031-0"
-
-__min_server_version__ = 1128031
-"""The minimum supported game server version (build revision). This is the minimum
-version that is required for the library to be fully functional. No guarantees can be
-made about future versions.
-
-The server's current build revision can be obtained using `Rcon.get_server_config()`.
-"""
