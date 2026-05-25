@@ -45,12 +45,12 @@ class _Role(IndexedBaseModel[int]):
     @property
     def is_infantry(self) -> bool:
         """Whether the role is associated with infantry units."""
-        return self.type in (RoleType.INFANTRY, RoleType.INFANTRY)
+        return self.type == RoleType.INFANTRY
 
     @property
     def is_tanker(self) -> bool:
         """Whether the role is associated with armor units."""
-        return self.type in (RoleType.ARMOR, RoleType.ARMOR)
+        return self.type == RoleType.ARMOR
 
     @property
     def is_artillery(self) -> bool:
@@ -66,7 +66,7 @@ class _Role(IndexedBaseModel[int]):
     @property
     def is_recon(self) -> bool:
         """Whether the role is associated with recon units."""
-        return self.type in (RoleType.RECON, RoleType.RECON)
+        return self.type == RoleType.RECON
 
     @property
     def is_helicopter(self) -> bool:
