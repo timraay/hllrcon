@@ -13,24 +13,19 @@ from hllrcon.data._utils import (
 from hllrcon.data.factions import HLLFaction, HLLVFaction, _Faction
 from hllrcon.data.roles import (
     HLLRole,
-    HLLRoleType,
     HLLVRole,
-    HLLVRoleType,
+    RoleType,
     _Role,
 )
 from hllrcon.data.weapons import HLLVWeapon, HLLWeapon, _Weapon
 
-_HLL_TANK_CREW_ROLES = {
-    role for role in HLLRole.all() if role.type == HLLRoleType.ARMOR
-}
+_HLL_TANK_CREW_ROLES = {role for role in HLLRole.all() if role.type == RoleType.ARMOR}
 _HLL_ARTY_CREW_ROLES = {
-    role for role in HLLRole.all() if role.type == HLLRoleType.ARTILLERY
+    role for role in HLLRole.all() if role.type == RoleType.ARTILLERY
 }
-_HLLV_TANK_CREW_ROLES = {
-    role for role in HLLVRole.all() if role.type == HLLVRoleType.ARMOR
-}
+_HLLV_TANK_CREW_ROLES = {role for role in HLLVRole.all() if role.type == RoleType.ARMOR}
 _HLLV_MORTAR_CREW_ROLES = {
-    role for role in HLLVRole.all() if role.type == HLLVRoleType.MORTAR
+    role for role in HLLVRole.all() if role.type == RoleType.MORTAR
 }
 
 

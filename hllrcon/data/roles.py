@@ -1,6 +1,6 @@
 # ruff: noqa: N802
 from enum import StrEnum
-from typing import TYPE_CHECKING, Generic, Literal, TypeAlias, TypeVar
+from typing import TYPE_CHECKING, Literal, TypeAlias
 
 from pydantic import BaseModel
 
@@ -11,34 +11,22 @@ if TYPE_CHECKING:
     from hllrcon.data.loadouts import HLLVLoadoutItem
     from hllrcon.data.weapons import HLLVWeapon
 
-RoleTypeT = TypeVar("RoleTypeT", bound=StrEnum)
 
-
-class HLLRoleType(StrEnum):
+class RoleType(StrEnum):
     INFANTRY = "Infantry"
     ARMOR = "Armor"
     ARTILLERY = "Artillery"
-    RECON = "Recon"
-    COMMANDER = "Commander"
-
-
-class HLLVRoleType(StrEnum):
-    INFANTRY = "Infantry"
-    ARMOR = "Armor"
     MORTAR = "Mortar"
     RECON = "Recon"
     HELICOPTER = "Helicopter"
     COMMANDER = "Commander"
 
 
-AnyRoleType: TypeAlias = HLLRoleType | HLLVRoleType
-
-
-class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
+class _Role(IndexedBaseModel[int]):
     id: int
     name: str
     pretty_name: str
-    type: RoleTypeT
+    type: RoleType
     is_squad_leader: bool
     """Whether this role is exclusive to the squad leader.
 
@@ -57,33 +45,33 @@ class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
     @property
     def is_infantry(self) -> bool:
         """Whether the role is associated with infantry units."""
-        return self.type in (HLLRoleType.INFANTRY, HLLVRoleType.INFANTRY)
+        return self.type in (RoleType.INFANTRY, RoleType.INFANTRY)
 
     @property
     def is_tanker(self) -> bool:
         """Whether the role is associated with armor units."""
-        return self.type in (HLLRoleType.ARMOR, HLLVRoleType.ARMOR)
+        return self.type in (RoleType.ARMOR, RoleType.ARMOR)
 
     @property
     def is_artillery(self) -> bool:
         """Whether the role is associated with artillery units."""
-        return self.type == HLLRoleType.ARTILLERY
+        return self.type == RoleType.ARTILLERY
 
     @property
     def is_mortar(self) -> bool:
         """Whether the role is associated with mortar units."""
         # TODO: Update docstring
-        return self.type == HLLVRoleType.MORTAR
+        return self.type == RoleType.MORTAR
 
     @property
     def is_recon(self) -> bool:
         """Whether the role is associated with recon units."""
-        return self.type in (HLLRoleType.RECON, HLLVRoleType.RECON)
+        return self.type in (RoleType.RECON, RoleType.RECON)
 
     @property
     def is_helicopter(self) -> bool:
         """Whether the role is associated with helicopter units."""
-        return self.type == HLLVRoleType.HELICOPTER
+        return self.type == RoleType.HELICOPTER
 
     @staticmethod
     def clamp_level(level: int) -> int:
@@ -95,7 +83,7 @@ class _Role(IndexedBaseModel[int], Generic[RoleTypeT]):
         return level
 
 
-class HLLRole(_Role[HLLRoleType]):
+class HLLRole(_Role):
     if TYPE_CHECKING:
 
         @property
@@ -163,7 +151,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=0,
             name="Rifleman",
             pretty_name="Rifleman",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
@@ -176,7 +164,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=1,
             name="Assault",
             pretty_name="Assault",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -189,7 +177,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=2,
             name="AutomaticRifleman",
             pretty_name="Automatic Rifleman",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -202,7 +190,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=3,
             name="Medic",
             pretty_name="Medic",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -215,7 +203,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=4,
             name="Spotter",
             pretty_name="Spotter",
-            type=HLLRoleType.RECON,
+            type=RoleType.RECON,
             is_squad_leader=True,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -228,7 +216,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=5,
             name="Support",
             pretty_name="Support",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -241,7 +229,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=6,
             name="HeavyMachineGunner",
             pretty_name="Machine Gunner",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -254,7 +242,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=7,
             name="AntiTank",
             pretty_name="Anti-Tank",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -267,7 +255,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=8,
             name="Engineer",
             pretty_name="Engineer",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -280,7 +268,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=9,
             name="Officer",
             pretty_name="Officer",
-            type=HLLRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -293,7 +281,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=10,
             name="Sniper",
             pretty_name="Sniper",
-            type=HLLRoleType.RECON,
+            type=RoleType.RECON,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -306,7 +294,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=11,
             name="Crewman",
             pretty_name="Crewman",
-            type=HLLRoleType.ARMOR,
+            type=RoleType.ARMOR,
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
@@ -319,7 +307,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=12,
             name="TankCommander",
             pretty_name="Tank Commander",
-            type=HLLRoleType.ARMOR,
+            type=RoleType.ARMOR,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -332,7 +320,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=13,
             name="ArmyCommander",
             pretty_name="Commander",
-            type=HLLRoleType.COMMANDER,
+            type=RoleType.COMMANDER,
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,
@@ -350,7 +338,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=14,
             name="ArtilleryObserver",
             pretty_name="Artillery Observer",
-            type=HLLRoleType.ARTILLERY,
+            type=RoleType.ARTILLERY,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -363,7 +351,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=15,
             name="Operator",
             pretty_name="Operator",
-            type=HLLRoleType.ARTILLERY,
+            type=RoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -376,7 +364,7 @@ class HLLRole(_Role[HLLRoleType]):
             id=16,
             name="Gunner",
             pretty_name="Gunner",
-            type=HLLRoleType.ARTILLERY,
+            type=RoleType.ARTILLERY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -392,7 +380,7 @@ class HLLVRoleProgression(BaseModel, frozen=True):
     utility_slots: int
 
 
-class HLLVRole(_Role[HLLVRoleType]):
+class HLLVRole(_Role):
     progression: list[HLLVRoleProgression]
 
     if TYPE_CHECKING:
@@ -545,7 +533,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=0,
             name="Rifleman",
             pretty_name="Rifleman",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
@@ -642,7 +630,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=3,
             name="Medic",
             pretty_name="Medic",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -739,7 +727,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=4,
             name="Spotter",
             pretty_name="Spotter",
-            type=HLLVRoleType.RECON,
+            type=RoleType.RECON,
             is_squad_leader=True,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -836,7 +824,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=5,
             name="Specialist",
             pretty_name="Specialist",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -933,7 +921,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=6,
             name="HeavyMachineGunner",
             pretty_name="Machine Gunner",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1030,7 +1018,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=7,
             name="Grenadier",
             pretty_name="Grenadier",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1127,7 +1115,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=8,
             name="Engineer",
             pretty_name="Engineer",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1224,7 +1212,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=9,
             name="SquadLeader",
             pretty_name="Squad Leader",
-            type=HLLVRoleType.INFANTRY,
+            type=RoleType.INFANTRY,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1321,7 +1309,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=10,
             name="Sniper",
             pretty_name="Sniper",
-            type=HLLVRoleType.RECON,
+            type=RoleType.RECON,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -1418,7 +1406,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=11,
             name="Crewman",
             pretty_name="Crewman",
-            type=HLLVRoleType.ARMOR,
+            type=RoleType.ARMOR,
             is_squad_leader=False,
             kill_combat_score=3,
             assist_combat_score=2,
@@ -1515,7 +1503,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=12,
             name="TankCommander",
             pretty_name="Tank Commander",
-            type=HLLVRoleType.ARMOR,
+            type=RoleType.ARMOR,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1612,7 +1600,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=13,
             name="MortarSupport",
             pretty_name="Support",
-            type=HLLVRoleType.MORTAR,
+            type=RoleType.MORTAR,
             is_squad_leader=False,
             kill_combat_score=12,  # TODO: Update
             assist_combat_score=8,
@@ -1709,7 +1697,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=14,
             name="MortarObserver",
             pretty_name="Observer",
-            type=HLLVRoleType.MORTAR,
+            type=RoleType.MORTAR,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1806,7 +1794,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=15,
             name="MortarGunner",
             pretty_name="Gunner",
-            type=HLLVRoleType.MORTAR,
+            type=RoleType.MORTAR,
             is_squad_leader=False,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -1903,7 +1891,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=16,
             name="HelicopterPilot",
             pretty_name="Pilot",
-            type=HLLVRoleType.HELICOPTER,
+            type=RoleType.HELICOPTER,
             is_squad_leader=False,
             kill_combat_score=6,
             assist_combat_score=4,
@@ -2000,7 +1988,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=17,
             name="HelicopterLogisticsOfficer",
             pretty_name="Logistics Officer",
-            type=HLLVRoleType.HELICOPTER,
+            type=RoleType.HELICOPTER,
             is_squad_leader=True,
             kill_combat_score=9,
             assist_combat_score=6,
@@ -2097,7 +2085,7 @@ class HLLVRole(_Role[HLLVRoleType]):
             id=20,
             name="ArmyCommander",
             pretty_name="Commander",
-            type=HLLVRoleType.COMMANDER,
+            type=RoleType.COMMANDER,
             is_squad_leader=True,
             kill_combat_score=12,
             assist_combat_score=8,

@@ -19,7 +19,7 @@ from .loadouts import (
     HLLVLoadoutItem,
 )
 from .maps import AnyMap, CardinalDirection, HLLMap, HLLVMap, Orientation
-from .roles import AnyRole, AnyRoleType, HLLRole, HLLRoleType, HLLVRole, HLLVRoleType
+from .roles import AnyRole, HLLRole, HLLVRole, RoleType
 from .sectors import (
     CaptureZone,
     Grid,
@@ -50,7 +50,6 @@ __all__ = (
     "AnyLayer",
     "AnyMap",
     "AnyRole",
-    "AnyRoleType",
     "AnyTeam",
     "AnyVehicle",
     "AnyVehicleSeat",
@@ -67,7 +66,6 @@ __all__ = (
     "HLLLoadoutItem",
     "HLLMap",
     "HLLRole",
-    "HLLRoleType",
     "HLLTeam",
     "HLLVFaction",
     "HLLVGameMode",
@@ -75,7 +73,6 @@ __all__ = (
     "HLLVLoadoutItem",
     "HLLVMap",
     "HLLVRole",
-    "HLLVRoleType",
     "HLLVTeam",
     "HLLVVehicle",
     "HLLVVehicleSeat",
@@ -84,6 +81,7 @@ __all__ = (
     "HLLVehicleSeat",
     "HLLWeapon",
     "Orientation",
+    "RoleType",
     "Sector",
     "Strongpoint",
     "TimeOfDay",
