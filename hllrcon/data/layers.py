@@ -21,6 +21,8 @@ from hllrcon.data.sectors import (
     SECTORS_HILL400_LARGE,
     SECTORS_HILL400_SMALL,
     SECTORS_HURTGENFOREST_LARGE,
+    SECTORS_JUNOBEACH_LARGE,
+    SECTORS_JUNOBEACH_SMALL,
     SECTORS_KHARKOV_LARGE,
     SECTORS_KURSK_LARGE,
     SECTORS_MORTAIN_LARGE,
@@ -1069,6 +1071,167 @@ class Layer(CaseInsensitiveIndexedBaseModel):
             weather=Weather.CLEAR,
             grid=Grid.small(),
             sectors=SECTORS_HILL400_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_WARFARE_DAY(cls) -> "Layer":
+        return cls(
+            id="junobeach_warfare_day",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_WARFARE_DAWN(cls) -> "Layer":
+        return cls(
+            id="junobeach_warfare_morning",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_WARFARE_NIGHT(cls) -> "Layer":
+        return cls(
+            id="junobeach_warfare_night",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.WARFARE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_OFFENSIVE_GER_DAY(cls) -> "Layer":
+        return cls(
+            id="junobeach_offensiveger_day",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_OFFENSIVE_GER_DAWN(cls) -> "Layer":
+        return cls(
+            id="junobeach_offensiveger_morning",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_OFFENSIVE_GER_NIGHT(cls) -> "Layer":
+        return cls(
+            id="junobeach_offensiveger_night",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+            attacking_team=Team.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_OFFENSIVE_CAN_DAY(cls) -> "Layer":
+        return cls(
+            id="junobeach_offensivecan_day",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_OFFENSIVE_CAN_DAWN(cls) -> "Layer":
+        return cls(
+            id="junobeach_offensivecan_morning",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_OFFENSIVE_CAN_NIGHT(cls) -> "Layer":
+        return cls(
+            id="junobeach_offensivecan_night",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_LARGE,
+            attacking_team=Team.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_SKIRMISH_DAY(cls) -> "Layer":
+        return cls(
+            id="junobeach_skirmish_day",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_JUNOBEACH_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_SKIRMISH_DAWN(cls) -> "Layer":
+        return cls(
+            id="junobeach_skirmish_morning",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.DAWN,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_JUNOBEACH_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def JUNOBEACH_SKIRMISH_NIGHT(cls) -> "Layer":
+        return cls(
+            id="junobeach_skirmish_night",
+            map=Map.JUNO_BEACH,
+            game_mode=GameMode.SKIRMISH,
+            time_of_day=TimeOfDay.NIGHT,
+            weather=Weather.CLEAR,
+            grid=Grid.small(),
+            sectors=SECTORS_JUNOBEACH_SMALL,
         )
 
     @class_cached_property

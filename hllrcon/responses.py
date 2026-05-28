@@ -63,6 +63,7 @@ class Response(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         validate_by_name=True,
+        extra="allow",
     )
 
 
@@ -101,7 +102,8 @@ class PlayerFactionId(IntEnum):
     CW = 3
     DAK = 4
     B8A = 5
-    UNASSIGNED = 6
+    CAN = 6
+    UNASSIGNED = 7
 
 
 class PlayerRoleId(IntEnum):
@@ -267,6 +269,9 @@ class GetPlayerResponse(Response):
     platoon: Annotated[str | None, EmptyStringToNoneValidator]
     """The name of the player's squad."""
 
+    platoon_index: int
+    """The index of the player's squad. Used by ``Rcon.disband_squad``."""
+
     loadout: str
     """The player's current loadout. Might not be accurate if not spawned in."""
 
@@ -361,10 +366,37 @@ class GetServerSessionResponse(Response):
     max_queue_count: int
     vip_queue_count: int
     max_vip_queue_count: int
+    allied_faction_id: Annotated[
+        PlayerFactionId,
+        Field(validation_alias="alliedFaction"),
+    ]
+    axis_faction_id: Annotated[
+        PlayerFactionId,
+        Field(validation_alias="axisFaction"),
+    ]
+    allied_morale: int
+    axis_morale: int
+    initial_morale: int
 
     @property
     def game_mode(self) -> GameMode:
         return GameMode.by_id(self.game_mode_id)
+
+    @property
+    def allied_faction(self) -> Faction:
+        faction = Faction.by_id(self.allied_faction_id)
+        if not faction:  # pragma: no cover
+            msg = f"Unknown faction ID: {self.allied_faction_id}"
+            raise ValueError(msg)
+        return faction
+
+    @property
+    def axis_faction(self) -> Faction:
+        faction = Faction.by_id(self.axis_faction_id)
+        if not faction:  # pragma: no cover
+            msg = f"Unknown faction ID: {self.axis_faction_id}"
+            raise ValueError(msg)
+        return faction
 
     def find_layer(self, *, strict: bool = True) -> Layer:
         """Attempt to find the layer associated with this map rotation entry.

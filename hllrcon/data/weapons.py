@@ -301,7 +301,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Stuart M5A1",
             name="Roadkill",
             vehicle_id="Stuart M5A1",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.ROADKILL,
         )
 
@@ -313,7 +313,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Sherman M4A3(75)W",
             name="Roadkill",
             vehicle_id="Sherman M4A3(75)W",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.ROADKILL,
         )
 
@@ -385,7 +385,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Jeep Willys",
             name="Roadkill",
             vehicle_id="Jeep Willys",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CW, Faction.B8A},
             type=WeaponType.ROADKILL,
         )
 
@@ -433,7 +433,7 @@ class Weapon(IndexedBaseModel[str]):
             id="37MM CANNON [Stuart M5A1]",
             name="37mm Cannon",
             vehicle_id="Stuart M5A1",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -445,7 +445,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL M1919 [Stuart M5A1]",
             name="M1919 Browning",
             vehicle_id="Stuart M5A1",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -457,7 +457,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL M1919 [Stuart M5A1]",
             name="M1919 Browning",
             vehicle_id="Stuart M5A1",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -469,7 +469,7 @@ class Weapon(IndexedBaseModel[str]):
             id="75MM CANNON [Sherman M4A3(75)W]",
             name="75mm Cannon",
             vehicle_id="Sherman M4A3(75)W",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -481,7 +481,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL M1919 [Sherman M4A3(75)W]",
             name="M1919 Browning",
             vehicle_id="Sherman M4A3(75)W",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -493,7 +493,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL M1919 [Sherman M4A3(75)W]",
             name="M1919 Browning",
             vehicle_id="Sherman M4A3(75)W",
-            factions={Faction.US},
+            factions={Faction.US, Faction.CAN},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -1988,7 +1988,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="SMLE No.1 Mk III",
             name="SMLE Mk III",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.BOLT_ACTION_RIFLE,
         )
 
@@ -1999,7 +1999,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Rifle No.4 Mk I",
             name="No.4 Rifle Mk I",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.BOLT_ACTION_RIFLE,
         )
 
@@ -2010,7 +2010,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Sten Gun Mk.II",
             name="Sten Mk II",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.SUBMACHINE_GUN,
         )
 
@@ -2044,12 +2044,23 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def LANCHESTER(cls) -> "Weapon":
+        """*Lanchester*"""
+        return cls(
+            id="Lanchester",
+            name="Lanchester",
+            factions={Faction.CAN},
+            type=WeaponType.SUBMACHINE_GUN,
+        )
+
+    @class_cached_property
+    @classmethod
     def BREN_GUN(cls) -> "Weapon":
         """*Bren Gun*"""
         return cls(
             id="Bren Gun",
             name="Bren Gun",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.ASSAULT_RIFLE,
         )
 
@@ -2071,7 +2082,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="FLAMETHROWER",
             name="Lifebuoy Flamethrower",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.FLAMETHROWER,
         )
 
@@ -2082,7 +2093,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Rifle No.4 Mk I Sniper",
             name="No.4 Rifle Mk I",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=8,
         )
@@ -2100,12 +2111,34 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def ENFIELD_NO_2_MK_I(cls) -> "Weapon":
+        """*Enfield No.2 Mk I*"""
+        return cls(
+            id="Enfield No.2 Mk I",
+            name="Enfield No.2 Mk I",
+            factions={Faction.CAN},
+            type=WeaponType.REVOLVER,
+        )
+
+    @class_cached_property
+    @classmethod
+    def FN_INGLIS_NO_2_MK_I(cls) -> "Weapon":
+        """*FN-Inglis No.2 MK I*"""
+        return cls(
+            id="FN-Inglis No.2 MK I",
+            name="Inglis Hi-Power",
+            factions={Faction.CAN},
+            type=WeaponType.PISTOL,
+        )
+
+    @class_cached_property
+    @classmethod
     def FAIRBAIRN_SYKES(cls) -> "Weapon":
         """*Fairbairn–Sykes*"""  # noqa: RUF002
         return cls(
             id="Fairbairn–Sykes",  # noqa: RUF001
             name="Fairbairn-Sykes",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.MELEE,
         )
 
@@ -2116,7 +2149,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Satchel",
             name="Satchel Charge",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.SATCHEL,
         )
 
@@ -2127,7 +2160,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="Mills Bomb",
             name="Mills Bomb",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.GRENADE,
         )
 
@@ -2138,7 +2171,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="No.82 Grenade",
             name="Gammon Bomb",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.GRENADE,
         )
 
@@ -2149,7 +2182,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="PIAT",
             name="PIAT",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.ROCKET_LAUNCHER,
         )
 
@@ -2171,7 +2204,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="A.P. Shrapnel Mine Mk II",
             name="AP Shrapnel Mine Mk II",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.AP_MINE,
         )
 
@@ -2182,7 +2215,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="A.T. Mine G.S. Mk V",
             name="AT Mine G.S. Mk V",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.AT_MINE,
         )
 
@@ -2193,7 +2226,7 @@ class Weapon(IndexedBaseModel[str]):
         return cls(
             id="No.2 Mk 5 Flare Pistol",
             name="No.2 Mk V Flare Gun",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.FLARE_GUN,
         )
 
@@ -2205,7 +2238,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 6-POUNDER [QF 6-Pounder]",
             name="57mm Cannon",
             vehicle_id="QF 6-Pounder",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.AT_GUN,
         )
 
@@ -2217,7 +2250,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 25-POUNDER [QF 25-Pounder]",
             name="88mm Howitzer",
             vehicle_id="QF 25-Pounder",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.ARTILLERY,
         )
 
@@ -2229,7 +2262,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Daimler",
             name="Roadkill",
             vehicle_id="Daimler",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.ROADKILL,
         )
 
@@ -2289,7 +2322,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Firefly",
             name="Roadkill",
             vehicle_id="Firefly",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.ROADKILL,
         )
 
@@ -2341,7 +2374,53 @@ class Weapon(IndexedBaseModel[str]):
             type=WeaponType.ROADKILL,
         )
 
-    # Churchill A.V.R.E. (currently uses same name as Sherman SPA; bug)
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__60L_SUPPLY(cls) -> "Weapon":
+        """*60L (Supply)*"""
+        return cls(
+            id="60L (Supply)",
+            name="Roadkill",
+            vehicle_id="60L (Supply)",
+            factions={Faction.CAN},
+            type=WeaponType.ROADKILL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__60L_TRANSPORT(cls) -> "Weapon":
+        """*60L (Transport)*"""
+        return cls(
+            id="60L (Transport)",
+            name="Roadkill",
+            vehicle_id="60L (Transport)",
+            factions={Faction.CAN},
+            type=WeaponType.ROADKILL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__HALF_TRACK(cls) -> "Weapon":
+        """*Half-track*"""
+        return cls(
+            id="Half-track",
+            name="Roadkill",
+            vehicle_id="Half-track",
+            factions={Faction.CAN},
+            type=WeaponType.ROADKILL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__JEEP(cls) -> "Weapon":
+        """*Jeep*"""
+        return cls(
+            id="Jeep",
+            name="Roadkill",
+            vehicle_id="Jeep",
+            factions={Faction.CAN},
+            type=WeaponType.ROADKILL,
+        )
 
     @class_cached_property
     @classmethod
@@ -2351,7 +2430,7 @@ class Weapon(IndexedBaseModel[str]):
             id="Churchill Mk III A.V.R.E.",
             name="Roadkill",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.ROADKILL,
         )
 
@@ -2379,7 +2458,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 2-POUNDER [Daimler]",
             name="QF 2-Pounder",
             vehicle_id="Daimler",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2391,7 +2470,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA [Daimler]",
             name="BESA",
             vehicle_id="Daimler",
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2523,7 +2602,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 17-POUNDER [Firefly]",
             name="QF 17-Pounder",
             vehicle_id="Firefly",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2535,7 +2614,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL M1919 [Firefly]",
             name="M1919 Browning",
             vehicle_id="Firefly",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2615,13 +2694,25 @@ class Weapon(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def V_M2_BROWNING__HALF_TRACK(cls) -> "Weapon":
+        """*M2 Browning [Half-track]*"""
+        return cls(
+            id="M2 Browning [Half-track]",
+            name="M2 Browning",
+            vehicle_id="Half-track",
+            factions={Faction.CAN},
+            type=WeaponType.MOUNTED_MG,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_230MM_PETARD__CHURCHILL_MK_III_AVRE(cls) -> "Weapon":
         """*230MM PETARD [Churchill Mk III A.V.R.E.]*"""
         return cls(
             id="230MM PETARD [Churchill Mk III A.V.R.E.]",
             name="230mm Petard",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2633,7 +2724,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA 7.92mm [Churchill Mk III A.V.R.E.]",
             name="BESA",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2645,7 +2736,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA 7.92mm [Churchill Mk III A.V.R.E.]",
             name="BESA",
             vehicle_id="Churchill Mk III A.V.R.E.",
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_HULL_MG,
         )
 
@@ -2669,7 +2760,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 6-POUNDER",
             name="57mm Cannon",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.AT_GUN,
         )
 
@@ -2681,7 +2772,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 25-POUNDER",
             name="88mm Howitzer",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.ARTILLERY,
         )
 
@@ -2693,7 +2784,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 2-POUNDER",
             name="QF 2-Pounder",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2705,7 +2796,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 75MM",
             name="QF 75mm",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2717,8 +2808,7 @@ class Weapon(IndexedBaseModel[str]):
             id="OQF 57MM",
             name="QF 57mm",
             vehicle_id=None,
-            # CW, GER and US are only here because their SPA cannons are wrongly named
-            factions={Faction.B8A, Faction.CW, Faction.GER, Faction.US},
+            factions={Faction.B8A},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2730,7 +2820,7 @@ class Weapon(IndexedBaseModel[str]):
             id="QF 17-POUNDER",
             name="QF 17-Pounder",
             vehicle_id=None,
-            factions={Faction.CW},
+            factions={Faction.CW, Faction.CAN},
             type=WeaponType.TANK_CANNON,
         )
 
@@ -2742,7 +2832,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2754,7 +2844,7 @@ class Weapon(IndexedBaseModel[str]):
             id="COAXIAL BESA 7.92mm",
             name="BESA",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_COAXIAL_MG,
         )
 
@@ -2778,7 +2868,7 @@ class Weapon(IndexedBaseModel[str]):
             id="HULL BESA 7.92mm",
             name="7.92mm",
             vehicle_id=None,
-            factions={Faction.CW, Faction.B8A},
+            factions={Faction.CW, Faction.B8A, Faction.CAN},
             type=WeaponType.TANK_HULL_MG,
         )
 

@@ -84,6 +84,10 @@ LOADOUT_LOCATIONS = [
         faction=Faction.B8A,
         filepath=Path("HLL/Content/Blueprints/Loadouts/BritEighthLoadouts"),
     ),
+    LoadoutLocation(
+        faction=Faction.CAN,
+        filepath=Path("HLL/Content/Blueprints/Loadouts/CanadianLoadouts"),
+    ),
 ]
 
 

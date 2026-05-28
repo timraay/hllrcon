@@ -145,6 +145,21 @@ class Map(CaseInsensitiveIndexedBaseModel):
 
     @class_cached_property
     @classmethod
+    def JUNO_BEACH(cls) -> "Map":
+        return cls(
+            id="junobeach",
+            name="JUNO BEACH",
+            tag="JUN",
+            pretty_name="Juno Beach",
+            short_name="Juno",
+            allies=Faction.CAN,
+            axis=Faction.GER,
+            orientation=Orientation.VERTICAL,
+            mirror_factions=False,
+        )
+
+    @class_cached_property
+    @classmethod
     def KHARKOV(cls) -> "Map":
         return cls(
             id="kharkov",

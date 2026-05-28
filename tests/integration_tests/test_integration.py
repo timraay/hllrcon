@@ -56,7 +56,7 @@ class TestIntegratedServer:
                     ),
                 )
                 # Introduce short delay to not overload the server
-                await asyncio.sleep(0.002)
+                await asyncio.sleep(0.004)
 
         for task in tasks:
             TypeAdapter(GetCommandDetailsResponse).validate_python(task.result())
