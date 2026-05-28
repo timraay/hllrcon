@@ -85,7 +85,7 @@ __all__ = (
 )
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "1.2.1.0-beta.1128031-0"
+__version__ = "1.2.1.0"
 
 __min_server_version__ = 1128031
 """The minimum supported game server version (build revision). This is the minimum
