@@ -4900,20 +4900,46 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             id="100MM D-10T CANNON",
             name="100MM D-10T CANNON",
             vehicle_id=None,
-            factions={HLLVFaction.US, HLLVFaction.NVA},
+            factions={HLLVFaction.NVA},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
 
     @class_cached_property
     @classmethod
-    def V_100MM_D_10T_CANNON__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
-        """*100MM D-10T CANNON [Sd.Kfz.171 Panther]*"""
+    def V_100MM_D_10T_CANNON__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
+        """*100MM D-10T CANNON [Sd.Kfz.171 T54]*"""
         return cls(
-            id="100MM D-10T CANNON [Sd.Kfz.171 Panther]",
-            name="100mm D-10T",
-            vehicle_id="Sd.Kfz.171 Panther",
-            factions={HLLVFaction.US, HLLVFaction.NVA},
+            id="100MM D-10T CANNON [Sd.Kfz.171 T54]",
+            name="100MM D-10T CANNON",
+            vehicle_id="Sd.Kfz.171 T54",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.TANK_CANNON,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_90MM_M41_CANNON__UNKNOWN(cls) -> "HLLVWeapon":
+        """*90MM M41 CANNON*"""
+        return cls(
+            id="90MM M41 CANNON",
+            name="90MM M41 CANNON",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.TANK_CANNON,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_90MM_M41_CANNON__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
+        """*90MM M41 CANNON [Sd.Kfz.171 M48Patton]*"""
+        return cls(
+            id="90MM M41 CANNON [Sd.Kfz.171 M48Patton]",
+            name="90MM M41 CANNON",
+            vehicle_id="Sd.Kfz.171 M48Patton",
+            factions={HLLVFaction.US},
             type=WeaponType.TANK_CANNON,
             magnification=None,
         )
@@ -5050,6 +5076,32 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_M73__UNKNOWN(cls) -> "HLLVWeapon":
+        """*M73*"""
+        return cls(
+            id="M73",
+            name="M73",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.TANK_COAXIAL_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_M73__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
+        """*M73 [Sd.Kfz.171 M48Patton]*"""
+        return cls(
+            id="M73 [Sd.Kfz.171 M48Patton]",
+            name="M73",
+            vehicle_id="Sd.Kfz.171 M48Patton",
+            factions={HLLVFaction.US},
+            type=WeaponType.TANK_COAXIAL_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_MORTAR__UNKNOWN(cls) -> "HLLVWeapon":
         """*MORTAR*"""
         return cls(
@@ -5089,19 +5141,6 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_NONE__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
-        """*None [Sd.Kfz.171 Panther]*"""
-        return cls(
-            id="None [Sd.Kfz.171 Panther]",
-            name="Smoke Screen",
-            vehicle_id="Sd.Kfz.171 Panther",
-            factions={HLLVFaction.US, HLLVFaction.NVA},
-            type=WeaponType.TANK_SMOKE_SCREEN,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
     def V_RPD__NVA_BOAT(cls) -> "HLLVWeapon":
         """*RPD [NVA Boat]*"""
         return cls(
@@ -5121,34 +5160,73 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             id="SGMT 7.62MM",
             name="SGMT",
             vehicle_id=None,
-            factions={HLLVFaction.US, HLLVFaction.NVA},
+            factions={HLLVFaction.NVA},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
     @class_cached_property
     @classmethod
-    def V_SGMT_7_62MM__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
-        """*SGMT 7.62MM [Sd.Kfz.171 Panther]*"""
+    def V_SGMT_7_62MM__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
+        """*SGMT 7.62MM [Sd.Kfz.171 T54]*"""
         return cls(
-            id="SGMT 7.62MM [Sd.Kfz.171 Panther]",
-            name="SGMT",
-            vehicle_id="Sd.Kfz.171 Panther",
-            factions={HLLVFaction.US, HLLVFaction.NVA},
+            id="SGMT 7.62MM [Sd.Kfz.171 T54]",
+            name="SGMT 7.62MM",
+            vehicle_id="Sd.Kfz.171 T54",
+            factions={HLLVFaction.NVA},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
         )
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__SD_KFZ_171_PANTHER(cls) -> "HLLVWeapon":
-        """*Sd.Kfz.171 Panther*"""
+    def V_ROADKILL__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
+        """*Sd.Kfz.171 M48Patton*"""
         return cls(
-            id="Sd.Kfz.171 Panther",
-            name="Sd.Kfz.171 Panther",
-            vehicle_id="Sd.Kfz.171 Panther",
-            factions={HLLVFaction.US, HLLVFaction.NVA},
+            id="Sd.Kfz.171 M48Patton",
+            name="Sd.Kfz.171 M48Patton",
+            vehicle_id="Sd.Kfz.171 M48Patton",
+            factions={HLLVFaction.US},
             type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
+        """*Sd.Kfz.171 T54*"""
+        return cls(
+            id="Sd.Kfz.171 T54",
+            name="Sd.Kfz.171 T54",
+            vehicle_id="Sd.Kfz.171 T54",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_SMOKE_SCREEN__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
+        """*Smoke Screen [Sd.Kfz.171 M48Patton]*"""
+        return cls(
+            id="Smoke Screen [Sd.Kfz.171 M48Patton]",
+            name="Smoke Screen",
+            vehicle_id="Sd.Kfz.171 M48Patton",
+            factions={HLLVFaction.US},
+            type=WeaponType.TANK_SMOKE_SCREEN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_SMOKE_SCREEN__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
+        """*Smoke Screen [Sd.Kfz.171 T54]*"""
+        return cls(
+            id="Smoke Screen [Sd.Kfz.171 T54]",
+            name="Smoke Screen",
+            vehicle_id="Sd.Kfz.171 T54",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.TANK_SMOKE_SCREEN,
             magnification=None,
         )
 

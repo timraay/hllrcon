@@ -143,9 +143,6 @@ def test_map_rotation_entry_find_layer() -> None:
     )
     assert hllv_entry.game_mode == HLLVGameMode.WARFARE
 
-    hllv_entry.game_mode_name = "Control Skirmish - La Petite Chapelle"
-    assert hllv_entry.game_mode == HLLVGameMode.SKIRMISH
-
     hllv_entry.game_mode_name = "U.S. Offensive"
     assert hllv_entry.game_mode == HLLVGameMode.OFFENSIVE
 

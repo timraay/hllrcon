@@ -10,8 +10,10 @@ from typing import Annotated, ClassVar, Generic, Never, Self, TypeAlias, TypeVar
 from pydantic import computed_field, field_serializer, model_validator
 
 from hllrcon.data.sectors import (
+    SECTORS_CAMRANHPORT_LARGE,
     SECTORS_CARENTAN_LARGE,
     SECTORS_CARENTAN_SMALL,
+    SECTORS_DAKTOAIRFIELD_LARGE,
     SECTORS_DRIEL_LARGE,
     SECTORS_DRIEL_SMALL,
     SECTORS_ELALAMEIN_LARGE,
@@ -21,6 +23,7 @@ from hllrcon.data.sectors import (
     SECTORS_FOY_LARGE,
     SECTORS_HILL400_LARGE,
     SECTORS_HILL400_SMALL,
+    SECTORS_HUEOUTSKIRTS_LARGE,
     SECTORS_HURTGENFOREST_LARGE,
     SECTORS_JUNOBEACH_LARGE,
     SECTORS_JUNOBEACH_SMALL,
@@ -31,6 +34,7 @@ from hllrcon.data.sectors import (
     SECTORS_OMAHABEACH_LARGE,
     SECTORS_PURPLEHEARTLANE_LARGE,
     SECTORS_PURPLEHEARTLANE_SMALL,
+    SECTORS_QUANGNGAI_LARGE,
     SECTORS_REMAGEN_LARGE,
     SECTORS_REMAGEN_SMALL,
     SECTORS_SMOLENSK_LARGE,
@@ -45,6 +49,7 @@ from hllrcon.data.sectors import (
     SECTORS_TOBRUK_LARGE,
     SECTORS_TOBRUK_SMALL,
     SECTORS_UTAHBEACH_LARGE,
+    SECTORS_VANTUONG_LARGE,
     Grid,
     Sector,
     Strongpoint,
@@ -2503,7 +2508,6 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
         "warfare": HLLVGameMode.WARFARE,
         "offensive": HLLVGameMode.OFFENSIVE,
         "off": HLLVGameMode.OFFENSIVE,
-        "skirmish": HLLVGameMode.SKIRMISH,
         "conquest": HLLVGameMode.CONQUEST,
         "domination": HLLVGameMode.DOMINATION,
     }
@@ -2512,6 +2516,328 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
         "usa": HLLVFaction.US,
         "nva": HLLVFaction.NVA,
     }
+
+    @class_cached_property
+    @classmethod
+    def CAMRANHPORT_CONQUEST_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeve_conquest_day",
+            map=HLLVMap.CAM_RANH_PORT,
+            game_mode=HLLVGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_CAMRANHPORT_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAMRANHPORT_DOMINATION_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeve_domination_day",
+            map=HLLVMap.CAM_RANH_PORT,
+            game_mode=HLLVGameMode.DOMINATION,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_CAMRANHPORT_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAMRANHPORT_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeve_offensivenva_day",
+            map=HLLVMap.CAM_RANH_PORT,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_CAMRANHPORT_LARGE,
+            attacking_team=HLLVTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAMRANHPORT_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeve_offensiveus_day",
+            map=HLLVMap.CAM_RANH_PORT,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_CAMRANHPORT_LARGE,
+            attacking_team=HLLVTeam.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAMRANHPORT_WARFARE_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeve_warfare_day",
+            map=HLLVMap.CAM_RANH_PORT,
+            game_mode=HLLVGameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_CAMRANHPORT_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAKTOAIRFIELD_CONQUEST_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevd_conquest_day",
+            map=HLLVMap.DAK_TO_AIRFIELD,
+            game_mode=HLLVGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_DAKTOAIRFIELD_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAKTOAIRFIELD_DOMINATION_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevd_domination_day",
+            map=HLLVMap.DAK_TO_AIRFIELD,
+            game_mode=HLLVGameMode.DOMINATION,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_DAKTOAIRFIELD_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAKTOAIRFIELD_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevd_offensivenva_day",
+            map=HLLVMap.DAK_TO_AIRFIELD,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_DAKTOAIRFIELD_LARGE,
+            attacking_team=HLLVTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAKTOAIRFIELD_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevd_offensiveus_day",
+            map=HLLVMap.DAK_TO_AIRFIELD,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_DAKTOAIRFIELD_LARGE,
+            attacking_team=HLLVTeam.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAKTOAIRFIELD_WARFARE_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevd_warfare_day",
+            map=HLLVMap.DAK_TO_AIRFIELD,
+            game_mode=HLLVGameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_DAKTOAIRFIELD_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HUEOUTSKIRTS_CONQUEST_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevc_conquest_day",
+            map=HLLVMap.HUE_OUTSKIRTS,
+            game_mode=HLLVGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_HUEOUTSKIRTS_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HUEOUTSKIRTS_DOMINATION_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevc_domination_day",
+            map=HLLVMap.HUE_OUTSKIRTS,
+            game_mode=HLLVGameMode.DOMINATION,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_HUEOUTSKIRTS_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HUEOUTSKIRTS_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevc_offensivenva_day",
+            map=HLLVMap.HUE_OUTSKIRTS,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_HUEOUTSKIRTS_LARGE,
+            attacking_team=HLLVTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HUEOUTSKIRTS_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevc_offensiveus_day",
+            map=HLLVMap.HUE_OUTSKIRTS,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_HUEOUTSKIRTS_LARGE,
+            attacking_team=HLLVTeam.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HUEOUTSKIRTS_WARFARE_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevc_warfare_day",
+            map=HLLVMap.HUE_OUTSKIRTS,
+            game_mode=HLLVGameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_HUEOUTSKIRTS_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def QUANGNGAI_CONQUEST_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevb_conquest_day",
+            map=HLLVMap.QUANG_NGAI,
+            game_mode=HLLVGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_QUANGNGAI_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def QUANGNGAI_DOMINATION_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevb_domination_day",
+            map=HLLVMap.QUANG_NGAI,
+            game_mode=HLLVGameMode.DOMINATION,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_QUANGNGAI_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def QUANGNGAI_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevb_offensivenva_day",
+            map=HLLVMap.QUANG_NGAI,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_QUANGNGAI_LARGE,
+            attacking_team=HLLVTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def QUANGNGAI_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevb_offensiveus_day",
+            map=HLLVMap.QUANG_NGAI,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_QUANGNGAI_LARGE,
+            attacking_team=HLLVTeam.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def QUANGNGAI_WARFARE_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevb_warfare_day",
+            map=HLLVMap.QUANG_NGAI,
+            game_mode=HLLVGameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_QUANGNGAI_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def THANHHOABRIDGE_CONQUEST_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevf_conquest_day",
+            map=HLLVMap.THANH_HOA_BRIDGE,
+            game_mode=HLLVGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_THANHHOABRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def THANHHOABRIDGE_DOMINATION_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevf_domination_day",
+            map=HLLVMap.THANH_HOA_BRIDGE,
+            game_mode=HLLVGameMode.DOMINATION,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_THANHHOABRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def THANHHOABRIDGE_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevf_offensivenva_day",
+            map=HLLVMap.THANH_HOA_BRIDGE,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_THANHHOABRIDGE_LARGE,
+            attacking_team=HLLVTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def THANHHOABRIDGE_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdevf_offensiveus_day",
+            map=HLLVMap.THANH_HOA_BRIDGE,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_THANHHOABRIDGE_LARGE,
+            attacking_team=HLLVTeam.ALLIES,
+        )
 
     @class_cached_property
     @classmethod
@@ -2524,6 +2850,73 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
             weather=Weather.CLEAR,
             grid=Grid.large(),
             sectors=SECTORS_THANHHOABRIDGE_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def VANTUONG_CONQUEST_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeva_conquest_day",
+            map=HLLVMap.VAN_TUONG,
+            game_mode=HLLVGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_VANTUONG_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def VANTUONG_DOMINATION_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeva_domination_day",
+            map=HLLVMap.VAN_TUONG,
+            game_mode=HLLVGameMode.DOMINATION,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_VANTUONG_LARGE,
+        )
+
+    @class_cached_property
+    @classmethod
+    def VANTUONG_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeva_offensivenva_day",
+            map=HLLVMap.VAN_TUONG,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_VANTUONG_LARGE,
+            attacking_team=HLLVTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def VANTUONG_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeva_offensiveus_day",
+            map=HLLVMap.VAN_TUONG,
+            game_mode=HLLVGameMode.OFFENSIVE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_VANTUONG_LARGE,
+            attacking_team=HLLVTeam.ALLIES,
+        )
+
+    @class_cached_property
+    @classmethod
+    def VANTUONG_WARFARE_DAY(cls) -> "HLLVLayer":
+        return cls(
+            id="wdeva_warfare_day",
+            map=HLLVMap.VAN_TUONG,
+            game_mode=HLLVGameMode.WARFARE,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_VANTUONG_LARGE,
         )
 
 

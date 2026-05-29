@@ -795,8 +795,6 @@ class HLLVGetMapRotationResponseEntry(
     _LAYER_CLS = HLLVLayer
 
     def _get_game_mode(self) -> HLLVGameMode:
-        if self.game_mode_name.startswith("Control Skirmish"):
-            return HLLVGameMode.SKIRMISH
         if self.game_mode_name.endswith("Offensive"):
             return HLLVGameMode.OFFENSIVE
         return super()._get_game_mode()

@@ -44,7 +44,7 @@ class HLLArmorInventoryPropertiesDefaultInventoryItem(Model):
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponMountedHowitzer)
         elif super_class_name in {
             "Class'HLLArmourWeapon_SmokeScreen'",
-            "Class'HLLArmourWeapon_Smokescreen'",
+            "Class'WFLArmourWeapon_Smokescreen'",
         }:
             weapon = weapon_bgc.get_default_object(HLLArmorWeaponSmokeScreen)
         elif super_class_name == "Class'HLLArmourWeapon_Mortar'":

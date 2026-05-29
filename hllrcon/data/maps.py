@@ -398,6 +398,66 @@ class HLLMap(_Map[HLLFaction]):
 class HLLVMap(_Map[HLLVFaction]):
     @class_cached_property
     @classmethod
+    def CAM_RANH_PORT(cls) -> "HLLVMap":
+        return cls(
+            id="wdeve",
+            name="CAM RANH PORT",
+            tag="CAM",
+            year=1969,
+            pretty_name="Cam Ranh Port",
+            short_name="Cam Ranh",
+            allies=HLLVFaction.US,
+            axis=HLLVFaction.NVA,
+            allies_direction=CardinalDirection.LEFT_TO_RIGHT,
+        )
+
+    @class_cached_property
+    @classmethod
+    def DAK_TO_AIRFIELD(cls) -> "HLLVMap":
+        return cls(
+            id="wdevd",
+            name="ĐĂK TÔ AIRFIELD",
+            tag="DAK",
+            year=1967,
+            pretty_name="Đăk Tô Airfield",
+            short_name="Đăk Tô",
+            allies=HLLVFaction.US,
+            axis=HLLVFaction.NVA,
+            allies_direction=CardinalDirection.LEFT_TO_RIGHT,
+        )
+
+    @class_cached_property
+    @classmethod
+    def HUE_OUTSKIRTS(cls) -> "HLLVMap":
+        return cls(
+            id="wdevc",
+            name="HUẾ OUTSKIRTS",
+            tag="HUE",
+            year=1968,
+            pretty_name="Huế Outskirts",
+            short_name="Huế",
+            allies=HLLVFaction.US,
+            axis=HLLVFaction.NVA,
+            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+        )
+
+    @class_cached_property
+    @classmethod
+    def QUANG_NGAI(cls) -> "HLLVMap":
+        return cls(
+            id="wdevb",
+            name="QUẢNG NGÃI",
+            tag="QUA",
+            year=1965,
+            pretty_name="Quảng Ngãi",
+            short_name="Quảng Ngãi",
+            allies=HLLVFaction.US,
+            axis=HLLVFaction.NVA,
+            allies_direction=CardinalDirection.LEFT_TO_RIGHT,
+        )
+
+    @class_cached_property
+    @classmethod
     def THANH_HOA_BRIDGE(cls) -> "HLLVMap":
         return cls(
             id="wdevf",
@@ -409,6 +469,21 @@ class HLLVMap(_Map[HLLVFaction]):
             allies=HLLVFaction.US,
             axis=HLLVFaction.NVA,
             allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+        )
+
+    @class_cached_property
+    @classmethod
+    def VAN_TUONG(cls) -> "HLLVMap":
+        return cls(
+            id="wdeva",
+            name="VẠN TƯỜNG",
+            tag="VAN",
+            year=1965,
+            pretty_name="Vạn Tường",
+            short_name="Vạn Tường",
+            allies=HLLVFaction.US,
+            axis=HLLVFaction.NVA,
+            allies_direction=CardinalDirection.RIGHT_TO_LEFT,
         )
 
 

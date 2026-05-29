@@ -2494,6 +2494,426 @@ SECTORS_UTAHBEACH_LARGE = Sector.large_layout(
     ),
 )
 
+SECTORS_CAMRANHPORT_LARGE = Sector.large_layout(  # TODO: Add strongpoints
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-80000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-80000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-80000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-0.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-0.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-0.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(80000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(80000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(80000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+    ),
+)
+SECTORS_DAKTOAIRFIELD_LARGE = Sector.large_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="ROUTE TO ARVN BASE",
+                name="",
+                center=(-68043.22, -39128.582, 1392.4828),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="US RADIO RELAY",
+                name="",
+                center=(-70020.0, -1705.0, 1026.4702),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="FORTIFIED BRIDGE",
+                name="",
+                center=(-71775.0, 32670.0, -173.39989),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="AIRBORNE CAMP",
+                name="",
+                center=(-40310.0, -43110.0, 1803.5828),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="MED EVAC STATION",
+                name="",
+                center=(-39905.0, -3540.0, 503.11826),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="DESERTED FARMLAND",
+                name="",
+                center=(-38830.0, 38805.0, 21.162066),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="SHOOTING RANGE",
+                name="",
+                center=(-100.0, -44230.0, 377.497),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="SPECIAL FORCES CAMP",
+                name="",
+                center=(335.0, -1875.0, 298.74045),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="PATROL BOAT DOCKS",
+                name="",
+                center=(945.0, 32910.0, -244.6939),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="C130 WRECKAGE",
+                name="",
+                center=(41746.785, -30439.621, 854.2748),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="AMMO DUMP",
+                name="",
+                center=(41205.0, -2090.0, -129.77422),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="RIVER LOOKOUT",
+                name="",
+                center=(40025.0, 34350.0, -682.5037),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="TERMINAL",
+                name="",
+                center=(69745.0, -29805.0, 1177.6472),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="ABANDONED DWELLING",
+                name="",
+                center=(70690.0, -735.0, 145.62274),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="NVA BOAT LANDING",
+                name="",
+                center=(67865.0, 33595.0, -237.5059),
+                radius=5500.0,
+            ),
+        ),
+    ),
+)
+SECTORS_HUEOUTSKIRTS_LARGE = Sector.large_layout(  # TODO: Add strongpoints
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, -80000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(0.0, -80000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, -80000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(0.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(0.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(0.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 80000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(0.0, 80000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 80000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+    ),
+)
+SECTORS_QUANGNGAI_LARGE = Sector.large_layout(  # TODO: Add strongpoints
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-80000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-80000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-80000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(-0.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-0.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(-0.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(40000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="",
+                name="",
+                center=(80000.0, -40000.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(80000.0, 0.0, 0.0),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="",
+                name="",
+                center=(80000.0, 40000.0, 0.0),
+                radius=5000.0,
+            ),
+        ),
+    ),
+)
 SECTORS_THANHHOABRIDGE_LARGE = Sector.large_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
@@ -2595,6 +3015,111 @@ SECTORS_THANHHOABRIDGE_LARGE = Sector.large_layout(
                 name="Hoang Long LZ",
                 center=(40538.805, 66755.37, 815.4627),
                 radius=6500.0,
+            ),
+        ),
+    ),
+)
+SECTORS_VANTUONG_LARGE = Sector.large_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="AN CUỜNG (2)",
+                name="",
+                center=(-72004.0, -45785.0, -259.04706),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="RIVER CHECKPOINT",
+                name="",
+                center=(-69240.0, -1535.0, 99.999756),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="JUNGLE OUTPOST",
+                name="",
+                center=(-70425.0, 37510.0, 99.999756),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="AN CƯỜNG OUTSKIRTS",
+                name="",
+                center=(-40000.0, -43460.0, -427.51587),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="PHASE LINE APPLE",
+                name="",
+                center=(-40042.0, 235.0, -372.57834),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="LZ BLUE PERIMETER",
+                name="",
+                center=(-40000.0, 35155.0, 99.999756),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="LAGOON OVERLOOK",
+                name="",
+                center=(0.0, -35565.0, 99.999756),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="FORTIFIED AN CƯỜNG",
+                name="",
+                center=(0.0, 520.0, -255.00024),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="NVA RELAY STATION",
+                name="",
+                center=(-2335.0, 38855.0, 686.1443),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="AN CƯỜNG (1)",
+                name="",
+                center=(41925.0, -41560.0, -830.344),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="ROUTE TO NAM YÊN",
+                name="",
+                center=(39190.0, 1275.0, -1227.0782),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="JUNGLE CLEARING CAMP",
+                name="",
+                center=(31645.0, 33800.0, -435.59326),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="RIVERSIDE VILLAGE",
+                name="",
+                center=(70575.0, -43615.0, -1487.6879),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="CẦU BÀU CHIẾU",
+                name="",
+                center=(69735.0, 1920.0, -1279.5627),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="RIVER'S END",
+                name="",
+                center=(70350.0, 40950.0, -501.7067),
+                radius=6000.0,
             ),
         ),
     ),

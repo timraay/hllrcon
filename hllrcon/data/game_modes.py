@@ -67,10 +67,5 @@ class HLLVGameMode(_GameMode):
     def DOMINATION(cls) -> "HLLVGameMode":
         return cls(id="domination", scale=GameModeScale.LARGE)
 
-    @class_cached_property
-    @classmethod
-    def SKIRMISH(cls) -> "HLLVGameMode":
-        return cls(id="skirmish", scale=GameModeScale.SMALL)
-
 
 AnyGameMode: TypeAlias = HLLGameMode | HLLVGameMode
