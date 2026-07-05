@@ -2123,9 +2123,9 @@ class Weapon(IndexedBaseModel[str]):
     @class_cached_property
     @classmethod
     def FN_INGLIS_NO_2_MK_I(cls) -> "Weapon":
-        """*FN-Inglis No.2 MK I*"""
+        """*FN-Inglis No.2 Mk I*"""
         return cls(
-            id="FN-Inglis No.2 MK I",
+            id="FN-Inglis No.2 Mk I",
             name="Inglis Hi-Power",
             factions={Faction.CAN},
             type=WeaponType.PISTOL,
