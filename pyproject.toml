@@ -96,6 +96,10 @@ omit = [
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
 
+[tool.pytest_env]
+env_files = [".env"]
+HLLRCON_STRICT = "1"
+
 [dependency-groups]
 dev = [
     "aiofiles>=24.1.0",
@@ -103,6 +107,7 @@ dev = [
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.1.1",
+    "pytest-env>=1.6.0",
     "pytest-mock>=3.14.1",
     "python-dotenv>=1.1.1",
     "ruff>=0.12.0",
