@@ -4801,7 +4801,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="Sten Gun Mk.II", amount=5),
-                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 Mk I", amount=4),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Watch", amount=1),
@@ -4840,7 +4840,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 Mk I", amount=4),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
@@ -4897,8 +4897,8 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=3,
             items=[
                 LoadoutItem(name="Rifle No.4 Mk I", amount=6),
-                LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Mills Bomb", amount=4),
+                LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
@@ -5057,7 +5057,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             role=Role.MEDIC,
             requires_level=3,
             items=[
-                LoadoutItem(name="FN-Inglis No.2 MK I", amount=21),
+                LoadoutItem(name="FN-Inglis No.2 Mk I", amount=21),
                 LoadoutItem(name="No.77", amount=6),
                 LoadoutItem(name="Morphine", amount=20),
                 LoadoutItem(name="Bandage", amount=20),
@@ -5113,7 +5113,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=8,
             items=[
                 LoadoutItem(name="FLAMETHROWER", amount=1),
-                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 Mk I", amount=4),
                 LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Bandage", amount=2),
@@ -5132,7 +5132,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="Bren Gun", amount=14),
-                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 Mk I", amount=4),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
@@ -5243,12 +5243,12 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=6,
             items=[
                 LoadoutItem(name="Sten Gun Mk.II", amount=5),
-                LoadoutItem(name="Mills Bomb", amount=2),
-                LoadoutItem(name="No.77", amount=2),
+                LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Wrench", amount=1),
                 LoadoutItem(name="Hammer", amount=1),
+                LoadoutItem(name="No.82 Grenade", amount=2),
+                LoadoutItem(name="No.77", amount=2),
                 LoadoutItem(name="Torch", amount=1),
-                LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
@@ -5397,7 +5397,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
                 LoadoutItem(name="Hammer", amount=1),
                 LoadoutItem(name="Torch", amount=1),
                 LoadoutItem(name="A.P. Shrapnel Mine Mk II", amount=1),
-                LoadoutItem(name="Ordnance QF 6-pounder", amount=1),
+                LoadoutItem(name="A.T. Mine G.S. Mk V", amount=1),
                 LoadoutItem(name="Fairbairn–Sykes", amount=1),
             ],
         )
@@ -5509,7 +5509,7 @@ class Loadout(IndexedBaseModel[LoadoutId]):
             requires_level=1,
             items=[
                 LoadoutItem(name="Rifle No.4 Mk I Sniper", amount=6),
-                LoadoutItem(name="FN-Inglis No.2 MK I", amount=4),
+                LoadoutItem(name="FN-Inglis No.2 Mk I", amount=4),
                 LoadoutItem(name="Mills Bomb", amount=2),
                 LoadoutItem(name="Bandage", amount=2),
                 LoadoutItem(name="Hammer", amount=1),

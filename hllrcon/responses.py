@@ -1,3 +1,4 @@
+import os
 from datetime import datetime, timedelta
 from enum import IntEnum, StrEnum
 from typing import Annotated, Literal, NamedTuple
@@ -63,7 +64,7 @@ class Response(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         validate_by_name=True,
-        extra="allow",
+        extra="forbid" if os.getenv("HLLRCON_STRICT") == "1" else "allow",
     )
 
 
