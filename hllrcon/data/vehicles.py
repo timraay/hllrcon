@@ -2920,7 +2920,7 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
         """*Sd.Kfz.171 M48Patton*"""
         return cls(
             id="Sd.Kfz.171 M48Patton",
-            name="Sd.Kfz.171 M48Patton",
+            name="M48 Patton",
             factions={HLLVFaction.US},
             type=VehicleType.MEDIUM_TANK,
             seats=[
@@ -2959,7 +2959,7 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
         """*Sd.Kfz.171 T54*"""
         return cls(
             id="Sd.Kfz.171 T54",
-            name="Sd.Kfz.171 T54",
+            name="T-54",
             factions={HLLVFaction.NVA},
             type=VehicleType.MEDIUM_TANK,
             seats=[

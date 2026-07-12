@@ -1572,8 +1572,12 @@ HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
         "name": "GAZ-63",
         "exposed": True,
     },
-    "Sd.Kfz.171 Panther": {
-        "name": "M48 Patton / T-54",
+    "Sd.Kfz.171 T54": {
+        "name": "T-54",
+        "exposed": False,
+    },
+    "Sd.Kfz.171 M48Patton": {
+        "name": "M48 Patton",
         "exposed": False,
     },
     "NVA Boat": {

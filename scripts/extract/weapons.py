@@ -704,7 +704,7 @@ HLL_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "Enfield No.2 Mk I",
         "type": WeaponType.REVOLVER,
     },
-    "FN-Inglis No.2 MK I": {
+    "FN-Inglis No.2 Mk I": {
         "name": "Inglis Hi-Power",
         "type": WeaponType.PISTOL,
     },
@@ -1293,13 +1293,22 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "RPD [NVA Boat]": {
         "name": "RPD",
     },
-    "100MM D-10T CANNON [Sd.Kfz.171 Panther]": {
+    "100MM D-10T CANNON [Sd.Kfz.171 T54]": {
         "name": "100mm D-10T",
     },
-    "SGMT 7.62MM [Sd.Kfz.171 Panther]": {
+    "SGMT 7.62MM [Sd.Kfz.171 T54]": {
         "name": "SGMT",
     },
-    "None [Sd.Kfz.171 Panther]": {
+    "Smoke Screen [Sd.Kfz.171 T54]": {
+        "name": "Smoke Screen",
+    },
+    "90MM M41 CANNON [Sd.Kfz.171 M48Patton]": {
+        "name": "90mm M41",
+    },
+    "M73 [Sd.Kfz.171 M48Patton]": {
+        "name": "M73",
+    },
+    "Smoke Screen [Sd.Kfz.171 M48Patton]": {
         "name": "Smoke Screen",
     },
     "M2 Browning [US Boat]": {
@@ -1322,11 +1331,18 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "M35 (Supply)": {},
     "M35 (Transport)": {},
     "NVA Boat": {},
-    "Sd.Kfz.171 Panther": {},
-    "100MM D-10T CANNON": {},
+    "Sd.Kfz.171 T54": {},
+    "Sd.Kfz.171 M48Patton": {},
+    "100MM D-10T CANNON": {
+        "name": "100mm D-10T",
+    },
     "SGMT 7.62MM": {
         "name": "SGMT",
     },
+    "90MM M41 CANNON": {
+        "name": "90mm M41",
+    },
+    "M73": {},
     "US Boat": {},
     "US Supply Helicopter": {},
     "US Transport Helicopter": {},

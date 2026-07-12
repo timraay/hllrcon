@@ -4,8 +4,8 @@ from hllrcon import (
     AnyRcon,
     HLLLayer,
     HLLVLayer,
-    __min_server_version__,
 )
+from hllrcon.rcon import HLLRcon, HLLVRcon
 
 from tests.integration_tests.conftest import HLL_GAME
 
@@ -17,7 +17,12 @@ class TestIntegratedServer:
         self,
         server_config: AnyGetServerConfigResponse,
     ) -> None:
-        assert server_config.build_revision >= __min_server_version__
+        min_server_version = (
+            HLLRcon.__min_server_version__
+            if HLL_GAME == "hll"
+            else HLLVRcon.__min_server_version__
+        )
+        assert server_config.build_revision >= min_server_version
 
     async def test_data_layers_all_exist(self, rcon: AnyRcon) -> None:
         live_layer_ids = set(await rcon.get_available_maps())
