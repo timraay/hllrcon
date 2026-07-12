@@ -1,6 +1,6 @@
 [project]
 name = "hllrcon"
-version = "1.2.1.0-beta.1128031-0" # Don't forget to also bump `hllrcon.__version__`
+version = "1.2.1.1" # Don't forget to also bump `hllrcon.__version__`
 description = "Asynchronous implementation of the Hell Let Loose RCON protocol"
 readme = "README.md"
 authors = [
@@ -100,6 +100,10 @@ omit = [
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "function"
 
+[tool.pytest_env]
+env_files = [".env"]
+HLLRCON_STRICT = "1"
+
 [dependency-groups]
 dev = [
     "aiofiles>=24.1.0",
@@ -107,6 +111,7 @@ dev = [
     "pytest>=8.3.5",
     "pytest-asyncio>=1.0.0",
     "pytest-cov>=6.1.1",
+    "pytest-env>=1.6.0",
     "pytest-mock>=3.14.1",
     "python-dotenv>=1.1.1",
     "ruff>=0.12.0",

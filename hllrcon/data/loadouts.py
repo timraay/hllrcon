@@ -9750,12 +9750,12 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=6,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.NO_77,
-                    ammo=2,
-                ),
-                HLLLoadoutItem(
                     weapon=HLLWeapon.MILLS_BOMB,
                     ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.NO_77,
+                    ammo=2,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -10542,11 +10542,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=5,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.MILLS_BOMB,
-                    ammo=2,
-                ),
-                HLLLoadoutItem(
-                    weapon=HLLWeapon.NO_77,
+                    weapon=HLLWeapon.BANDAGE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -10558,12 +10554,16 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=1,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.TORCH,
-                    ammo=1,
+                    weapon=HLLWeapon.NO_82_GRENADE,
+                    ammo=2,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.BANDAGE,
+                    weapon=HLLWeapon.NO_77,
                     ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.FAIRBAIRN_SYKES,
@@ -11150,7 +11150,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=1,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.ORDNANCE_QF_6_POUNDER,
+                    weapon=HLLWeapon.AT_MINE_GS_MK_V,
                     ammo=1,
                 ),
                 HLLLoadoutItem(

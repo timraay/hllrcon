@@ -441,9 +441,9 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
     @class_cached_property
     @classmethod
     def FN_INGLIS_NO_2_MK_I(cls) -> "HLLWeapon":
-        """*FN-Inglis No.2 MK I*"""
+        """*FN-Inglis No.2 Mk I*"""
         return cls(
-            id="FN-Inglis No.2 MK I",
+            id="FN-Inglis No.2 Mk I",
             name="Inglis Hi-Power",
             vehicle_id=None,
             factions={HLLFaction.CAN},
@@ -4898,7 +4898,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         """*100MM D-10T CANNON*"""
         return cls(
             id="100MM D-10T CANNON",
-            name="100MM D-10T CANNON",
+            name="100mm D-10T",
             vehicle_id=None,
             factions={HLLVFaction.NVA},
             type=WeaponType.TANK_CANNON,
@@ -4911,7 +4911,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         """*100MM D-10T CANNON [Sd.Kfz.171 T54]*"""
         return cls(
             id="100MM D-10T CANNON [Sd.Kfz.171 T54]",
-            name="100MM D-10T CANNON",
+            name="100mm D-10T",
             vehicle_id="Sd.Kfz.171 T54",
             factions={HLLVFaction.NVA},
             type=WeaponType.TANK_CANNON,
@@ -4924,7 +4924,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         """*90MM M41 CANNON*"""
         return cls(
             id="90MM M41 CANNON",
-            name="90MM M41 CANNON",
+            name="90mm M41",
             vehicle_id=None,
             factions={HLLVFaction.US},
             type=WeaponType.TANK_CANNON,
@@ -4937,7 +4937,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         """*90MM M41 CANNON [Sd.Kfz.171 M48Patton]*"""
         return cls(
             id="90MM M41 CANNON [Sd.Kfz.171 M48Patton]",
-            name="90MM M41 CANNON",
+            name="90mm M41",
             vehicle_id="Sd.Kfz.171 M48Patton",
             factions={HLLVFaction.US},
             type=WeaponType.TANK_CANNON,
@@ -5171,7 +5171,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         """*SGMT 7.62MM [Sd.Kfz.171 T54]*"""
         return cls(
             id="SGMT 7.62MM [Sd.Kfz.171 T54]",
-            name="SGMT 7.62MM",
+            name="SGMT",
             vehicle_id="Sd.Kfz.171 T54",
             factions={HLLVFaction.NVA},
             type=WeaponType.TANK_COAXIAL_MG,
