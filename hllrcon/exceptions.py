@@ -1,24 +1,24 @@
 __all__ = (
-    "HLLAuthError",
-    "HLLCommandError",
-    "HLLConnectionClosedError",
-    "HLLConnectionError",
-    "HLLConnectionLostError",
-    "HLLConnectionRefusedError",
-    "HLLError",
-    "HLLMessageError",
+    "RconAuthError",
+    "RconCommandError",
+    "RconConnectionClosedError",
+    "RconConnectionError",
+    "RconConnectionLostError",
+    "RconConnectionRefusedError",
+    "RconError",
+    "RconMessageError",
 )
 
 
-class HLLError(Exception):
+class RconError(Exception):
     """Base exception for all HLL-related errors."""
 
 
-class HLLCommandError(HLLError):
+class RconCommandError(RconError):
     """Raised when the game server returns an error for a request."""
 
     def __init__(self, status_code: int, *args: object) -> None:
-        """Initialize a new `HLLCommandError` instance.
+        """Initialize a new `RconCommandError` instance.
 
         Parameters
         ----------
@@ -38,29 +38,29 @@ class HLLCommandError(HLLError):
         return f"{header} {exc_str}".rstrip()
 
 
-class HLLMessageError(HLLError):
+class RconMessageError(RconError):
     """Raised when the game server returns an unexpected value."""
 
 
-class HLLConnectionError(HLLError):
+class RconConnectionError(RconError):
     """Generic error for connection errors."""
 
 
-class HLLConnectionRefusedError(HLLConnectionError):
+class RconConnectionRefusedError(RconConnectionError):
     """Raised when the connection is refused."""
 
 
-class HLLAuthError(HLLConnectionError):
+class RconAuthError(RconConnectionError):
     """Raised for failed authentication."""
 
 
-class HLLConnectionClosedError(HLLConnectionError):
+class RconConnectionClosedError(RconConnectionError):
     """Raised when the connection is closed."""
 
 
-class HLLConnectionLostError(HLLConnectionClosedError):
+class RconConnectionLostError(RconConnectionClosedError):
     """Raised when the connection to the server is unexpectedly lost."""
 
 
-class HLLRconWarning(UserWarning):
+class RconWarning(UserWarning):
     """Base warning for all warnings emitted by the hllrcon library."""

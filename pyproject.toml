@@ -90,6 +90,10 @@ omit = [
     "tests/**",
     "tests/integration_tests/**",
     "scripts/**",
+    "scripts/extract/**",
+    "scripts/extractlib/**",
+    "scripts/extractlib/objects/**",
+    "scripts/extractlib/structs/**",
     "tmp.py",
 ]
 
@@ -111,6 +115,5 @@ dev = [
     "pytest-mock>=3.14.1",
     "python-dotenv>=1.1.1",
     "ruff>=0.12.0",
-    "ty>=0.0.23",
     "types-aiofiles>=24.1.0.20250606",
 ]

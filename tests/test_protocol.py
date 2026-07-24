@@ -8,12 +8,12 @@ from unittest.mock import Mock
 import pytest
 import pytest_asyncio
 from hllrcon.exceptions import (
-    HLLAuthError,
-    HLLConnectionClosedError,
-    HLLConnectionError,
-    HLLConnectionLostError,
-    HLLConnectionRefusedError,
-    HLLMessageError,
+    RconAuthError,
+    RconConnectionClosedError,
+    RconConnectionError,
+    RconConnectionLostError,
+    RconConnectionRefusedError,
+    RconMessageError,
 )
 from hllrcon.protocol.constants import MAGIC_HEADER_BYTES
 from hllrcon.protocol.protocol import RconProtocol
@@ -102,14 +102,14 @@ async def test_connect(
 
     mock_create_connection.side_effect = TimeoutError
     with pytest.raises(
-        HLLConnectionError,
+        RconConnectionError,
         match=f"Address {host} could not be resolved",
     ):
         await protocol.connect(host, port, password)
 
     mock_create_connection.side_effect = ConnectionRefusedError
     with pytest.raises(
-        HLLConnectionRefusedError,
+        RconConnectionRefusedError,
         match=f"The server refused connection over port {port}",
     ):
         await protocol.connect(host, port, password)
@@ -117,8 +117,8 @@ async def test_connect(
     mock_create_connection.side_effect = None
     authenticate = mocker.patch.object(protocol, "authenticate")
 
-    authenticate.side_effect = HLLAuthError
-    with pytest.raises(HLLAuthError):
+    authenticate.side_effect = RconAuthError
+    with pytest.raises(RconAuthError):
         await protocol.connect(host, port, password)
     assert protocol._transport is None
 
@@ -303,8 +303,8 @@ def test_connection_lost_use_request_headers(
 
     assert not protocol.is_connected()
     assert not protocol._waiters
-    assert type(waiters[1].exception()) is HLLConnectionClosedError
-    assert type(waiters[2].exception()) is HLLConnectionClosedError
+    assert type(waiters[1].exception()) is RconConnectionClosedError
+    assert type(waiters[2].exception()) is RconConnectionClosedError
 
 
 def test_connection_lost_with_exception(
@@ -331,7 +331,7 @@ def test_connection_lost_with_exception(
     assert not protocol.is_connected()
     assert not protocol._waiters
     assert waiters[1].result() == response
-    assert isinstance(waiters[2].exception(), HLLConnectionLostError)
+    assert isinstance(waiters[2].exception(), RconConnectionLostError)
 
 
 def test_connection_lost_invokes_callback(
@@ -445,7 +445,7 @@ async def test_execute_no_connection(
     protocol: RconProtocol,
 ) -> None:
     protocol.connection_lost(None)
-    with pytest.raises(HLLConnectionClosedError, match=r"Connection is closed"):
+    with pytest.raises(RconConnectionClosedError, match=r"Connection is closed"):
         await protocol.execute("command", 1, "body")
 
 
@@ -561,7 +561,7 @@ async def test_authenticate_serverconnect_not_string(
     execute = mocker.patch.object(protocol, "execute", side_effect=[xorkey_response])
 
     with pytest.raises(
-        HLLMessageError,
+        RconMessageError,
         match="ServerConnect response content_body is not a string",
     ):
         await protocol.authenticate("password")

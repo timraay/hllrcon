@@ -10,12 +10,12 @@ from typing import Any, Self
 from typing_extensions import override
 
 from hllrcon.exceptions import (
-    HLLAuthError,
-    HLLConnectionClosedError,
-    HLLConnectionError,
-    HLLConnectionLostError,
-    HLLConnectionRefusedError,
-    HLLMessageError,
+    RconAuthError,
+    RconConnectionClosedError,
+    RconConnectionError,
+    RconConnectionLostError,
+    RconConnectionRefusedError,
+    RconMessageError,
 )
 from hllrcon.protocol.constants import (
     MAGIC_HEADER_BYTES,
@@ -141,7 +141,7 @@ class RconProtocol(asyncio.Protocol):
         """
         loop = loop or asyncio.get_running_loop()
 
-        def protocol_factory() -> Self:
+        def protocol_factory() -> Self:  # type: ignore[type-var]
             return cls(  # pragma: no cover
                 loop=loop,
                 timeout=timeout,
@@ -157,16 +157,16 @@ class RconProtocol(asyncio.Protocol):
             )
         except TimeoutError:
             msg = f"Address {host} could not be resolved"
-            raise HLLConnectionError(msg) from None
+            raise RconConnectionError(msg) from None
         except ConnectionRefusedError:
             msg = f"The server refused connection over port {port}"
-            raise HLLConnectionRefusedError(msg) from None
+            raise RconConnectionRefusedError(msg) from None
 
         self.logger.info("Connected!")
 
         try:
             await self.authenticate(password)
-        except HLLAuthError:
+        except RconAuthError:
             self.disconnect()
             raise
 
@@ -278,12 +278,12 @@ class RconProtocol(asyncio.Protocol):
             self.logger.warning("Connection lost: %s", exc)
             for waiter in waiters:
                 if not waiter.done():
-                    waiter.set_exception(HLLConnectionLostError(str(exc)))
+                    waiter.set_exception(RconConnectionLostError(str(exc)))
 
         else:
             self.logger.info("Connection closed")
             for waiter in waiters:
-                waiter.set_exception(HLLConnectionClosedError())
+                waiter.set_exception(RconConnectionClosedError())
 
         if self.on_connection_lost:
             try:
@@ -359,7 +359,7 @@ class RconProtocol(asyncio.Protocol):
         """
         if not self._transport:
             msg = "Connection is closed"
-            raise HLLConnectionClosedError(msg)
+            raise RconConnectionClosedError(msg)
 
         # Create request
         request = RconRequest(
@@ -421,7 +421,7 @@ class RconProtocol(asyncio.Protocol):
 
         if not isinstance(xorkey_resp.content_body, str):
             msg = "ServerConnect response content_body is not a string"
-            raise HLLMessageError(msg)
+            raise RconMessageError(msg)
         self.xorkey = base64.b64decode(xorkey_resp.content_body)
 
         auth_token_resp = await self.execute("Login", 2, password)

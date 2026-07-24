@@ -2,7 +2,7 @@ import json
 from enum import IntEnum
 from typing import Any, Self
 
-from hllrcon.exceptions import HLLCommandError
+from hllrcon.exceptions import RconCommandError
 
 
 class RconResponseStatus(IntEnum):
@@ -127,4 +127,4 @@ class RconResponse:
 
         """
         if self.status_code != RconResponseStatus.OK:
-            raise HLLCommandError(self.status_code, self.status_message)
+            raise RconCommandError(self.status_code, self.status_message)

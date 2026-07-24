@@ -1,23 +1,24 @@
+import itertools
 import json
 from collections.abc import Generator
 from typing import Annotated, NamedTuple
 
 import pytest
 from hllrcon.data import (
-    Faction,
-    GameMode,
     GameModeScale,
     Grid,
-    Layer,
-    Loadout,
-    LoadoutId,
-    Map,
-    Role,
+    HLLFaction,
+    HLLGameMode,
+    HLLLayer,
+    HLLLoadout,
+    HLLLoadoutId,
+    HLLMap,
+    HLLRole,
+    HLLTeam,
+    HLLVehicle,
+    HLLWeapon,
     Strongpoint,
-    Team,
     TimeOfDay,
-    Vehicle,
-    Weapon,
     Weather,
 )
 from hllrcon.data._utils import (
@@ -27,19 +28,24 @@ from hllrcon.data._utils import (
     model_sequence_serializer,
     model_serializer,
 )
+from hllrcon.data.factions import AnyFaction, HLLVFaction
+from hllrcon.data.loadouts import HLLVLoadoutItem
+from hllrcon.data.maps import CardinalDirection, Orientation
+from hllrcon.data.roles import AnyRole, HLLVRole
 from hllrcon.data.sectors import GridPositionalModel
+from hllrcon.data.weapons import AnyWeapon, HLLVWeapon
 from pydantic import BaseModel, ValidationError
 
 
 @pytest.fixture(autouse=True)
 def reset_lookup_maps() -> Generator[None]:
-    layer_lookup_map = Layer._lookup_map.copy()
-    map_lookup_map = Map._lookup_map.copy()
+    layer_lookup_map = HLLLayer._lookup_map.copy()
+    map_lookup_map = HLLMap._lookup_map.copy()
 
     yield
 
-    Layer._lookup_map = layer_lookup_map
-    Map._lookup_map = map_lookup_map
+    HLLLayer._lookup_map = layer_lookup_map
+    HLLMap._lookup_map = map_lookup_map
 
 
 class TestDataUtils:
@@ -196,34 +202,45 @@ class TestDataUtils:
 
 class TestDataFactions:
     def test_faction_by_id(self) -> None:
-        assert Faction.by_id(0) == Faction.GER
-        assert Faction.by_id(1) == Faction.US
-        assert Faction.by_id(2) == Faction.SOV
-        assert Faction.by_id(3) == Faction.CW
-        assert Faction.by_id(4) == Faction.DAK
-        assert Faction.by_id(5) == Faction.B8A
-        assert Faction.by_id(6) == Faction.CAN
-        assert Faction.by_id(7) is None
+        assert HLLFaction.by_id(0) == HLLFaction.GER
+        assert HLLFaction.by_id(1) == HLLFaction.US
+        assert HLLFaction.by_id(2) == HLLFaction.SOV
+        assert HLLFaction.by_id(3) == HLLFaction.CW
+        assert HLLFaction.by_id(4) == HLLFaction.DAK
+        assert HLLFaction.by_id(5) == HLLFaction.B8A
+        assert HLLFaction.by_id(6) == HLLFaction.CAN
+        assert HLLFaction.by_id(7) is None
 
         with pytest.raises(ValueError, match="not found"):
-            Faction.by_id(8)
+            HLLFaction.by_id(8)
 
-        assert None not in Faction.all()
+        assert HLLVFaction.by_id(1) == HLLVFaction.US
+        assert HLLVFaction.by_id(6) == HLLVFaction.NVA
+        assert HLLVFaction.by_id(8) is None
+
+        with pytest.raises(ValueError, match="not found"):
+            HLLVFaction.by_id(2)
+        with pytest.raises(ValueError, match="not found"):
+            HLLVFaction.by_id(7)
+
+        assert None not in HLLFaction.all()
 
     class FactionProperties(NamedTuple):
-        faction: Faction
+        faction: AnyFaction
         is_allied: bool
         is_axis: bool
 
     @pytest.mark.parametrize(
         "properties",
         [
-            FactionProperties(Faction.GER, False, True),
-            FactionProperties(Faction.US, True, False),
-            FactionProperties(Faction.SOV, True, False),
-            FactionProperties(Faction.CW, True, False),
-            FactionProperties(Faction.DAK, False, True),
-            FactionProperties(Faction.B8A, True, False),
+            FactionProperties(HLLFaction.GER, False, True),
+            FactionProperties(HLLFaction.US, True, False),
+            FactionProperties(HLLFaction.SOV, True, False),
+            FactionProperties(HLLFaction.CW, True, False),
+            FactionProperties(HLLFaction.DAK, False, True),
+            FactionProperties(HLLFaction.B8A, True, False),
+            FactionProperties(HLLVFaction.US, True, False),
+            FactionProperties(HLLVFaction.NVA, False, True),
         ],
     )
     def test_faction_properties(self, properties: FactionProperties) -> None:
@@ -233,18 +250,18 @@ class TestDataFactions:
 
 class TestDataGameModes:
     def test_game_mode_by_id(self) -> None:
-        assert GameMode.by_id("warfare") == GameMode.WARFARE
-        assert GameMode.by_id("offensive") == GameMode.OFFENSIVE
-        assert GameMode.by_id("skirmish") == GameMode.SKIRMISH
+        assert HLLGameMode.by_id("warfare") == HLLGameMode.WARFARE
+        assert HLLGameMode.by_id("offensive") == HLLGameMode.OFFENSIVE
+        assert HLLGameMode.by_id("skirmish") == HLLGameMode.SKIRMISH
 
-        assert GameMode.by_id("wArFaRe") == GameMode.WARFARE
+        assert HLLGameMode.by_id("wArFaRe") == HLLGameMode.WARFARE
 
         with pytest.raises(ValueError, match="not found"):
-            GameMode.by_id("invalid_mode")
+            HLLGameMode.by_id("invalid_mode")
 
     def test_game_mode_scale(self) -> None:
-        large = GameMode(id="large", scale=GameModeScale.LARGE)
-        small = GameMode(id="small", scale=GameModeScale.SMALL)
+        large = HLLGameMode(id="large", scale=GameModeScale.LARGE)
+        small = HLLGameMode(id="small", scale=GameModeScale.SMALL)
 
         assert large.is_large()
         assert not large.is_small()
@@ -255,59 +272,63 @@ class TestDataGameModes:
 
 class TestDataLayers:
     def test_layer_by_id(self) -> None:
-        assert Layer.by_id("DRL_S_1944_Day_P_Skirmish") == Layer.DRIEL_SKIRMISH_DAY
-        assert Layer.by_id("drl_s_1944_day_p_skirmish") == Layer.DRIEL_SKIRMISH_DAY
+        assert (
+            HLLLayer.by_id("DRL_S_1944_Day_P_Skirmish") == HLLLayer.DRIEL_SKIRMISH_DAY
+        )
+        assert (
+            HLLLayer.by_id("drl_s_1944_day_p_skirmish") == HLLLayer.DRIEL_SKIRMISH_DAY
+        )
 
         with pytest.raises(ValueError, match="not parse"):
-            Layer.by_id("Not a layer", strict=False)
+            HLLLayer.by_id("Not a layer", strict=False)
 
         with pytest.raises(ValueError, match="not found"):
-            Layer.by_id("Not a layer", strict=True)
+            HLLLayer.by_id("Not a layer", strict=True)
 
     def test_layer_str(self) -> None:
-        layer = Layer.DRIEL_SKIRMISH_DAY
+        layer = HLLLayer.DRIEL_SKIRMISH_DAY
         assert str(layer) == layer.id
 
     def test_layer_repr(self) -> None:
-        layer = Layer.DRIEL_SKIRMISH_DAY
-        expected_repr = "Layer(id='DRL_S_1944_Day_P_Skirmish')"
+        layer = HLLLayer.DRIEL_SKIRMISH_DAY
+        expected_repr = "HLLLayer(id='DRL_S_1944_Day_P_Skirmish')"
         assert repr(layer) == expected_repr
 
     def test_layer_equality(self) -> None:
-        layer = Layer.DRIEL_SKIRMISH_DAY
+        layer = HLLLayer.DRIEL_SKIRMISH_DAY
         assert layer == layer  # noqa: PLR0124
         assert layer == layer.id.upper()
-        assert layer != Layer.DRIEL_SKIRMISH_DAWN
+        assert layer != HLLLayer.DRIEL_SKIRMISH_DAWN
         assert layer != "Some other layer"
         assert layer != 12345
 
     def test_layer_hash(self) -> None:
-        layer = Layer.DRIEL_SKIRMISH_DAY
+        layer = HLLLayer.DRIEL_SKIRMISH_DAY
         assert hash(layer) == hash(layer.id.lower())
-        assert hash(layer) != hash(Layer.DRIEL_SKIRMISH_DAWN)
+        assert hash(layer) != hash(HLLLayer.DRIEL_SKIRMISH_DAWN)
 
     @pytest.mark.parametrize(
         ("layer", "name"),
         [
-            (Layer.DRIEL_SKIRMISH_DAY, "Driel Skirmish"),
-            (Layer.DRIEL_OFFENSIVE_CW_DAY, "Driel Off. CW"),
-            (Layer.MORTAIN_OFFENSIVE_GER_OVERCAST, "Mortain Off. GER (Overcast)"),
-            (Layer.STMARIEDUMONT_SKIRMISH_RAIN, "St. Marie Du Mont Skirmish (Rain)"),
-            (Layer.ELALAMEIN_WARFARE_DUSK, "El Alamein Warfare (Dusk)"),
+            (HLLLayer.DRIEL_SKIRMISH_DAY, "Driel Skirmish"),
+            (HLLLayer.DRIEL_OFFENSIVE_CW_DAY, "Driel Off. CW"),
+            (HLLLayer.MORTAIN_OFFENSIVE_GER_OVERCAST, "Mortain Off. GER (Overcast)"),
+            (HLLLayer.STMARIEDUMONT_SKIRMISH_RAIN, "St. Marie Du Mont Skirmish (Rain)"),
+            (HLLLayer.ELALAMEIN_WARFARE_DUSK, "El Alamein Warfare (Dusk)"),
             (
-                Layer.ELSENBORNRIDGE_OFFENSIVE_US_DAWN,
+                HLLLayer.ELSENBORNRIDGE_OFFENSIVE_US_DAWN,
                 "Elsenborn Ridge Off. US (Dawn, Snow)",
             ),
         ],
     )
-    def test_layer_pretty_name(self, layer: Layer, name: str) -> None:
+    def test_layer_pretty_name(self, layer: HLLLayer, name: str) -> None:
         assert layer.pretty_name == name
 
     def test_layer_pretty_name_missing_attacking_team(self) -> None:
-        layer = Layer(
+        layer = HLLLayer(
             id="test_layer",
-            map=Map.KHARKOV,
-            game_mode=GameMode.OFFENSIVE,
+            map=HLLMap.KHARKOV,
+            game_mode=HLLGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
             weather=Weather.OVERCAST,
             attacking_team=None,
@@ -317,78 +338,78 @@ class TestDataLayers:
         assert layer.pretty_name == "Kharkov Off. (Overcast)"
 
     def test_layer_attackers(self) -> None:
-        layer1 = Layer.KURSK_OFFENSIVE_SOV_DAY
-        assert layer1.attacking_team == Team.ALLIES
-        assert layer1.defending_team == Team.AXIS
-        assert layer1.attacking_faction == Faction.SOV
-        assert layer1.defending_faction == Faction.GER
+        layer1 = HLLLayer.KURSK_OFFENSIVE_SOV_DAY
+        assert layer1.attacking_team == HLLTeam.ALLIES
+        assert layer1.defending_team == HLLTeam.AXIS
+        assert layer1.attacking_faction == HLLFaction.SOV
+        assert layer1.defending_faction == HLLFaction.GER
 
-        layer2 = Layer.KURSK_OFFENSIVE_GER_DAY
-        assert layer2.attacking_team == Team.AXIS
-        assert layer2.defending_team == Team.ALLIES
-        assert layer2.attacking_faction == Faction.GER
-        assert layer2.defending_faction == Faction.SOV
+        layer2 = HLLLayer.KURSK_OFFENSIVE_GER_DAY
+        assert layer2.attacking_team == HLLTeam.AXIS
+        assert layer2.defending_team == HLLTeam.ALLIES
+        assert layer2.attacking_faction == HLLFaction.GER
+        assert layer2.defending_faction == HLLFaction.SOV
 
-        layer3 = Layer.KURSK_WARFARE_DAY
+        layer3 = HLLLayer.KURSK_WARFARE_DAY
         assert layer3.attacking_team is None
         assert layer3.defending_team is None
         assert layer3.attacking_faction is None
         assert layer3.defending_faction is None
 
     def test_layer_parse_id_small(self) -> None:
-        layer = Layer.by_id("FOO_S_1942_Rain_P_Skirmish", strict=False)
+        layer = HLLLayer.by_id("FOO_S_1942_Rain_P_Skirmish", strict=False)
         assert layer.map.id == "FOO"
         assert layer.map.tag == "FOO"
         assert layer.map.name == "Foo"
-        assert layer.game_mode == GameMode.SKIRMISH
+        assert layer.game_mode == HLLGameMode.SKIRMISH
         assert layer.time_of_day == TimeOfDay.DAY
         assert layer.weather == Weather.RAIN
         assert layer.attacking_faction is None
 
     def test_layer_parse_id_large(self) -> None:
-        layer = Layer.by_id("FOO_L_1942_OffensiveCW_Morning", strict=False)
+        layer = HLLLayer.by_id("FOO_L_1942_OffensiveCW_Morning", strict=False)
         assert layer.map.id == "FOO"
         assert layer.map.tag == "FOO"
         assert layer.map.name == "Foo"
-        assert layer.game_mode == GameMode.OFFENSIVE
+        assert layer.game_mode == HLLGameMode.OFFENSIVE
         assert layer.time_of_day == TimeOfDay.DAWN
         assert layer.weather == Weather.CLEAR
-        assert layer.attacking_faction == Faction.CW
+        assert layer.attacking_faction == HLLFaction.CW
 
     def test_layer_parse_id_legacy(self) -> None:
-        layer = Layer.by_id("foo_warfare_night", strict=False)
+        layer = HLLLayer.by_id("foo_warfare_night", strict=False)
         assert layer.map.id == "foo"
         assert layer.map.tag == "FOO"
         assert layer.map.name == "Foo"
-        assert layer.game_mode == GameMode.WARFARE
+        assert layer.game_mode == HLLGameMode.WARFARE
         assert layer.time_of_day == TimeOfDay.NIGHT
         assert layer.weather == Weather.CLEAR
         assert layer.attacking_faction is None
 
     def test_layer_parse_id_legacy_offensive(self) -> None:
-        layer = Layer.by_id("foo_offensive_ger", strict=False)
+        layer = HLLLayer.by_id("foo_offensive_ger", strict=False)
         assert layer.map.id == "foo"
         assert layer.map.tag == "FOO"
         assert layer.map.name == "Foo"
-        assert layer.game_mode == GameMode.OFFENSIVE
+        assert layer.game_mode == HLLGameMode.OFFENSIVE
         assert layer.time_of_day == TimeOfDay.DAY
         assert layer.weather == Weather.CLEAR
-        assert layer.attacking_faction == Faction.GER
+        assert layer.attacking_faction == HLLFaction.GER
 
     def test_layer_parse_id_unknown_game_mode(self) -> None:
         with pytest.raises(ValueError, match="not parse"):
-            Layer.by_id("foy_notamode", strict=False)
+            HLLLayer.by_id("foy_notamode", strict=False)
 
     def test_layer_can_parse_known_layers(self) -> None:
-        all_layers = Layer.all()
-        Layer._lookup_map.clear()
+        all_layers = HLLLayer.all()
+        HLLLayer._lookup_map.clear()
 
         for layer in all_layers:
-            Map._lookup_map.clear()
-            Layer._parse_id(layer.id)
+            HLLMap._lookup_map.clear()
+            HLLLayer._parse_id(layer.id)
 
     def test_layer_field_serializers(self) -> None:
-        layer = Layer.KURSK_OFFENSIVE_GER_DAY
+        layer = HLLLayer.KURSK_OFFENSIVE_GER_DAY
         exclude = {
             "sectors",
             "grid",
@@ -440,12 +461,12 @@ class TestSectors:
         assert grid.world_to_grid((-20000, -50000)) == (-2, -3)
 
     def test_grid_area(self) -> None:
-        assert Layer.TOBRUK_WARFARE_DAY.sectors[0].area == (
+        assert HLLLayer.TOBRUK_WARFARE_DAY.sectors[0].area == (
             (-100000, -60000),
             (-60000, 60000),
         )
 
-        assert Layer.PURPLEHEARTLANE_SKIRMISH_RAIN.sectors[0].area == (
+        assert HLLLayer.PURPLEHEARTLANE_SKIRMISH_RAIN.sectors[0].area == (
             (-55705.6, -69632),
             (55705.6, -13926.4),
         )
@@ -488,7 +509,7 @@ class TestSectors:
         assert not sp.is_inside((10, 10, 10))
 
     def test_capture_zone_is_inside(self) -> None:
-        zone = Layer.STMEREEGLISE_WARFARE_DAY.sectors[2].capture_zones[2]
+        zone = HLLLayer.STMEREEGLISE_WARFARE_DAY.sectors[2].capture_zones[2]
 
         assert zone.is_inside((0, 40000))
         assert zone.is_inside((-19000, 21000))
@@ -500,7 +521,7 @@ class TestSectors:
         assert not zone.is_inside((-21000, 40000))
 
     def test_sector_is_inside(self) -> None:
-        sector = Layer.KHARKOV_WARFARE_DAY.sectors[2]
+        sector = HLLLayer.KHARKOV_WARFARE_DAY.sectors[2]
 
         assert sector.is_inside((0, 0))
         assert sector.is_inside((0, 19000))
@@ -511,140 +532,435 @@ class TestSectors:
 
 class TestDataMaps:
     def test_map_by_id(self) -> None:
-        assert Map.by_id("kharkov") == Map.KHARKOV
-        assert Map.by_id("driel") == Map.DRIEL
-        assert Map.by_id("elalamein") == Map.EL_ALAMEIN
-        assert Map.by_id("mortain") == Map.MORTAIN
-        assert Map.by_id("elsenbornridge") == Map.ELSENBORN_RIDGE
+        assert HLLMap.by_id("kharkov") == HLLMap.KHARKOV
+        assert HLLMap.by_id("driel") == HLLMap.DRIEL
+        assert HLLMap.by_id("elalamein") == HLLMap.EL_ALAMEIN
+        assert HLLMap.by_id("mortain") == HLLMap.MORTAIN
+        assert HLLMap.by_id("elsenbornridge") == HLLMap.ELSENBORN_RIDGE
 
-        assert Map.by_id("kHaRkOv") == Map.KHARKOV
+        assert HLLMap.by_id("kHaRkOv") == HLLMap.KHARKOV
 
         with pytest.raises(ValueError, match="not found"):
-            Map.by_id("invalid_map")
+            HLLMap.by_id("invalid_map")
 
     def test_map_str(self) -> None:
-        map_ = Map.KHARKOV
+        map_ = HLLMap.KHARKOV
         assert str(map_) == map_.id
 
     def test_map_repr(self) -> None:
-        map_ = Map.KHARKOV
-        expected_repr = "Map(id='kharkov')"
+        map_ = HLLMap.KHARKOV
+        expected_repr = "HLLMap(id='kharkov')"
         assert repr(map_) == expected_repr
 
     def test_map_equality(self) -> None:
-        map_ = Map.KHARKOV
+        map_ = HLLMap.KHARKOV
         assert map_ == map_  # noqa: PLR0124
         assert map_ == map_.id.lower()
-        assert map_ != Map.DRIEL
+        assert map_ != HLLMap.DRIEL
         assert map_ != "Some other map"
         assert map_ != 12345
 
     def test_map_hash(self) -> None:
-        map_ = Map.KHARKOV
+        map_ = HLLMap.KHARKOV
         assert hash(map_) == hash(map_.id.lower())
-        assert hash(map_) != hash(Map.DRIEL)
+        assert hash(map_) != hash(HLLMap.DRIEL)
+
+    @pytest.mark.parametrize(
+        ("allies_direction", "axis_direction", "orientation", "is_mirrored"),
+        [
+            (
+                CardinalDirection.LEFT_TO_RIGHT,
+                CardinalDirection.RIGHT_TO_LEFT,
+                Orientation.HORIZONTAL,
+                False,
+            ),
+            (
+                CardinalDirection.RIGHT_TO_LEFT,
+                CardinalDirection.LEFT_TO_RIGHT,
+                Orientation.HORIZONTAL,
+                True,
+            ),
+            (
+                CardinalDirection.TOP_TO_BOTTOM,
+                CardinalDirection.BOTTOM_TO_TOP,
+                Orientation.VERTICAL,
+                False,
+            ),
+            (
+                CardinalDirection.BOTTOM_TO_TOP,
+                CardinalDirection.TOP_TO_BOTTOM,
+                Orientation.VERTICAL,
+                True,
+            ),
+        ],
+    )
+    def test_map_axis_direction(
+        self,
+        allies_direction: CardinalDirection,
+        axis_direction: CardinalDirection,
+        orientation: Orientation,
+        is_mirrored: bool,
+    ) -> None:
+        map_ = HLLMap(
+            id="foo",
+            name="Foo",
+            tag="FOO",
+            year=1944,
+            pretty_name="Foo",
+            short_name="FOO",
+            allies=HLLFaction.US,
+            axis=HLLFaction.GER,
+            allies_direction=allies_direction,
+        )
+        assert map_.axis_direction == axis_direction
+        assert map_.orientation == orientation
+        assert map_.is_mirrored == is_mirrored
 
 
 class TestDataTeams:
     def test_team_by_id(self) -> None:
-        assert Team.by_id(1) == Team.ALLIES
-        assert Team.by_id(2) == Team.AXIS
+        assert HLLTeam.by_id(1) == HLLTeam.ALLIES
+        assert HLLTeam.by_id(2) == HLLTeam.AXIS
 
         with pytest.raises(ValueError, match="not found"):
-            Team.by_id(3)
+            HLLTeam.by_id(3)
 
 
 class TestDataRoles:
     def test_role_by_id(self) -> None:
-        assert Role.by_id(0) == Role.RIFLEMAN
-        assert Role.by_id(1) == Role.ASSAULT
-        assert Role.by_id(2) == Role.AUTOMATIC_RIFLEMAN
-        assert Role.by_id(3) == Role.MEDIC
-        assert Role.by_id(4) == Role.SPOTTER
-        assert Role.by_id(5) == Role.SUPPORT
-        assert Role.by_id(6) == Role.MACHINE_GUNNER
-        assert Role.by_id(7) == Role.ANTI_TANK
-        assert Role.by_id(8) == Role.ENGINEER
-        assert Role.by_id(9) == Role.OFFICER
-        assert Role.by_id(10) == Role.SNIPER
-        assert Role.by_id(11) == Role.CREWMAN
-        assert Role.by_id(12) == Role.TANK_COMMANDER
-        assert Role.by_id(13) == Role.COMMANDER
+        assert HLLRole.by_id(0) == HLLRole.RIFLEMAN
+        assert HLLRole.by_id(1) == HLLRole.ASSAULT
+        assert HLLRole.by_id(2) == HLLRole.AUTOMATIC_RIFLEMAN
+        assert HLLRole.by_id(3) == HLLRole.MEDIC
+        assert HLLRole.by_id(4) == HLLRole.SPOTTER
+        assert HLLRole.by_id(5) == HLLRole.SUPPORT
+        assert HLLRole.by_id(6) == HLLRole.MACHINE_GUNNER
+        assert HLLRole.by_id(7) == HLLRole.ANTI_TANK
+        assert HLLRole.by_id(8) == HLLRole.ENGINEER
+        assert HLLRole.by_id(9) == HLLRole.OFFICER
+        assert HLLRole.by_id(10) == HLLRole.SNIPER
+        assert HLLRole.by_id(11) == HLLRole.CREWMAN
+        assert HLLRole.by_id(12) == HLLRole.TANK_COMMANDER
+        assert HLLRole.by_id(13) == HLLRole.COMMANDER
 
         with pytest.raises(ValueError, match="not found"):
-            Team.by_id(14)
+            HLLTeam.by_id(14)
 
     class RoleProperties(NamedTuple):
-        role: Role
+        roles: list[AnyRole]
         is_infantry: bool
         is_tanker: bool
         is_artillery: bool
+        is_mortar: bool
         is_recon: bool
+        is_helicopter: bool
         is_squad_leader: bool
 
     @pytest.mark.parametrize(
         "properties",
         [
-            RoleProperties(Role.RIFLEMAN, True, False, False, False, False),
-            RoleProperties(Role.ASSAULT, True, False, False, False, False),
-            RoleProperties(Role.AUTOMATIC_RIFLEMAN, True, False, False, False, False),
-            RoleProperties(Role.MEDIC, True, False, False, False, False),
-            RoleProperties(Role.SPOTTER, False, False, False, True, True),
-            RoleProperties(Role.SUPPORT, True, False, False, False, False),
-            RoleProperties(Role.MACHINE_GUNNER, True, False, False, False, False),
-            RoleProperties(Role.ANTI_TANK, True, False, False, False, False),
-            RoleProperties(Role.ENGINEER, True, False, False, False, False),
-            RoleProperties(Role.OFFICER, True, False, False, False, True),
-            RoleProperties(Role.SNIPER, False, False, False, True, False),
-            RoleProperties(Role.CREWMAN, False, True, False, False, False),
-            RoleProperties(Role.TANK_COMMANDER, False, True, False, False, True),
-            RoleProperties(Role.COMMANDER, False, False, False, False, True),
-            RoleProperties(Role.ARTILLERY_OBSERVER, False, False, True, False, True),
-            RoleProperties(Role.ARTILLERY_ENGINEER, False, False, True, False, False),
-            RoleProperties(Role.ARTILLERY_SUPPORT, False, False, True, False, False),
+            RoleProperties(
+                [
+                    HLLRole.RIFLEMAN,
+                    HLLRole.ASSAULT,
+                    HLLRole.AUTOMATIC_RIFLEMAN,
+                    HLLRole.MEDIC,
+                    HLLRole.SUPPORT,
+                    HLLRole.MACHINE_GUNNER,
+                    HLLRole.ANTI_TANK,
+                    HLLRole.ENGINEER,
+                    HLLVRole.RIFLEMAN,
+                    HLLVRole.MEDIC,
+                    HLLVRole.SPECIALIST,
+                    HLLVRole.MACHINE_GUNNER,
+                    HLLVRole.GRENADIER,
+                    HLLVRole.ENGINEER,
+                ],
+                is_infantry=True,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.SPOTTER,
+                    HLLVRole.SPOTTER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=True,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.OFFICER,
+                    HLLVRole.SQUAD_LEADER,
+                ],
+                is_infantry=True,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.SNIPER,
+                    HLLVRole.SNIPER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=True,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.CREWMAN,
+                    HLLVRole.CREWMAN,
+                ],
+                is_infantry=False,
+                is_tanker=True,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.TANK_COMMANDER,
+                    HLLVRole.TANK_COMMANDER,
+                ],
+                is_infantry=False,
+                is_tanker=True,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.COMMANDER,
+                    HLLVRole.COMMANDER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.ARTILLERY_OBSERVER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=True,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLRole.OPERATOR,
+                    HLLRole.GUNNER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=True,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.OBSERVER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=True,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.SUPPORT,
+                    HLLVRole.GUNNER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=True,
+                is_recon=False,
+                is_helicopter=False,
+                is_squad_leader=False,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.LOGISTICS_OFFICER,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=True,
+                is_squad_leader=True,
+            ),
+            RoleProperties(
+                [
+                    HLLVRole.PILOT,
+                ],
+                is_infantry=False,
+                is_tanker=False,
+                is_artillery=False,
+                is_mortar=False,
+                is_recon=False,
+                is_helicopter=True,
+                is_squad_leader=False,
+            ),
         ],
     )
     def test_role_properties(self, properties: RoleProperties) -> None:
-        assert properties.role.is_infantry is properties.is_infantry
-        assert properties.role.is_tanker is properties.is_tanker
-        assert properties.role.is_artillery is properties.is_artillery
-        assert properties.role.is_recon is properties.is_recon
-        assert properties.role.is_squad_leader is properties.is_squad_leader
+        for role in properties.roles:
+            assert role.is_infantry is properties.is_infantry
+            assert role.is_tanker is properties.is_tanker
+            assert role.is_artillery is properties.is_artillery
+            assert role.is_mortar is properties.is_mortar
+            assert role.is_recon is properties.is_recon
+            assert role.is_helicopter is properties.is_helicopter
+            assert role.is_squad_leader is properties.is_squad_leader
+
+    def test_role_hllv_get_available_capacity(self) -> None:
+        role = HLLVRole.SNIPER
+
+        assert role.get_available_capacity(0).max_weight == 6
+        assert role.get_available_capacity(1).max_weight == 6
+        assert role.get_available_capacity(10).max_weight == 15
+        assert role.get_available_capacity(11).max_weight == 15
+
+    def test_role_hllv_get_available_items(self) -> None:
+        role = HLLVRole.SNIPER
+        faction = HLLVFaction.US
+
+        l1_items = {
+            HLLVLoadoutItem.M40,
+            HLLVLoadoutItem.WFL_USHAMMER,
+            HLLVLoadoutItem.M18_SMOKE,
+            HLLVLoadoutItem.M61,
+            HLLVLoadoutItem.WFL_TNT,
+            HLLVLoadoutItem.WFL_USBANDAGE,
+            HLLVLoadoutItem.M3_KNIFE,
+            HLLVLoadoutItem._1911A1,
+        }
+
+        l10_items = l1_items | {
+            HLLVLoadoutItem.M18_SMOKEX2,
+            HLLVLoadoutItem.M61X2,
+            HLLVLoadoutItem.M18_CLAYMORE,
+            HLLVLoadoutItem.M18_SMOKEX3,
+            HLLVLoadoutItem.M61X3,
+            HLLVLoadoutItem.M18_CLAYMOREX2,
+            HLLVLoadoutItem.MODEL_77E_SHOTGUN,
+        }
+
+        assert role.get_available_items(0, faction) == l1_items
+        assert role.get_available_items(1, faction) == l1_items
+        assert role.get_available_items(10, faction) == l10_items
+        assert role.get_available_items(11, faction) == l10_items
+
+        l1_weapons = {item.weapon for item in l1_items}
+        l10_weapons = {item.weapon for item in l10_items}
+
+        assert role.get_available_weapons(0, faction) == l1_weapons
+        assert role.get_available_weapons(1, faction) == l1_weapons
+        assert role.get_available_weapons(10, faction) == l10_weapons
+        assert role.get_available_weapons(11, faction) == l10_weapons
+
+    @pytest.mark.parametrize("role", HLLVRole.all())
+    def test_role_hllv_progression_incremental(self, role: HLLVRole) -> None:
+        assert len(role.progression) == 10
+
+        for i, progression in enumerate(role.progression):
+            assert progression.level == i + 1
+
+        for prev, curr in itertools.pairwise(role.progression):
+            assert prev.max_weight <= curr.max_weight
+            assert not (
+                prev.secondary_slot_unlocked and not curr.secondary_slot_unlocked
+            )
+            assert not (prev.extra_ammo_unlocked and not curr.extra_ammo_unlocked)
+            assert prev.lethal_slots <= curr.lethal_slots
+            assert prev.utility_slots <= curr.utility_slots
+
+            prev_items = role.get_available_items(prev.level, HLLVFaction.US)
+            curr_items = role.get_available_items(curr.level, HLLVFaction.US)
+            assert prev_items <= curr_items
 
 
 class TestDataWeapons:
     def test_weapon_by_id(self) -> None:
-        assert Weapon.by_id("M1 GARAND") == Weapon.M1_GARAND
-        assert Weapon.by_id("MP40") == Weapon.MP40
+        assert HLLWeapon.by_id("M1 GARAND") == HLLWeapon.M1_GARAND
+        assert HLLWeapon.by_id("MP40") == HLLWeapon.MP40
         assert (
-            Weapon.by_id("COAXIAL M1919 [Sherman M4A3E2]")
-            == Weapon.V_COAXIAL_M1919__SHERMAN_M4A3E2
+            HLLWeapon.by_id("COAXIAL M1919 [Sherman M4A3E2]")
+            == HLLWeapon.V_COAXIAL_M1919__SHERMAN_M4A3E2
         )
 
         with pytest.raises(ValueError, match="not found"):
-            Weapon.by_id("invalid_weapon")
+            HLLWeapon.by_id("invalid_weapon")
 
         with pytest.raises(ValueError, match="not found"):
-            Weapon.by_id("m1 garand")
+            HLLWeapon.by_id("m1 garand")
 
     def test_weapon_resolve_vehicle(self) -> None:
-        for weapon in Weapon.all():
+        weapon: AnyWeapon
+
+        for weapon in HLLWeapon.all():
             weapon.vehicle  # noqa: B018
+
+        for weapon in HLLVWeapon.all():
+            weapon.vehicle  # noqa: B018
+
+    def test_weapon_is_lethal(self) -> None:
+        assert HLLWeapon.M1_GARAND.is_lethal
+        assert HLLWeapon.MK2_GRENADE.is_lethal
+        assert HLLWeapon.V_COAXIAL_M1919__SHERMAN_M4A3E2.is_lethal
+        assert not HLLWeapon.M18_SMOKE_GRENADE.is_lethal
+        assert not HLLWeapon.WESTINGHOUSE_M3_6_30.is_lethal
+        assert not HLLWeapon.WRENCH.is_lethal
 
 
 class TestDataVehicles:
     def test_vehicle_by_id(self) -> None:
-        assert Vehicle.by_id("Sherman M4A3E2") == Vehicle.SHERMAN_M4A3E2
-        assert Vehicle.by_id("sFH 18") == Vehicle.SFH_18
+        assert HLLVehicle.by_id("Sherman M4A3E2") == HLLVehicle.SHERMAN_M4A3E2
+        assert HLLVehicle.by_id("sFH 18") == HLLVehicle.SFH_18
 
         with pytest.raises(ValueError, match="not found"):
-            Vehicle.by_id("invalid_vehicle")
+            HLLVehicle.by_id("invalid_vehicle")
 
         with pytest.raises(ValueError, match="not found"):
-            Vehicle.by_id("sherman m4a3e2")
+            HLLVehicle.by_id("sherman m4a3e2")
 
     class VehicleProperties(NamedTuple):
-        vehicle: Vehicle
+        vehicle: HLLVehicle
         is_truck: bool
         is_tank: bool
         is_artilerry: bool
@@ -653,11 +969,17 @@ class TestDataVehicles:
     @pytest.mark.parametrize(
         "properties",
         [
-            VehicleProperties(Vehicle.BA_10, False, True, False, False),
-            VehicleProperties(Vehicle.BEDFORD_OYD_SUPPLY, True, False, False, False),
-            VehicleProperties(Vehicle.BEDFORD_OYD_TRANSPORT, True, False, False, False),
-            VehicleProperties(Vehicle.M1938_M_30, False, False, True, True),
-            VehicleProperties(Vehicle.KV_2, False, False, True, False),
+            VehicleProperties(HLLVehicle.BA_10, False, True, False, False),
+            VehicleProperties(HLLVehicle.BEDFORD_OYD_SUPPLY, True, False, False, False),
+            VehicleProperties(
+                HLLVehicle.BEDFORD_OYD_TRANSPORT,
+                True,
+                False,
+                False,
+                False,
+            ),
+            VehicleProperties(HLLVehicle.M1938_M_30, False, False, True, True),
+            VehicleProperties(HLLVehicle.KV_2, False, False, True, False),
         ],
     )
     def test_vehicle_properties(self, properties: VehicleProperties) -> None:
@@ -670,42 +992,79 @@ class TestDataVehicles:
 class TestDataLoadouts:
     def test_loadout_by_id(self) -> None:
         assert (
-            Loadout.by_id(LoadoutId(Faction.US.id, Role.OFFICER.id, "NCO"))
-            == Loadout.US_OFFICER_NCO
+            HLLLoadout.by_id(HLLLoadoutId(HLLFaction.US.id, HLLRole.OFFICER.id, "NCO"))
+            == HLLLoadout.US_OFFICER_NCO
         )
         assert (
-            Loadout.by_id(LoadoutId(Faction.CW.id, Role.RIFLEMAN.id, "Standard Issue"))
-            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+            HLLLoadout.by_id(
+                HLLLoadoutId(HLLFaction.CW.id, HLLRole.RIFLEMAN.id, "Standard Issue"),
+            )
+            == HLLLoadout.CW_RIFLEMAN_STANDARD_ISSUE
         )
 
         assert (
-            Loadout.by_id(LoadoutId(Faction.CW.id, Role.RIFLEMAN.id, "sTaNdArD iSsUe"))
-            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+            HLLLoadout.by_id(
+                HLLLoadoutId(HLLFaction.CW.id, HLLRole.RIFLEMAN.id, "sTaNdArD iSsUe"),
+            )
+            == HLLLoadout.CW_RIFLEMAN_STANDARD_ISSUE
         )
 
         with pytest.raises(ValueError, match="not found"):
-            Loadout.by_id(LoadoutId(Faction.US.id, Role.RIFLEMAN.id, "invalid_loadout"))
+            HLLLoadout.by_id(
+                HLLLoadoutId(HLLFaction.US.id, HLLRole.RIFLEMAN.id, "invalid_loadout"),
+            )
         with pytest.raises(ValueError, match="not found"):
-            Loadout.by_id(LoadoutId(Faction.US.id, 69, "Standard Issue"))
+            HLLLoadout.by_id(HLLLoadoutId(HLLFaction.US.id, 69, "Standard Issue"))
 
     def test_loadout_by_name(self) -> None:
         assert (
-            Loadout.by_name(Faction.US, Role.OFFICER, "NCO") == Loadout.US_OFFICER_NCO
+            HLLLoadout.by_name(HLLFaction.US, HLLRole.OFFICER, "NCO")
+            == HLLLoadout.US_OFFICER_NCO
         )
         assert (
-            Loadout.by_name(Faction.CW, Role.RIFLEMAN, "Standard Issue")
-            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+            HLLLoadout.by_name(HLLFaction.CW, HLLRole.RIFLEMAN, "Standard Issue")
+            == HLLLoadout.CW_RIFLEMAN_STANDARD_ISSUE
         )
 
         assert (
-            Loadout.by_name(Faction.CW, Role.RIFLEMAN, "sTaNdArD iSsUe")
-            == Loadout.CW_RIFLEMAN_STANDARD_ISSUE
+            HLLLoadout.by_name(HLLFaction.CW, HLLRole.RIFLEMAN, "sTaNdArD iSsUe")
+            == HLLLoadout.CW_RIFLEMAN_STANDARD_ISSUE
         )
 
         with pytest.raises(ValueError, match="not found"):
-            Loadout.by_name(Faction.US, Role.RIFLEMAN, "invalid_loadout")
+            HLLLoadout.by_name(HLLFaction.US, HLLRole.RIFLEMAN, "invalid_loadout")
 
-    def test_loadout_equipment_weapon(self) -> None:
-        assert Loadout.US_OFFICER_NCO.items[0].weapon == Weapon.M1_GARAND
-        assert Loadout.US_OFFICER_NCO.items[1].weapon == Weapon.MK2_GRENADE
-        assert Loadout.US_OFFICER_NCO.items[2].weapon is None
+
+class TestDataLoadoutItems:
+    def test_loadoutitem_calculate_weight(self) -> None:
+        loadout = HLLVLoadoutItem.RPG2
+        # Base is weight 6 with 2 ammo. Each rocket adds 3 weight.
+        assert loadout.calculate_weight(1) == 6
+        assert loadout.calculate_weight(2) == 6
+        assert loadout.calculate_weight(3) == 9
+
+    def test_loadoutitem_field_serializers(self) -> None:
+        loadout = HLLVLoadoutItem.M40
+        assert json.loads(loadout.model_dump_json()) == {
+            **loadout.model_dump(),
+            "faction": {
+                "type": "faction",
+                "id": 1,
+                "key": "1",
+            },
+            "weapon": {
+                "type": "weapon",
+                "id": "M40",
+                "key": "M40",
+            },
+            "level_requirements": [
+                {
+                    "role": {
+                        "type": "role",
+                        "id": 10,
+                        "key": "10",
+                    },
+                    "level": 0,
+                },
+            ],
+        }
