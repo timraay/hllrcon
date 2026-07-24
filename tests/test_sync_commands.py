@@ -186,8 +186,10 @@ class TestCommands:
             {"LogBackTrackTime": 60, "Filters": filter_ or ""},
             (
                 '{"entries": ['
-                '{"timestamp": "2023-10-01T12:00:00Z", "message": "Log 1"},'
-                '{"timestamp": "2023-10-01T12:01:00Z", "message": "Log 2"}'
+                '{"timestamp": "2023-10-01T12:00:00Z",'
+                ' "message": "[2023-10-01 12:00:00 (1712345678)] Log 1"},'
+                '{"timestamp": "2023-10-01T12:01:00Z",'
+                ' "message": "[2023-10-01 12:01:00 (1712345678)] Log 2"}'
                 "]}"
             ),
         ).get_admin_log(60, filter_)

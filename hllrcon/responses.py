@@ -2,7 +2,16 @@ import os
 from collections.abc import Sequence
 from datetime import datetime, timedelta
 from enum import IntEnum, StrEnum
-from typing import Annotated, ClassVar, Generic, Literal, NamedTuple, TypeAlias, TypeVar
+from typing import (
+    Annotated,
+    Any,
+    ClassVar,
+    Generic,
+    Literal,
+    NamedTuple,
+    TypeAlias,
+    TypeVar,
+)
 
 from pydantic import (
     AfterValidator,
@@ -14,6 +23,7 @@ from pydantic import (
 )
 from pydantic.alias_generators import to_camel
 
+from hllrcon.admin_logs import AdminLog
 from hllrcon.data import AnyFaction, AnyGameMode, AnyLayer, AnyRole, TimeOfDay
 from hllrcon.data.factions import HLLFaction, HLLVFaction, _Faction
 from hllrcon.data.game_modes import HLLGameMode, HLLVGameMode
@@ -279,6 +289,15 @@ class _GetAdminLogResponseEntry(Response):
     timestamp: datetime
     message: str
 
+    @classmethod
+    def _admin_log_validator(cls, vs: Sequence[Any]) -> list[AdminLog]:
+        if not isinstance(vs, Sequence):  # pragma: no cover
+            msg = f"Expected a sequence, got {type(vs)}"
+            raise TypeError(msg)
+
+        entries = [cls.model_validate(v) for v in vs]
+        return [AdminLog.parse(entry.message) for entry in entries]
+
 
 class HLLGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
     pass
@@ -294,16 +313,27 @@ AnyGetAdminLogResponseEntry: TypeAlias = (
 
 
 class _GetAdminLogResponse(Response):
-    entries: Sequence[_GetAdminLogResponseEntry]
+    entries: Annotated[
+        Sequence[AdminLog],
+        PlainValidator(_GetAdminLogResponseEntry._admin_log_validator),
+    ]
     """A list of log entries, oldest entries first."""
 
 
 class HLLGetAdminLogResponse(_GetAdminLogResponse):
-    entries: list[HLLGetAdminLogResponseEntry]
+    entries: Annotated[
+        Sequence[AdminLog],
+        PlainValidator(HLLGetAdminLogResponseEntry._admin_log_validator),
+    ]
+    """A list of log entries, oldest entries first."""
 
 
 class HLLVGetAdminLogResponse(_GetAdminLogResponse):
-    entries: list[HLLVGetAdminLogResponseEntry]
+    entries: Annotated[
+        Sequence[AdminLog],
+        PlainValidator(HLLVGetAdminLogResponseEntry._admin_log_validator),
+    ]
+    """A list of log entries, oldest entries first."""
 
 
 AnyGetAdminLogResponse: TypeAlias = HLLGetAdminLogResponse | HLLVGetAdminLogResponse
