@@ -12111,7 +12111,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 "Secondary",
             ],
             base_ammo=3,
-            max_ammo=3,
+            max_ammo=5,
             ammo_weight=3,
             level_requirements={
                 HLLVRole.GRENADIER: 0,
@@ -12344,8 +12344,8 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 "Machine Gun",
                 "Automatic",
             ],
-            base_ammo=4,
-            max_ammo=2,
+            base_ammo=3,
+            max_ammo=6,
             ammo_weight=2,
             level_requirements={
                 HLLVRole.MACHINE_GUNNER: 0,
@@ -12447,11 +12447,11 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def TYPE53_BAYONET(cls) -> "HLLVLoadoutItem":
         return cls(
             id="Type53_Bayonet",
-            name="Type 53",
+            name="Type 53 w/Bayonet",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.TYPE_53,
+            weapon=HLLVWeapon.TYPE_53_W_BAYONET,
             type=HLLVLoadoutItemType.PRIMARY,
-            weight=4,
+            weight=3,
             description_tags=[
                 "Primary",
                 "Rifle",
@@ -12828,7 +12828,6 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
             ammo_weight=1,
             level_requirements={
                 HLLVRole.RIFLEMAN: 0,
-                HLLVRole.MEDIC: 0,
                 HLLVRole.SPOTTER: 0,
                 HLLVRole.SPECIALIST: 0,
                 HLLVRole.MACHINE_GUNNER: 0,
@@ -12842,6 +12841,28 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 HLLVRole.OBSERVER: 0,
                 HLLVRole.GUNNER: 0,
                 HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_NVABANDAGE_MEDIC(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_NVABandage_Medic",
+            name="Bandage",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.BANDAGE_NVA,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+                "Utility",
+            ],
+            base_ammo=2,
+            max_ammo=20,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MEDIC: 0,
             },
         )
 
@@ -13247,7 +13268,6 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
             ammo_weight=1,
             level_requirements={
                 HLLVRole.RIFLEMAN: 0,
-                HLLVRole.MEDIC: 0,
                 HLLVRole.SPOTTER: 0,
                 HLLVRole.SPECIALIST: 0,
                 HLLVRole.MACHINE_GUNNER: 0,
@@ -13263,6 +13283,27 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 HLLVRole.PILOT: 0,
                 HLLVRole.LOGISTICS_OFFICER: 0,
                 HLLVRole.COMMANDER: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_USBANDAGE_MEDIC(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_USBandage_Medic",
+            name="BANDAGE",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.BANDAGE_US,
+            type=HLLVLoadoutItemType.UTILITY,
+            weight=1,
+            description_tags=[
+                "Equipment",
+            ],
+            base_ammo=2,
+            max_ammo=20,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.MEDIC: 0,
             },
         )
 

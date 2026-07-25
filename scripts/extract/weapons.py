@@ -1279,8 +1279,8 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "Satchel Charge",
         "type": WeaponType.SATCHEL,
     },
-    "Type 53": {
-        "name": "Type 53",
+    "Type 53 w/Bayonet": {
+        "name": "Type 53 w/Bayonet",
         "type": WeaponType.BOLT_ACTION_RIFLE,
     },
     "Chi Com Signal Pistol": {

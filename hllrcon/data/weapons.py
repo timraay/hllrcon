@@ -4799,19 +4799,6 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def TYPE_53(cls) -> "HLLVWeapon":
-        """*Type 53*"""
-        return cls(
-            id="Type 53",
-            name="Type 53",
-            vehicle_id=None,
-            factions={HLLVFaction.NVA},
-            type=WeaponType.BOLT_ACTION_RIFLE,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
     def TYPE_53_PU(cls) -> "HLLVWeapon":
         """*Type 53 PU*"""
         return cls(
@@ -4821,6 +4808,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             factions={HLLVFaction.NVA},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=4,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_53_W_BAYONET(cls) -> "HLLVWeapon":
+        """*Type 53 w/Bayonet*"""
+        return cls(
+            id="Type 53 w/Bayonet",
+            name="",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.UNKNOWN,
+            magnification=None,
         )
 
     @class_cached_property
