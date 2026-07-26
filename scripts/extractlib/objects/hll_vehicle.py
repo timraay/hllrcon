@@ -21,7 +21,7 @@ from scripts.extractlib.objects.tank_seat import (
     VehicleSeat,
 )
 from scripts.extractlib.structs.team import ETeam
-from scripts.extractlib.types import String
+from scripts.extractlib.types import CultureInvariantString, String
 
 
 class EHLLArmorWeightClass(StrEnum):
@@ -70,7 +70,7 @@ class HLLVehicleProperties(Model):
         Field(alias="ArmourWeightClass"),
     ] = None
     low_speed_threshold_kph: float = 0.0
-    team: ETeam
+    team: ETeam = ETeam.AXIS
 
     def get_seats(self) -> Iterator[VehicleSeat]:
         yield from []
@@ -172,15 +172,26 @@ class HLLAntiTankGunProperties(HLLVehicleProperties):
         yield self.get_loader_seat()
 
 
-class HLLAntiAircraftGunProperties(HLLVehicleProperties):
-    gunner_seat_class: BGCReference[VehicleSeat]
+class HLLDeployableMGProperties(HLLVehicleProperties):
+    seat_class: BGCReference[VehicleSeat]
+    dismantle_time: float
+    dismantle_resource_amount: int
 
-    def get_gunner_seat(self) -> VehicleSeat:
-        return self.gunner_seat_class.get_inst(VehicleSeat)
+    armor_meta_data: Annotated[
+        WFLBaseTankPropertiesMetaData,
+        Field(alias="ArmourMetaData"),
+    ] = WFLBaseTankPropertiesMetaData(
+        display_name=CultureInvariantString(
+            culture_invariant_string="DShKM Anti-Aircraft Gun",
+        ),
+    )
+
+    def get_seat(self) -> VehicleSeat:
+        return self.seat_class.get_inst(VehicleSeat)
 
     def get_seats(self) -> Iterator[VehicleSeat]:
         yield from super().get_seats()
-        yield self.get_gunner_seat()
+        yield self.get_seat()
 
 
 class HLLHowitzerProperties(HLLAntiTankGunProperties):
@@ -304,7 +315,7 @@ HLLVehiclePropT_co = TypeVar(
     | HLLAntiTankGunProperties
     | HLLHowitzerProperties
     | HLLMortarProperties
-    | HLLAntiAircraftGunProperties
+    | HLLDeployableMGProperties
     | HLLVBoatProperties
     | HLLVHelicopterProperties,
     covariant=True,

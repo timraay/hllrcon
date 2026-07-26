@@ -6,7 +6,7 @@ from enum import StrEnum
 from pathlib import Path
 from typing import Generic, TypedDict, cast
 
-from pydantic import BaseModel, TypeAdapter, model_validator
+from pydantic import BaseModel, TypeAdapter, ValidationError, model_validator
 
 from hllrcon.data.factions import AnyFaction, HLLFaction, HLLVFaction
 from hllrcon.data.vehicles import VehicleSeatType, VehicleType
@@ -50,9 +50,9 @@ from scripts.extractlib.objects.hll_commander_ability import (
 )
 from scripts.extractlib.objects.hll_map_ability_data import HLLMapAbilityData
 from scripts.extractlib.objects.hll_vehicle import (
-    HLLAntiAircraftGunProperties,
     HLLAntiTankGunProperties,
     HLLArmorProperties,
+    HLLDeployableMGProperties,
     HLLHalftrackProperties,
     HLLHowitzerProperties,
     HLLMortarProperties,
@@ -182,7 +182,7 @@ with root_path_ctx(HLLV_METADATA_PATH):
     HLLV_ARTILLERY_FACTIONS: dict[Path, set[AnyFaction]] = {
         HLLV_MORTARS_DIR / "US/BP_Mortar_US_M29.json": {HLLVFaction.US},
         HLLV_MORTARS_DIR / "BP_Mortar_NVA_Type67.json": {HLLVFaction.NVA},
-        HLLV_ANTI_AIR_DIR / "BP_DShKMAntiAircraftGun.json": {HLLVFaction.NVA},
+        HLLV_ANTI_AIR_DIR / "BP_DeployableAAGun.json": {HLLVFaction.NVA},
     }
     HLLV_ARTILLERY_FACTIONS = {
         local_to_abs_path(fp): factions
@@ -864,7 +864,7 @@ class ArtilleryVehicleExtractor(
         HLLHowitzerProperties
         | HLLAntiTankGunProperties
         | HLLMortarProperties
-        | HLLAntiAircraftGunProperties
+        | HLLDeployableMGProperties
     ],
 ):
     def get_weapon_type(self, weapon: HLLArmorWeapon, seat_index: int) -> WeaponType:
@@ -1001,8 +1001,15 @@ def get_all_ability_tables() -> Iterator[tuple[HLLMapAbilityData, set[AnyFaction
 def get_all_abilities() -> Iterator[tuple[HLLCommanderAbility, set[AnyFaction]]]:
     for ability_table, factions in get_all_ability_tables():
         for ability in ability_table.properties.abilities:
-            if a := ability.get_ability():
-                yield a, factions
+            try:
+                if a := ability.get_ability():
+                    yield a, factions
+            except ValidationError as e:
+                logger.error(  # noqa: TRY400
+                    "Error resolving ability blueprint %s: %s",
+                    ability.ability_class.asset_path_name,
+                    e,
+                )
 
 
 def get_all_artillery() -> Iterator[tuple[HLLVehicle, VehicleType, Path]]:
@@ -1040,26 +1047,40 @@ def get_all_artillery() -> Iterator[tuple[HLLVehicle, VehicleType, Path]]:
             glob_pattern="**/BP_Mortar_*.json",
             cond_obj_type=BlueprintGeneratedClass,
         ):
-            yield (
-                mortar_bgc.get_default_object(HLLVehicle[HLLMortarProperties]),
-                VehicleType.MORTAR,
-                fp,
-            )
+            try:
+                yield (
+                    mortar_bgc.get_default_object(HLLVehicle[HLLMortarProperties]),
+                    VehicleType.MORTAR,
+                    fp,
+                )
+            except ValidationError as e:
+                logger.error(  # noqa: TRY400
+                    "Error resolving mortar blueprint %s: %s",
+                    mortar_bgc.name,
+                    e,
+                )
 
         for antiair_bgc, fp in find_objects_in_dir(
             local_to_abs_path(HLLV_ANTI_AIR_DIR, add_ext=False),
-            lambda bgc: bgc.get_root_struct_name() == "Class'HLLAntiAircraftGun'",
-            obj_type=BlueprintGeneratedClass[HLLVehicle[HLLAntiAircraftGunProperties]],
+            lambda bgc: bgc.get_root_struct_name() == "Class'HLLDeployableMG'",
+            obj_type=BlueprintGeneratedClass[HLLVehicle[HLLDeployableMGProperties]],
             glob_pattern="**/BP_*Gun.json",
             cond_obj_type=BlueprintGeneratedClass,
         ):
-            yield (
-                antiair_bgc.get_default_object(
-                    HLLVehicle[HLLAntiAircraftGunProperties],
-                ),
-                VehicleType.ANTI_AIRCRAFT_GUN,
-                fp,
-            )
+            try:
+                yield (
+                    antiair_bgc.get_default_object(
+                        HLLVehicle[HLLDeployableMGProperties],
+                    ),
+                    VehicleType.ANTI_AIRCRAFT_GUN,
+                    fp,
+                )
+            except ValidationError as e:
+                logger.error(  # noqa: TRY400
+                    "Error resolving AA gun blueprint %s: %s",
+                    antiair_bgc.name,
+                    e,
+                )
 
         return
     else:
@@ -1233,7 +1254,7 @@ def get_all_vehicle_data() -> Iterator[VehicleData]:
                 HLLHowitzerProperties,
                 HLLAntiTankGunProperties,
                 HLLMortarProperties,
-                HLLAntiAircraftGunProperties,
+                HLLDeployableMGProperties,
             ),
         ):
             data = ArtilleryVehicleExtractor(

@@ -4816,10 +4816,10 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         """*Type 53 w/Bayonet*"""
         return cls(
             id="Type 53 w/Bayonet",
-            name="",
+            name="Type 53 w/Bayonet",
             vehicle_id=None,
             factions={HLLVFaction.NVA},
-            type=WeaponType.UNKNOWN,
+            type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
         )
 
