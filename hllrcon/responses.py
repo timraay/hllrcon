@@ -11,6 +11,7 @@ from typing import (
     NamedTuple,
     TypeAlias,
     TypeVar,
+    cast,
 )
 
 from pydantic import (
@@ -23,7 +24,7 @@ from pydantic import (
 )
 from pydantic.alias_generators import to_camel
 
-from hllrcon.admin_logs import AdminLog
+from hllrcon.admin_logs import AnyAdminLog, HLLAdminLog, HLLVAdminLog, _AdminLog
 from hllrcon.data import AnyFaction, AnyGameMode, AnyLayer, AnyRole, TimeOfDay
 from hllrcon.data.factions import HLLFaction, HLLVFaction, _Faction
 from hllrcon.data.game_modes import HLLGameMode, HLLVGameMode
@@ -34,6 +35,7 @@ RoleT = TypeVar("RoleT", bound=AnyRole)
 FactionT = TypeVar("FactionT", bound=AnyFaction)
 GameModeT = TypeVar("GameModeT", bound=AnyGameMode)
 LayerT = TypeVar("LayerT", bound=AnyLayer)
+AdminLogT = TypeVar("AdminLogT", bound=AnyAdminLog)
 
 EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 SplitStringValidator = BeforeValidator(lambda x: str(x).split(",") if x else [])
@@ -286,25 +288,28 @@ class ForceMode(StrEnum):
 
 
 class _GetAdminLogResponseEntry(Response):
+    _ADMIN_LOG_CLS: ClassVar[type[_AdminLog]] = _AdminLog
+
     timestamp: datetime
     message: str
 
     @classmethod
-    def _admin_log_validator(cls, vs: Sequence[Any]) -> list[AdminLog]:
+    def _admin_log_validator(cls, vs: Sequence[Any]) -> list[AnyAdminLog]:
         if not isinstance(vs, Sequence):  # pragma: no cover
             msg = f"Expected a sequence, got {type(vs)}"
             raise TypeError(msg)
 
         entries = [cls.model_validate(v) for v in vs]
-        return [AdminLog.parse(entry.message) for entry in entries]
+        admin_log_cls = cast("type[AnyAdminLog]", cls._ADMIN_LOG_CLS)
+        return [admin_log_cls.parse(entry.message) for entry in entries]
 
 
 class HLLGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
-    pass
+    _ADMIN_LOG_CLS = HLLAdminLog
 
 
 class HLLVGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
-    pass
+    _ADMIN_LOG_CLS = HLLVAdminLog
 
 
 AnyGetAdminLogResponseEntry: TypeAlias = (
@@ -314,7 +319,7 @@ AnyGetAdminLogResponseEntry: TypeAlias = (
 
 class _GetAdminLogResponse(Response):
     entries: Annotated[
-        Sequence[AdminLog],
+        Sequence[_AdminLog],
         PlainValidator(_GetAdminLogResponseEntry._admin_log_validator),
     ]
     """A list of log entries, oldest entries first."""
@@ -322,7 +327,7 @@ class _GetAdminLogResponse(Response):
 
 class HLLGetAdminLogResponse(_GetAdminLogResponse):
     entries: Annotated[
-        Sequence[AdminLog],
+        Sequence[HLLAdminLog],
         PlainValidator(HLLGetAdminLogResponseEntry._admin_log_validator),
     ]
     """A list of log entries, oldest entries first."""
@@ -330,7 +335,7 @@ class HLLGetAdminLogResponse(_GetAdminLogResponse):
 
 class HLLVGetAdminLogResponse(_GetAdminLogResponse):
     entries: Annotated[
-        Sequence[AdminLog],
+        Sequence[HLLVAdminLog],
         PlainValidator(HLLVGetAdminLogResponseEntry._admin_log_validator),
     ]
     """A list of log entries, oldest entries first."""

@@ -84,6 +84,9 @@ exclude_also = [
     # Don't complain about type checker code
     "if TYPE_CHECKING:",
     "@(typing\\.)?overload",
+
+    # Comments to turn coverage on and off:
+    'no cover: start(?s:.)*?no cover: stop',
 ]
 omit = [
     # Exclude "tests" and "scripts" folder from coverage report
