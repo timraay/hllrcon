@@ -23,6 +23,30 @@ class CardinalDirection(StrEnum):
     TOP_TO_BOTTOM = "top to bottom"
     BOTTOM_TO_TOP = "bottom to top"
 
+    def get_opposite(self) -> "CardinalDirection":
+        match self:
+            case CardinalDirection.LEFT_TO_RIGHT:
+                return CardinalDirection.RIGHT_TO_LEFT
+            case CardinalDirection.RIGHT_TO_LEFT:
+                return CardinalDirection.LEFT_TO_RIGHT
+            case CardinalDirection.TOP_TO_BOTTOM:
+                return CardinalDirection.BOTTOM_TO_TOP
+            case CardinalDirection.BOTTOM_TO_TOP:
+                return CardinalDirection.TOP_TO_BOTTOM
+            case _:  # pragma: no cover
+                msg = f"Invalid direction: {self}"
+                raise ValueError(msg)
+
+    def to_orientation(self) -> "Orientation":
+        match self:
+            case CardinalDirection.LEFT_TO_RIGHT | CardinalDirection.RIGHT_TO_LEFT:
+                return Orientation.HORIZONTAL
+            case CardinalDirection.TOP_TO_BOTTOM | CardinalDirection.BOTTOM_TO_TOP:
+                return Orientation.VERTICAL
+            case _:  # pragma: no cover
+                msg = f"Invalid direction: {self}"
+                raise ValueError(msg)
+
 
 class Orientation(StrEnum):
     HORIZONTAL = "horizontal"
@@ -51,31 +75,13 @@ class _Map(CaseInsensitiveIndexedBaseModel[R], Generic[FactionT, R]):
     @cached_property
     def axis_direction(self) -> CardinalDirection:
         """The direction from which the Axis team has to attack."""
-        match self.allies_direction:
-            case CardinalDirection.LEFT_TO_RIGHT:
-                return CardinalDirection.RIGHT_TO_LEFT
-            case CardinalDirection.RIGHT_TO_LEFT:
-                return CardinalDirection.LEFT_TO_RIGHT
-            case CardinalDirection.TOP_TO_BOTTOM:
-                return CardinalDirection.BOTTOM_TO_TOP
-            case CardinalDirection.BOTTOM_TO_TOP:
-                return CardinalDirection.TOP_TO_BOTTOM
-            case _:  # pragma: no cover
-                msg = f"Invalid direction: {self.allies_direction}"
-                raise ValueError(msg)
+        return self.allies_direction.get_opposite()
 
     @computed_field
     @cached_property
     def orientation(self) -> Orientation:
         """Whether teams start horizontally or vertically from one another."""
-        match self.allies_direction:
-            case CardinalDirection.LEFT_TO_RIGHT | CardinalDirection.RIGHT_TO_LEFT:
-                return Orientation.HORIZONTAL
-            case CardinalDirection.TOP_TO_BOTTOM | CardinalDirection.BOTTOM_TO_TOP:
-                return Orientation.VERTICAL
-            case _:  # pragma: no cover
-                msg = f"Invalid direction: {self.allies_direction}"
-                raise ValueError(msg)
+        return self.allies_direction.to_orientation()
 
     @computed_field
     @cached_property
@@ -396,11 +402,13 @@ class HLLMap(_Map[HLLFaction]):
 
 
 class HLLVMap(_Map[HLLVFaction]):
+    ### INJECT "hllv maps" START
+
     @class_cached_property
     @classmethod
     def CAM_RANH_PORT(cls) -> "HLLVMap":
         return cls(
-            id="wdeve",
+            id="WDEV_E",
             name="CAM RANH PORT",
             tag="CAM",
             year=1969,
@@ -415,7 +423,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def DAK_TO_AIRFIELD(cls) -> "HLLVMap":
         return cls(
-            id="wdevd",
+            id="WDEV_D",
             name="ĐĂK TÔ AIRFIELD",
             tag="DAK",
             year=1967,
@@ -430,7 +438,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def HUE_OUTSKIRTS(cls) -> "HLLVMap":
         return cls(
-            id="wdevc",
+            id="WDEV_C",
             name="HUẾ OUTSKIRTS",
             tag="HUE",
             year=1968,
@@ -445,7 +453,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def QUANG_NGAI(cls) -> "HLLVMap":
         return cls(
-            id="wdevb",
+            id="WDEV_B",
             name="QUẢNG NGÃI",
             tag="QUA",
             year=1965,
@@ -460,7 +468,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def THANH_HOA_BRIDGE(cls) -> "HLLVMap":
         return cls(
-            id="wdevf",
+            id="WDEV_F",
             name="THANH HÒA BRIDGE",
             tag="THA",
             year=1965,
@@ -475,7 +483,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def VAN_TUONG(cls) -> "HLLVMap":
         return cls(
-            id="wdeva",
+            id="WDEV_A",
             name="VẠN TƯỜNG",
             tag="VAN",
             year=1965,
@@ -485,6 +493,8 @@ class HLLVMap(_Map[HLLVFaction]):
             axis=HLLVFaction.NVA,
             allies_direction=CardinalDirection.RIGHT_TO_LEFT,
         )
+
+    ### INJECT "hllv maps" END
 
 
 AnyMap: TypeAlias = HLLMap | HLLVMap

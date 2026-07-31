@@ -129,7 +129,46 @@ class Sector(GridPositionalModel, frozen=True):
     capture_zones: list[CaptureZone]
 
     @classmethod
-    def large_layout(
+    def _new_layout(
+        cls,
+        orientation: Orientation,
+        strongpoints: tuple[
+            tuple[Strongpoint, ...],
+            ...,
+        ],
+    ) -> list[Self]:
+
+        if orientation == Orientation.HORIZONTAL:
+
+            def orient(x: int, y: int) -> tuple[int, int]:
+                return x, y
+        else:
+
+            def orient(x: int, y: int) -> tuple[int, int]:
+                return y, x
+
+        num_sectors = len(strongpoints)
+        return [
+            cls(
+                grid_from=orient(2 * i - num_sectors, -len(sector)),
+                grid_to=orient(2 * i - (num_sectors - 1), len(sector) - 1),
+                capture_zones=[
+                    CaptureZone(
+                        grid_from=orient(2 * i - num_sectors, 2 * j - len(sector)),
+                        grid_to=orient(
+                            2 * i - (num_sectors - 1),
+                            2 * j - (len(sector) - 1),
+                        ),
+                        strongpoint=strongpoint,
+                    )
+                    for j, strongpoint in enumerate(sector)
+                ],
+            )
+            for i, sector in enumerate(strongpoints)
+        ]
+
+    @classmethod
+    def warfare_layout(
         cls,
         orientation: Orientation,
         strongpoints: tuple[
@@ -138,6 +177,18 @@ class Sector(GridPositionalModel, frozen=True):
             tuple[Strongpoint, Strongpoint, Strongpoint],
             tuple[Strongpoint, Strongpoint, Strongpoint],
             tuple[Strongpoint, Strongpoint, Strongpoint],
+        ],
+    ) -> list[Self]:
+        return cls._new_layout(orientation=orientation, strongpoints=strongpoints)
+
+    @classmethod
+    def conquest_layout(
+        cls,
+        orientation: Orientation,
+        strongpoints: tuple[
+            tuple[Strongpoint],
+            tuple[Strongpoint, Strongpoint, Strongpoint],
+            tuple[Strongpoint],
         ],
     ) -> list[Self]:
         if orientation == Orientation.HORIZONTAL:
@@ -149,21 +200,24 @@ class Sector(GridPositionalModel, frozen=True):
             def orient(x: int, y: int) -> tuple[int, int]:
                 return y, x
 
-        return [
+        self = cls._new_layout(orientation=orientation, strongpoints=strongpoints)
+        self.insert(
+            0,
             cls(
-                grid_from=orient(2 * i - 5, -3),
-                grid_to=orient(2 * i - 4, 2),
-                capture_zones=[
-                    CaptureZone(
-                        grid_from=orient(2 * i - 5, 2 * j - 3),
-                        grid_to=orient(2 * i - 4, 2 * j - 2),
-                        strongpoint=strongpoint,
-                    )
-                    for j, strongpoint in enumerate(sector)
-                ],
-            )
-            for i, sector in enumerate(strongpoints)
-        ]
+                grid_from=orient(-5, -3),
+                grid_to=orient(-4, 2),
+                capture_zones=[],
+            ),
+        )
+        self.append(
+            cls(
+                grid_from=orient(3, -3),
+                grid_to=orient(4, 2),
+                capture_zones=[],
+            ),
+        )
+
+        return self
 
     @classmethod
     def skirmish_layout(
@@ -205,7 +259,7 @@ class Sector(GridPositionalModel, frozen=True):
         ]
 
 
-def convert_large_layout_to_conquest(sectors: list[Sector]) -> list[Sector]:
+def convert_warfare_layout_to_conquest(sectors: list[Sector]) -> list[Sector]:
     """Create a copy of a large sector layout suitable for Conquest mode.
 
     Conquest layouts are similar to standard large layouts, but the second and fourth
@@ -213,23 +267,23 @@ def convert_large_layout_to_conquest(sectors: list[Sector]) -> list[Sector]:
     capture zones are removed.
     """
     return [
-        sectors[0],
+        sectors[0].model_copy(update={"capture_zones": []}),
         Sector(
             grid_from=sectors[1].grid_from,
             grid_to=sectors[1].grid_to,
             capture_zones=[sectors[1].capture_zones[1]],
         ),
-        sectors[2],
+        sectors[2].model_copy(),
         Sector(
             grid_from=sectors[3].grid_from,
             grid_to=sectors[3].grid_to,
             capture_zones=[sectors[3].capture_zones[1]],
         ),
-        sectors[4],
+        sectors[4].model_copy(update={"capture_zones": []}),
     ]
 
 
-SECTORS_CARENTAN_LARGE = Sector.large_layout(
+SECTORS_CARENTAN_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -334,7 +388,7 @@ SECTORS_CARENTAN_LARGE = Sector.large_layout(
         ),
     ),
 )
-SECTORS_CARENTAN_CONQUEST = convert_large_layout_to_conquest(SECTORS_CARENTAN_LARGE)
+SECTORS_CARENTAN_CONQUEST = convert_warfare_layout_to_conquest(SECTORS_CARENTAN_LARGE)
 
 SECTORS_CARENTAN_SMALL = Sector.skirmish_layout(
     orientation=Orientation.HORIZONTAL,
@@ -346,7 +400,7 @@ SECTORS_CARENTAN_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_DRIEL_LARGE = Sector.large_layout(
+SECTORS_DRIEL_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -358,7 +412,7 @@ SECTORS_DRIEL_LARGE = Sector.large_layout(
             ),
             Strongpoint(
                 id="ROSANDER POLDER",
-                name="Roseander Polder",
+                name="Rosander Polder",
                 center=(2809.0745, -78795.875, -159.22235),
                 radius=6000.0,
             ),
@@ -462,7 +516,7 @@ SECTORS_DRIEL_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_ELALAMEIN_LARGE = Sector.large_layout(
+SECTORS_ELALAMEIN_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -578,7 +632,7 @@ SECTORS_ELALAMEIN_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_ELSENBORNRIDGE_LARGE = Sector.large_layout(
+SECTORS_ELSENBORNRIDGE_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -694,7 +748,7 @@ SECTORS_ELSENBORNRIDGE_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_FOY_LARGE = Sector.large_layout(
+SECTORS_FOY_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -800,9 +854,9 @@ SECTORS_FOY_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_FOY_CONQUEST = convert_large_layout_to_conquest(SECTORS_FOY_LARGE)
+SECTORS_FOY_CONQUEST = convert_warfare_layout_to_conquest(SECTORS_FOY_LARGE)
 
-SECTORS_HILL400_LARGE = Sector.large_layout(
+SECTORS_HILL400_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -918,7 +972,7 @@ SECTORS_HILL400_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_HURTGENFOREST_LARGE = Sector.large_layout(
+SECTORS_HURTGENFOREST_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -1024,7 +1078,7 @@ SECTORS_HURTGENFOREST_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_JUNOBEACH_LARGE = Sector.large_layout(
+SECTORS_JUNOBEACH_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -1140,7 +1194,7 @@ SECTORS_JUNOBEACH_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_KHARKOV_LARGE = Sector.large_layout(
+SECTORS_KHARKOV_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -1246,7 +1300,7 @@ SECTORS_KHARKOV_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_KURSK_LARGE = Sector.large_layout(
+SECTORS_KURSK_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -1352,7 +1406,7 @@ SECTORS_KURSK_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_MORTAIN_LARGE = Sector.large_layout(
+SECTORS_MORTAIN_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -1468,7 +1522,7 @@ SECTORS_MORTAIN_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_OMAHABEACH_LARGE = Sector.large_layout(
+SECTORS_OMAHABEACH_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -1574,7 +1628,7 @@ SECTORS_OMAHABEACH_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_PURPLEHEARTLANE_LARGE = Sector.large_layout(
+SECTORS_PURPLEHEARTLANE_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -1690,7 +1744,7 @@ SECTORS_PURPLEHEARTLANE_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_REMAGEN_LARGE = Sector.large_layout(
+SECTORS_REMAGEN_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -1806,7 +1860,7 @@ SECTORS_REMAGEN_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_SMOLENSK_LARGE = Sector.large_layout(
+SECTORS_SMOLENSK_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -1912,7 +1966,7 @@ SECTORS_SMOLENSK_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_SMOLENSK_CONQUEST = convert_large_layout_to_conquest(SECTORS_SMOLENSK_LARGE)
+SECTORS_SMOLENSK_CONQUEST = convert_warfare_layout_to_conquest(SECTORS_SMOLENSK_LARGE)
 
 SECTORS_SMOLENSK_SMALL = Sector.skirmish_layout(
     orientation=Orientation.HORIZONTAL,
@@ -1924,7 +1978,7 @@ SECTORS_SMOLENSK_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_STALINGRAD_LARGE = Sector.large_layout(
+SECTORS_STALINGRAD_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2040,7 +2094,7 @@ SECTORS_STALINGRAD_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_STMARIEDUMONT_LARGE = Sector.large_layout(
+SECTORS_STMARIEDUMONT_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -2156,7 +2210,7 @@ SECTORS_STMARIEDUMONT_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_STMEREEGLISE_LARGE = Sector.large_layout(
+SECTORS_STMEREEGLISE_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2272,7 +2326,7 @@ SECTORS_STMEREEGLISE_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_TOBRUK_LARGE = Sector.large_layout(
+SECTORS_TOBRUK_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2388,7 +2442,7 @@ SECTORS_TOBRUK_SMALL = Sector.skirmish_layout(
     ),
 )
 
-SECTORS_UTAHBEACH_LARGE = Sector.large_layout(
+SECTORS_UTAHBEACH_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2494,7 +2548,7 @@ SECTORS_UTAHBEACH_LARGE = Sector.large_layout(
     ),
 )
 
-SECTORS_CAMRANHPORT_LARGE = Sector.large_layout(  # TODO: Add strongpoints
+SECTORS_CAMRANHPORT_LARGE = Sector.warfare_layout(  # TODO: Add strongpoints
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2599,7 +2653,7 @@ SECTORS_CAMRANHPORT_LARGE = Sector.large_layout(  # TODO: Add strongpoints
         ),
     ),
 )
-SECTORS_DAKTOAIRFIELD_LARGE = Sector.large_layout(
+SECTORS_DAKTOAIRFIELD_LARGE = Sector.warfare_layout(
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2704,7 +2758,7 @@ SECTORS_DAKTOAIRFIELD_LARGE = Sector.large_layout(
         ),
     ),
 )
-SECTORS_HUEOUTSKIRTS_LARGE = Sector.large_layout(  # TODO: Add strongpoints
+SECTORS_HUEOUTSKIRTS_LARGE = Sector.warfare_layout(  # TODO: Add strongpoints
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -2809,7 +2863,7 @@ SECTORS_HUEOUTSKIRTS_LARGE = Sector.large_layout(  # TODO: Add strongpoints
         ),
     ),
 )
-SECTORS_QUANGNGAI_LARGE = Sector.large_layout(  # TODO: Add strongpoints
+SECTORS_QUANGNGAI_LARGE = Sector.warfare_layout(  # TODO: Add strongpoints
     orientation=Orientation.HORIZONTAL,
     strongpoints=(
         (
@@ -2914,7 +2968,7 @@ SECTORS_QUANGNGAI_LARGE = Sector.large_layout(  # TODO: Add strongpoints
         ),
     ),
 )
-SECTORS_THANHHOABRIDGE_LARGE = Sector.large_layout(
+SECTORS_THANHHOABRIDGE_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -3019,7 +3073,7 @@ SECTORS_THANHHOABRIDGE_LARGE = Sector.large_layout(
         ),
     ),
 )
-SECTORS_VANTUONG_LARGE = Sector.large_layout(
+SECTORS_VANTUONG_LARGE = Sector.warfare_layout(
     orientation=Orientation.VERTICAL,
     strongpoints=(
         (
@@ -3124,3 +3178,896 @@ SECTORS_VANTUONG_LARGE = Sector.large_layout(
         ),
     ),
 )
+
+
+### INJECT "hllv sectors" START
+
+SECTORS_CAM_RANH_PORT_WARFARE = Sector.warfare_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="POL STORAGE",
+                name="POL STORAGE",
+                center=(-80000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="SIGNAL SITE",
+                name="SIGNAL SITE",
+                center=(-80000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="POL JETTY",
+                name="POL JETTY",
+                center=(-80000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="ROADSIDE CAMP",
+                name="ROADSIDE CAMP",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="CHECKPOINT",
+                name="CHECKPOINT",
+                center=(-40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="AMMO PIER",
+                name="AMMO PIER",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="CANTONMENT OUTSKIRTS",
+                name="CANTONMENT OUTSKIRTS",
+                center=(0.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="BASE CAMP",
+                name="BASE CAMP",
+                center=(0.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="DELONG PIERS",
+                name="DELONG PIERS",
+                center=(0.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="DESERT JUNGLE CROSSING",
+                name="DESERT JUNGLE CROSSING",
+                center=(40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="DRY CREEK BED",
+                name="DRY CREEK BED",
+                center=(40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="STORAGE YARD",
+                name="STORAGE YARD",
+                center=(40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="JUNGLE HILL",
+                name="JUNGLE HILL",
+                center=(80000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="MAINTENANCE MARKET",
+                name="MAINTENANCE MARKET",
+                center=(80000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="COMMUNICATIONS CENTRE",
+                name="COMMUNICATIONS CENTRE",
+                center=(80000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_DAK_TO_AIRFIELD_WARFARE = Sector.warfare_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="ROUTE TO ARVN BASE",
+                name="ROUTE TO ARVN BASE",
+                center=(-68043.22, -39128.582, 1392.4828),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="US RADIO RELAY",
+                name="US RADIO RELAY",
+                center=(-70020.0, -1705.0, 1026.4702),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="FORTIFIED BRIDGE",
+                name="FORTIFIED BRIDGE",
+                center=(-71775.0, 32670.0, -173.39989),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="AIRBORNE CAMP",
+                name="AIRBORNE CAMP",
+                center=(-40310.0, -43110.0, 1803.5828),
+                radius=6500.0,
+            ),
+            Strongpoint(
+                id="MED EVAC STATION",
+                name="MED EVAC STATION",
+                center=(-39905.0, -3540.0, 503.11826),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="DESERTED FARMLAND",
+                name="DESERTED FARMLAND",
+                center=(-38830.0, 38805.0, 21.162066),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="SHOOTING RANGE",
+                name="SHOOTING RANGE",
+                center=(-100.0, -44230.0, 377.497),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="SPECIAL FORCES CAMP",
+                name="SPECIAL FORCES CAMP",
+                center=(335.0, -1875.0, 298.74045),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="PATROL BOAT DOCKS",
+                name="PATROL BOAT DOCKS",
+                center=(945.0, 32910.0, -244.6939),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="C130 WRECKAGE",
+                name="C130 WRECKAGE",
+                center=(41746.785, -30439.621, 854.2748),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="AMMO DUMP",
+                name="AMMO DUMP",
+                center=(41205.0, -2090.0, -129.77422),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="RIVER LOOKOUT",
+                name="RIVER LOOKOUT",
+                center=(40025.0, 34350.0, -682.5037),
+                radius=6000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="TERMINAL",
+                name="TERMINAL",
+                center=(69745.0, -29805.0, 1177.6472),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="ABANDONED DWELLING",
+                name="ABANDONED DWELLING",
+                center=(70690.0, -735.0, 145.62274),
+                radius=5500.0,
+            ),
+            Strongpoint(
+                id="NVA BOAT LANDING",
+                name="NVA BOAT LANDING",
+                center=(67865.0, 33595.0, -237.5059),
+                radius=5500.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_HUE_OUTSKIRTS_WARFARE = Sector.warfare_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="MARKET TOWN",
+                name="MARKET TOWN",
+                center=(-40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="RIVERSIDE PLANTATION",
+                name="RIVERSIDE PLANTATION",
+                center=(0.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="HIDDEN ENCAMPMENT",
+                name="HIDDEN ENCAMPMENT",
+                center=(40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="LOST CONVOY",
+                name="LOST CONVOY",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="FACTORY CHECKPOINT",
+                name="FACTORY CHECKPOINT",
+                center=(0.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="SOUTHERN CLIMB",
+                name="SOUTHERN CLIMB",
+                center=(40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="US OVERLOOK",
+                name="US OVERLOOK",
+                center=(-40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="INDUSTRIAL ZONE",
+                name="INDUSTRIAL ZONE",
+                center=(0.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="HILLTOP PASS",
+                name="HILLTOP PASS",
+                center=(40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="MOUNTAIN BASE CAMP",
+                name="MOUNTAIN BASE CAMP",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="ARMOURED CHECKPOINT",
+                name="ARMOURED CHECKPOINT",
+                center=(0.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="US CHECKPOINT",
+                name="US CHECKPOINT",
+                center=(40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="SOUTHERN HAMLET",
+                name="SOUTHERN HAMLET",
+                center=(-40000.0, 80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="RANSACKED FARM",
+                name="RANSACKED FARM",
+                center=(0.0, 80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="US FOB",
+                name="US FOB",
+                center=(40000.0, 80000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_QUANG_NGAI_WARFARE = Sector.warfare_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="LZ OAK",
+                name="LZ OAK",
+                center=(-80000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="U.S RECON CAMP",
+                name="U.S RECON CAMP",
+                center=(-80000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="RIVERSIDE FARM",
+                name="RIVERSIDE FARM",
+                center=(-80000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="JUNGLE HILLSIDE",
+                name="JUNGLE HILLSIDE",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="FISHING VILLAGE",
+                name="FISHING VILLAGE",
+                center=(-40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="JUNGLE CROSSROADS",
+                name="JUNGLE CROSSROADS",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="LIMESTONE CAVE",
+                name="LIMESTONE CAVE",
+                center=(0.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="FLOODED VILLAGE",
+                name="FLOODED VILLAGE",
+                center=(0.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="SCISSOR CROSSING",
+                name="SCISSOR CROSSING",
+                center=(0.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="HIDDEN NVA CAMP",
+                name="HIDDEN NVA CAMP",
+                center=(40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="JUNGLE FARMSTEAD",
+                name="JUNGLE FARMSTEAD",
+                center=(40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="ABANDONED HAMLET",
+                name="ABANDONED HAMLET",
+                center=(40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="NVA SUPPLY CACHE",
+                name="NVA SUPPLY CACHE",
+                center=(80000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="EASTERN BANK",
+                name="EASTERN BANK",
+                center=(80000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="TWIN ISLANDS",
+                name="TWIN ISLANDS",
+                center=(80000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_THANH_HOA_BRIDGE_WARFARE = Sector.warfare_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="BOATYARD",
+                name="BOATYARD",
+                center=(-40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="RAILWAY CHECKPOINT",
+                name="RAILWAY CHECKPOINT",
+                center=(0.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="AN CHƯƠNG FARM",
+                name="AN CHƯƠNG FARM",
+                center=(40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="ĐƯỜNG TÂY",
+                name="ĐƯỜNG TÂY",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="NAM MÃ RIVER",
+                name="NAM MÃ RIVER",
+                center=(0.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="YÊN TRUNG VILLAGE",
+                name="YÊN TRUNG VILLAGE",
+                center=(40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="FORTIFIED TRAIN STATION",
+                name="FORTIFIED TRAIN STATION",
+                center=(-40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="DRAGONS JAW",
+                name="DRAGONS JAW",
+                center=(0.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="TRAINYARD",
+                name="TRAINYARD",
+                center=(40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="RAILWAY VILLAGE",
+                name="RAILWAY VILLAGE",
+                center=(-40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="NVA RIVER CHECKPOINT",
+                name="NVA RIVER CHECKPOINT",
+                center=(0.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="HÀM RỒNG APPROACH",
+                name="HÀM RỒNG APPROACH",
+                center=(40000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="US ENCAMPMENT",
+                name="US ENCAMPMENT",
+                center=(-40000.0, 80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="US PBR CAMP",
+                name="US PBR CAMP",
+                center=(0.0, 80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="HOÀNG LONG LZ",
+                name="HOÀNG LONG LZ",
+                center=(40000.0, 80000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_VAN_TUONG_WARFARE = Sector.warfare_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="AN CUỜNG (2)",
+                name="AN CUỜNG (2)",
+                center=(-72004.0, -45785.0, -259.04706),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="LZ BLUE PERIMETER",
+                name="LZ BLUE PERIMETER",
+                center=(-69240.0, -1535.0, 99.999756),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="ROUTE TO NAM YÊN",
+                name="ROUTE TO NAM YÊN",
+                center=(-70425.0, 37510.0, 99.999756),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="RIVER CHECKPOINT",
+                name="RIVER CHECKPOINT",
+                center=(-40000.0, -43460.0, -427.51587),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="LAGOON OVERLOOK",
+                name="LAGOON OVERLOOK",
+                center=(-40042.0, 235.0, -372.57834),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="JUNGLE CLEARING CAMP",
+                name="JUNGLE CLEARING CAMP",
+                center=(-40000.0, 35155.0, 99.999756),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="JUNGLE OUTPOST",
+                name="JUNGLE OUTPOST",
+                center=(0.0, -35565.0, 99.999756),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="FORTIFIED AN CƯỜNG",
+                name="FORTIFIED AN CƯỜNG",
+                center=(0.0, 520.0, -255.00024),
+                radius=7000.0,
+            ),
+            Strongpoint(
+                id="RIVERSIDE VILLAGE",
+                name="RIVERSIDE VILLAGE",
+                center=(-2335.0, 38855.0, 686.1443),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="AN CƯỜNG OUTSKIRTS",
+                name="AN CƯỜNG OUTSKIRTS",
+                center=(41925.0, -41560.0, -830.344),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="NVA RELAY STATION",
+                name="NVA RELAY STATION",
+                center=(39190.0, 1275.0, -1227.0782),
+                radius=5000.0,
+            ),
+            Strongpoint(
+                id="CẦU BÀU CHIẾU",
+                name="CẦU BÀU CHIẾU",
+                center=(31645.0, 33800.0, -435.59326),
+                radius=5000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="PHASE LINE APPLE",
+                name="PHASE LINE APPLE",
+                center=(70575.0, -43615.0, -1487.6879),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="AN CƯỜNG (1)",
+                name="AN CƯỜNG (1)",
+                center=(69735.0, 1920.0, -1279.5627),
+                radius=6000.0,
+            ),
+            Strongpoint(
+                id="RIVER'S END",
+                name="RIVER'S END",
+                center=(70350.0, 40950.0, -501.7067),
+                radius=6000.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_CAM_RANH_PORT_CONQUEST = Sector.conquest_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="POL STORAGE",
+                name="POL STORAGE",
+                center=(-80000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="SIGNAL SITE",
+                name="SIGNAL SITE",
+                center=(-80000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="POL JETTY",
+                name="POL JETTY",
+                center=(-80000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="ROADSIDE CAMP",
+                name="ROADSIDE CAMP",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="CHECKPOINT",
+                name="CHECKPOINT",
+                center=(-40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_DAK_TO_AIRFIELD_CONQUEST = Sector.conquest_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="MED EVAC STATION",
+                name="MED EVAC STATION",
+                center=(-40275.19, -1838.3939, 74.64155),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="SHOOTING RANGE",
+                name="SHOOTING RANGE",
+                center=(1.9078368e-05, -44125.66, 0.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="SPECIAL FORCES CAMP",
+                name="SPECIAL FORCES CAMP",
+                center=(0.0, 0.0, 0.0),
+                radius=8000.0,
+            ),
+            Strongpoint(
+                id="PATROL BOAT DOCKS",
+                name="PATROL BOAT DOCKS",
+                center=(850.9194, 33583.22, 1.0913936e-11),
+                radius=8000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="AMMO DUMP",
+                name="AMMO DUMP",
+                center=(41672.914, -467.4983, 0.0),
+                radius=8000.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_HUE_OUTSKIRTS_CONQUEST = Sector.conquest_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="MARKET TOWN",
+                name="MARKET TOWN",
+                center=(-40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="RIVERSIDE PLANTATION",
+                name="RIVERSIDE PLANTATION",
+                center=(0.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="HIDDEN ENCAMPMENT",
+                name="HIDDEN ENCAMPMENT",
+                center=(40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="LOST CONVOY",
+                name="LOST CONVOY",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="FACTORY CHECKPOINT",
+                name="FACTORY CHECKPOINT",
+                center=(0.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_QUANG_NGAI_CONQUEST = Sector.conquest_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="LZ OAK",
+                name="LZ OAK",
+                center=(-80000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="U.S RECON CAMP",
+                name="U.S RECON CAMP",
+                center=(-80000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="RIVERSIDE FARM",
+                name="RIVERSIDE FARM",
+                center=(-80000.0, 40000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="JUNGLE HILLSIDE",
+                name="JUNGLE HILLSIDE",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="FISHING VILLAGE",
+                name="FISHING VILLAGE",
+                center=(-40000.0, 0.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_THANH_HOA_BRIDGE_CONQUEST = Sector.conquest_layout(
+    orientation=Orientation.VERTICAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="BOATYARD",
+                name="BOATYARD",
+                center=(-40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="RAILWAY CHECKPOINT",
+                name="RAILWAY CHECKPOINT",
+                center=(0.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="AN CHƯƠNG FARM",
+                name="AN CHƯƠNG FARM",
+                center=(40000.0, -80000.0, 0.0),
+                radius=1.0,
+            ),
+            Strongpoint(
+                id="ĐƯỜNG TÂY",
+                name="ĐƯỜNG TÂY",
+                center=(-40000.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="NAM MÃ RIVER",
+                name="NAM MÃ RIVER",
+                center=(0.0, -40000.0, 0.0),
+                radius=1.0,
+            ),
+        ),
+    ),
+)
+
+SECTORS_VAN_TUONG_CONQUEST = Sector.conquest_layout(
+    orientation=Orientation.HORIZONTAL,
+    strongpoints=(
+        (
+            Strongpoint(
+                id="LAGOON OVERLOOK",
+                name="LAGOON OVERLOOK",
+                center=(-40000.0, 0.0, 0.0),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="JUNGLE OUTPOST",
+                name="JUNGLE OUTPOST",
+                center=(0.0, -36616.64, -3.946474e-06),
+                radius=7500.0,
+            ),
+            Strongpoint(
+                id="FORTIFIED AN CƯỜNG",
+                name="FORTIFIED AN CƯỜNG",
+                center=(0.0, 0.0, 0.0),
+                radius=7500.0,
+            ),
+            Strongpoint(
+                id="RIVERSIDE VILLAGE",
+                name="RIVERSIDE VILLAGE",
+                center=(-2325.214, 38828.816, 4.712013e-06),
+                radius=7000.0,
+            ),
+        ),
+        (
+            Strongpoint(
+                id="NVA RELAY STATION",
+                name="NVA RELAY STATION",
+                center=(39306.44, 1309.354, -744.11945),
+                radius=7500.0,
+            ),
+        ),
+    ),
+)
+
+### INJECT "hllv sectors" END
