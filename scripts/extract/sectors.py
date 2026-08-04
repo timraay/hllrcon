@@ -187,7 +187,7 @@ def get_all_conquest_gp_levels() -> Iterator[Level | None]:
             local_to_abs_path(map_dir / "GP", add_ext=False),
             lambda obj: obj.type == "World",
             obj_type=World,
-            glob_pattern="*GP_Conquest.json",
+            glob_pattern="*Conquest*.json",
         ):
             yield world.persistent_level.get(Level)
             break

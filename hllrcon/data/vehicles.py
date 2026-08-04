@@ -2848,6 +2848,45 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
 
     @class_cached_property
     @classmethod
+    def M48PATTON(cls) -> "HLLVVehicle":
+        """*M48Patton*"""
+        return cls(
+            id="M48Patton",
+            name="M48 Patton",
+            factions={HLLVFaction.US},
+            type=VehicleType.MEDIUM_TANK,
+            seats=[
+                HLLVVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    requires_roles=_HLLV_TANK_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLVWeapon.V_90MM_M41_CANNON__M48PATTON,
+                        HLLVWeapon.V_M73__M48PATTON,
+                    ],
+                    requires_roles=_HLLV_TANK_CREW_ROLES,
+                    exposed=False,
+                ),
+                HLLVVehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.COMMANDER,
+                    weapons=[
+                        HLLVWeapon.V_SMOKE_SCREEN__M48PATTON,
+                    ],
+                    requires_roles=_HLLV_TANK_CREW_ROLES,
+                    exposed=False,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def MORTAR(cls) -> "HLLVVehicle":
         """*MORTAR*"""
         return cls(
@@ -2916,49 +2955,10 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
 
     @class_cached_property
     @classmethod
-    def SD_KFZ_171_M48PATTON(cls) -> "HLLVVehicle":
-        """*Sd.Kfz.171 M48Patton*"""
+    def T54(cls) -> "HLLVVehicle":
+        """*T54*"""
         return cls(
-            id="Sd.Kfz.171 M48Patton",
-            name="M48 Patton",
-            factions={HLLVFaction.US},
-            type=VehicleType.MEDIUM_TANK,
-            seats=[
-                HLLVVehicleSeat(
-                    index=0,
-                    type=VehicleSeatType.DRIVER,
-                    weapons=[],
-                    requires_roles=_HLLV_TANK_CREW_ROLES,
-                    exposed=False,
-                ),
-                HLLVVehicleSeat(
-                    index=1,
-                    type=VehicleSeatType.GUNNER,
-                    weapons=[
-                        HLLVWeapon.V_90MM_M41_CANNON__SD_KFZ_171_M48PATTON,
-                        HLLVWeapon.V_M73__SD_KFZ_171_M48PATTON,
-                    ],
-                    requires_roles=_HLLV_TANK_CREW_ROLES,
-                    exposed=False,
-                ),
-                HLLVVehicleSeat(
-                    index=2,
-                    type=VehicleSeatType.COMMANDER,
-                    weapons=[
-                        HLLVWeapon.V_SMOKE_SCREEN__SD_KFZ_171_M48PATTON,
-                    ],
-                    requires_roles=_HLLV_TANK_CREW_ROLES,
-                    exposed=False,
-                ),
-            ],
-        )
-
-    @class_cached_property
-    @classmethod
-    def SD_KFZ_171_T54(cls) -> "HLLVVehicle":
-        """*Sd.Kfz.171 T54*"""
-        return cls(
-            id="Sd.Kfz.171 T54",
+            id="T54",
             name="T-54",
             factions={HLLVFaction.NVA},
             type=VehicleType.MEDIUM_TANK,
@@ -2974,8 +2974,8 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     index=1,
                     type=VehicleSeatType.GUNNER,
                     weapons=[
-                        HLLVWeapon.V_100MM_D_10T_CANNON__SD_KFZ_171_T54,
-                        HLLVWeapon.V_SGMT_7_62MM__SD_KFZ_171_T54,
+                        HLLVWeapon.V_100MM_D_10T_CANNON__T54,
+                        HLLVWeapon.V_SGMT_7_62MM__T54,
                     ],
                     requires_roles=_HLLV_TANK_CREW_ROLES,
                     exposed=False,
@@ -2984,7 +2984,7 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     index=2,
                     type=VehicleSeatType.COMMANDER,
                     weapons=[
-                        HLLVWeapon.V_SMOKE_SCREEN__SD_KFZ_171_T54,
+                        HLLVWeapon.V_SMOKE_SCREEN__T54,
                     ],
                     requires_roles=_HLLV_TANK_CREW_ROLES,
                     exposed=False,

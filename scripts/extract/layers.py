@@ -181,7 +181,124 @@ class LayerMetaData(TypedDict):
     weather: Weather
 
 
-HLLV_LAYER_METADATA: dict[str, LayerMetaData] = {}
+HLLV_LAYER_METADATA: dict[str, LayerMetaData] = {
+    "WDEV_A_Warfare_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_A_OffensiveNVA_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_A_OffensiveUS_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_A_Domination_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_B_OffensiveNVA_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_B_OffensiveUS_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_B_Domination_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_B_Conquest_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_C_Warfare_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_C_OffensiveNVA_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_C_OffensiveUS_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_C_Domination_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_C_Conquest_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_D_Warfare_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_D_OffensiveNVA_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_D_OffensiveUS_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_D_Domination_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_D_Conquest_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_E_Warfare_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_E_OffensiveNVA_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_E_OffensiveUS_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_E_Domination_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_E_Conquest_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_B_Warfare_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_F_Warfare_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_F_OffensiveNVA_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_F_OffensiveUS_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_F_Domination_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+    "WDEV_F_Conquest_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
+}
 
 if __name__ == "__main__":
     main()

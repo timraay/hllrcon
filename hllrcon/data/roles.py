@@ -1026,7 +1026,7 @@ class HLLVRole(_Role):
             progression=[
                 HLLVRoleProgression(
                     level=1,
-                    max_weight=6,
+                    max_weight=8,
                     secondary_slot_unlocked=False,
                     extra_ammo_unlocked=False,
                     lethal_slots=1,
@@ -1034,7 +1034,7 @@ class HLLVRole(_Role):
                 ),
                 HLLVRoleProgression(
                     level=2,
-                    max_weight=7,
+                    max_weight=9,
                     secondary_slot_unlocked=True,
                     extra_ammo_unlocked=False,
                     lethal_slots=1,
@@ -1042,7 +1042,7 @@ class HLLVRole(_Role):
                 ),
                 HLLVRoleProgression(
                     level=3,
-                    max_weight=8,
+                    max_weight=9,
                     secondary_slot_unlocked=True,
                     extra_ammo_unlocked=True,
                     lethal_slots=2,

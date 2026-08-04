@@ -11606,9 +11606,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M16A1_BAYONET(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M16A1_Bayonet",
-            name="M16A1 With Bayonet",
+            name="M16A1 Bayonet",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M16A1_WITH_BAYONET,
+            weapon=HLLVWeapon.M16A1_BAYONET,
             type=HLLVLoadoutItemType.PRIMARY,
             weight=5,
             description_tags=[
@@ -11725,9 +11725,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M18_SMOKE(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M18_Smoke",
-            name="M18 Smoke Grenade",
+            name="M18 ",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M18_SMOKE_GRENADE,
+            weapon=HLLVWeapon.M18,
             type=HLLVLoadoutItemType.UTILITY,
             weight=1,
             description_tags=[
@@ -11763,9 +11763,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M18_SMOKEX2(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M18_Smokex2",
-            name="M18 Smoke Grenade x2",
+            name="M18 x2",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M18_SMOKE_GRENADE,
+            weapon=HLLVWeapon.M18,
             type=HLLVLoadoutItemType.UTILITY,
             weight=3,
             description_tags=[
@@ -11801,9 +11801,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M18_SMOKEX3(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M18_Smokex3",
-            name="M18 Smoke Grenade x3",
+            name="M18 x3",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M18_SMOKE_GRENADE,
+            weapon=HLLVWeapon.M18,
             type=HLLVLoadoutItemType.UTILITY,
             weight=5,
             description_tags=[
@@ -11972,9 +11972,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M61(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M61",
-            name="M61 Frag Grenade",
+            name="M61",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M61_FRAG_GRENADE,
+            weapon=HLLVWeapon.M61,
             type=HLLVLoadoutItemType.LETHAL,
             weight=2,
             description_tags=[
@@ -12010,9 +12010,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M61X2(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M61x2",
-            name="M61 Frag Grenade x2",
+            name="M61 x2",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M61_FRAG_GRENADE,
+            weapon=HLLVWeapon.M61,
             type=HLLVLoadoutItemType.LETHAL,
             weight=4,
             description_tags=[
@@ -12048,9 +12048,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def M61X3(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M61x3",
-            name="M61 Frag Grenade x3",
+            name="M61 x3",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.M61_FRAG_GRENADE,
+            weapon=HLLVWeapon.M61,
             type=HLLVLoadoutItemType.LETHAL,
             weight=6,
             description_tags=[
@@ -12083,7 +12083,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
             faction=HLLVFaction.US,
             weapon=HLLVWeapon.M72,
             type=HLLVLoadoutItemType.VERSATILE,
-            weight=6,
+            weight=5,
             description_tags=[
                 "Secondary",
                 "Launcher",
@@ -12143,7 +12143,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 HLLVRole.ENGINEER: 7,
                 HLLVRole.SQUAD_LEADER: 7,
                 HLLVRole.SPECIALIST: 7,
-                HLLVRole.GRENADIER: 7,
+                HLLVRole.GRENADIER: 3,
                 HLLVRole.PILOT: 7,
                 HLLVRole.LOGISTICS_OFFICER: 7,
                 HLLVRole.SPOTTER: 7,
@@ -12163,9 +12163,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def N4_RIFLE_LAUNCHER(cls) -> "HLLVLoadoutItem":
         return cls(
             id="N4_Rifle_Launcher",
-            name="Type 53 W/ N4 Rifle Launcher",
+            name="Type 53 N4 Rifle Launcher",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.TYPE_53_W_N4_RIFLE_LAUNCHER,
+            weapon=HLLVWeapon.TYPE_53_N4_RIFLE_LAUNCHER,
             type=HLLVLoadoutItemType.PRIMARY,
             weight=6,
             description_tags=[
@@ -12214,9 +12214,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def NVA_AAWRENCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="NVA_AAWrench",
-            name="Anti-Aircraft Gun Wrench",
+            name="Wrench",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.ANTI_AIRCRAFT_GUN_WRENCH,
+            weapon=HLLVWeapon.WRENCH,
             type=HLLVLoadoutItemType.UTILITY,
             weight=3,
             description_tags=[
@@ -12361,7 +12361,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
             faction=HLLVFaction.NVA,
             weapon=HLLVWeapon.RPG_02,
             type=HLLVLoadoutItemType.VERSATILE,
-            weight=6,
+            weight=5,
             description_tags=[
                 "Secondary",
                 "Launcher",
@@ -12379,7 +12379,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def RUSTORCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="RUSTorch",
-            name="BLOW TORCH",
+            name="Blow Torch",
             faction=HLLVFaction.NVA,
             weapon=HLLVWeapon.BLOW_TORCH,
             type=HLLVLoadoutItemType.UTILITY,
@@ -12447,9 +12447,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def TYPE53_BAYONET(cls) -> "HLLVLoadoutItem":
         return cls(
             id="Type53_Bayonet",
-            name="Type 53 w/Bayonet",
+            name="Type 53 Bayonet",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.TYPE_53_W_BAYONET,
+            weapon=HLLVWeapon.TYPE_53_BAYONET,
             type=HLLVLoadoutItemType.PRIMARY,
             weight=3,
             description_tags=[
@@ -12540,9 +12540,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def TYPE56_AK_BAYONET(cls) -> "HLLVLoadoutItem":
         return cls(
             id="Type56_AK_Bayonet",
-            name="Type 56 W/ Bayonet",
+            name="Type 56 Bayonet",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.TYPE_56_W_BAYONET,
+            weapon=HLLVWeapon.TYPE_56_BAYONET,
             type=HLLVLoadoutItemType.PRIMARY,
             weight=4,
             description_tags=[
@@ -12719,7 +12719,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def USTORCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="USTorch",
-            name="BLOW TORCH",
+            name="Blow Torch",
             faction=HLLVFaction.US,
             weapon=HLLVWeapon.BLOW_TORCH,
             type=HLLVLoadoutItemType.UTILITY,
@@ -13190,7 +13190,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def WFL_TNT(cls) -> "HLLVLoadoutItem":
         return cls(
             id="WFL_TNT",
-            name="WFL_TNT",
+            name="TNT",
             faction=HLLVFaction.US,
             weapon=HLLVWeapon.TNT,
             type=HLLVLoadoutItemType.LOCKED_ITEM,
@@ -13228,9 +13228,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def WFL_USAMMONBOX(cls) -> "HLLVLoadoutItem":
         return cls(
             id="WFL_USAmmonbox",
-            name="Small Ammunition Box",
+            name="Ammo Box",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.SMALL_AMMUNITION_BOX,
+            weapon=HLLVWeapon.AMMO_BOX,
             type=HLLVLoadoutItemType.UTILITY,
             weight=3,
             description_tags=[
@@ -13291,7 +13291,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def WFL_USBANDAGE_MEDIC(cls) -> "HLLVLoadoutItem":
         return cls(
             id="WFL_USBandage_Medic",
-            name="BANDAGE",
+            name="Bandage",
             faction=HLLVFaction.US,
             weapon=HLLVWeapon.BANDAGE_US,
             type=HLLVLoadoutItemType.UTILITY,
@@ -13419,9 +13419,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def WFL_USHEAMMOBOX(cls) -> "HLLVLoadoutItem":
         return cls(
             id="WFL_USHEAmmoBox",
-            name="Explosive Ammo Box",
+            name="HE Ammo Box",
             faction=HLLVFaction.US,
-            weapon=HLLVWeapon.EXPLOSIVE_AMMO_BOX,
+            weapon=HLLVWeapon.HE_AMMO_BOX,
             type=HLLVLoadoutItemType.UTILITY,
             weight=4,
             description_tags=[

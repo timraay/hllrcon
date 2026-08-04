@@ -4194,21 +4194,8 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             id="Ammo Box",
             name="Small Ammo Box",
             vehicle_id=None,
-            factions={HLLVFaction.NVA},
+            factions={HLLVFaction.US, HLLVFaction.NVA},
             type=WeaponType.SUPPLIES,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def ANTI_AIRCRAFT_GUN_WRENCH(cls) -> "HLLVWeapon":
-        """*Anti-Aircraft Gun Wrench*"""
-        return cls(
-            id="Anti-Aircraft Gun Wrench",
-            name="Wrench",
-            vehicle_id=None,
-            factions={HLLVFaction.NVA},
-            type=WeaponType.WRENCH,
             magnification=None,
         )
 
@@ -4267,9 +4254,9 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
     @class_cached_property
     @classmethod
     def BLOW_TORCH(cls) -> "HLLVWeapon":
-        """*BLOW TORCH*"""
+        """*Blow Torch*"""
         return cls(
-            id="BLOW TORCH",
+            id="Blow Torch",
             name="Blowtorch",
             vehicle_id=None,
             factions={HLLVFaction.US, HLLVFaction.NVA},
@@ -4300,19 +4287,6 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id=None,
             factions={HLLVFaction.NVA},
             type=WeaponType.AP_MINE,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def EXPLOSIVE_AMMO_BOX(cls) -> "HLLVWeapon":
-        """*Explosive Ammo Box*"""
-        return cls(
-            id="Explosive Ammo Box",
-            name="Explosive Ammo Box",
-            vehicle_id=None,
-            factions={HLLVFaction.US},
-            type=WeaponType.SUPPLIES,
             magnification=None,
         )
 
@@ -4350,7 +4324,7 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             id="HE Ammo Box",
             name="Explosive Ammo Box",
             vehicle_id=None,
-            factions={HLLVFaction.NVA},
+            factions={HLLVFaction.US, HLLVFaction.NVA},
             type=WeaponType.SUPPLIES,
             magnification=None,
         )
@@ -4448,6 +4422,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def M16A1_BAYONET(cls) -> "HLLVWeapon":
+        """*M16A1 Bayonet*"""
+        return cls(
+            id="M16A1 Bayonet",
+            name="M16A1 w/Bayonet",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.ASSAULT_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def M16A1_M203(cls) -> "HLLVWeapon":
         """*M16A1-M203*"""
         return cls(
@@ -4461,14 +4448,14 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def M16A1_WITH_BAYONET(cls) -> "HLLVWeapon":
-        """*M16A1 With Bayonet*"""
+    def M18(cls) -> "HLLVWeapon":
+        """*M18 *"""
         return cls(
-            id="M16A1 With Bayonet",
-            name="M16A1 w/Bayonet",
+            id="M18 ",
+            name="M18 Smoke Grenade",
             vehicle_id=None,
             factions={HLLVFaction.US},
-            type=WeaponType.ASSAULT_RIFLE,
+            type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
 
@@ -4495,19 +4482,6 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id=None,
             factions={HLLVFaction.US},
             type=WeaponType.AP_MINE,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def M18_SMOKE_GRENADE(cls) -> "HLLVWeapon":
-        """*M18 Smoke Grenade*"""
-        return cls(
-            id="M18 Smoke Grenade",
-            name="M18 Smoke Grenade",
-            vehicle_id=None,
-            factions={HLLVFaction.US},
-            type=WeaponType.SMOKE_GRENADE,
             magnification=None,
         )
 
@@ -4604,10 +4578,10 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def M61_FRAG_GRENADE(cls) -> "HLLVWeapon":
-        """*M61 Frag Grenade*"""
+    def M61(cls) -> "HLLVWeapon":
+        """*M61*"""
         return cls(
-            id="M61 Frag Grenade",
+            id="M61",
             name="M61 Grenade",
             vehicle_id=None,
             factions={HLLVFaction.US},
@@ -4747,19 +4721,6 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def SMALL_AMMUNITION_BOX(cls) -> "HLLVWeapon":
-        """*Small Ammunition Box*"""
-        return cls(
-            id="Small Ammunition Box",
-            name="Small Ammo Box",
-            vehicle_id=None,
-            factions={HLLVFaction.US},
-            type=WeaponType.SUPPLIES,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
     def SUPPLIES(cls) -> "HLLVWeapon":
         """*Supplies*"""
         return cls(
@@ -4799,23 +4760,10 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def TYPE_53_PU(cls) -> "HLLVWeapon":
-        """*Type 53 PU*"""
+    def TYPE_53_BAYONET(cls) -> "HLLVWeapon":
+        """*Type 53 Bayonet*"""
         return cls(
-            id="Type 53 PU",
-            name="Type 53",
-            vehicle_id=None,
-            factions={HLLVFaction.NVA},
-            type=WeaponType.BOLT_ACTION_RIFLE,
-            magnification=4,
-        )
-
-    @class_cached_property
-    @classmethod
-    def TYPE_53_W_BAYONET(cls) -> "HLLVWeapon":
-        """*Type 53 w/Bayonet*"""
-        return cls(
-            id="Type 53 w/Bayonet",
+            id="Type 53 Bayonet",
             name="Type 53 w/Bayonet",
             vehicle_id=None,
             factions={HLLVFaction.NVA},
@@ -4825,15 +4773,28 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def TYPE_53_W_N4_RIFLE_LAUNCHER(cls) -> "HLLVWeapon":
-        """*Type 53 W/ N4 Rifle Launcher*"""
+    def TYPE_53_N4_RIFLE_LAUNCHER(cls) -> "HLLVWeapon":
+        """*Type 53 N4 Rifle Launcher*"""
         return cls(
-            id="Type 53 W/ N4 Rifle Launcher",
+            id="Type 53 N4 Rifle Launcher",
             name="Type 53 w/N4",
             vehicle_id=None,
             factions={HLLVFaction.NVA},
             type=WeaponType.BOLT_ACTION_RIFLE,
             magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def TYPE_53_PU(cls) -> "HLLVWeapon":
+        """*Type 53 PU*"""
+        return cls(
+            id="Type 53 PU",
+            name="Type 53",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=4,
         )
 
     @class_cached_property
@@ -4851,10 +4812,10 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def TYPE_56_W_BAYONET(cls) -> "HLLVWeapon":
-        """*Type 56 W/ Bayonet*"""
+    def TYPE_56_BAYONET(cls) -> "HLLVWeapon":
+        """*Type 56 Bayonet*"""
         return cls(
-            id="Type 56 W/ Bayonet",
+            id="Type 56 Bayonet",
             name="Type 56 w/Bayonet",
             vehicle_id=None,
             factions={HLLVFaction.NVA},
@@ -4907,12 +4868,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_100MM_D_10T_CANNON__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
-        """*100MM D-10T CANNON [Sd.Kfz.171 T54]*"""
+    def V_100MM_D_10T_CANNON__T54(cls) -> "HLLVWeapon":
+        """*100MM D-10T CANNON [T54]*"""
         return cls(
-            id="100MM D-10T CANNON [Sd.Kfz.171 T54]",
+            id="100MM D-10T CANNON [T54]",
             name="100mm D-10T",
-            vehicle_id="Sd.Kfz.171 T54",
+            vehicle_id="T54",
             factions={HLLVFaction.NVA},
             type=WeaponType.TANK_CANNON,
             magnification=None,
@@ -4933,12 +4894,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_90MM_M41_CANNON__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
-        """*90MM M41 CANNON [Sd.Kfz.171 M48Patton]*"""
+    def V_90MM_M41_CANNON__M48PATTON(cls) -> "HLLVWeapon":
+        """*90MM M41 CANNON [M48Patton]*"""
         return cls(
-            id="90MM M41 CANNON [Sd.Kfz.171 M48Patton]",
+            id="90MM M41 CANNON [M48Patton]",
             name="90mm M41",
-            vehicle_id="Sd.Kfz.171 M48Patton",
+            vehicle_id="M48Patton",
             factions={HLLVFaction.US},
             type=WeaponType.TANK_CANNON,
             magnification=None,
@@ -5063,6 +5024,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_ROADKILL__M48PATTON(cls) -> "HLLVWeapon":
+        """*M48Patton*"""
+        return cls(
+            id="M48Patton",
+            name="M48Patton",
+            vehicle_id="M48Patton",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_M60D__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
         """*M60D [US Transport Helicopter]*"""
         return cls(
@@ -5089,12 +5063,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_M73__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
-        """*M73 [Sd.Kfz.171 M48Patton]*"""
+    def V_M73__M48PATTON(cls) -> "HLLVWeapon":
+        """*M73 [M48Patton]*"""
         return cls(
-            id="M73 [Sd.Kfz.171 M48Patton]",
+            id="M73 [M48Patton]",
             name="M73",
-            vehicle_id="Sd.Kfz.171 M48Patton",
+            vehicle_id="M48Patton",
             factions={HLLVFaction.US},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
@@ -5167,12 +5141,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_SGMT_7_62MM__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
-        """*SGMT 7.62MM [Sd.Kfz.171 T54]*"""
+    def V_SGMT_7_62MM__T54(cls) -> "HLLVWeapon":
+        """*SGMT 7.62MM [T54]*"""
         return cls(
-            id="SGMT 7.62MM [Sd.Kfz.171 T54]",
+            id="SGMT 7.62MM [T54]",
             name="SGMT",
-            vehicle_id="Sd.Kfz.171 T54",
+            vehicle_id="T54",
             factions={HLLVFaction.NVA},
             type=WeaponType.TANK_COAXIAL_MG,
             magnification=None,
@@ -5180,38 +5154,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
-        """*Sd.Kfz.171 M48Patton*"""
+    def V_SMOKE_SCREEN__M48PATTON(cls) -> "HLLVWeapon":
+        """*Smoke Screen [M48Patton]*"""
         return cls(
-            id="Sd.Kfz.171 M48Patton",
-            name="Sd.Kfz.171 M48Patton",
-            vehicle_id="Sd.Kfz.171 M48Patton",
-            factions={HLLVFaction.US},
-            type=WeaponType.ROADKILL,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def V_ROADKILL__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
-        """*Sd.Kfz.171 T54*"""
-        return cls(
-            id="Sd.Kfz.171 T54",
-            name="Sd.Kfz.171 T54",
-            vehicle_id="Sd.Kfz.171 T54",
-            factions={HLLVFaction.NVA},
-            type=WeaponType.ROADKILL,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def V_SMOKE_SCREEN__SD_KFZ_171_M48PATTON(cls) -> "HLLVWeapon":
-        """*Smoke Screen [Sd.Kfz.171 M48Patton]*"""
-        return cls(
-            id="Smoke Screen [Sd.Kfz.171 M48Patton]",
+            id="Smoke Screen [M48Patton]",
             name="Smoke Screen",
-            vehicle_id="Sd.Kfz.171 M48Patton",
+            vehicle_id="M48Patton",
             factions={HLLVFaction.US},
             type=WeaponType.TANK_SMOKE_SCREEN,
             magnification=None,
@@ -5219,14 +5167,27 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_SMOKE_SCREEN__SD_KFZ_171_T54(cls) -> "HLLVWeapon":
-        """*Smoke Screen [Sd.Kfz.171 T54]*"""
+    def V_SMOKE_SCREEN__T54(cls) -> "HLLVWeapon":
+        """*Smoke Screen [T54]*"""
         return cls(
-            id="Smoke Screen [Sd.Kfz.171 T54]",
+            id="Smoke Screen [T54]",
             name="Smoke Screen",
-            vehicle_id="Sd.Kfz.171 T54",
+            vehicle_id="T54",
             factions={HLLVFaction.NVA},
             type=WeaponType.TANK_SMOKE_SCREEN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__T54(cls) -> "HLLVWeapon":
+        """*T54*"""
+        return cls(
+            id="T54",
+            name="T54",
+            vehicle_id="T54",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.ROADKILL,
             magnification=None,
         )
 

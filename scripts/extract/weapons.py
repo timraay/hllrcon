@@ -1089,7 +1089,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "M16A1 w/M203",
         "type": WeaponType.ASSAULT_RIFLE,
     },
-    "M16A1 With Bayonet": {
+    "M16A1 Bayonet": {
         "name": "M16A1 w/Bayonet",
         "type": WeaponType.ASSAULT_RIFLE,
     },
@@ -1097,7 +1097,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "M60",
         "type": WeaponType.MACHINE_GUN,
     },
-    "M61 Frag Grenade": {
+    "M61": {
         "name": "M61 Grenade",
         "type": WeaponType.GRENADE,
     },
@@ -1109,7 +1109,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "Wrench",
         "type": WeaponType.WRENCH,
     },
-    "M18 Smoke Grenade": {
+    "M18 ": {
         "name": "M18 Smoke Grenade",
         "type": WeaponType.SMOKE_GRENADE,
     },
@@ -1180,7 +1180,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "M21 AT Mine",
         "type": WeaponType.AT_MINE,
     },
-    "BLOW TORCH": {
+    "Blow Torch": {
         "name": "Blowtorch",
         "type": WeaponType.TORCH,
     },
@@ -1209,7 +1209,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "IZh-58",
         "type": WeaponType.SHOTGUN,
     },
-    "Type 53 W/ N4 Rifle Launcher": {
+    "Type 53 N4 Rifle Launcher": {
         "name": "Type 53 w/N4",
         "type": WeaponType.BOLT_ACTION_RIFLE,
     },
@@ -1253,7 +1253,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "Binoculars",
         "type": WeaponType.BINOCULARS,
     },
-    "Type 56 W/ Bayonet": {
+    "Type 56 Bayonet": {
         "name": "Type 56 w/Bayonet",
         "type": WeaponType.ASSAULT_RIFLE,
     },
@@ -1279,7 +1279,7 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
         "name": "Satchel Charge",
         "type": WeaponType.SATCHEL,
     },
-    "Type 53 w/Bayonet": {
+    "Type 53 Bayonet": {
         "name": "Type 53 w/Bayonet",
         "type": WeaponType.BOLT_ACTION_RIFLE,
     },
@@ -1293,22 +1293,22 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "RPD [NVA Boat]": {
         "name": "RPD",
     },
-    "100MM D-10T CANNON [Sd.Kfz.171 T54]": {
+    "100MM D-10T CANNON [T54]": {
         "name": "100mm D-10T",
     },
-    "SGMT 7.62MM [Sd.Kfz.171 T54]": {
+    "SGMT 7.62MM [T54]": {
         "name": "SGMT",
     },
-    "Smoke Screen [Sd.Kfz.171 T54]": {
+    "Smoke Screen [T54]": {
         "name": "Smoke Screen",
     },
-    "90MM M41 CANNON [Sd.Kfz.171 M48Patton]": {
+    "90MM M41 CANNON [M48Patton]": {
         "name": "90mm M41",
     },
-    "M73 [Sd.Kfz.171 M48Patton]": {
+    "M73 [M48Patton]": {
         "name": "M73",
     },
-    "Smoke Screen [Sd.Kfz.171 M48Patton]": {
+    "Smoke Screen [M48Patton]": {
         "name": "Smoke Screen",
     },
     "M2 Browning [US Boat]": {
@@ -1331,8 +1331,8 @@ HLLV_WEAPON_METADATA: dict[str, WeaponMetaData] = {
     "M35 (Supply)": {},
     "M35 (Transport)": {},
     "NVA Boat": {},
-    "Sd.Kfz.171 T54": {},
-    "Sd.Kfz.171 M48Patton": {},
+    "T54": {},
+    "M48Patton": {},
     "100MM D-10T CANNON": {
         "name": "100mm D-10T",
     },
