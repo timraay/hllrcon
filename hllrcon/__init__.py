@@ -170,6 +170,8 @@ __all__ = (
     "HLLVGetPlayerResponseStats",
     "HLLVGetPlayerResponseWorldPosition",
     "HLLVGetPlayersResponse",
+    "HLLVGetSectorLayoutResponse",
+    "HLLVGetSectorLayoutResponseEntry",
     "HLLVGetServerConfigResponse",
     "HLLVGetServerSessionResponse",
     "HLLVGetTeamSwitchCooldownResponse",

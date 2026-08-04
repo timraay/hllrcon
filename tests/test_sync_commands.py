@@ -273,25 +273,6 @@ class TestCommands:
         with pytest.raises(RconMessageError):
             stub.get_available_sector_names()
 
-    def test_commands_change_sector_layout(self) -> None:
-        sector1 = "Sector 1"
-        sector2 = "Sector 2"
-        sector3 = "Sector 3"
-        sector4 = "Sector 4"
-        sector5 = "Sector 5"
-
-        self.stub(
-            "SetSectorLayout",
-            2,
-            {
-                "Sector_1": sector1,
-                "Sector_2": sector2,
-                "Sector_3": sector3,
-                "Sector_4": sector4,
-                "Sector_5": sector5,
-            },
-        ).set_sector_layout(sector1, sector2, sector3, sector4, sector5)
-
     def test_commands_add_map_to_rotation(self) -> None:
         map_name = "Map1"
         index = 3
@@ -625,6 +606,7 @@ class TestCommands:
                     "iD": player_id,
                     "platform": "steam",
                     "eosId": "1234567890",
+                    "steamId": None,
                     "level": 25,
                     "team": 1,
                     "role": 4,
@@ -667,6 +649,7 @@ class TestCommands:
                             "iD": "123",
                             "platform": "steam",
                             "eosId": "1234567890",
+                            "steamId": None,
                             "level": 25,
                             "team": 1,
                             "role": 4,
@@ -1160,11 +1143,26 @@ class TestCommands:
 
 
 class TestHLLCommands(TestCommands):
-    stub = HLLSyncRconCommandsStub
+    stub: ClassVar[type[HLLSyncRconCommandsStub]] = HLLSyncRconCommandsStub
 
+    def test_commands_change_sector_layout(self) -> None:
+        sector1 = "Sector 1"
+        sector2 = "Sector 2"
+        sector3 = "Sector 3"
+        sector4 = "Sector 4"
+        sector5 = "Sector 5"
 
-class TestHLLVCommands(TestCommands):
-    stub = HLLVSyncRconCommandsStub
+        self.stub(
+            "SetSectorLayout",
+            2,
+            {
+                "Sector_1": sector1,
+                "Sector_2": sector2,
+                "Sector_3": sector3,
+                "Sector_4": sector4,
+                "Sector_5": sector5,
+            },
+        ).set_sector_layout(sector1, sector2, sector3, sector4, sector5)
 
     def test_commands_get_player(self) -> None:
         player_id = "player123"
@@ -1178,7 +1176,7 @@ class TestHLLVCommands(TestCommands):
                     "name": "Player1",
                     "clanTag": "ClanA",
                     "iD": player_id,
-                    "platform": "EPlatformFamily::Steam",
+                    "platform": "steam",
                     "eosId": "1234567890",
                     "level": 25,
                     "team": 1,
@@ -1220,8 +1218,159 @@ class TestHLLVCommands(TestCommands):
                             "name": "Player1",
                             "clanTag": "ClanA",
                             "iD": "123",
-                            "platform": "EPlatformFamily::Steam",
+                            "platform": "steam",
                             "eosId": "1234567890",
+                            "level": 25,
+                            "team": 1,
+                            "role": 4,
+                            "platoon": "ABLE",
+                            "platoonIndex": 0,
+                            "loadout": "Combat Medic",
+                            "stats": {
+                                "deaths": 50,
+                                "infantryKills": 150,
+                                "vehicleKills": 20,
+                                "teamKills": 5,
+                                "vehiclesDestroyed": 3,
+                            },
+                            "scoreData": {
+                                "cOMBAT": 100,
+                                "offense": 50,
+                                "defense": 30,
+                                "support": 20,
+                            },
+                            "worldPosition": {
+                                "x": 1000,
+                                "y": 2000,
+                                "z": 300,
+                            },
+                        },
+                    ],
+                },
+            ),
+        ).get_players()
+
+
+class TestHLLVCommands(TestCommands):
+    stub: ClassVar[type[HLLVSyncRconCommandsStub]] = HLLVSyncRconCommandsStub
+
+    def test_commands_change_sector_layout(self) -> None:
+        map_id = "hue_outskirts_warfare_day"
+        sector1 = "Sector 1"
+        sector2 = "Sector 2"
+        sector3 = "Sector 3"
+        sector4 = "Sector 4"
+        sector5 = "Sector 5"
+
+        self.stub(
+            "SetSectorLayout",
+            2,
+            {
+                "MapId": map_id,
+                "Sector_1": sector1,
+                "Sector_2": sector2,
+                "Sector_3": sector3,
+                "Sector_4": sector4,
+                "Sector_5": sector5,
+            },
+        ).set_sector_layout(map_id, sector1, sector2, sector3, sector4, sector5)
+
+    def test_commands_get_sector_layout(self) -> None:
+        self.stub(
+            "GetSectorLayout",
+            2,
+            "",
+            json.dumps(
+                {
+                    "entries": [
+                        {
+                            "mapId": "hue_outskirts_warfare_day",
+                            "sectors": [
+                                "Sector 1",
+                                "Sector 2",
+                                "Sector 3",
+                                "Sector 4",
+                                "Sector 5",
+                            ],
+                        },
+                    ],
+                },
+            ),
+        ).get_sector_layout()
+
+    def test_commands_remove_sector_layout(self) -> None:
+        map_id = "hue_outskirts_warfare_day"
+
+        self.stub(
+            "RemoveSectorLayout",
+            2,
+            {"MapId": map_id},
+        ).remove_sector_layout(map_id)
+
+    def test_commands_set_welcome_message(self) -> None:
+        message = "Hello all!"
+        self.stub(
+            "SetNoticeMessage",
+            2,
+            {"Message": message},
+        ).set_notice_message(message)
+
+    def test_commands_get_player(self) -> None:
+        player_id = "player123"
+
+        self.stub(
+            "GetServerInformation",
+            2,
+            {"Name": "player", "Value": player_id},
+            json.dumps(
+                {
+                    "name": "Player1",
+                    "clanTag": "ClanA",
+                    "iD": player_id,
+                    "platform": "EPlatformFamily::Steam",
+                    "steamId": None,
+                    "level": 25,
+                    "team": 1,
+                    "role": 4,
+                    "platoon": "ABLE",
+                    "platoonIndex": 0,
+                    "loadout": "Combat Medic",
+                    "stats": {
+                        "deaths": 50,
+                        "infantryKills": 150,
+                        "vehicleKills": 20,
+                        "teamKills": 5,
+                        "vehiclesDestroyed": 3,
+                    },
+                    "scoreData": {
+                        "cOMBAT": 100,
+                        "offense": 50,
+                        "defense": 30,
+                        "support": 20,
+                    },
+                    "worldPosition": {
+                        "x": 1000,
+                        "y": 2000,
+                        "z": 300,
+                    },
+                },
+            ),
+        ).get_player(player_id)
+
+    def test_commands_get_players(self) -> None:
+        self.stub(
+            "GetServerInformation",
+            2,
+            {"Name": "players", "Value": ""},
+            json.dumps(
+                {
+                    "players": [
+                        {
+                            "name": "Player1",
+                            "clanTag": "ClanA",
+                            "iD": "123",
+                            "platform": "EPlatformFamily::Steam",
+                            "steamId": None,
                             "level": 25,
                             "team": 1,
                             "role": 4,

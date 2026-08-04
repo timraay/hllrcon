@@ -60,6 +60,7 @@ from hllrcon.responses import (
     HLLVGetMapShuffleEnabledResponse,
     HLLVGetPlayerResponse,
     HLLVGetPlayersResponse,
+    HLLVGetSectorLayoutResponse,
     HLLVGetServerConfigResponse,
     HLLVGetServerSessionResponse,
     HLLVGetTeamSwitchCooldownResponse,
@@ -332,42 +333,6 @@ class _RconCommands(ABC):
             parameters[2].value_member,
             parameters[3].value_member,
             parameters[4].value_member,
-        )
-
-    async def set_sector_layout(
-        self,
-        sector1: str,
-        sector2: str,
-        sector3: str,
-        sector4: str,
-        sector5: str,
-    ) -> None:
-        """Immediately restart the map with the given sector layout.
-
-        Parameters
-        ----------
-        sector1 : str
-            The name of the first sector.
-        sector2 : str
-            The name of the second sector.
-        sector3 : str
-            The name of the third sector.
-        sector4 : str
-            The name of the fourth sector.
-        sector5 : str
-            The name of the fifth sector.
-
-        """
-        await self.execute(
-            "SetSectorLayout",
-            2,
-            {
-                "Sector_1": sector1,
-                "Sector_2": sector2,
-                "Sector_3": sector3,
-                "Sector_4": sector4,
-                "Sector_5": sector5,
-            },
         )
 
     async def add_map_to_rotation(
@@ -761,6 +726,22 @@ class _RconCommands(ABC):
                 "Message": message,
             },
         )
+
+    async def set_notice_message(self, message: str) -> None:
+        """Set the welcome message for the server.
+
+        The notice message is displayed to players on the deployment screen and briefly
+        when they first spawn in. The message will be briefly shown again when updated.
+
+        This is an alias of `set_welcome_message`.
+
+        Parameters
+        ----------
+        message : str
+            The welcome message to set.
+
+        """
+        return await self.set_welcome_message(message)
 
     async def _get_player(self, player_id: str) -> str:
         return await self.execute(
@@ -1621,6 +1602,42 @@ class HLLRconCommands(_RconCommands):
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
         return await self._get_admin_log(seconds_span, filter_)
 
+    async def set_sector_layout(
+        self,
+        sector1: str,
+        sector2: str,
+        sector3: str,
+        sector4: str,
+        sector5: str,
+    ) -> None:
+        """Immediately restart the map with the given sector layout.
+
+        Parameters
+        ----------
+        sector1 : str
+            The name of the first sector.
+        sector2 : str
+            The name of the second sector.
+        sector3 : str
+            The name of the third sector.
+        sector4 : str
+            The name of the fourth sector.
+        sector5 : str
+            The name of the fifth sector.
+
+        """
+        await self.execute(
+            "SetSectorLayout",
+            2,
+            {
+                "Sector_1": sector1,
+                "Sector_2": sector2,
+                "Sector_3": sector3,
+                "Sector_4": sector4,
+                "Sector_5": sector5,
+            },
+        )
+
     @override
     @cast_response_to_model(HLLGetMapShuffleEnabledResponse, lambda r: r.enabled)
     async def get_map_shuffle_enabled(self) -> str:
@@ -1786,6 +1803,80 @@ class HLLVRconCommands(_RconCommands):
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
         return await self._get_admin_log(seconds_span, filter_)
 
+    async def set_sector_layout(
+        self,
+        map_id: str,
+        sector1: str,
+        sector2: str,
+        sector3: str,
+        sector4: str,
+        sector5: str,
+    ) -> None:
+        """Set a custom sector layout for a given map.
+
+        The next time the server loads the map, it will use this custom sector layout
+        instead of a randomly chosen one. Subsequent rounds will again use a randomly
+        chosen layout, unless a new custom layout is set.
+
+        Parameters
+        ----------
+        map_id : str
+            The ID of the map to set the sector layout for.
+        sector1 : str
+            The name of the first sector.
+        sector2 : str
+            The name of the second sector.
+        sector3 : str
+            The name of the third sector.
+        sector4 : str
+            The name of the fourth sector.
+        sector5 : str
+            The name of the fifth sector.
+
+        """
+        await self.execute(
+            "SetSectorLayout",
+            2,
+            {
+                "MapId": map_id,
+                "Sector_1": sector1,
+                "Sector_2": sector2,
+                "Sector_3": sector3,
+                "Sector_4": sector4,
+                "Sector_5": sector5,
+            },
+        )
+
+    @cast_response_to_model(HLLVGetSectorLayoutResponse)
+    async def get_sector_layout(self) -> str:
+        """Retrieve all custom sector layouts of the server.
+
+        Returns
+        -------
+        HLLVGetSectorLayoutResponse
+            The custom sector layouts of the server.
+
+        """
+        return await self.execute("GetSectorLayout", 2)
+
+    @cast_response_to_bool({400})
+    async def remove_sector_layout(self, map_id: str) -> None:
+        """Remove a sector layout from the server.
+
+        Parameters
+        ----------
+        map_id : str
+            The ID of the map to remove the sector layout for.
+
+        Returns
+        -------
+        bool
+            Whether the sector layout was successfully removed. If the map does not have
+            a custom sector layout defined, will return False.
+
+        """
+        await self.execute("RemoveSectorLayout", 2, {"MapId": map_id})
+
     @override
     @cast_response_to_model(HLLVGetMapShuffleEnabledResponse, lambda r: r.enabled)
     async def get_map_shuffle_enabled(self) -> str:
@@ -1825,6 +1916,16 @@ class HLLVRconCommands(_RconCommands):
     @cast_response_to_model(HLLVGetIdleKickDurationResponse, lambda r: r.minutes)
     async def get_idle_kick_duration(self) -> str:
         return await self._get_idle_kick_duration()
+
+    @override
+    async def set_welcome_message(self, message: str) -> None:
+        await self.execute(
+            "SetNoticeMessage",
+            2,
+            {
+                "Message": message,
+            },
+        )
 
     @override
     @cast_response_to_model(HLLVGetPlayerResponse)

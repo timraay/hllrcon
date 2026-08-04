@@ -138,6 +138,8 @@ __all__ = (
     "HLLVGetPlayerResponseStats",
     "HLLVGetPlayerResponseWorldPosition",
     "HLLVGetPlayersResponse",
+    "HLLVGetSectorLayoutResponse",
+    "HLLVGetSectorLayoutResponseEntry",
     "HLLVGetServerConfigResponse",
     "HLLVGetServerSessionResponse",
     "HLLVGetTeamSwitchCooldownResponse",
@@ -342,6 +344,15 @@ class HLLVGetAdminLogResponse(_GetAdminLogResponse):
 
 
 AnyGetAdminLogResponse: TypeAlias = HLLGetAdminLogResponse | HLLVGetAdminLogResponse
+
+
+class HLLVGetSectorLayoutResponseEntry(Response):
+    map_id: str
+    sectors: list[str]
+
+
+class HLLVGetSectorLayoutResponse(Response):
+    entries: list[HLLVGetSectorLayoutResponseEntry]
 
 
 class _GetCommandsResponseEntry(Response):
@@ -679,13 +690,25 @@ class _GetPlayerResponse(Response, Generic[FactionT, RoleT]):
     """The player's clan tag. Empty string if none."""
 
     id: str = Field(validation_alias="iD")
-    """The player's ID"""
+    """The player's ID.
+
+    This ID represents different things depending on the game and platform:
+    - In Hell Let Loose, the player ID is equal to the SteamID64 when played on Steam,
+    and arbitrary otherwise.
+    - In Hell Let Loose: Vietnam, the player ID is equal to the EOS ID.
+    """
 
     platform: AnyPlayerPlatform
     """The player's platform"""
 
-    eos_id: str = Field(validation_alias="eosId")
-    """The player's Epic Online Services ID"""
+    eos_id: str
+    """The player's Epic Online Services ID.
+
+    Note that EOS IDs are tied to the game. A player will have different EOS IDs for
+    HLL and HLL:V."""
+
+    steam_id: str | None
+    """The player's Steam ID"""
 
     level: int
     """The player's level"""
@@ -730,6 +753,11 @@ class HLLGetPlayerResponse(_GetPlayerResponse[HLLFaction, HLLRole]):
     _ROLE_CLS = HLLRole
 
     platform: HLLPlayerPlatform
+    steam_id: Annotated[
+        str | None,
+        Field(validation_alias="iD"),
+        AfterValidator(lambda x: x if len(x) == 17 else None),
+    ]
     faction_id: HLLPlayerFactionId = Field(validation_alias="team")
     role_id: HLLPlayerRoleId = Field(validation_alias="role")
     stats: HLLGetPlayerResponseStats
@@ -742,6 +770,7 @@ class HLLVGetPlayerResponse(_GetPlayerResponse[HLLVFaction, HLLVRole]):
     _ROLE_CLS = HLLVRole
 
     platform: HLLVPlayerPlatform
+    eos_id: str = Field(validation_alias="iD")
     faction_id: HLLVPlayerFactionId = Field(validation_alias="team")
     role_id: HLLVPlayerRoleId = Field(validation_alias="role")
     stats: HLLVGetPlayerResponseStats
