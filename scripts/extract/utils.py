@@ -6,6 +6,7 @@ from typing import Any
 
 from hllrcon.data.factions import AnyFaction
 from hllrcon.data.roles import AnyRole
+from hllrcon.data.teams import AnyTeam
 
 
 def inject_code(fp: Path, marker: str, code: str) -> None:
@@ -72,6 +73,14 @@ def stringify_dict(d: dict[Any, Any], indent: int = 0) -> str:
 
 def stringify_enum_member(member: Enum) -> str:
     return f"{member.__class__.__name__}.{member.name}"
+
+
+def stringify_team(team: AnyTeam) -> str:
+    return f"{type(team).__name__}.{team.name.upper()}"
+
+
+def stringify_faction(faction: AnyFaction) -> str:
+    return f"{type(faction).__name__}.{faction.short_name.upper()}"
 
 
 def stringify_factions(factions: Collection[AnyFaction], indent: int = 0) -> str:

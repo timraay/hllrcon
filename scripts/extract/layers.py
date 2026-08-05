@@ -10,7 +10,11 @@ from hllrcon.data.layers import TimeOfDay, Weather
 from hllrcon.data.teams import AnyTeam
 from scripts import HLLV_METADATA_PATH
 from scripts.extract.maps import MapData, get_all_maps, get_map_data
-from scripts.extract.utils import inject_code, to_method_name
+from scripts.extract.utils import (
+    inject_code,
+    stringify_team,
+    to_method_name,
+)
 from scripts.extractlib.loader import set_root_path
 from scripts.extractlib.objects.layout_meta_data_asset import LayoutMetaDataAsset
 from scripts.extractlib.objects.map_meta_data_asset import MapMetaDataAsset
@@ -47,6 +51,7 @@ HLLV_LAYER_CONSTRUCTOR_TEMPLATE = """\
                 ),
             ),
             sectors={sectors},
+            attacking_team={attacking_team}
         )"""
 
 _layer_id_no_metadata_warned: set[str] = set()
@@ -115,10 +120,15 @@ class LayerData(BaseModel):
         else:
             sectors_meth_id = f"SECTORS_{self.map.meth_name}_SKIRMISH"
 
+        attacking_team = (
+            stringify_team(self.attacking_team) if self.attacking_team else None
+        )
+
         return template.format(
             layer=self,
             game_mode=self.game_mode.id.upper(),
             sectors=sectors_meth_id,
+            attacking_team=attacking_team,
         )
 
 
