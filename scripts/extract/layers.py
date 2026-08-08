@@ -208,6 +208,10 @@ HLLV_LAYER_METADATA: dict[str, LayerMetaData] = {
         "time_of_day": TimeOfDay.DAY,
         "weather": Weather.CLEAR,
     },
+    "WDEV_A_Conquest_Day": {
+        "time_of_day": TimeOfDay.DAY,
+        "weather": Weather.CLEAR,
+    },
     "WDEV_B_OffensiveNVA_Day": {
         "time_of_day": TimeOfDay.DAY,
         "weather": Weather.CLEAR,
