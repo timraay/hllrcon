@@ -1038,10 +1038,10 @@ class TestDataLoadouts:
 class TestDataLoadoutItems:
     def test_loadoutitem_calculate_weight(self) -> None:
         loadout = HLLVLoadoutItem.RPG2
-        # Base is weight 6 with 2 ammo. Each rocket adds 3 weight.
-        assert loadout.calculate_weight(1) == 6
-        assert loadout.calculate_weight(2) == 6
-        assert loadout.calculate_weight(3) == 9
+        # Base is weight 5 with 2 ammo. Each rocket adds 3 weight.
+        assert loadout.calculate_weight(1) == 5
+        assert loadout.calculate_weight(2) == 5
+        assert loadout.calculate_weight(3) == 8
 
     def test_loadoutitem_field_serializers(self) -> None:
         loadout = HLLVLoadoutItem.M40
