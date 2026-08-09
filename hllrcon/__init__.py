@@ -249,4 +249,4 @@ __all__ = (
 )
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "1.2.1.1"
+__version__ = "2.0.0.0-beta-1"
