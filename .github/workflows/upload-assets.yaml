@@ -34,6 +34,8 @@ jobs:
         with:
           working_directory: dist
           files: |
-            data.json
-            data.schema.json
+            data.hll.json
+            data.hll.schema.json
+            data.hllv.json
+            data.hllv.schema.json
           fail_on_unmatched_files: true
