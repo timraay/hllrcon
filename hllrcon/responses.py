@@ -43,7 +43,6 @@ SplitStringValidator = BeforeValidator(lambda x: str(x).split(",") if x else [])
 __all__ = (
     "AnyGetAdminGroupsResponse",
     "AnyGetAdminLogResponse",
-    "AnyGetAdminLogResponseEntry",
     "AnyGetAdminUsersResponse",
     "AnyGetAdminUsersResponseEntry",
     "AnyGetAutoBalanceEnabledResponse",
@@ -80,7 +79,6 @@ __all__ = (
     "ForceMode",
     "HLLGetAdminGroupsResponse",
     "HLLGetAdminLogResponse",
-    "HLLGetAdminLogResponseEntry",
     "HLLGetAdminUsersResponse",
     "HLLGetAdminUsersResponseEntry",
     "HLLGetAutoBalanceEnabledResponse",
@@ -116,7 +114,6 @@ __all__ = (
     "HLLSupportedPlatform",
     "HLLVGetAdminGroupsResponse",
     "HLLVGetAdminLogResponse",
-    "HLLVGetAdminLogResponseEntry",
     "HLLVGetAdminUsersResponse",
     "HLLVGetAdminUsersResponseEntry",
     "HLLVGetAutoBalanceEnabledResponse",
@@ -306,17 +303,12 @@ class _GetAdminLogResponseEntry(Response):
         return [admin_log_cls.parse(entry.message) for entry in entries]
 
 
-class HLLGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
+class _HLLGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
     _ADMIN_LOG_CLS = HLLAdminLog
 
 
-class HLLVGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
+class _HLLVGetAdminLogResponseEntry(_GetAdminLogResponseEntry):
     _ADMIN_LOG_CLS = HLLVAdminLog
-
-
-AnyGetAdminLogResponseEntry: TypeAlias = (
-    HLLGetAdminLogResponseEntry | HLLVGetAdminLogResponseEntry
-)
 
 
 class _GetAdminLogResponse(Response):
@@ -330,7 +322,7 @@ class _GetAdminLogResponse(Response):
 class HLLGetAdminLogResponse(_GetAdminLogResponse):
     entries: Annotated[
         Sequence[HLLAdminLog],
-        PlainValidator(HLLGetAdminLogResponseEntry._admin_log_validator),
+        PlainValidator(_HLLGetAdminLogResponseEntry._admin_log_validator),
     ]
     """A list of log entries, oldest entries first."""
 
@@ -338,7 +330,7 @@ class HLLGetAdminLogResponse(_GetAdminLogResponse):
 class HLLVGetAdminLogResponse(_GetAdminLogResponse):
     entries: Annotated[
         Sequence[HLLVAdminLog],
-        PlainValidator(HLLVGetAdminLogResponseEntry._admin_log_validator),
+        PlainValidator(_HLLVGetAdminLogResponseEntry._admin_log_validator),
     ]
     """A list of log entries, oldest entries first."""
 

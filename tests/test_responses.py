@@ -7,7 +7,6 @@ from hllrcon.data.factions import HLLFaction
 from hllrcon.data.game_modes import HLLVGameMode
 from hllrcon.responses import (
     EmptyStringToNoneValidator,
-    HLLGetAdminLogResponseEntry,
     HLLGetMapRotationResponseEntry,
     HLLGetPlayerResponse,
     HLLGetServerSessionResponse,
@@ -15,6 +14,7 @@ from hllrcon.responses import (
     HLLPlayerPlatform,
     HLLPlayerRoleId,
     HLLVGetMapRotationResponseEntry,
+    _HLLGetAdminLogResponseEntry,
 )
 
 if TYPE_CHECKING:
@@ -35,7 +35,7 @@ def test_empty_string_to_none_validator() -> None:
 
 
 def test_get_admin_log_response_convert_isoformat_to_datetime() -> None:
-    entry = HLLGetAdminLogResponseEntry.model_validate(
+    entry = _HLLGetAdminLogResponseEntry.model_validate(
         {
             "timestamp": "2023-03-15T12:34:56.789Z",
             "message": "Test log entry",
