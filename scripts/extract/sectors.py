@@ -10,7 +10,7 @@ from hllrcon.data.maps import Orientation
 from scripts import HLLV_METADATA_PATH
 from scripts.extract.layers import HLLV_LAYER_OUTPUT_PATH
 from scripts.extract.maps import HLLV_MAP_DIRS, MapData, get_all_maps, get_map_data
-from scripts.extract.utils import inject_code
+from scripts.extract.utils import inject_code, load_meta, save_meta
 from scripts.extractlib.loader import Object, local_to_abs_path, set_root_path
 from scripts.extractlib.objects.conquest_objectives_phase1 import (
     ConquestObjectivesPhase1,
@@ -43,7 +43,7 @@ HLLV_SECTOR_ROW_CONSTRUCTOR_TEMPLATE = """\
         ),"""
 HLLV_SECTOR_STRONGPOINT_CONSTRUCTOR_TEMPLATE = """\
             Strongpoint(
-                id={strongpoint.name!r},
+                id={strongpoint.id!r},
                 name={strongpoint.name!r},
                 center=({strongpoint.position.x}, {strongpoint.position.y}, {strongpoint.position.z}),
                 radius={strongpoint.radius},
@@ -78,7 +78,17 @@ class LayerGridData(BaseModel):
 class SectorStrongpointData(BaseModel):
     position: Vec3
     radius: float
-    name: str
+    id: str
+    name: str = ""
+
+    @model_validator(mode="after")
+    def set_name(self) -> "SectorStrongpointData":
+        metadata = HLLV_STRONGPOINT_METADATA
+        self.name = metadata.setdefault(
+            self.id,
+            " ".join([part.capitalize() for part in self.id.split(" ")]),
+        )
+        return self
 
     def get_grid_position(self, grid: LayerGridData | LayoutMetaDataAsset) -> Vec2:
         if isinstance(grid, LayoutMetaDataAsset):
@@ -275,7 +285,7 @@ def get_sector_strongpoint_data(
                 z=0,
             ),
             radius=1.0,
-            name="",
+            id="",
         )
         for x in range(-2, 3)
         for y in range(-1, 2)
@@ -289,7 +299,7 @@ def get_sector_strongpoint_data(
             SectorStrongpointData(
                 position=sphere.properties.relative_location,
                 radius=sphere.properties.sphere_radius,
-                name="",
+                id="",
             )
             for sphere in get_sphere_components_from_warfare_level(level)
         ]
@@ -298,7 +308,7 @@ def get_sector_strongpoint_data(
             SectorStrongpointData(
                 position=sphere.properties.relative_location,
                 radius=sphere.properties.sphere_radius,
-                name="",
+                id="",
             )
             for sphere in get_sphere_components_from_conquest_level(level)
         ]
@@ -322,7 +332,7 @@ def get_sector_strongpoint_data(
         strongpoint_grid_pos = strongpoint.get_grid_position(grid)
         for name, grid_pos in sector_names:
             if strongpoint_grid_pos == grid_pos:
-                strongpoint.name = str(name)
+                strongpoint.id = str(name)
                 break
         else:
             msg = f"Strongpoint at {strongpoint.position} has no matching sector name"
@@ -392,6 +402,14 @@ def main() -> None:
         ),
     )
 
+    save_meta(HLLV_STRONGPOINT_METADATA_PATH, str, HLLV_STRONGPOINT_METADATA)
+
+
+HLLV_STRONGPOINT_METADATA_PATH = Path("./scripts/extract/meta/hllv/strongpoints.json")
+HLLV_STRONGPOINT_METADATA: dict[str, str] = load_meta(
+    HLLV_STRONGPOINT_METADATA_PATH,
+    str,
+)
 
 if __name__ == "__main__":
     main()

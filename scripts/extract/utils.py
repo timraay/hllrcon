@@ -1,8 +1,11 @@
+import json
 import re
 from collections.abc import Collection
 from enum import Enum
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
+
+from pydantic import TypeAdapter
 
 from hllrcon.data.factions import AnyFaction
 from hllrcon.data.roles import AnyRole
@@ -128,3 +131,39 @@ def to_method_name(s: str) -> str:
         s = "_" + s
 
     return s
+
+
+T = TypeVar("T")
+
+
+def load_meta(fp: Path, validation_cls: type[T]) -> dict[str, T]:
+    if not fp.exists():
+        msg = f"Metadata not found: {fp}"
+        raise FileNotFoundError(msg)
+
+    t = dict[str, validation_cls]  # type: ignore[valid-type]
+
+    data = json.loads(fp.read_text(encoding="utf-8"))
+    data.pop("$schema", None)  # Remove the $schema key if it exists
+
+    return TypeAdapter(t).validate_python(data)
+
+
+def save_meta(fp: Path, validation_cls: type[T], data: dict[str, T]) -> None:
+    t = dict[str, validation_cls]  # type: ignore[valid-type]
+    adapter = TypeAdapter(t)
+    out = adapter.dump_python(data, mode="json")
+    out["$schema"] = f"../_schemas/{fp.stem}.schema.json"
+
+    fp.write_text(json.dumps(out, indent=2), encoding="utf-8")
+    save_meta_schema(
+        fp.parent.parent / f"_schemas/{fp.stem}.schema.json",
+        validation_cls,
+    )
+
+
+def save_meta_schema(fp: Path, validation_cls: type[T]) -> None:
+    t = dict[str, str | validation_cls]  # type: ignore[valid-type]
+    adapter = TypeAdapter(t)
+    schema = adapter.json_schema()
+    fp.write_text(json.dumps(schema, indent=2), encoding="utf-8")

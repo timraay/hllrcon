@@ -14,6 +14,8 @@ from hllrcon.data.weapons import WeaponType
 from scripts import HLL_METADATA_PATH, HLLV_METADATA_PATH
 from scripts.extract.utils import (
     inject_code,
+    load_meta,
+    save_meta,
     stringify_enum_member,
     stringify_factions,
     stringify_list,
@@ -1365,275 +1367,21 @@ def main() -> None:
             "\n\n".join(weapon_constructors),
         )
 
+    save_meta(HLL_VEHICLE_METADATA_PATH, VehicleMetaData, HLL_VEHICLE_METADATA)
+    save_meta(HLLV_VEHICLE_METADATA_PATH, VehicleMetaData, HLLV_VEHICLE_METADATA)
 
-HLL_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
-    "Daimler": {
-        "name": "Daimler",
-        "exposed": False,
-    },
-    "Tetrarch": {
-        "name": "Tetrarch",
-        "exposed": False,
-    },
-    "Jeep Willys": {
-        "name": "Willy's Jeep",
-        "exposed": True,
-    },
-    "Firefly": {
-        "name": "Sherman Firefly",
-        "exposed": False,
-    },
-    "Bedford OYD (Supply)": {
-        "name": "Bedford OYD",
-        "exposed": True,
-    },
-    "Bedford OYD (Transport)": {
-        "name": "Bedford OYD",
-        "exposed": True,
-    },
-    "M3 Half-track": {
-        "name": "M3 Half-track",
-        "exposed": True,
-    },
-    "Cromwell": {
-        "name": "Cromwell",
-        "exposed": False,
-    },
-    "Churchill Mk.VII": {
-        "name": "Churchill Mk VII",
-        "exposed": False,
-    },
-    "Churchill Mk III A.V.R.E.": {
-        "meth_name": "CHURCHILL_MK_III_AVRE",
-        "name": "Churchill AVRE",
-        "exposed": False,
-    },
-    "Sd.Kfz.234 Puma": {
-        "name": "Sd.Kfz.234 Puma",
-        "exposed": False,
-    },
-    "Sd.Kfz.171 Panther": {
-        "name": "Sd.Kfz.171 Panther",
-        "exposed": False,
-    },
-    "Sd.Kfz.181 Tiger 1": {
-        "name": "Sd.Kfz.181 Tiger 1",
-        "exposed": False,
-    },
-    "Sturmpanzer IV": {
-        "name": "Sturmpanzer IV",
-        "exposed": False,
-    },
-    "Opel Blitz (Supply)": {
-        "name": "Opel Blitz",
-        "exposed": True,
-    },
-    "Opel Blitz (Transport)": {
-        "name": "Opel Blitz",
-        "exposed": True,
-    },
-    "Sd.Kfz 251 Half-track": {
-        "name": "Sd.Kfz.251 Half-track",
-        "exposed": True,
-    },
-    "Sd.Kfz.121 Luchs": {
-        "name": "Sd.Kfz.121 Luchs",
-        "exposed": False,
-    },
-    "Sd.Kfz.161 Panzer IV": {
-        "name": "Sd.Kfz.161 Panzer IV",
-        "exposed": False,
-    },
-    "Kubelwagen": {
-        "name": "Kubelwagen",
-        "exposed": True,
-    },
-    "BA-10": {
-        "name": "BA-10",
-        "exposed": False,
-    },
-    "T34/76": {
-        "name": "T34/76",
-        "exposed": False,
-    },
-    "IS-1": {
-        "name": "IS-1",
-        "exposed": False,
-    },
-    "ZIS-5 (Supply)": {
-        "name": "ZIS-5",
-        "exposed": True,
-    },
-    "ZIS-5 (Transport)": {
-        "name": "ZIS-5",
-        "exposed": True,
-    },
-    "GAZ-67": {
-        "name": "GAZ-67",
-        "exposed": True,
-    },
-    "T70": {
-        "name": "T70",
-        "exposed": False,
-    },
-    "KV-2": {
-        "name": "KV-2",
-        "exposed": False,
-    },
-    "M8 Greyhound": {
-        "name": "M8 Greyhound",
-        "exposed": False,
-    },
-    "Sherman M4A3E2": {
-        "name": "M4A3E2 Sherman",
-        "exposed": False,
-    },
-    "Sherman M4A3E2(76)": {
-        "name": "M4A3E2(76) Sherman",
-        "exposed": False,
-    },
-    "GMC CCKW 353 (Supply)": {
-        "name": "GMC CCKW 353",
-        "exposed": True,
-    },
-    "GMC CCKW 353 (Transport)": {
-        "name": "GMC CCKW 353",
-        "exposed": True,
-    },
-    "Sherman M4A3(75)W": {
-        "name": "M4A3(75)W Sherman",
-        "exposed": False,
-    },
-    "Stuart M5A1": {
-        "name": "M5A1 Stuart",
-        "exposed": False,
-    },
-    "M4A3 (105mm)": {
-        "name": "Sherman M4(104)",
-        "exposed": False,
-    },
-    "M3 Stuart Honey": {
-        "name": "M3 Stuart Honey",
-        "exposed": False,
-    },
-    "Churchill Mk.III": {
-        "name": "Churchill Mk III",
-        "exposed": False,
-    },
-    "Crusader Mk.III": {
-        "name": "Crusader Mk III",
-        "exposed": False,
-    },
-    "Bishop SP 25pdr": {
-        "name": "Bishop",
-        "exposed": False,
-    },
-    "Panzer III Ausf.N": {
-        "name": "Sd.Kfz.141 Panzer III",
-        "exposed": False,
-    },
-    "M114": {
-        "name": "M114 Howitzer",
-        "exposed": True,
-    },
-    "M1938 (M-30)": {
-        "name": "M-30",
-        "exposed": True,
-    },
-    "sFH 18": {
-        "name": "sFH 18",
-        "exposed": True,
-    },
-    "QF 25-Pounder": {
-        "name": "QF 25-Pounder",
-        "exposed": True,
-    },
-    "M1 57mm": {
-        "name": "M1 57mm",
-        "exposed": True,
-    },
-    "ZiS-2": {
-        "name": "ZiS-2",
-        "exposed": True,
-    },
-    "PAK 40": {
-        "name": "Pak 40",
-        "exposed": True,
-    },
-    "QF 6-Pounder": {
-        "name": "QF 6-Pounder",
-        "exposed": True,
-    },
-    "Jeep": {
-        "name": "Willy's Jeep",
-        "exposed": True,
-    },
-    "60L (Supply)": {
-        "meth_name": "FORD_F60L_SUPPLY",
-        "name": "Ford F60L",
-        "exposed": True,
-    },
-    "60L (Transport)": {
-        "meth_name": "FORD_F60L_TRANSPORT",
-        "name": "Ford F60L",
-        "exposed": True,
-    },
-    "Half-track": {
-        "name": "M3 Half-track",
-        "exposed": True,
-    },
-}
 
-HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = {
-    "Gaz 63 (Transport)": {
-        "name": "GAZ-63",
-        "exposed": True,
-    },
-    "Gaz 63 (Supply)": {
-        "name": "GAZ-63",
-        "exposed": True,
-    },
-    "T54": {
-        "name": "T-54",
-        "exposed": False,
-    },
-    "M48Patton": {
-        "name": "M48 Patton",
-        "exposed": False,
-    },
-    "NVA Boat": {
-        "name": "NVA Boat",
-        "exposed": True,
-    },
-    "US Transport Helicopter": {
-        "name": "Bell UH-1 Iroquois",
-        "exposed": True,
-    },
-    "US Supply Helicopter": {
-        "name": "Bell UH-1 Iroquois",
-        "exposed": True,
-    },
-    "M35 (Transport)": {
-        "name": "M35 Truck",
-        "exposed": True,
-    },
-    "M35 (Supply)": {
-        "name": "M35 Truck",
-        "exposed": True,
-    },
-    "US Boat": {
-        "name": "PBR",
-        "exposed": True,
-    },
-    "MORTAR": {
-        "name": "Mortar",
-        "exposed": True,
-    },
-    "DShKM Anti-Aircraft Gun": {
-        "name": "DShKM",
-        "exposed": True,
-    },
-}
+HLL_VEHICLE_METADATA_PATH = Path("./scripts/extract/meta/hll/vehicles.json")
+HLL_VEHICLE_METADATA: dict[str, VehicleMetaData] = load_meta(
+    HLL_VEHICLE_METADATA_PATH,
+    VehicleMetaData,
+)
+
+HLLV_VEHICLE_METADATA_PATH = Path("./scripts/extract/meta/hllv/vehicles.json")
+HLLV_VEHICLE_METADATA: dict[str, VehicleMetaData] = load_meta(
+    HLLV_VEHICLE_METADATA_PATH,
+    VehicleMetaData,
+)
 
 if __name__ == "__main__":
     main()

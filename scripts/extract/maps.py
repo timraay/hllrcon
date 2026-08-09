@@ -8,7 +8,7 @@ from pydantic import BaseModel, model_validator
 from hllrcon.data.factions import AnyFaction
 from hllrcon.data.maps import CardinalDirection
 from scripts import HLLV_METADATA_PATH
-from scripts.extract.utils import inject_code, to_method_name
+from scripts.extract.utils import inject_code, load_meta, save_meta, to_method_name
 from scripts.extractlib.loader import local_to_abs_path, set_root_path
 from scripts.extractlib.objects.map_meta_data_asset import MapMetaDataAsset
 from scripts.extractlib.utils import find_objects_in_dir
@@ -124,6 +124,8 @@ def main() -> None:
         "\n\n".join(map_constructors),
     )
 
+    save_meta(HLLV_MAP_METADATA_PATH, MapMetaData, HLLV_MAP_METADATA)
+
 
 class MapMetaData(TypedDict):
     meth_name: NotRequired[str]
@@ -133,50 +135,11 @@ class MapMetaData(TypedDict):
     short_name: str
 
 
-HLLV_MAP_METADATA: dict[str, MapMetaData] = {
-    "WDEV_A": {
-        "meth_name": "VAN_TUONG",
-        "tag": "VAN",
-        "year": 1965,
-        "pretty_name": "Vạn Tường",
-        "short_name": "Vạn Tường",
-    },
-    "WDEV_B": {
-        "meth_name": "QUANG_NGAI",
-        "tag": "QUA",
-        "year": 1965,
-        "pretty_name": "Quảng Ngãi",
-        "short_name": "Quảng Ngãi",
-    },
-    "WDEV_C": {
-        "meth_name": "HUE_OUTSKIRTS",
-        "tag": "HUE",
-        "year": 1968,
-        "pretty_name": "Huế Outskirts",
-        "short_name": "Huế",
-    },
-    "WDEV_D": {
-        "meth_name": "DAK_TO_AIRFIELD",
-        "tag": "DAK",
-        "year": 1967,
-        "pretty_name": "Đăk Tô Airfield",
-        "short_name": "Đăk Tô",
-    },
-    "WDEV_E": {
-        "meth_name": "CAM_RANH_PORT",
-        "tag": "CAM",
-        "year": 1969,
-        "pretty_name": "Cam Ranh Port",
-        "short_name": "Cam Ranh",
-    },
-    "WDEV_F": {
-        "meth_name": "THANH_HOA_BRIDGE",
-        "tag": "THA",
-        "year": 1965,
-        "pretty_name": "Thanh Hòa Bridge",
-        "short_name": "Thanh Hoa",
-    },
-}
+HLLV_MAP_METADATA_PATH = Path("./scripts/extract/meta/hllv/maps.json")
+HLLV_MAP_METADATA: dict[str, MapMetaData] = load_meta(
+    HLLV_MAP_METADATA_PATH,
+    MapMetaData,
+)
 
 if __name__ == "__main__":
     main()
