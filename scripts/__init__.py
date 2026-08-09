@@ -1,8 +1,12 @@
+import logging
 import os
 from pathlib import Path
 from typing import TypedDict
 
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
+
 
 ENV_PATH = Path(".env")
 if ENV_PATH.exists():
@@ -15,6 +19,7 @@ HLL_PORT = int(_hll_port) if _hll_port else None
 HLL_PASSWORD = os.getenv("HLL_PASSWORD")
 
 HLL_METADATA_PATH = Path(os.getenv("HLL_METADATA_PATH", ""))
+HLLV_METADATA_PATH = Path(os.getenv("HLLV_METADATA_PATH", ""))
 
 
 class HLLServerCredentials(TypedDict):

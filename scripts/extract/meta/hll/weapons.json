@@ -1,0 +1,937 @@
+{
+  "M1 GARAND": {
+    "name": "M1 Garand",
+    "type": "Semi-Auto Rifle"
+  },
+  "M1 CARBINE": {
+    "name": "M1 Carbine",
+    "type": "Semi-Auto Rifle"
+  },
+  "M1A1 THOMPSON": {
+    "name": "M1A1 Thompson",
+    "type": "Submachine Gun"
+  },
+  "M3 GREASE GUN": {
+    "name": "M3 Grease Gun",
+    "type": "Submachine Gun"
+  },
+  "M1918A2 BAR": {
+    "name": "M1918A2 BAR",
+    "type": "Assault Rifle"
+  },
+  "BROWNING M1919": {
+    "name": "M1919 Browning",
+    "type": "Machine Gun"
+  },
+  "M1903A3 SPRINGFIELD": {
+    "name": "M1903A3 Springfield",
+    "type": "Bolt Action Rifle"
+  },
+  "M1903A4 SPRINGFIELD": {
+    "name": "M1903A4 Springfield",
+    "type": "Bolt Action Rifle",
+    "magnification": 4
+  },
+  "M97 TRENCH GUN": {
+    "name": "M97 Trench Gun",
+    "type": "Shotgun"
+  },
+  "COLT M1911": {
+    "name": "Colt M1911",
+    "type": "Pistol"
+  },
+  "M3 KNIFE": {
+    "name": "M3 Knife",
+    "type": "Melee"
+  },
+  "SATCHEL": {
+    "name": "Satchel Charge",
+    "type": "Satchel"
+  },
+  "MK2 GRENADE": {
+    "name": "Mk 2 Grenade",
+    "type": "Grenade"
+  },
+  "M2 FLAMETHROWER": {
+    "name": "M2 Flamethrower",
+    "type": "Flamethrower"
+  },
+  "BAZOOKA": {
+    "name": "Bazooka",
+    "type": "Rocket Launcher"
+  },
+  "M2 AP MINE": {
+    "name": "M2 AP Mine",
+    "type": "Anti-Personnel Mine"
+  },
+  "M1A1 AT MINE": {
+    "name": "M1A1 AT Mine",
+    "type": "Anti-Tank Mine"
+  },
+  "FLARE GUN": {
+    "name": "Flare Gun",
+    "type": "Recon Flare"
+  },
+  "57MM CANNON [M1 57mm]": {
+    "name": "57mm Cannon"
+  },
+  "155MM HOWITZER [M114]": {
+    "name": "155mm Howitzer"
+  },
+  "M8 Greyhound": {},
+  "Stuart M5A1": {},
+  "Sherman M4A3(75)W": {},
+  "Sherman M4A3E2": {},
+  "Sherman M4A3E2(76)": {},
+  "GMC CCKW 353 (Supply)": {},
+  "GMC CCKW 353 (Transport)": {},
+  "M3 Half-track": {},
+  "Jeep Willys": {},
+  "M4A3 (105mm)": {},
+  "M6 37mm [M8 Greyhound]": {
+    "name": "37mm Cannon"
+  },
+  "COAXIAL M1919 [M8 Greyhound]": {
+    "name": "M1919 Browning"
+  },
+  "37MM CANNON [Stuart M5A1]": {
+    "name": "37mm Cannon"
+  },
+  "COAXIAL M1919 [Stuart M5A1]": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919 [Stuart M5A1]": {
+    "name": "M1919 Browning"
+  },
+  "75MM CANNON [Sherman M4A3(75)W]": {
+    "name": "75mm Cannon"
+  },
+  "COAXIAL M1919 [Sherman M4A3(75)W]": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919 [Sherman M4A3(75)W]": {
+    "name": "M1919 Browning"
+  },
+  "75MM M3 GUN [Sherman M4A3E2]": {
+    "name": "75mm Cannon"
+  },
+  "COAXIAL M1919 [Sherman M4A3E2]": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919 [Sherman M4A3E2]": {
+    "name": "M1919 Browning"
+  },
+  "76MM M1 GUN [Sherman M4A3E2(76)]": {
+    "name": "76mm Cannon"
+  },
+  "COAXIAL M1919 [Sherman M4A3E2(76)]": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919 [Sherman M4A3E2(76)]": {
+    "name": "M1919 Browning"
+  },
+  "M2 Browning [M3 Half-track]": {
+    "name": "M2 Browning"
+  },
+  "105MM HOWITZER [M4A3 (105mm)]": {
+    "name": "105mm Howitzer"
+  },
+  "COAXIAL M1919 [M4A3 (105mm)]": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919 [M4A3 (105mm)]": {
+    "name": "M1919 Browning"
+  },
+  "57MM CANNON": {
+    "name": "57mm Cannon"
+  },
+  "155MM HOWITZER": {
+    "name": "155mm Howitzer"
+  },
+  "76MM M1 GUN": {
+    "name": "76mm Cannon"
+  },
+  "75MM M3 GUN": {
+    "name": "75mm Cannon"
+  },
+  "75MM CANNON": {
+    "name": "75mm Cannon"
+  },
+  "37MM CANNON": {
+    "name": "37mm Cannon"
+  },
+  "M6 37MM": {
+    "name": "37mm Cannon"
+  },
+  "COAXIAL M1919": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919": {
+    "name": "M1919 Browning"
+  },
+  "M2 Browning": {
+    "name": "M2 Browning",
+    "type": "Mounted MG"
+  },
+  "KARABINER 98K": {
+    "name": "Karabiner 98k",
+    "type": "Bolt Action Rifle"
+  },
+  "GEWEHR 43": {
+    "name": "G43",
+    "type": "Semi-Auto Rifle"
+  },
+  "STG44": {
+    "name": "STG44",
+    "type": "Assault Rifle"
+  },
+  "FG42": {
+    "name": "FG42",
+    "type": "Assault Rifle"
+  },
+  "MP40": {
+    "name": "MP40",
+    "type": "Submachine Gun"
+  },
+  "MG34": {
+    "name": "MG34",
+    "type": "Machine Gun"
+  },
+  "MG42": {
+    "name": "MG42",
+    "type": "Machine Gun"
+  },
+  "FLAMMENWERFER 41": {
+    "name": "Flammenwerfer 41",
+    "type": "Flamethrower"
+  },
+  "KARABINER 98K x8": {
+    "name": "Karabiner 98k",
+    "type": "Bolt Action Rifle",
+    "magnification": 8
+  },
+  "FG42 x4": {
+    "name": "FG42",
+    "type": "Semi-Auto Rifle",
+    "magnification": 4
+  },
+  "LUGER P08": {
+    "name": "Luger P08",
+    "type": "Pistol"
+  },
+  "WALTHER P38": {
+    "name": "Walther P38",
+    "type": "Pistol"
+  },
+  "FELDSPATEN": {
+    "name": "Feldspaten",
+    "type": "Melee"
+  },
+  "M24 STIELHANDGRANATE": {
+    "name": "M24 Stielhandgranate",
+    "type": "Grenade"
+  },
+  "M43 STIELHANDGRANATE": {
+    "name": "M43 Stielhandgranate",
+    "type": "Grenade"
+  },
+  "PANZERSCHRECK": {
+    "name": "Panzerschreck",
+    "type": "Rocket Launcher"
+  },
+  "S-MINE": {
+    "name": "S-Mine",
+    "type": "Anti-Personnel Mine"
+  },
+  "TELLERMINE 43": {
+    "name": "Tellermine 43",
+    "type": "Anti-Tank Mine"
+  },
+  "75MM CANNON [PAK 40]": {
+    "name": "75mm Cannon"
+  },
+  "150MM HOWITZER [sFH 18]": {
+    "name": "150mm Howitzer"
+  },
+  "Sd.Kfz.234 Puma": {},
+  "Sd.Kfz.121 Luchs": {},
+  "Sd.Kfz.161 Panzer IV": {},
+  "Sd.Kfz.171 Panther": {},
+  "Sd.Kfz.181 Tiger 1": {},
+  "Opel Blitz (Supply)": {},
+  "Opel Blitz (Transport)": {},
+  "Sd.Kfz 251 Half-track": {},
+  "Kubelwagen": {},
+  "Sturmpanzer IV": {},
+  "Panzer III Ausf.N": {},
+  "50mm KwK 39/1 [Sd.Kfz.234 Puma]": {
+    "name": "50mm KwK 39/1"
+  },
+  "COAXIAL MG34 [Sd.Kfz.234 Puma]": {
+    "name": "MG34"
+  },
+  "20MM KWK 30 [Sd.Kfz.121 Luchs]": {
+    "name": "20mm KwK 30"
+  },
+  "COAXIAL MG34 [Sd.Kfz.121 Luchs]": {
+    "name": "MG34"
+  },
+  "75MM CANNON [Sd.Kfz.161 Panzer IV]": {
+    "name": "75mm Cannon"
+  },
+  "COAXIAL MG34 [Sd.Kfz.161 Panzer IV]": {
+    "name": "MG34"
+  },
+  "HULL MG34 [Sd.Kfz.161 Panzer IV]": {
+    "name": "MG34"
+  },
+  "75MM CANNON [Sd.Kfz.171 Panther]": {
+    "name": "75mm Cannon"
+  },
+  "COAXIAL MG34 [Sd.Kfz.171 Panther]": {
+    "name": "MG34"
+  },
+  "HULL MG34 [Sd.Kfz.171 Panther]": {
+    "name": "MG34"
+  },
+  "88 KWK 36 L/56 [Sd.Kfz.181 Tiger 1]": {
+    "name": "88mm KwK 36 L/56"
+  },
+  "COAXIAL MG34 [Sd.Kfz.181 Tiger 1]": {
+    "name": "MG34"
+  },
+  "HULL MG34 [Sd.Kfz.181 Tiger 1]": {
+    "name": "MG34"
+  },
+  "MG 42 [Sd.Kfz 251 Half-track]": {
+    "name": "MG42",
+    "type": "Mounted MG"
+  },
+  "StuH 43 L/12 [Sturmpanzer IV]": {
+    "name": "StuH 43 L/12"
+  },
+  "7.5CM KwK 37 [Panzer III Ausf.N]": {
+    "name": "75mm KwK 37"
+  },
+  "COAXIAL MG34 [Panzer III Ausf.N]": {
+    "name": "MG34"
+  },
+  "HULL MG34 [Panzer III Ausf.N]": {
+    "name": "MG34"
+  },
+  "150MM HOWITZER": {
+    "name": "150mm Howitzer"
+  },
+  "50MM KWK 39/1": {
+    "name": "50mm KwK 39/1"
+  },
+  "20MM KWK 30": {
+    "name": "20mm KwK 30"
+  },
+  "88 KWK 36 L/56": {
+    "name": "88mm KwK 36 L/56"
+  },
+  "COAXIAL MG34": {
+    "name": "MG34"
+  },
+  "HULL MG34": {
+    "name": "MG34"
+  },
+  "MG 42": {
+    "name": "MG42",
+    "type": "Mounted MG"
+  },
+  "7.5CM KwK 37": {
+    "name": "75mm KwK 37"
+  },
+  "MOSIN NAGANT 1891": {
+    "name": "Mosin-Nagant 1891",
+    "type": "Bolt Action Rifle"
+  },
+  "MOSIN NAGANT 91/30": {
+    "name": "Mosin-Nagant 91/30",
+    "type": "Bolt Action Rifle"
+  },
+  "MOSIN NAGANT M38": {
+    "name": "Mosin-Nagant M38",
+    "type": "Bolt Action Rifle"
+  },
+  "SVT40": {
+    "name": "SVT-40",
+    "type": "Semi-Auto Rifle"
+  },
+  "PPSH 41": {
+    "name": "PPSh-41",
+    "type": "Submachine Gun"
+  },
+  "PPSH 41 W/DRUM": {
+    "name": "PPSh-41 with Drum",
+    "type": "Submachine Gun"
+  },
+  "DP-27": {
+    "name": "DP-27",
+    "type": "Machine Gun"
+  },
+  "SCOPED MOSIN NAGANT 91/30": {
+    "name": "Mosin-Nagant 91/30",
+    "type": "Bolt Action Rifle",
+    "magnification": 4
+  },
+  "SCOPED SVT40": {
+    "name": "SVT-40",
+    "type": "Semi-Auto Rifle",
+    "magnification": 4
+  },
+  "NAGANT M1895": {
+    "name": "Nagant M1895",
+    "type": "Revolver"
+  },
+  "TOKAREV TT33": {
+    "name": "Tokarev TT-33",
+    "type": "Pistol"
+  },
+  "MPL-50 SPADE": {
+    "name": "MPL-50 Spade",
+    "type": "Melee"
+  },
+  "SATCHEL CHARGE": {
+    "name": "Satchel Charge",
+    "type": "Satchel"
+  },
+  "RG-42 GRENADE": {
+    "name": "RG-42 Grenade",
+    "type": "Grenade"
+  },
+  "MOLOTOV": {
+    "name": "Molotov",
+    "type": "Grenade"
+  },
+  "PTRS-41": {
+    "name": "PTRS-41",
+    "type": "Anti-Materiel Rifle"
+  },
+  "POMZ AP MINE": {
+    "name": "POMZ AP Mine",
+    "type": "Anti-Personnel Mine"
+  },
+  "TM-35 AT MINE": {
+    "name": "TM-35 AT Mine",
+    "type": "Anti-Tank Mine"
+  },
+  "57MM CANNON [ZiS-2]": {
+    "name": "57mm Cannon"
+  },
+  "122MM HOWITZER [M1938 (M-30)]": {
+    "name": "122mm Howitzer"
+  },
+  "BA-10": {},
+  "T70": {},
+  "T34/76": {},
+  "IS-1": {},
+  "ZIS-5 (Supply)": {},
+  "ZIS-5 (Transport)": {},
+  "KV-2": {},
+  "GAZ-67": {},
+  "19-K 45MM [BA-10]": {
+    "name": "45mm M1932"
+  },
+  "COAXIAL DT [BA-10]": {
+    "name": "DT"
+  },
+  "45MM M1937 [T70]": {
+    "name": "45mm M1937"
+  },
+  "COAXIAL DT [T70]": {
+    "name": "DT"
+  },
+  "76MM ZiS-5 [T34/76]": {
+    "name": "76mm M1940"
+  },
+  "COAXIAL DT [T34/76]": {
+    "name": "DT"
+  },
+  "HULL DT [T34/76]": {
+    "name": "DT"
+  },
+  "D-5T 85MM [IS-1]": {
+    "name": "D-5T 85mm"
+  },
+  "COAXIAL DT [IS-1]": {
+    "name": "DT"
+  },
+  "HULL DT [IS-1]": {
+    "name": "DT"
+  },
+  "152MM M-10T [KV-2]": {
+    "name": "M-10T 152mm"
+  },
+  "HULL DT [KV-2]": {
+    "name": "DT"
+  },
+  "122MM HOWITZER": {
+    "name": "122mm Howitzer"
+  },
+  "19-K 45MM": {
+    "name": "45mm M1932"
+  },
+  "45MM M1937": {
+    "name": "45mm M1937"
+  },
+  "76MM ZiS-5": {
+    "name": "76mm M1940"
+  },
+  "D-5T 85MM": {
+    "name": "D-5T 85mm"
+  },
+  "COAXIAL DT": {
+    "name": "COAXIAL DT"
+  },
+  "HULL DT": {
+    "name": "HULL DT"
+  },
+  "152MM M-10T": {
+    "name": "M-10T 152mm"
+  },
+  "SMLE No.1 Mk III": {
+    "name": "SMLE Mk III",
+    "type": "Bolt Action Rifle"
+  },
+  "Rifle No.4 Mk I": {
+    "name": "No.4 Rifle Mk I",
+    "type": "Bolt Action Rifle"
+  },
+  "Sten Gun Mk.II": {
+    "name": "Sten Mk II",
+    "type": "Submachine Gun"
+  },
+  "Sten Gun Mk.V": {
+    "name": "Sten Mk V",
+    "type": "Submachine Gun"
+  },
+  "M1928A1 THOMPSON": {
+    "name": "M1928A1 Thompson",
+    "type": "Submachine Gun"
+  },
+  "Bren Gun": {
+    "name": "Bren Gun",
+    "type": "Assault Rifle"
+  },
+  "Lewis Gun": {
+    "name": "Lewis Gun",
+    "type": "Machine Gun"
+  },
+  "FLAMETHROWER": {
+    "name": "Lifebuoy Flamethrower",
+    "type": "Flamethrower"
+  },
+  "Rifle No.4 Mk I Sniper": {
+    "name": "No.4 Rifle Mk I",
+    "type": "Bolt Action Rifle",
+    "magnification": 8
+  },
+  "Webley MK VI": {
+    "name": "Webley Mk IV",
+    "type": "Revolver"
+  },
+  "Fairbairn\u2013Sykes": {
+    "name": "Fairbairn-Sykes",
+    "type": "Melee"
+  },
+  "Satchel": {
+    "name": "Satchel Charge",
+    "type": "Satchel"
+  },
+  "Mills Bomb": {
+    "name": "Mills Bomb",
+    "type": "Grenade"
+  },
+  "No.82 Grenade": {
+    "name": "Gammon Bomb",
+    "type": "Grenade"
+  },
+  "PIAT": {
+    "name": "PIAT",
+    "type": "Rocket Launcher"
+  },
+  "Boys Anti-tank Rifle": {
+    "name": "Boys AT Rifle",
+    "type": "Anti-Materiel Rifle"
+  },
+  "A.P. Shrapnel Mine Mk II": {
+    "meth_name": "AP_SHRAPNEL_MINE_MK_II",
+    "name": "AP Shrapnel Mine Mk II",
+    "type": "Anti-Personnel Mine"
+  },
+  "A.T. Mine G.S. Mk V": {
+    "meth_name": "AT_MINE_GS_MK_V",
+    "name": "AT Mine G.S. Mk V",
+    "type": "Anti-Tank Mine"
+  },
+  "No.2 Mk 5 Flare Pistol": {
+    "name": "No.2 Mk V Flare Gun",
+    "type": "Recon Flare"
+  },
+  "Enfield No.2 Mk I": {
+    "name": "Enfield No.2 Mk I",
+    "type": "Revolver"
+  },
+  "FN-Inglis No.2 Mk I": {
+    "name": "Inglis Hi-Power",
+    "type": "Pistol"
+  },
+  "Lanchester": {
+    "type": "Submachine Gun"
+  },
+  "QF 6-POUNDER [QF 6-Pounder]": {
+    "name": "57mm Cannon"
+  },
+  "QF 25-POUNDER [QF 25-Pounder]": {
+    "name": "88mm Howitzer"
+  },
+  "Daimler": {},
+  "Tetrarch": {},
+  "M3 Stuart Honey": {},
+  "Cromwell": {},
+  "Crusader Mk.III": {},
+  "Firefly": {},
+  "Churchill Mk.III": {},
+  "Churchill Mk.VII": {},
+  "Bedford OYD (Supply)": {},
+  "Bedford OYD (Transport)": {},
+  "Churchill Mk III A.V.R.E.": {},
+  "Bishop SP 25pdr": {},
+  "QF 2-POUNDER [Daimler]": {
+    "name": "QF 2-Pounder"
+  },
+  "COAXIAL BESA [Daimler]": {
+    "name": "BESA"
+  },
+  "QF 2-POUNDER [Tetrarch]": {
+    "name": "QF 2-Pounder"
+  },
+  "COAXIAL BESA [Tetrarch]": {
+    "name": "BESA"
+  },
+  "37MM CANNON [M3 Stuart Honey]": {
+    "name": "37mm Cannon"
+  },
+  "COAXIAL M1919 [M3 Stuart Honey]": {
+    "name": "M1919 Browning"
+  },
+  "HULL M1919 [M3 Stuart Honey]": {
+    "name": "M1919 Browning"
+  },
+  "OQF 75MM [Cromwell]": {
+    "name": "QF 75mm"
+  },
+  "COAXIAL BESA [Cromwell]": {
+    "name": "BESA"
+  },
+  "HULL BESA [Cromwell]": {
+    "name": "BESA"
+  },
+  "OQF 57MM [Crusader Mk.III]": {
+    "name": "QF 57mm"
+  },
+  "COAXIAL BESA [Crusader Mk.III]": {
+    "name": "BESA"
+  },
+  "QF 17-POUNDER [Firefly]": {
+    "name": "QF 17-Pounder"
+  },
+  "COAXIAL M1919 [Firefly]": {
+    "name": "M1919 Browning"
+  },
+  "OQF 57MM [Churchill Mk.III]": {
+    "name": "QF 57mm"
+  },
+  "COAXIAL BESA 7.92mm [Churchill Mk.III]": {
+    "name": "BESA"
+  },
+  "HULL BESA 7.92mm [Churchill Mk.III]": {
+    "name": "BESA"
+  },
+  "OQF 75MM [Churchill Mk.VII]": {
+    "name": "QF 75mm"
+  },
+  "COAXIAL BESA 7.92mm [Churchill Mk.VII]": {
+    "name": "BESA"
+  },
+  "HULL BESA 7.92mm [Churchill Mk.VII]": {
+    "name": "BESA"
+  },
+  "230MM PETARD [Churchill Mk III A.V.R.E.]": {
+    "name": "230mm Petard"
+  },
+  "COAXIAL BESA 7.92mm [Churchill Mk III A.V.R.E.]": {
+    "name": "BESA"
+  },
+  "HULL BESA 7.92mm [Churchill Mk III A.V.R.E.]": {
+    "name": "BESA"
+  },
+  "QF 25 POUNDER [Bishop SP 25pdr]": {
+    "name": "88mm Howitzer"
+  },
+  "QF 6-POUNDER": {
+    "name": "57mm Cannon"
+  },
+  "QF 25-POUNDER": {
+    "name": "88mm Howitzer"
+  },
+  "QF 2-POUNDER": {
+    "name": "QF 2-Pounder"
+  },
+  "OQF 75MM": {
+    "name": "QF 75mm"
+  },
+  "OQF 57MM": {
+    "name": "QF 57mm"
+  },
+  "QF 17-POUNDER": {
+    "name": "QF 17-Pounder"
+  },
+  "COAXIAL BESA": {
+    "name": "BESA"
+  },
+  "COAXIAL BESA 7.92mm": {
+    "name": "BESA"
+  },
+  "HULL BESA": {
+    "name": "BESA"
+  },
+  "HULL BESA 7.92mm": {
+    "name": "7.92mm"
+  },
+  "QF 25 POUNDER": {
+    "meth_name": "V_QF_25_POUNDER__UNKNOWN_2",
+    "name": "88mm Howitzer"
+  },
+  "UNKNOWN": {
+    "name": "Unknown"
+  },
+  "BOMBING RUN": {
+    "name": "Bombing Run",
+    "type": "Commander Ability"
+  },
+  "STRAFING RUN": {
+    "name": "Strafing Run",
+    "type": "Commander Ability"
+  },
+  "PRECISION STRIKE": {
+    "name": "Precision Strike",
+    "type": "Commander Ability"
+  },
+  "Unknown": {
+    "name": "Artillery Strike",
+    "type": "Commander Ability"
+  },
+  "FireSpot": {
+    "name": "Fire"
+  },
+  "SMALL AMMUNITION BOX": {
+    "name": "Small Ammunition Box",
+    "type": "Supplies"
+  },
+  "HAMMER": {
+    "name": "Hammer",
+    "type": "Hammer"
+  },
+  "BANDAGE": {
+    "name": "Bandage",
+    "type": "Healing"
+  },
+  "NB39 NEBELHANDGRANATE": {
+    "name": "NB39 Nebelhandgranate",
+    "type": "Smoke"
+  },
+  "EXPLOSIVE AMMO BOX": {
+    "name": "Explosive Ammo Box",
+    "type": "Supplies"
+  },
+  "MORPHINE AMPOULE": {
+    "name": "Morphine",
+    "type": "Healing"
+  },
+  "MEDICAL SUPPLIES": {
+    "name": "Medical Supplies",
+    "type": "Supplies"
+  },
+  "WATCH": {
+    "name": "Watch",
+    "type": "Watch"
+  },
+  "DIENSTGLAS 6\u00d730": {
+    "name": "Dienstglas 6x30",
+    "type": "Binoculars"
+  },
+  "SUPPLIES": {
+    "name": "Supplies",
+    "type": "Supplies"
+  },
+  "PAK 40": {
+    "name": "Wrench",
+    "type": "Wrench"
+  },
+  "WRENCH": {
+    "name": "Wrench",
+    "type": "Wrench"
+  },
+  "TORCH": {
+    "name": "Torch",
+    "type": "Torch"
+  },
+  "EXTERIOR CUSTOMIZATION": {
+    "name": "Exterior Customization",
+    "type": "Wrench"
+  },
+  "M18 SMOKE GRENADE": {
+    "name": "M18 Smoke Grenade",
+    "type": "Smoke"
+  },
+  "MORPHINE SYRETTE": {
+    "name": "Morphine Syrette",
+    "type": "Healing"
+  },
+  "WESTINGHOUSE M3 6\u00d730": {
+    "name": "Westinghouse M3 6x30",
+    "type": "Binoculars"
+  },
+  "57MM M1": {
+    "meth_name": "WRENCH_57MM_M1",
+    "name": "Wrench",
+    "type": "Wrench"
+  },
+  "RDG-2 SMOKE": {
+    "name": "RDG-2 Smoke Grenade",
+    "type": "Smoke"
+  },
+  "REVIVE": {
+    "name": "Revive",
+    "type": "Healing"
+  },
+  "RKKA 8\u00d740": {
+    "name": "RKKA 8x40",
+    "type": "Binoculars"
+  },
+  "ZiS-2": {
+    "name": "ZiS-2",
+    "type": "Wrench"
+  },
+  "Bandage": {
+    "name": "Bandage",
+    "type": "Healing"
+  },
+  "Hammer": {
+    "name": "Hammer",
+    "type": "Hammer"
+  },
+  "Small Ammunition Box": {
+    "name": "Small Ammunition Box",
+    "type": "Supplies"
+  },
+  "No.77": {
+    "name": "No.77 WP Grenade",
+    "type": "Smoke"
+  },
+  "Explosive Ammo Box": {
+    "name": "Explosive Ammo Box",
+    "type": "Supplies"
+  },
+  "Morphine": {
+    "name": "Morphine",
+    "type": "Healing"
+  },
+  "Medical Supplies": {
+    "name": "Medical Supplies",
+    "type": "Supplies"
+  },
+  "Watch": {
+    "name": "Watch",
+    "type": "Watch"
+  },
+  "Prism No.2 Mk II x6": {
+    "name": "Prism No.2 Mk II x6",
+    "type": "Binoculars"
+  },
+  "Supplies": {
+    "name": "Supplies",
+    "type": "Supplies"
+  },
+  "Ordnance QF 6-pounder": {
+    "name": "Ordnance QF 6-pounder",
+    "type": "Wrench"
+  },
+  "Wrench": {
+    "name": "Wrench",
+    "type": "Wrench"
+  },
+  "Torch": {
+    "name": "Torch",
+    "type": "Torch"
+  },
+  "PRIMARY [BA-10]": {
+    "name": "Receive Intel"
+  },
+  "PRIMARY [Daimler]": {
+    "name": "Receive Intel"
+  },
+  "PRIMARY [M8 Greyhound]": {
+    "name": "Receive Intel"
+  },
+  "PRIMARY [Sd.Kfz.234 Puma]": {
+    "name": "Receive Intel"
+  },
+  "230MM PETARD": {
+    "name": "230mm Petard"
+  },
+  "105MM HOWITZER": {
+    "name": "105mm Howitzer"
+  },
+  "M6 37mm": {
+    "name": "37mm Cannon"
+  },
+  "50mm KwK 39/1": {
+    "name": "50mm KwK 39/1"
+  },
+  "StuH 43 L/12": {
+    "name": "StuH 43 L/12"
+  },
+  "SMOKE GRENADE [Churchill Mk.III]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE [Churchill Mk.VII]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE [Cromwell]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE [Firefly]": {
+    "name": "Smoke Grenade"
+  },
+  "FUEL INJECTION [IS-1]": {
+    "name": "Smoke Screen"
+  },
+  "SMOKE GRENADE [Sd.Kfz.171 Panther]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE [Sd.Kfz.181 Tiger 1]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE [Sherman M4A3E2]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE [Tetrarch]": {
+    "name": "Smoke Grenade"
+  },
+  "SMOKE GRENADE": {
+    "name": "Smoke Grenade"
+  },
+  "M2 Browning [Half-track]": {
+    "name": "M2 Browning"
+  },
+  "60L (Supply)": {},
+  "60L (Transport)": {},
+  "Half-track": {},
+  "Jeep": {},
+  "$schema": "../_schemas/weapons.schema.json"
+}

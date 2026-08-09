@@ -1,0 +1,51 @@
+{
+  "Gaz 63 (Transport)": {
+    "name": "GAZ-63",
+    "exposed": true
+  },
+  "Gaz 63 (Supply)": {
+    "name": "GAZ-63",
+    "exposed": true
+  },
+  "T54": {
+    "name": "T-54",
+    "exposed": false
+  },
+  "M48Patton": {
+    "name": "M48 Patton",
+    "exposed": false
+  },
+  "NVA Boat": {
+    "name": "NVA Boat",
+    "exposed": true
+  },
+  "US Transport Helicopter": {
+    "name": "Bell UH-1 Iroquois",
+    "exposed": true
+  },
+  "US Supply Helicopter": {
+    "name": "Bell UH-1 Iroquois",
+    "exposed": true
+  },
+  "M35 (Transport)": {
+    "name": "M35 Truck",
+    "exposed": true
+  },
+  "M35 (Supply)": {
+    "name": "M35 Truck",
+    "exposed": true
+  },
+  "US Boat": {
+    "name": "PBR",
+    "exposed": true
+  },
+  "MORTAR": {
+    "name": "Mortar",
+    "exposed": true
+  },
+  "DShKM Anti-Aircraft Gun": {
+    "name": "DShKM",
+    "exposed": true
+  },
+  "$schema": "../_schemas/vehicles.schema.json"
+}

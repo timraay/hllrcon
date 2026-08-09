@@ -84,12 +84,19 @@ exclude_also = [
     # Don't complain about type checker code
     "if TYPE_CHECKING:",
     "@(typing\\.)?overload",
+
+    # Comments to turn coverage on and off:
+    'no cover: start(?s:.)*?no cover: stop',
 ]
 omit = [
     # Exclude "tests" and "scripts" folder from coverage report
     "tests/**",
     "tests/integration_tests/**",
     "scripts/**",
+    "scripts/extract/**",
+    "scripts/extractlib/**",
+    "scripts/extractlib/objects/**",
+    "scripts/extractlib/structs/**",
     "tmp.py",
 ]
 
@@ -111,6 +118,5 @@ dev = [
     "pytest-mock>=3.14.1",
     "python-dotenv>=1.1.1",
     "ruff>=0.12.0",
-    "ty>=0.0.23",
     "types-aiofiles>=24.1.0.20250606",
 ]

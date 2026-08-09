@@ -1,0 +1,33 @@
+{
+  "$defs": {
+    "VehicleMetaData": {
+      "properties": {
+        "meth_name": {
+          "title": "Meth Name",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "exposed": {
+          "title": "Exposed",
+          "type": "boolean"
+        }
+      },
+      "title": "VehicleMetaData",
+      "type": "object"
+    }
+  },
+  "additionalProperties": {
+    "anyOf": [
+      {
+        "type": "string"
+      },
+      {
+        "$ref": "#/$defs/VehicleMetaData"
+      }
+    ]
+  },
+  "type": "object"
+}

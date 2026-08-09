@@ -1,0 +1,218 @@
+{
+  "Daimler": {
+    "name": "Daimler",
+    "exposed": false
+  },
+  "Tetrarch": {
+    "name": "Tetrarch",
+    "exposed": false
+  },
+  "Jeep Willys": {
+    "name": "Willy's Jeep",
+    "exposed": true
+  },
+  "Firefly": {
+    "name": "Sherman Firefly",
+    "exposed": false
+  },
+  "Bedford OYD (Supply)": {
+    "name": "Bedford OYD",
+    "exposed": true
+  },
+  "Bedford OYD (Transport)": {
+    "name": "Bedford OYD",
+    "exposed": true
+  },
+  "M3 Half-track": {
+    "name": "M3 Half-track",
+    "exposed": true
+  },
+  "Cromwell": {
+    "name": "Cromwell",
+    "exposed": false
+  },
+  "Churchill Mk.VII": {
+    "name": "Churchill Mk VII",
+    "exposed": false
+  },
+  "Churchill Mk III A.V.R.E.": {
+    "meth_name": "CHURCHILL_MK_III_AVRE",
+    "name": "Churchill AVRE",
+    "exposed": false
+  },
+  "Sd.Kfz.234 Puma": {
+    "name": "Sd.Kfz.234 Puma",
+    "exposed": false
+  },
+  "Sd.Kfz.171 Panther": {
+    "name": "Sd.Kfz.171 Panther",
+    "exposed": false
+  },
+  "Sd.Kfz.181 Tiger 1": {
+    "name": "Sd.Kfz.181 Tiger 1",
+    "exposed": false
+  },
+  "Sturmpanzer IV": {
+    "name": "Sturmpanzer IV",
+    "exposed": false
+  },
+  "Opel Blitz (Supply)": {
+    "name": "Opel Blitz",
+    "exposed": true
+  },
+  "Opel Blitz (Transport)": {
+    "name": "Opel Blitz",
+    "exposed": true
+  },
+  "Sd.Kfz 251 Half-track": {
+    "name": "Sd.Kfz.251 Half-track",
+    "exposed": true
+  },
+  "Sd.Kfz.121 Luchs": {
+    "name": "Sd.Kfz.121 Luchs",
+    "exposed": false
+  },
+  "Sd.Kfz.161 Panzer IV": {
+    "name": "Sd.Kfz.161 Panzer IV",
+    "exposed": false
+  },
+  "Kubelwagen": {
+    "name": "Kubelwagen",
+    "exposed": true
+  },
+  "BA-10": {
+    "name": "BA-10",
+    "exposed": false
+  },
+  "T34/76": {
+    "name": "T34/76",
+    "exposed": false
+  },
+  "IS-1": {
+    "name": "IS-1",
+    "exposed": false
+  },
+  "ZIS-5 (Supply)": {
+    "name": "ZIS-5",
+    "exposed": true
+  },
+  "ZIS-5 (Transport)": {
+    "name": "ZIS-5",
+    "exposed": true
+  },
+  "GAZ-67": {
+    "name": "GAZ-67",
+    "exposed": true
+  },
+  "T70": {
+    "name": "T70",
+    "exposed": false
+  },
+  "KV-2": {
+    "name": "KV-2",
+    "exposed": false
+  },
+  "M8 Greyhound": {
+    "name": "M8 Greyhound",
+    "exposed": false
+  },
+  "Sherman M4A3E2": {
+    "name": "M4A3E2 Sherman",
+    "exposed": false
+  },
+  "Sherman M4A3E2(76)": {
+    "name": "M4A3E2(76) Sherman",
+    "exposed": false
+  },
+  "GMC CCKW 353 (Supply)": {
+    "name": "GMC CCKW 353",
+    "exposed": true
+  },
+  "GMC CCKW 353 (Transport)": {
+    "name": "GMC CCKW 353",
+    "exposed": true
+  },
+  "Sherman M4A3(75)W": {
+    "name": "M4A3(75)W Sherman",
+    "exposed": false
+  },
+  "Stuart M5A1": {
+    "name": "M5A1 Stuart",
+    "exposed": false
+  },
+  "M4A3 (105mm)": {
+    "name": "Sherman M4(104)",
+    "exposed": false
+  },
+  "M3 Stuart Honey": {
+    "name": "M3 Stuart Honey",
+    "exposed": false
+  },
+  "Churchill Mk.III": {
+    "name": "Churchill Mk III",
+    "exposed": false
+  },
+  "Crusader Mk.III": {
+    "name": "Crusader Mk III",
+    "exposed": false
+  },
+  "Bishop SP 25pdr": {
+    "name": "Bishop",
+    "exposed": false
+  },
+  "Panzer III Ausf.N": {
+    "name": "Sd.Kfz.141 Panzer III",
+    "exposed": false
+  },
+  "M114": {
+    "name": "M114 Howitzer",
+    "exposed": true
+  },
+  "M1938 (M-30)": {
+    "name": "M-30",
+    "exposed": true
+  },
+  "sFH 18": {
+    "name": "sFH 18",
+    "exposed": true
+  },
+  "QF 25-Pounder": {
+    "name": "QF 25-Pounder",
+    "exposed": true
+  },
+  "M1 57mm": {
+    "name": "M1 57mm",
+    "exposed": true
+  },
+  "ZiS-2": {
+    "name": "ZiS-2",
+    "exposed": true
+  },
+  "PAK 40": {
+    "name": "Pak 40",
+    "exposed": true
+  },
+  "QF 6-Pounder": {
+    "name": "QF 6-Pounder",
+    "exposed": true
+  },
+  "Jeep": {
+    "name": "Willy's Jeep",
+    "exposed": true
+  },
+  "60L (Supply)": {
+    "meth_name": "FORD_F60L_SUPPLY",
+    "name": "Ford F60L",
+    "exposed": true
+  },
+  "60L (Transport)": {
+    "meth_name": "FORD_F60L_TRANSPORT",
+    "name": "Ford F60L",
+    "exposed": true
+  },
+  "Half-track": {
+    "name": "M3 Half-track",
+    "exposed": true
+  },
+  "$schema": "../_schemas/vehicles.schema.json"
+}
