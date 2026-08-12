@@ -1789,7 +1789,7 @@ class HLLRconCommands(_RconCommands):
 
 
 class HLLVRconCommands(_RconCommands):
-    __min_server_version__: ClassVar[int] = 0
+    __min_server_version__: ClassVar[int] = 1167904
     """The minimum supported game server version (build revision). This is the minimum
     version that is required for the library to be fully functional. No guarantees can
     be made about future versions.
