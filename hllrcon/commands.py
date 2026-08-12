@@ -18,7 +18,7 @@ from typing_extensions import override
 
 from hllrcon.data.factions import AnyFaction
 from hllrcon.data.game_modes import AnyGameMode
-from hllrcon.data.layers import AnyLayer
+from hllrcon.data.layers import AnyLayer, HLLVLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
     AnyPlayerFactionId,
@@ -307,32 +307,6 @@ class _RconCommands(ABC):
             {
                 "MapName": str(map_name),
             },
-        )
-
-    async def get_available_sector_names(
-        self,
-    ) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
-        """Retrieve a list of all sector names available on the current map.
-
-        Returns
-        -------
-        tuple[list[str], list[str], list[str], list[str], list[str]]
-            A list of sector names available on the current map.
-
-        """
-        details = await self.get_command_details("SetSectorLayout")
-        parameters = details.dialogue_parameters
-        if not parameters or not all(
-            p.id.startswith("Sector_") for p in parameters[:5]
-        ):
-            msg = "Received unexpected response from server."
-            raise RconMessageError(msg)
-        return (
-            parameters[0].value_member,
-            parameters[1].value_member,
-            parameters[2].value_member,
-            parameters[3].value_member,
-            parameters[4].value_member,
         )
 
     async def add_map_to_rotation(
@@ -1602,6 +1576,32 @@ class HLLRconCommands(_RconCommands):
     async def get_admin_log(self, seconds_span: int, filter_: str | None = None) -> str:
         return await self._get_admin_log(seconds_span, filter_)
 
+    async def get_available_sector_names(
+        self,
+    ) -> tuple[list[str], list[str], list[str], list[str], list[str]]:
+        """Retrieve a list of all sector names available on the current map.
+
+        Returns
+        -------
+        tuple[list[str], list[str], list[str], list[str], list[str]]
+            A list of sector names available on the current map.
+
+        """
+        details = await self.get_command_details("SetSectorLayout")
+        parameters = details.dialogue_parameters
+        if not parameters or not all(
+            p.id.startswith("Sector_") for p in parameters[:5]
+        ):
+            msg = "Received unexpected response from server."
+            raise RconMessageError(msg)
+        return (
+            parameters[0].value_member,
+            parameters[1].value_member,
+            parameters[2].value_member,
+            parameters[3].value_member,
+            parameters[4].value_member,
+        )
+
     async def set_sector_layout(
         self,
         sector1: str,
@@ -1805,12 +1805,12 @@ class HLLVRconCommands(_RconCommands):
 
     async def set_sector_layout(
         self,
-        map_id: str,
-        sector1: str,
-        sector2: str,
-        sector3: str,
-        sector4: str,
-        sector5: str,
+        map_id: str | AnyLayer,
+        sector1: int | str,
+        sector2: int | str,
+        sector3: int | str,
+        sector4: int | str,
+        sector5: int | str,
     ) -> None:
         """Set a custom sector layout for a given map.
 
@@ -1820,35 +1820,66 @@ class HLLVRconCommands(_RconCommands):
 
         Parameters
         ----------
-        map_id : str
+        map_id : str | AnyLayer
             The ID of the map to set the sector layout for.
-        sector1 : str
-            The name of the first sector.
-        sector2 : str
-            The name of the second sector.
-        sector3 : str
-            The name of the third sector.
-        sector4 : str
-            The name of the fourth sector.
-        sector5 : str
-            The name of the fifth sector.
+        sector1 : int | str
+            The index or name of the first sector.
+        sector2 : int | str
+            The index or name of the second sector.
+        sector3 : int | str
+            The index or name of the third sector.
+        sector4 : int | str
+            The index or name of the fourth sector.
+        sector5 : int | str
+            The index or name of the fifth sector.
 
         """
+        sectors: list[int] = []
+        for i, sector in enumerate(
+            (sector1, sector2, sector3, sector4, sector5),
+            start=1,
+        ):
+            if isinstance(sector, int):
+                if sector < 0 or sector > 2:
+                    msg = f"Sector {i} index '{sector}' out of range."
+                    raise IndexError(msg)
+                sectors.append(sector)
+
+            elif isinstance(sector, str):
+                layer = (
+                    map_id if isinstance(map_id, AnyLayer) else HLLVLayer.by_id(map_id)
+                )
+
+                for j, capture_zone in enumerate(layer.sectors[i - 1].capture_zones):
+                    if capture_zone.strongpoint.id == sector:
+                        sectors.append(j)
+                        break
+                else:
+                    msg = f"Sector {i} name '{sector}' not found."
+                    raise ValueError(msg)
+
+            else:  # pragma: no cover
+                msg = (
+                    f"Sector '{sector}' must be an int or str,"
+                    " got {type(sector).__name__}."
+                )
+                raise TypeError(msg)
+
         await self.execute(
             "SetSectorLayout",
             2,
             {
-                "MapId": map_id,
-                "Sector_1": sector1,
-                "Sector_2": sector2,
-                "Sector_3": sector3,
-                "Sector_4": sector4,
-                "Sector_5": sector5,
+                "MapId": str(map_id),
+                "Sector_1": sectors[0],
+                "Sector_2": sectors[1],
+                "Sector_3": sectors[2],
+                "Sector_4": sectors[3],
+                "Sector_5": sectors[4],
             },
         )
 
     @cast_response_to_model(HLLVGetSectorLayoutResponse)
-    async def get_sector_layout(self) -> str:
+    async def get_sector_layouts(self) -> str:
         """Retrieve all custom sector layouts of the server.
 
         Returns
@@ -1859,23 +1890,16 @@ class HLLVRconCommands(_RconCommands):
         """
         return await self.execute("GetSectorLayout", 2)
 
-    @cast_response_to_bool({400})
-    async def remove_sector_layout(self, map_id: str) -> None:
+    async def remove_sector_layout(self, map_id: str | AnyLayer) -> None:
         """Remove a sector layout from the server.
 
         Parameters
         ----------
-        map_id : str
+        map_id : str | AnyLayer
             The ID of the map to remove the sector layout for.
 
-        Returns
-        -------
-        bool
-            Whether the sector layout was successfully removed. If the map does not have
-            a custom sector layout defined, will return False.
-
         """
-        await self.execute("RemoveSectorLayout", 2, {"MapId": map_id})
+        await self.execute("RemoveSectorLayout", 2, {"MapId": str(map_id)})
 
     @override
     @cast_response_to_model(HLLVGetMapShuffleEnabledResponse, lambda r: r.enabled)

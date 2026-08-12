@@ -2536,9 +2536,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_E_WARFARE_DAY(cls) -> "HLLVLayer":
+    def WDEVE_WARFARE_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_E_Warfare_Day",
+            id="wdeve_warfare_day",
             map=HLLVMap.CAM_RANH_PORT,
             game_mode=HLLVGameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -2557,9 +2557,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_E_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+    def WDEVE_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_E_OffensiveNVA_Day",
+            id="wdeve_offensivenva_day",
             map=HLLVMap.CAM_RANH_PORT,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2578,9 +2578,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_E_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+    def WDEVE_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_E_OffensiveUS_Day",
+            id="wdeve_offensiveus_day",
             map=HLLVMap.CAM_RANH_PORT,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2599,9 +2599,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_E_DOMINATION_DAY(cls) -> "HLLVLayer":
+    def WDEVE_DOMINATION_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_E_Domination_Day",
+            id="wdeve_domination_day",
             map=HLLVMap.CAM_RANH_PORT,
             game_mode=HLLVGameMode.DOMINATION,
             time_of_day=TimeOfDay.DAY,
@@ -2620,9 +2620,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_E_CONQUEST_DAY(cls) -> "HLLVLayer":
+    def WDEVE_CONQUEST_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_E_Conquest_Day",
+            id="wdeve_conquest_day",
             map=HLLVMap.CAM_RANH_PORT,
             game_mode=HLLVGameMode.CONQUEST,
             time_of_day=TimeOfDay.DAY,
@@ -2641,9 +2641,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_D_WARFARE_DAY(cls) -> "HLLVLayer":
+    def WDEVD_WARFARE_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_D_Warfare_Day",
+            id="wdevd_warfare_day",
             map=HLLVMap.DAK_TO_AIRFIELD,
             game_mode=HLLVGameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -2662,9 +2662,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_D_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+    def WDEVD_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_D_OffensiveNVA_Day",
+            id="wdevd_offensivenva_day",
             map=HLLVMap.DAK_TO_AIRFIELD,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2683,9 +2683,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_D_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+    def WDEVD_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_D_OffensiveUS_Day",
+            id="wdevd_offensiveus_day",
             map=HLLVMap.DAK_TO_AIRFIELD,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2704,9 +2704,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_D_DOMINATION_DAY(cls) -> "HLLVLayer":
+    def WDEVD_DOMINATION_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_D_Domination_Day",
+            id="wdevd_domination_day",
             map=HLLVMap.DAK_TO_AIRFIELD,
             game_mode=HLLVGameMode.DOMINATION,
             time_of_day=TimeOfDay.DAY,
@@ -2725,9 +2725,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_D_CONQUEST_DAY(cls) -> "HLLVLayer":
+    def WDEVD_CONQUEST_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_D_Conquest_Day",
+            id="wdevd_conquest_day",
             map=HLLVMap.DAK_TO_AIRFIELD,
             game_mode=HLLVGameMode.CONQUEST,
             time_of_day=TimeOfDay.DAY,
@@ -2746,9 +2746,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_C_WARFARE_DAY(cls) -> "HLLVLayer":
+    def WDEVC_WARFARE_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_C_Warfare_Day",
+            id="wdevc_warfare_day",
             map=HLLVMap.HUE_OUTSKIRTS,
             game_mode=HLLVGameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -2767,9 +2767,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_C_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+    def WDEVC_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_C_OffensiveNVA_Day",
+            id="wdevc_offensivenva_day",
             map=HLLVMap.HUE_OUTSKIRTS,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2788,9 +2788,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_C_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+    def WDEVC_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_C_OffensiveUS_Day",
+            id="wdevc_offensiveus_day",
             map=HLLVMap.HUE_OUTSKIRTS,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2809,9 +2809,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_C_DOMINATION_DAY(cls) -> "HLLVLayer":
+    def WDEVC_DOMINATION_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_C_Domination_Day",
+            id="wdevc_domination_day",
             map=HLLVMap.HUE_OUTSKIRTS,
             game_mode=HLLVGameMode.DOMINATION,
             time_of_day=TimeOfDay.DAY,
@@ -2830,9 +2830,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_C_CONQUEST_DAY(cls) -> "HLLVLayer":
+    def WDEVC_CONQUEST_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_C_Conquest_Day",
+            id="wdevc_conquest_day",
             map=HLLVMap.HUE_OUTSKIRTS,
             game_mode=HLLVGameMode.CONQUEST,
             time_of_day=TimeOfDay.DAY,
@@ -2851,9 +2851,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_B_WARFARE_DAY(cls) -> "HLLVLayer":
+    def WDEVB_WARFARE_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_B_Warfare_Day",
+            id="wdevb_warfare_day",
             map=HLLVMap.QUANG_NGAI,
             game_mode=HLLVGameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -2872,9 +2872,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_B_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+    def WDEVB_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_B_OffensiveNVA_Day",
+            id="wdevb_offensivenva_day",
             map=HLLVMap.QUANG_NGAI,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2893,9 +2893,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_B_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+    def WDEVB_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_B_OffensiveUS_Day",
+            id="wdevb_offensiveus_day",
             map=HLLVMap.QUANG_NGAI,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2914,9 +2914,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_B_DOMINATION_DAY(cls) -> "HLLVLayer":
+    def WDEVB_DOMINATION_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_B_Domination_Day",
+            id="wdevb_domination_day",
             map=HLLVMap.QUANG_NGAI,
             game_mode=HLLVGameMode.DOMINATION,
             time_of_day=TimeOfDay.DAY,
@@ -2935,9 +2935,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_B_CONQUEST_DAY(cls) -> "HLLVLayer":
+    def WDEVB_CONQUEST_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_B_Conquest_Day",
+            id="wdevb_conquest_day",
             map=HLLVMap.QUANG_NGAI,
             game_mode=HLLVGameMode.CONQUEST,
             time_of_day=TimeOfDay.DAY,
@@ -2956,9 +2956,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_F_WARFARE_DAY(cls) -> "HLLVLayer":
+    def WDEVF_WARFARE_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_F_Warfare_Day",
+            id="wdevf_warfare_day",
             map=HLLVMap.THANH_HOA_BRIDGE,
             game_mode=HLLVGameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -2977,9 +2977,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_F_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+    def WDEVF_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_F_OffensiveNVA_Day",
+            id="wdevf_offensivenva_day",
             map=HLLVMap.THANH_HOA_BRIDGE,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -2998,9 +2998,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_F_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+    def WDEVF_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_F_OffensiveUS_Day",
+            id="wdevf_offensiveus_day",
             map=HLLVMap.THANH_HOA_BRIDGE,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -3019,9 +3019,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_F_DOMINATION_DAY(cls) -> "HLLVLayer":
+    def WDEVF_DOMINATION_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_F_Domination_Day",
+            id="wdevf_domination_day",
             map=HLLVMap.THANH_HOA_BRIDGE,
             game_mode=HLLVGameMode.DOMINATION,
             time_of_day=TimeOfDay.DAY,
@@ -3040,9 +3040,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_F_CONQUEST_DAY(cls) -> "HLLVLayer":
+    def WDEVF_CONQUEST_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_F_Conquest_Day",
+            id="wdevf_conquest_day",
             map=HLLVMap.THANH_HOA_BRIDGE,
             game_mode=HLLVGameMode.CONQUEST,
             time_of_day=TimeOfDay.DAY,
@@ -3061,9 +3061,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_A_WARFARE_DAY(cls) -> "HLLVLayer":
+    def WDEVA_WARFARE_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_A_Warfare_Day",
+            id="wdeva_warfare_day",
             map=HLLVMap.VAN_TUONG,
             game_mode=HLLVGameMode.WARFARE,
             time_of_day=TimeOfDay.DAY,
@@ -3082,9 +3082,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_A_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
+    def WDEVA_OFFENSIVENVA_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_A_OffensiveNVA_Day",
+            id="wdeva_offensivenva_day",
             map=HLLVMap.VAN_TUONG,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -3103,9 +3103,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_A_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
+    def WDEVA_OFFENSIVEUS_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_A_OffensiveUS_Day",
+            id="wdeva_offensiveus_day",
             map=HLLVMap.VAN_TUONG,
             game_mode=HLLVGameMode.OFFENSIVE,
             time_of_day=TimeOfDay.DAY,
@@ -3124,9 +3124,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_A_DOMINATION_DAY(cls) -> "HLLVLayer":
+    def WDEVA_DOMINATION_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_A_Domination_Day",
+            id="wdeva_domination_day",
             map=HLLVMap.VAN_TUONG,
             game_mode=HLLVGameMode.DOMINATION,
             time_of_day=TimeOfDay.DAY,
@@ -3145,9 +3145,9 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
 
     @class_cached_property
     @classmethod
-    def WDEV_A_CONQUEST_DAY(cls) -> "HLLVLayer":
+    def WDEVA_CONQUEST_DAY(cls) -> "HLLVLayer":
         return cls(
-            id="WDEV_A_Conquest_Day",
+            id="wdeva_conquest_day",
             map=HLLVMap.VAN_TUONG,
             game_mode=HLLVGameMode.CONQUEST,
             time_of_day=TimeOfDay.DAY,

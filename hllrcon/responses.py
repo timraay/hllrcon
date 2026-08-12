@@ -340,7 +340,7 @@ AnyGetAdminLogResponse: TypeAlias = HLLGetAdminLogResponse | HLLVGetAdminLogResp
 
 class HLLVGetSectorLayoutResponseEntry(Response):
     map_id: str
-    sectors: list[str]
+    sectors: list[int]
 
 
 class HLLVGetSectorLayoutResponse(Response):
@@ -690,7 +690,7 @@ class _GetPlayerResponse(Response, Generic[FactionT, RoleT]):
     - In Hell Let Loose: Vietnam, the player ID is equal to the EOS ID.
     """
 
-    platform: AnyPlayerPlatform
+    platform: AnyPlayerPlatform | str
     """The player's platform"""
 
     eos_id: str
@@ -761,7 +761,8 @@ class HLLVGetPlayerResponse(_GetPlayerResponse[HLLVFaction, HLLVRole]):
     _FACTION_CLS = HLLVFaction
     _ROLE_CLS = HLLVRole
 
-    platform: HLLVPlayerPlatform
+    # TODO: Remove "str" once all platforms are known
+    platform: HLLVPlayerPlatform | str
     eos_id: str = Field(validation_alias="iD")
     faction_id: HLLVPlayerFactionId = Field(validation_alias="team")
     role_id: HLLVPlayerRoleId = Field(validation_alias="role")

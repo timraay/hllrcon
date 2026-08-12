@@ -33,6 +33,9 @@ class TestIntegratedServer:
         assert live_layer_ids == mapped_layer_ids
 
     async def test_data_valid_strongpoints(self, rcon: AnyRcon) -> None:
+        if not isinstance(rcon, HLLRcon):
+            pytest.skip("Test only applies to HLL servers")
+
         session = await rcon.get_server_session()
         configured_strongpoints = tuple(
             [capture_zone.strongpoint.id for capture_zone in sector.capture_zones]

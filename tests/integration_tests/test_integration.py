@@ -72,14 +72,15 @@ class TestIntegratedServer:
         result = await rcon.kick_player("1234567890", "Test reason")
         assert result is False
 
-    @pytest.mark.skip("Disabled for Vietnam closed beta")
     async def test_modify_sequence(
         self,
         rcon: AnyRcon,
         sequence: AnyGetMapRotationResponse,
     ) -> None:
+        available_map_ids = await rcon.get_available_maps()
+
         # Add new map to start of sequence
-        new_map_id = "foy_warfare"
+        new_map_id = available_map_ids[0]
         await rcon.add_map_to_sequence(new_map_id, 0)
         new_sequence = await rcon.get_map_sequence()
 
@@ -99,15 +100,16 @@ class TestIntegratedServer:
         new_sequence = await rcon.get_map_sequence()
         assert sequence == new_sequence
 
-    @pytest.mark.skip("Disabled for Vietnam closed beta")
     async def test_modify_rotation(
         self,
         rcon: AnyRcon,
         rotation: AnyGetMapRotationResponse,
         sequence: AnyGetMapRotationResponse,
     ) -> None:
+        available_map_ids = await rcon.get_available_maps()
+
         # Add new map to start of rotation
-        new_map_id = "foy_warfare"
+        new_map_id = available_map_ids[0]
         await rcon.add_map_to_rotation(new_map_id, 0)
         new_rotation = await rcon.get_map_rotation()
         new_sequence = await rcon.get_map_sequence()

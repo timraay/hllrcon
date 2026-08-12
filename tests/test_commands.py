@@ -13,7 +13,7 @@ from hllrcon.commands import (
     get_game_mode_id,
 )
 from hllrcon.data.game_modes import HLLGameMode
-from hllrcon.data.layers import HLLLayer
+from hllrcon.data.layers import HLLLayer, HLLVLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
     ForceMode,
@@ -209,66 +209,6 @@ class TestCommands:
             2,
             {"MapName": map_name},
         ).change_map(map_name)
-
-    async def test_commands_get_available_sector_names(self) -> None:
-        command_id = "SetSectorLayout"
-        sector_names: tuple[list[str], ...] = (
-            ["ROAD TO RECOGNE", "COBRU APPROACH", "ROAD TO NOVILLE"],
-            ["COBRU FACTORY", "FOY", "FLAK BATTERY"],
-            ["WEST BEND", "SOUTHERN EDGE", "DUGOUT BARN"],
-            ["N30 HIGHWAY", "BIZORY-FOY ROAD", "EASTERN OURTHE"],
-            ["ROAD TO BASTOGNE", "BOIS JACQUES", "FOREST OUTSKIRTS"],
-        )
-        response = await self.stub(
-            "GetClientReferenceData",
-            2,
-            command_id,
-            json.dumps(
-                {
-                    "name": "SetSectorLayout",
-                    "text": "Set Sector Layout",
-                    "description": "Configure the active sector layout",
-                    "dialogueParameters": [
-                        {
-                            "type": "Combo",
-                            "name": f"Sector {i + 1}",
-                            "iD": f"Sector_{i + 1}",
-                            "displayMember": ",".join(sector_names[i]),
-                            "valueMember": ",".join(sector_names[i]),
-                        }
-                        for i in range(5)
-                    ],
-                },
-            ),
-        ).get_available_sector_names()
-        assert response == sector_names
-
-    async def test_commands_get_available_sector_names_invalid_message(self) -> None:
-        command_id = "SetSectorLayout"
-        stub = self.stub(
-            "GetClientReferenceData",
-            2,
-            command_id,
-            json.dumps(
-                {
-                    "name": "SetSectorLayout",
-                    "text": "Set Sector Layout",
-                    "description": "Configure the active sector layout",
-                    "dialogueParameters": [
-                        {
-                            "type": "Combo",
-                            "name": "Sector 1",
-                            "iD": "Some incorrect ID",
-                            "displayMember": "blib,blab,blob",
-                            "valueMember": "blib,blab,blob",
-                        },
-                    ],
-                },
-            ),
-        )
-
-        with pytest.raises(RconMessageError):
-            await stub.get_available_sector_names()
 
     async def test_commands_add_map_to_rotation(self) -> None:
         map_name = "Map1"
@@ -1142,6 +1082,66 @@ class TestCommands:
 class TestHLLCommands(TestCommands):
     stub: ClassVar[type[HLLRconCommandsStub]] = HLLRconCommandsStub
 
+    async def test_commands_get_available_sector_names(self) -> None:
+        command_id = "SetSectorLayout"
+        sector_names: tuple[list[str], ...] = (
+            ["ROAD TO RECOGNE", "COBRU APPROACH", "ROAD TO NOVILLE"],
+            ["COBRU FACTORY", "FOY", "FLAK BATTERY"],
+            ["WEST BEND", "SOUTHERN EDGE", "DUGOUT BARN"],
+            ["N30 HIGHWAY", "BIZORY-FOY ROAD", "EASTERN OURTHE"],
+            ["ROAD TO BASTOGNE", "BOIS JACQUES", "FOREST OUTSKIRTS"],
+        )
+        response = await self.stub(
+            "GetClientReferenceData",
+            2,
+            command_id,
+            json.dumps(
+                {
+                    "name": "SetSectorLayout",
+                    "text": "Set Sector Layout",
+                    "description": "Configure the active sector layout",
+                    "dialogueParameters": [
+                        {
+                            "type": "Combo",
+                            "name": f"Sector {i + 1}",
+                            "iD": f"Sector_{i + 1}",
+                            "displayMember": ",".join(sector_names[i]),
+                            "valueMember": ",".join(sector_names[i]),
+                        }
+                        for i in range(5)
+                    ],
+                },
+            ),
+        ).get_available_sector_names()
+        assert response == sector_names
+
+    async def test_commands_get_available_sector_names_invalid_message(self) -> None:
+        command_id = "SetSectorLayout"
+        stub = self.stub(
+            "GetClientReferenceData",
+            2,
+            command_id,
+            json.dumps(
+                {
+                    "name": "SetSectorLayout",
+                    "text": "Set Sector Layout",
+                    "description": "Configure the active sector layout",
+                    "dialogueParameters": [
+                        {
+                            "type": "Combo",
+                            "name": "Sector 1",
+                            "iD": "Some incorrect ID",
+                            "displayMember": "blib,blab,blob",
+                            "valueMember": "blib,blab,blob",
+                        },
+                    ],
+                },
+            ),
+        )
+
+        with pytest.raises(RconMessageError):
+            await stub.get_available_sector_names()
+
     async def test_commands_change_sector_layout(self) -> None:
         sector1 = "Sector 1"
         sector2 = "Sector 2"
@@ -1252,27 +1252,65 @@ class TestHLLVCommands(TestCommands):
     stub: ClassVar[type[HLLVRconCommandsStub]] = HLLVRconCommandsStub
 
     async def test_commands_change_sector_layout(self) -> None:
-        map_id = "hue_outskirts_warfare_day"
-        sector1 = "Sector 1"
-        sector2 = "Sector 2"
-        sector3 = "Sector 3"
-        sector4 = "Sector 4"
-        sector5 = "Sector 5"
+        layer = HLLVLayer.WDEVA_WARFARE_DAY
+        sector1 = 0
+        sector2 = 1
+        sector3 = 2
+        sector4 = layer.sectors[3].capture_zones[1].strongpoint.id
+        sector5 = layer.sectors[4].capture_zones[0].strongpoint.id
 
         await self.stub(
             "SetSectorLayout",
             2,
             {
-                "MapId": map_id,
-                "Sector_1": sector1,
-                "Sector_2": sector2,
-                "Sector_3": sector3,
-                "Sector_4": sector4,
-                "Sector_5": sector5,
+                "MapId": layer.id,
+                "Sector_1": 0,
+                "Sector_2": 1,
+                "Sector_3": 2,
+                "Sector_4": 1,
+                "Sector_5": 0,
             },
-        ).set_sector_layout(map_id, sector1, sector2, sector3, sector4, sector5)
+        ).set_sector_layout(layer.id, sector1, sector2, sector3, sector4, sector5)
 
-    async def test_commands_get_sector_layout(self) -> None:
+    async def test_commands_change_sector_layout_invalid_index(self) -> None:
+        layer = HLLVLayer.WDEVA_WARFARE_DAY
+        with pytest.raises(IndexError):
+            await self.stub(
+                "SetSectorLayout",
+                2,
+            ).set_sector_layout(layer, 3, 0, 0, 0, 0)
+
+    async def test_commands_change_sector_layout_invalid_name(self) -> None:
+        layer = HLLVLayer.WDEVA_WARFARE_DAY
+        with pytest.raises(ValueError, match=r"Sector 1 name 'blah' not found"):
+            await self.stub(
+                "SetSectorLayout",
+                2,
+            ).set_sector_layout(layer, "blah", 0, 0, 0, 0)
+
+    async def test_commands_change_sector_layout_unknown_layer(self) -> None:
+        await self.stub(
+            "SetSectorLayout",
+            2,
+            {
+                "MapId": "blah",
+                "Sector_1": 0,
+                "Sector_2": 1,
+                "Sector_3": 2,
+                "Sector_4": 1,
+                "Sector_5": 0,
+            },
+        ).set_sector_layout("blah", 0, 1, 2, 1, 0)
+
+        with pytest.raises(ValueError, match=r"HLLVLayer with ID blah not found."):
+            await self.stub(
+                "SetSectorLayout",
+                2,
+            ).set_sector_layout("blah", "blah", 0, 0, 0, 0)
+
+    async def test_commands_get_sector_layouts(self) -> None:
+        layer = HLLVLayer.WDEVA_WARFARE_DAY
+
         await self.stub(
             "GetSectorLayout",
             2,
@@ -1281,19 +1319,13 @@ class TestHLLVCommands(TestCommands):
                 {
                     "entries": [
                         {
-                            "mapId": "hue_outskirts_warfare_day",
-                            "sectors": [
-                                "Sector 1",
-                                "Sector 2",
-                                "Sector 3",
-                                "Sector 4",
-                                "Sector 5",
-                            ],
+                            "mapId": layer.id,
+                            "sectors": [0, 1, 2, 1, 0],
                         },
                     ],
                 },
             ),
-        ).get_sector_layout()
+        ).get_sector_layouts()
 
     async def test_commands_remove_sector_layout(self) -> None:
         map_id = "hue_outskirts_warfare_day"

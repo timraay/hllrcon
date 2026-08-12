@@ -159,7 +159,7 @@ def get_layer_data(
         return None
 
     return LayerData(
-        id=props.get_layer_id(map_meta),
+        id=props.get_layer_id(map_meta).lower(),
         map=get_map_data(map_meta),
         game_mode=game_mode,
         grid=LayerGridData.from_layout_meta(layout_meta),

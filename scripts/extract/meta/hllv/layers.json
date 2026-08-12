@@ -1,121 +1,121 @@
 {
-  "WDEV_A_Warfare_Day": {
+  "WDEVA_Warfare_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_A_OffensiveNVA_Day": {
+  "WDEVA_OffensiveNVA_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_A_OffensiveUS_Day": {
+  "WDEVA_OffensiveUS_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_A_Domination_Day": {
+  "WDEVA_Domination_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_A_Conquest_Day": {
+  "WDEVA_Conquest_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_B_OffensiveNVA_Day": {
+  "WDEVB_Warfare_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_B_OffensiveUS_Day": {
+  "WDEVB_OffensiveNVA_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_B_Domination_Day": {
+  "WDEVB_OffensiveUS_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_B_Conquest_Day": {
+  "WDEVB_Domination_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_C_Warfare_Day": {
+  "WDEVB_Conquest_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_C_OffensiveNVA_Day": {
+  "WDEVC_Warfare_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_C_OffensiveUS_Day": {
+  "WDEVC_OffensiveNVA_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_C_Domination_Day": {
+  "WDEVC_OffensiveUS_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_C_Conquest_Day": {
+  "WDEVC_Domination_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_D_Warfare_Day": {
+  "WDEVC_Conquest_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_D_OffensiveNVA_Day": {
+  "WDEVD_Warfare_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_D_OffensiveUS_Day": {
+  "WDEVD_OffensiveNVA_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_D_Domination_Day": {
+  "WDEVD_OffensiveUS_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_D_Conquest_Day": {
+  "WDEVD_Domination_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_E_Warfare_Day": {
+  "WDEVD_Conquest_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_E_OffensiveNVA_Day": {
+  "WDEVE_Warfare_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_E_OffensiveUS_Day": {
+  "WDEVE_OffensiveNVA_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_E_Domination_Day": {
+  "WDEVE_OffensiveUS_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_E_Conquest_Day": {
+  "WDEVE_Domination_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_B_Warfare_Day": {
+  "WDEVE_Conquest_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_F_Warfare_Day": {
+  "WDEVF_Warfare_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_F_OffensiveNVA_Day": {
+  "WDEVF_OffensiveNVA_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_F_OffensiveUS_Day": {
+  "WDEVF_OffensiveUS_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_F_Domination_Day": {
+  "WDEVF_Domination_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
-  "WDEV_F_Conquest_Day": {
+  "WDEVF_Conquest_Day": {
     "time_of_day": "Day",
     "weather": "Clear"
   },
