@@ -1,40 +1,40 @@
 {
-  "WDEV_A": {
+  "wdeva": {
     "meth_name": "VAN_TUONG",
     "year": 1965,
     "tag": "VAN",
     "pretty_name": "V\u1ea1n T\u01b0\u1eddng",
     "short_name": "V\u1ea1n T\u01b0\u1eddng"
   },
-  "WDEV_B": {
+  "wdevb": {
     "meth_name": "QUANG_NGAI",
     "year": 1965,
     "tag": "QUA",
     "pretty_name": "Qu\u1ea3ng Ng\u00e3i",
     "short_name": "Qu\u1ea3ng Ng\u00e3i"
   },
-  "WDEV_C": {
+  "wdevc": {
     "meth_name": "HUE_OUTSKIRTS",
     "year": 1968,
     "tag": "HUE",
     "pretty_name": "Hu\u1ebf Outskirts",
     "short_name": "Hu\u1ebf"
   },
-  "WDEV_D": {
+  "wdevd": {
     "meth_name": "DAK_TO_AIRFIELD",
     "year": 1967,
     "tag": "DAK",
     "pretty_name": "\u0110\u0103k T\u00f4 Airfield",
     "short_name": "\u0110\u0103k T\u00f4"
   },
-  "WDEV_E": {
+  "wdeve": {
     "meth_name": "CAM_RANH_PORT",
     "year": 1969,
     "tag": "CAM",
     "pretty_name": "Cam Ranh Port",
     "short_name": "Cam Ranh"
   },
-  "WDEV_F": {
+  "wdevf": {
     "meth_name": "THANH_HOA_BRIDGE",
     "year": 1965,
     "tag": "THA",

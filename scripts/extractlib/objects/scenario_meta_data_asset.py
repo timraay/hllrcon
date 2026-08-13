@@ -21,7 +21,7 @@ class ScenarioMetaDataAssetProperties(Model):
     def get_layer_id(self, map_meta: "MapMetaDataAsset") -> str:
         if self.override_map_id:
             return self.overridden_map_id
-        return map_meta.properties.map_id.replace("_", "") + "_" + self.scenario_key
+        return map_meta.properties.get_map_id() + "_" + self.scenario_key
 
 
 class ScenarioMetaDataAsset(Object[ScenarioMetaDataAssetProperties]):

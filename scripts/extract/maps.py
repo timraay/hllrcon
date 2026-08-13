@@ -98,7 +98,7 @@ def get_all_maps() -> Iterator[MapMetaDataAsset]:
 def get_map_data(map_meta: MapMetaDataAsset) -> MapData:
     props = map_meta.properties
     return MapData(
-        id=props.map_id,
+        id=props.get_map_id().lower(),
         name=str(props.map_friendly_name),
         short_name=props.map_id.upper(),
         allies=props.allies_faction.to_hllv_faction(),
