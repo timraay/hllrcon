@@ -408,7 +408,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def CAM_RANH_PORT(cls) -> "HLLVMap":
         return cls(
-            id="WDEV_E",
+            id="wdeve",
             name="CAM RANH PORT",
             tag="CAM",
             year=1969,
@@ -423,7 +423,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def DAK_TO_AIRFIELD(cls) -> "HLLVMap":
         return cls(
-            id="WDEV_D",
+            id="wdevd",
             name="ĐĂK TÔ AIRFIELD",
             tag="DAK",
             year=1967,
@@ -438,7 +438,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def HUE_OUTSKIRTS(cls) -> "HLLVMap":
         return cls(
-            id="WDEV_C",
+            id="wdevc",
             name="HUẾ OUTSKIRTS",
             tag="HUE",
             year=1968,
@@ -453,7 +453,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def QUANG_NGAI(cls) -> "HLLVMap":
         return cls(
-            id="WDEV_B",
+            id="wdevb",
             name="QUẢNG NGÃI",
             tag="QUA",
             year=1965,
@@ -468,7 +468,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def THANH_HOA_BRIDGE(cls) -> "HLLVMap":
         return cls(
-            id="WDEV_F",
+            id="wdevf",
             name="THANH HÒA BRIDGE",
             tag="THA",
             year=1965,
@@ -483,7 +483,7 @@ class HLLVMap(_Map[HLLVFaction]):
     @classmethod
     def VAN_TUONG(cls) -> "HLLVMap":
         return cls(
-            id="WDEV_A",
+            id="wdeva",
             name="VẠN TƯỜNG",
             tag="VAN",
             year=1965,

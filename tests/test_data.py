@@ -214,6 +214,7 @@ class TestDataFactions:
         with pytest.raises(ValueError, match="not found"):
             HLLFaction.by_id(8)
 
+        assert HLLVFaction.by_id(0) is None
         assert HLLVFaction.by_id(1) == HLLVFaction.US
         assert HLLVFaction.by_id(6) == HLLVFaction.NVA
         assert HLLVFaction.by_id(8) is None

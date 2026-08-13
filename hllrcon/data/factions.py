@@ -161,6 +161,13 @@ class HLLFaction(_Faction[HLLTeam]):
 class HLLVFaction(_Faction[HLLVTeam]):
     UNASSIGNED_ID: ClassVar[int] = 8
 
+    @classmethod
+    def _lookup_fallback(cls, id_: int) -> "Self | None":
+        if id_ == 0:
+            return None
+
+        return super()._lookup_fallback(id_)
+
     @property
     def is_southern(self) -> bool:
         """Whether the faction is part of the southern ("allied") forces.

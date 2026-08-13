@@ -21,6 +21,9 @@ class MapMetaDataAssetProperties(Model):
     map_achievement_stat: str
     scenarios: list[ObjectReference[ScenarioMetaDataAsset]]
 
+    def get_map_id(self) -> str:
+        return self.map_id.replace("_", "")
+
     def get_scenarios(self) -> Iterator[ScenarioMetaDataAsset]:
         for scenario_ref in self.scenarios:
             yield scenario_ref.get(ScenarioMetaDataAsset)
