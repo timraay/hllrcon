@@ -149,7 +149,10 @@
   },
   "RPD": {
     "name": "RPD",
-    "type": "Machine Gun"
+    "type": "Machine Gun",
+    "ignored_meth_names": [
+      "V_RPD__UNKNOWN"
+    ]
   },
   "K50M": {
     "name": "K-50M",
@@ -224,6 +227,9 @@
   "Dhsk [NVA Boat]": {
     "name": "DShK"
   },
+  "Dhsk": {
+    "name": "DShK"
+  },
   "RPD [NVA Boat]": {
     "name": "RPD"
   },
@@ -248,12 +254,15 @@
   "M2 Browning [US Boat]": {
     "name": "M2 Browning"
   },
+  "M2 Browning": {},
   "Flare Gun [US Transport Helicopter]": {
     "name": "Flare Gun"
   },
+  "Flare Gun": {},
   "M60D [US Transport Helicopter]": {
     "name": "M60D"
   },
+  "M60D": {},
   "MORTAR [MORTAR]": {
     "name": "Mortar"
   },

@@ -3282,6 +3282,25 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_M2_BROWNING__UNKNOWN(cls) -> "HLLWeapon":
+        """*M2 Browning*"""
+        return cls(
+            id="M2 Browning",
+            name="M2 Browning",
+            vehicle_id=None,
+            factions={
+                HLLFaction.US,
+                HLLFaction.SOV,
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_M2_BROWNING__HALF_TRACK(cls) -> "HLLWeapon":
         """*M2 Browning [Half-track]*"""
         return cls(
@@ -3391,6 +3410,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             vehicle_id="M8 Greyhound",
             factions={HLLFaction.US},
             type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_MG_42__UNKNOWN(cls) -> "HLLWeapon":
+        """*MG 42*"""
+        return cls(
+            id="MG 42",
+            name="MG42",
+            vehicle_id=None,
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=WeaponType.MOUNTED_MG,
             magnification=None,
         )
 
@@ -4933,6 +4965,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_DHSK__UNKNOWN(cls) -> "HLLVWeapon":
+        """*Dhsk*"""
+        return cls(
+            id="Dhsk",
+            name="DShK",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_DHSK__NVA_BOAT(cls) -> "HLLVWeapon":
         """*Dhsk [NVA Boat]*"""
         return cls(
@@ -4941,6 +4986,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id="NVA Boat",
             factions={HLLVFaction.NVA},
             type=WeaponType.MOUNTED_MG,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_FLARE_GUN__UNKNOWN(cls) -> "HLLVWeapon":
+        """*Flare Gun*"""
+        return cls(
+            id="Flare Gun",
+            name="Flare Gun",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.RECON_FLARE,
             magnification=None,
         )
 
@@ -4980,6 +5038,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id="Gaz 63 (Transport)",
             factions={HLLVFaction.NVA},
             type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_M2_BROWNING__UNKNOWN(cls) -> "HLLVWeapon":
+        """*M2 Browning*"""
+        return cls(
+            id="M2 Browning",
+            name="M2 Browning",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.MOUNTED_MG,
             magnification=None,
         )
 
@@ -5032,6 +5103,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id="M48Patton",
             factions={HLLVFaction.US},
             type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_M60D__UNKNOWN(cls) -> "HLLVWeapon":
+        """*M60D*"""
+        return cls(
+            id="M60D",
+            name="M60D",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.MOUNTED_MG,
             magnification=None,
         )
 
@@ -5231,6 +5315,72 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
         )
 
     ### INJECT "hllv vehicles" END
+
+    @class_cached_property
+    @classmethod
+    def UNKNOWN(cls) -> "HLLVWeapon":
+        """*UNKNOWN*"""
+        return cls(
+            id="UNKNOWN",
+            name="Unknown",
+            factions=set(HLLVFaction.all()),
+            type=WeaponType.UNKNOWN,
+        )
+
+    @class_cached_property
+    @classmethod
+    def NAPALM_STRIKE(cls) -> "HLLVWeapon":
+        """*NAPALM STRIKE*"""
+        return cls(
+            id="NAPALM STRIKE",
+            name="Napalm Strike",
+            factions={HLLVFaction.US},
+            type=WeaponType.COMMANDER_ABILITY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def BOMBING_RUN(cls) -> "HLLVWeapon":
+        """*Unknown*"""
+        return cls(
+            id="Unknown",
+            name="Bombing Run",
+            factions={HLLVFaction.NVA},
+            type=WeaponType.COMMANDER_ABILITY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STRAFING_RUN(cls) -> "HLLVWeapon":
+        """*STRAFING RUN*"""
+        return cls(
+            id="STRAFING RUN",
+            name="Strafing Run",
+            factions=set(HLLVFaction.all()),
+            type=WeaponType.COMMANDER_ABILITY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def ARTILLERY_STRIKE(cls) -> "HLLVWeapon":
+        """*Artillery Strike*"""
+        return cls(
+            id="Artillery Strike",
+            name="Artillery Strike",
+            factions=set(HLLVFaction.all()),
+            type=WeaponType.COMMANDER_ABILITY,
+        )
+
+    @class_cached_property
+    @classmethod
+    def PRECISION_STRIKE(cls) -> "HLLVWeapon":
+        """*PRECISION STRIKE*"""
+        return cls(
+            id="PRECISION STRIKE",
+            name="Precision Strike",
+            factions={HLLVFaction.US},
+            type=WeaponType.COMMANDER_ABILITY,
+        )
 
 
 AnyWeapon: TypeAlias = HLLWeapon | HLLVWeapon

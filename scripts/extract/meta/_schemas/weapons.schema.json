@@ -16,6 +16,14 @@
         "magnification": {
           "title": "Magnification",
           "type": "integer"
+        },
+        "ignored_meth_names": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Ignored Meth Names",
+          "type": "array",
+          "uniqueItems": true
         }
       },
       "title": "WeaponMetaData",
