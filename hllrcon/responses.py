@@ -185,6 +185,8 @@ class HLLPlayerPlatform(StrEnum):
 class HLLVPlayerPlatform(StrEnum):
     # TODO: Add more
     STEAM = "EPlatformFamily::Steam"
+    XBOX_SERIES = "EPlatformFamily::XboxSeries"
+    PS5 = "EPlatformFamily::PS5"
 
 
 AnyPlayerPlatform: TypeAlias = HLLPlayerPlatform | HLLVPlayerPlatform
@@ -762,8 +764,8 @@ class HLLVGetPlayerResponse(_GetPlayerResponse[HLLVFaction, HLLVRole]):
     _FACTION_CLS = HLLVFaction
     _ROLE_CLS = HLLVRole
 
-    # TODO: Remove "str" once all platforms are known
-    platform: HLLVPlayerPlatform | str
+    # TODO: Replace with HLLVPlayerPlatform when all platforms are known
+    platform: str
     eos_id: str = Field(validation_alias="iD")
     faction_id: HLLVPlayerFactionId = Field(validation_alias="team")
     role_id: HLLVPlayerRoleId = Field(validation_alias="role")
