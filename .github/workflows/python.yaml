@@ -44,8 +44,8 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
 
-      - name: Run ty
-        run: uv run ty check
+      - name: Run mypy
+        run: uv run mypy hllrcon
 
   test:
     runs-on: ubuntu-latest

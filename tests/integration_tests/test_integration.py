@@ -3,13 +3,13 @@ import logging
 
 import pytest
 from hllrcon import (
-    GetCommandDetailsResponse,
-    GetCommandsResponse,
-    GetMapRotationResponse,
-    GetPlayerResponse,
-    GetServerConfigResponse,
-    GetServerSessionResponse,
-    Rcon,
+    AnyGetCommandDetailsResponse,
+    AnyGetCommandsResponse,
+    AnyGetMapRotationResponse,
+    AnyGetPlayerResponse,
+    AnyGetServerConfigResponse,
+    AnyGetServerSessionResponse,
+    AnyRcon,
 )
 from pydantic import TypeAdapter
 
@@ -21,33 +21,36 @@ class TestIntegratedServer:
     def setup_module(self, caplog: pytest.LogCaptureFixture) -> None:
         caplog.set_level(logging.DEBUG)
 
-    async def test_validate_player_data(self, players: list[GetPlayerResponse]) -> None:
+    async def test_validate_player_data(
+        self,
+        players: list[AnyGetPlayerResponse],
+    ) -> None:
         pass
 
     async def test_validate_rotation_data(
         self,
-        rotation: GetMapRotationResponse,
-        sequence: GetMapRotationResponse,
+        rotation: AnyGetMapRotationResponse,
+        sequence: AnyGetMapRotationResponse,
     ) -> None:
         pass
 
     async def test_validate_server_session_data(
         self,
-        server_session: GetServerSessionResponse,
+        server_session: AnyGetServerSessionResponse,
     ) -> None:
         pass
 
     async def test_validate_server_config_data(
         self,
-        server_config: GetServerConfigResponse,
+        server_config: AnyGetServerConfigResponse,
     ) -> None:
         pass
 
-    async def test_validate_client_reference_data(self, rcon: Rcon) -> None:
+    async def test_validate_client_reference_data(self, rcon: AnyRcon) -> None:
         commands = await rcon.get_commands()
-        TypeAdapter(GetCommandsResponse).validate_python(commands)
+        TypeAdapter(AnyGetCommandsResponse).validate_python(commands)
 
-        tasks: list[asyncio.Task[GetCommandDetailsResponse]] = []
+        tasks: list[asyncio.Task[AnyGetCommandDetailsResponse]] = []
         async with asyncio.TaskGroup() as tg:
             for command in commands.entries:
                 tasks.append(
@@ -56,26 +59,28 @@ class TestIntegratedServer:
                     ),
                 )
                 # Introduce short delay to not overload the server
-                await asyncio.sleep(0.004)
+                await asyncio.sleep(0.005)
 
         for task in tasks:
-            TypeAdapter(GetCommandDetailsResponse).validate_python(task.result())
+            TypeAdapter(AnyGetCommandDetailsResponse).validate_python(task.result())
 
-    async def test_kill_missing_player_returns_false(self, rcon: Rcon) -> None:
+    async def test_kill_missing_player_returns_false(self, rcon: AnyRcon) -> None:
         result = await rcon.kill_player("1234567890", "Test reason")
         assert result is False
 
-    async def test_kick_missing_player_returns_false(self, rcon: Rcon) -> None:
+    async def test_kick_missing_player_returns_false(self, rcon: AnyRcon) -> None:
         result = await rcon.kick_player("1234567890", "Test reason")
         assert result is False
 
     async def test_modify_sequence(
         self,
-        rcon: Rcon,
-        sequence: GetMapRotationResponse,
+        rcon: AnyRcon,
+        sequence: AnyGetMapRotationResponse,
     ) -> None:
+        available_map_ids = await rcon.get_available_maps()
+
         # Add new map to start of sequence
-        new_map_id = "foy_warfare"
+        new_map_id = available_map_ids[0]
         await rcon.add_map_to_sequence(new_map_id, 0)
         new_sequence = await rcon.get_map_sequence()
 
@@ -97,12 +102,14 @@ class TestIntegratedServer:
 
     async def test_modify_rotation(
         self,
-        rcon: Rcon,
-        rotation: GetMapRotationResponse,
-        sequence: GetMapRotationResponse,
+        rcon: AnyRcon,
+        rotation: AnyGetMapRotationResponse,
+        sequence: AnyGetMapRotationResponse,
     ) -> None:
+        available_map_ids = await rcon.get_available_maps()
+
         # Add new map to start of rotation
-        new_map_id = "foy_warfare"
+        new_map_id = available_map_ids[0]
         await rcon.add_map_to_rotation(new_map_id, 0)
         new_rotation = await rcon.get_map_rotation()
         new_sequence = await rcon.get_map_sequence()

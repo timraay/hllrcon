@@ -1,0 +1,55 @@
+{
+  "$defs": {
+    "LayerMetaData": {
+      "properties": {
+        "meth_name": {
+          "title": "Meth Name",
+          "type": "string"
+        },
+        "time_of_day": {
+          "$ref": "#/$defs/TimeOfDay"
+        },
+        "weather": {
+          "$ref": "#/$defs/Weather"
+        }
+      },
+      "required": [
+        "time_of_day",
+        "weather"
+      ],
+      "title": "LayerMetaData",
+      "type": "object"
+    },
+    "TimeOfDay": {
+      "enum": [
+        "Dawn",
+        "Day",
+        "Dusk",
+        "Night"
+      ],
+      "title": "TimeOfDay",
+      "type": "string"
+    },
+    "Weather": {
+      "enum": [
+        "Clear",
+        "Overcast",
+        "Rain",
+        "Snow"
+      ],
+      "title": "Weather",
+      "type": "string"
+    }
+  },
+  "additionalProperties": {
+    "anyOf": [
+      {
+        "type": "string"
+      },
+      {
+        "$ref": "#/$defs/LayerMetaData"
+      }
+    ]
+  },
+  "type": "object"
+}

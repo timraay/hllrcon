@@ -29,8 +29,8 @@
 
 ---
 
-**hllrcon** is an asynchronous Python implementation of the [Hell Let Loose](https://www.hellletloose.com/game/hll) RCON protocol.  
-It allows you to interact with your HLL servers programmatically, supporting modern Python async features and robust error handling.
+**hllrcon** is an asynchronous Python implementation of the [Hell Let Loose](https://www.hellletloose.com/game/hll) and [Hell Let Loose: Vietnam](https://www.hellletloose.com/game/hll-vietnam) RCON protocol.  
+It allows you to interact with your HLL and HLL:V servers programmatically, supporting modern Python async features and robust error handling.
 
 ## Features
 
@@ -38,6 +38,7 @@ It allows you to interact with your HLL servers programmatically, supporting mod
 - Command execution and response parsing
 - Collection of vanilla maps, factions, weapons, and more
 - Alternative interfaces for synchronous applications
+- Compatible with both _Hell Let Loose_ and _Hell Let Loose: Vietnam_
 - Well-typed and tested
 
 ## Installation
@@ -49,12 +50,12 @@ pip install hllrcon
 ## Usage
 ```py
 import asyncio
-from hllrcon import Rcon, Layer
+from hllrcon import HLLRcon, HLLLayer
 
 
 async def main():
     # Initialize client
-    rcon = Rcon(
+    rcon = HLLRcon(
         host="127.0.0.1",
         port=12345,
         password="your_rcon_password",
@@ -71,7 +72,7 @@ async def main():
 
     # Alternatively, use the context manager interface to avoid
     # having to manually disconnect.
-    async with rcon.connect():
+    async with rcon.connection():
         assert rcon.is_connected() is True
         await rcon.broadcast("Hello, HLL!")
 
@@ -81,30 +82,54 @@ if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-For integration of synchronous applications, a `SyncRcon` class is provided.
+Above example connects to servers running the original _Hell Let Loose_. Use `HLLVRcon` to connect to a _Hell Let Loose: Vietnam_ server instead.
+
+```py
+import asyncio
+from hllrcon import HLLVRcon, HLLVLayer
+
+
+async def main():
+    # Initialize client
+    rcon = HLLVRcon(
+        host="127.0.0.1",
+        port=12345,
+        password="your_rcon_password",
+    )
+
+    # Connect and change the map
+    async with rcon.connection():
+        await rcon.change_map(HLLVLayer.THANHHOABRIDGE_WARFARE_DAY)
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+
+
+For integration of synchronous applications, the `HLLSyncRcon` and `HLLVSyncRcon` classes are provided.
 
 ```py
 from hllrcon.sync import SyncRcon
 
-rcon = SyncRcon(
+rcon = HLLSyncRcon(
     host="127.0.0.1",
     port=12345,
     password="your_rcon_password",
 )
 
 # Connect and send a broadcast message
-with rcon.connect():
+with rcon.connection():
     rcon.broadcast("Hello, HLL!")
 ```
 
 The library contains a swathe of details about in-game maps, factions, weapons, vehicles, and more. Below is just an example of what it might be used for.
 
 ```py
-from hllron import Weapon
+from hllron import HLLWeapon
 
 # Find a weapon by its ID
 weapon_id = "COAXIAL M1919 [Stuart M5A1]"
-weapon = Weapon.by_id(weapon_id)
+weapon = HLLWeapon.by_id(weapon_id)
 
 # Print out whichever vehicle seat the attacker must have been in, if any
 if weapon.vehicle:
@@ -114,7 +139,7 @@ if weapon.vehicle:
             break
 ```
 ```py
-from hllrcon import Rcon, Map, Team
+from hllrcon import HLLRcon, HLLTeam
 
 # Get the AA Network capture zone (SMDM, 3rd sector, 2nd capture zone)
 sector = Layer.STMARIEDUMONT_WARFARE_DAY.sectors[2]
@@ -122,11 +147,11 @@ capture_zone = sector.capture_zones[1]
 assert capture_zone.strongpoint.name == "AA Network"
 
 # Get the current online players
-rcon = Rcon(...)
+rcon = HLLRcon(...)
 players = await rcon.get_players()
 
 # Calculate each team's capture strength towards the sector
-strength = {Team.ALLIES: 0, Team.AXIS: 0}
+strength = {HLLTeam.ALLIES: 0, HLLTeam.AXIS: 0}
 for player in players.players:
     if player.faction is None:
         continue
@@ -144,28 +169,28 @@ for player in players.players:
         strength[player.faction.team] += 1
 
 # Print out the results
-print("Allied cap weight:", strength[Team.ALLIES])
-print("Axis cap weight:", strength[Team.AXIS])
+print("Allied cap weight:", strength[HLLTeam.ALLIES])
+print("Axis cap weight:", strength[HLLTeam.AXIS])
 ```
 
 # Versioning
 
-Hell Let Loose (referred to as "the game") is a constantly evolving game, and game updates might alter its RCON interfaces in ways that are not backward-compatible.
+The Hell Let Loose franchise is constantly evolving, and game updates might alter its games' RCON interfaces in ways that are not backward-compatible.
 This affects any tools and libraries that depend on it, including this library and any software utilizing it.
 
-Releases of `hllrcon` only guarantee compatibility with the latest version of the game at the time of release. See the release notes of a given version for more
+Releases of `hllrcon` only guarantee compatibility with the latest version of _Hell Let Loose_ and _Hell Let Loose: Vietnam_ at the time of release. See the release notes of a given version for more
 information on what version this is.
 
 This project uses its own versioning system similar to [Pragmatic Versioning principles](https://pragver.github.io/spec/) (i.e. `GRADE`.`MAJOR`.`MINOR`.`PATCH`).
 However, there are differences in the way each of the four components are defined and what they guarantee:
 
-- **`GRADE`** - Reserved for structural changes. Likely to increase only with the release of [Hell Let Loose: Vietnam](https://www.hellletloose.com/game/hll-vietnam).
+- **`GRADE`** - Reserved for structural changes. Likely to increase only with the release of _Hell Let Loose: Vietnam_.
 - **`MAJOR`** - Incremented when backward-incompatible changes are released.
 - **`MINOR`** - Incremented when support for the previously supported game version is dropped.
 - **`PATCH`** - Incremented when backward-compatible changes are released.
 
-When specifying `hllrcon` as a dependency, it is recommended to pin the `MINOR` version but not the `PATCH` version. `MINOR` versions are still backwards-incompatible
-in that they require the game server to be updated. `MINOR` versions may depend on upcoming, unreleased game version.
+When specifying `hllrcon` as a dependency, it is recommended to pin the `MINOR` version but not the `PATCH` version. `MINOR` versions are still backward-incompatible
+in that they require the game server to be updated. `MINOR` versions may be released before the game update it depends on.
 
 # License
 

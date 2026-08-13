@@ -1,0 +1,80 @@
+{
+  "$defs": {
+    "WeaponMetaData": {
+      "properties": {
+        "meth_name": {
+          "title": "Meth Name",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/WeaponType"
+        },
+        "magnification": {
+          "title": "Magnification",
+          "type": "integer"
+        }
+      },
+      "title": "WeaponMetaData",
+      "type": "object"
+    },
+    "WeaponType": {
+      "enum": [
+        "Bolt Action Rifle",
+        "Semi-Auto Rifle",
+        "Assault Rifle",
+        "Submachine Gun",
+        "Machine Gun",
+        "Shotgun",
+        "Pistol",
+        "Revolver",
+        "Grenade",
+        "Grenade Launcher",
+        "Anti-Personnel Mine",
+        "Anti-Tank Mine",
+        "Flamethrower",
+        "Melee",
+        "Recon Flare",
+        "Rocket Launcher",
+        "Anti-Materiel Rifle",
+        "Anti-Tank Gun",
+        "Tank Cannon",
+        "Tank Coaxial MG",
+        "Tank Hull MG",
+        "Tank Recon",
+        "Tank Smoke Screen",
+        "Mounted MG",
+        "Roadkill",
+        "Artillery",
+        "Mortar",
+        "Commander Ability",
+        "Satchel",
+        "Smoke",
+        "Healing",
+        "Binoculars",
+        "Supplies",
+        "Hammer",
+        "Wrench",
+        "Torch",
+        "Watch",
+        "Unknown"
+      ],
+      "title": "WeaponType",
+      "type": "string"
+    }
+  },
+  "additionalProperties": {
+    "anyOf": [
+      {
+        "type": "string"
+      },
+      {
+        "$ref": "#/$defs/WeaponMetaData"
+      }
+    ]
+  },
+  "type": "object"
+}
