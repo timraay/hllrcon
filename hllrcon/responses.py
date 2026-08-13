@@ -187,6 +187,7 @@ class HLLVPlayerPlatform(StrEnum):
     STEAM = "EPlatformFamily::Steam"
     XBOX_SERIES = "EPlatformFamily::XboxSeries"
     PS5 = "EPlatformFamily::PS5"
+    WIN_GDK = "EPlatformFamily::WinGDK"
 
 
 AnyPlayerPlatform: TypeAlias = HLLPlayerPlatform | HLLVPlayerPlatform
