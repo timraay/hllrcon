@@ -116,6 +116,9 @@ def test_get_server_session_game_mode_and_layer() -> None:
     assert response.axis_faction == HLLFaction.GER
     assert response.find_layer() == HLLLayer.FOY_WARFARE_DAY
 
+    response.game_mode_id = "U.S. Offensive"
+    assert response.game_mode == HLLGameMode.OFFENSIVE
+
 
 def test_map_rotation_entry_find_layer() -> None:
     entry = HLLGetMapRotationResponseEntry(

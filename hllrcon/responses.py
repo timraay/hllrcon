@@ -925,6 +925,8 @@ class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT, FactionT]):
 
     @property
     def game_mode(self) -> GameModeT:
+        if self.game_mode_id.endswith("Offensive"):
+            return self._GAME_MODE_CLS.OFFENSIVE  # type: ignore[return-value]
         return self._GAME_MODE_CLS.by_id(self.game_mode_id)  # type: ignore[return-value]
 
     @property
