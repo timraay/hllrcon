@@ -222,6 +222,7 @@ class HLLPlayerFactionId(IntEnum):
 
 
 class HLLVPlayerFactionId(IntEnum):
+    UNKNOWN = 0
     US = 1
     NVA = 6
     UNASSIGNED = 8
