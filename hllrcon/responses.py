@@ -41,6 +41,7 @@ EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 SplitStringValidator = BeforeValidator(lambda x: str(x).split(",") if x else [])
 
 __all__ = (
+    "AnyForceMode",
     "AnyGetAdminGroupsResponse",
     "AnyGetAdminLogResponse",
     "AnyGetAdminUsersResponse",
@@ -76,7 +77,7 @@ __all__ = (
     "AnyPlayerPlatform",
     "AnyPlayerRoleId",
     "AnySupportedPlatform",
-    "ForceMode",
+    "HLLForceMode",
     "HLLGetAdminGroupsResponse",
     "HLLGetAdminLogResponse",
     "HLLGetAdminUsersResponse",
@@ -112,6 +113,7 @@ __all__ = (
     "HLLPlayerPlatform",
     "HLLPlayerRoleId",
     "HLLSupportedPlatform",
+    "HLLVForceMode",
     "HLLVGetAdminGroupsResponse",
     "HLLVGetAdminLogResponse",
     "HLLVGetAdminUsersResponse",
@@ -281,13 +283,22 @@ class HLLVPlayerRoleId(IntEnum):
 AnyPlayerRoleId: TypeAlias = HLLPlayerRoleId | HLLVPlayerRoleId
 
 
-class ForceMode(StrEnum):
+class HLLForceMode(StrEnum):
     IMMEDIATE = "0"
     """Force the player to be switched immediately, killing them if currently alive."""
-
-    # TODO: Verify behavior when player is already dead
     AFTER_DEATH = "1"
     """Force the player to be switched upon death."""
+
+
+class HLLVForceMode(StrEnum):
+    # For some reason, in HLLV, these are flipped
+    AFTER_DEATH = "0"
+    """Force the player to be switched upon death."""
+    IMMEDIATE = "1"
+    """Force the player to be switched immediately, killing them if currently alive."""
+
+
+AnyForceMode: TypeAlias = HLLForceMode | HLLVForceMode
 
 
 class _GetAdminLogResponseEntry(Response):
