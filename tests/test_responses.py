@@ -14,6 +14,10 @@ from hllrcon.responses import (
     HLLPlayerPlatform,
     HLLPlayerRoleId,
     HLLVGetMapRotationResponseEntry,
+    HLLVGetPlayerResponse,
+    HLLVPlayerFactionId,
+    HLLVPlayerPlatform,
+    HLLVPlayerRoleId,
     _HLLGetAdminLogResponseEntry,
 )
 
@@ -85,6 +89,47 @@ def test_get_player_response_team_unassigned() -> None:
     # Test other validators just for the sake of it
     assert response.clan_tag is None
     assert response.platoon is None
+
+
+def test_get_player_response_garbage_steam_id() -> None:
+    response = HLLVGetPlayerResponse.model_validate(
+        {
+            "name": "TestPlayer",
+            "clanTag": "",
+            "iD": "12345",
+            "platform": HLLVPlayerPlatform.STEAM.value,
+            "steamId": "2938429013894",  # Garbage Steam ID
+            "level": 10,
+            "team": HLLVPlayerFactionId.UNASSIGNED.value,
+            "role": HLLVPlayerRoleId.RIFLEMAN.value,
+            "platoon": "",
+            "platoonIndex": 0,
+            "loadout": "Standard Issue",
+            "stats": {
+                "deaths": 50,
+                "infantryKills": 150,
+                "vehicleKills": 20,
+                "teamKills": 5,
+                "vehiclesDestroyed": 3,
+            },
+            "scoreData": {
+                "cOMBAT": 100,
+                "offense": 50,
+                "defense": 30,
+                "support": 20,
+            },
+            "worldPosition": {
+                "x": 0.0,
+                "y": 0.0,
+                "z": 0.0,
+            },
+        },
+    )
+
+    assert response.steam_id is None
+
+    response.steam_id = "76561198000000000"  # Valid Steam ID
+    assert response.steam_id == "76561198000000000"
 
 
 def test_get_server_session_game_mode_and_layer() -> None:

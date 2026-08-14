@@ -767,6 +767,12 @@ class HLLVGetPlayerResponse(_GetPlayerResponse[HLLVFaction, HLLVRole]):
 
     # TODO: Replace with HLLVPlayerPlatform when all platforms are known
     platform: str
+    steam_id: Annotated[
+        str | None,
+        AfterValidator(
+            lambda x: x if x and len(x) == 17 and x.startswith("7656") else None,
+        ),
+    ]
     eos_id: str = Field(validation_alias="iD")
     faction_id: HLLVPlayerFactionId = Field(validation_alias="team")
     role_id: HLLVPlayerRoleId = Field(validation_alias="role")
