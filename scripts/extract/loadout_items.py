@@ -209,7 +209,7 @@ def main() -> None:
                 weapon.meth_name = meth_name + "_" + str(i + 1)
     """
 
-    weapon_constructors = [w.to_constructor() for w in weapons]
+    weapon_constructors = [w.to_constructor() for w in weapons if not w.should_ignore]
 
     inject_code(
         Path("hllrcon/data/weapons.py"),

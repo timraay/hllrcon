@@ -8,9 +8,18 @@ from .rcon import *
 from .responses import *
 from .sync import *
 
+# Deprecated; Alias to preserve backwards functionality
+ForceMode = HLLForceMode
+"""An alias for `HLLForceMode`, maintained for backwards compatibility.
+
+This alias will be removed in a future release.
+Use `HLLForceMode` or `HLLVForceMode` instead.
+"""
+
 __all__ = (
     "AnyAdminLog",
     "AnyFaction",
+    "AnyForceMode",
     "AnyGameMode",
     "AnyGetAdminGroupsResponse",
     "AnyGetAdminLogResponse",
@@ -82,6 +91,7 @@ __all__ = (
     "Grid",
     "HLLAdminLog",
     "HLLFaction",
+    "HLLForceMode",
     "HLLGameMode",
     "HLLGetAdminGroupsResponse",
     "HLLGetAdminLogResponse",
@@ -143,6 +153,7 @@ __all__ = (
     "HLLTeam",
     "HLLVAdminLog",
     "HLLVFaction",
+    "HLLVForceMode",
     "HLLVGameMode",
     "HLLVGetAdminGroupsResponse",
     "HLLVGetAdminLogResponse",
@@ -249,4 +260,4 @@ __all__ = (
 )
 
 # Don't forget to also bump in pyproject.toml
-__version__ = "2.0.0.1"
+__version__ = "2.0.0.2"

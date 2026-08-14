@@ -257,6 +257,8 @@ class VehicleWeapon(BaseModel):
     ammo: list[VehicleWeaponAmmo]
 
     def is_lethal(self) -> bool:
+        if self.ammo == []:
+            return True
         return any(ammo.type.is_lethal() for ammo in self.ammo)
 
 
@@ -1335,7 +1337,9 @@ def main() -> None:
         )
 
         weapons = list(get_all_vehicle_weapons(vehicles))
-        weapon_constructors = [w.to_constructor() for w in weapons]
+        weapon_constructors = [
+            w.to_constructor() for w in weapons if not w.should_ignore
+        ]
 
         inject_code(
             Path("hllrcon/data/weapons.py"),
@@ -1359,7 +1363,9 @@ def main() -> None:
         )
 
         weapons = list(get_all_vehicle_weapons(vehicles))
-        weapon_constructors = [w.to_constructor() for w in weapons]
+        weapon_constructors = [
+            w.to_constructor() for w in weapons if not w.should_ignore
+        ]
 
         inject_code(
             Path("hllrcon/data/weapons.py"),

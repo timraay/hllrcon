@@ -41,6 +41,7 @@ EmptyStringToNoneValidator = AfterValidator(lambda v: v or None)
 SplitStringValidator = BeforeValidator(lambda x: str(x).split(",") if x else [])
 
 __all__ = (
+    "AnyForceMode",
     "AnyGetAdminGroupsResponse",
     "AnyGetAdminLogResponse",
     "AnyGetAdminUsersResponse",
@@ -76,7 +77,7 @@ __all__ = (
     "AnyPlayerPlatform",
     "AnyPlayerRoleId",
     "AnySupportedPlatform",
-    "ForceMode",
+    "HLLForceMode",
     "HLLGetAdminGroupsResponse",
     "HLLGetAdminLogResponse",
     "HLLGetAdminUsersResponse",
@@ -112,6 +113,7 @@ __all__ = (
     "HLLPlayerPlatform",
     "HLLPlayerRoleId",
     "HLLSupportedPlatform",
+    "HLLVForceMode",
     "HLLVGetAdminGroupsResponse",
     "HLLVGetAdminLogResponse",
     "HLLVGetAdminUsersResponse",
@@ -187,6 +189,7 @@ class HLLVPlayerPlatform(StrEnum):
     STEAM = "EPlatformFamily::Steam"
     XBOX_SERIES = "EPlatformFamily::XboxSeries"
     PS5 = "EPlatformFamily::PS5"
+    WIN_GDK = "EPlatformFamily::WinGDK"
 
 
 AnyPlayerPlatform: TypeAlias = HLLPlayerPlatform | HLLVPlayerPlatform
@@ -280,13 +283,22 @@ class HLLVPlayerRoleId(IntEnum):
 AnyPlayerRoleId: TypeAlias = HLLPlayerRoleId | HLLVPlayerRoleId
 
 
-class ForceMode(StrEnum):
+class HLLForceMode(StrEnum):
     IMMEDIATE = "0"
     """Force the player to be switched immediately, killing them if currently alive."""
-
-    # TODO: Verify behavior when player is already dead
     AFTER_DEATH = "1"
     """Force the player to be switched upon death."""
+
+
+class HLLVForceMode(StrEnum):
+    # For some reason, in HLLV, these are flipped
+    AFTER_DEATH = "0"
+    """Force the player to be switched upon death."""
+    IMMEDIATE = "1"
+    """Force the player to be switched immediately, killing them if currently alive."""
+
+
+AnyForceMode: TypeAlias = HLLForceMode | HLLVForceMode
 
 
 class _GetAdminLogResponseEntry(Response):
@@ -766,6 +778,12 @@ class HLLVGetPlayerResponse(_GetPlayerResponse[HLLVFaction, HLLVRole]):
 
     # TODO: Replace with HLLVPlayerPlatform when all platforms are known
     platform: str
+    steam_id: Annotated[
+        str | None,
+        AfterValidator(
+            lambda x: x if x and len(x) == 17 and x.startswith("7656") else None,
+        ),
+    ]
     eos_id: str = Field(validation_alias="iD")
     faction_id: HLLVPlayerFactionId = Field(validation_alias="team")
     role_id: HLLVPlayerRoleId = Field(validation_alias="role")
@@ -924,6 +942,8 @@ class _GetServerSessionResponse(Response, Generic[GameModeT, LayerT, FactionT]):
 
     @property
     def game_mode(self) -> GameModeT:
+        if self.game_mode_id.endswith("Offensive"):
+            return self._GAME_MODE_CLS.OFFENSIVE  # type: ignore[return-value]
         return self._GAME_MODE_CLS.by_id(self.game_mode_id)  # type: ignore[return-value]
 
     @property

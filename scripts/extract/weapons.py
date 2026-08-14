@@ -56,12 +56,14 @@ class WeaponData(BaseModel):
     factions: set[AnyFaction]
     type: WeaponType = WeaponType.UNKNOWN
     magnification: int | None = None
+    should_ignore: bool = False
 
     @model_validator(mode="after")
     def set_meth_name(self) -> "WeaponData":
         metadata = game_switch(HLL_WEAPON_METADATA, HLLV_WEAPON_METADATA)
         meta = metadata.get(self.id)
         if meta is not None:
+            self.should_ignore = self.meth_name in meta.get("ignored_meth_names", set())
             self.meth_name = meta.get("meth_name", self.meth_name)
             self.name = meta.get("name", self.name)
             self.type = meta.get("type", self.type)
@@ -110,6 +112,13 @@ class WeaponData(BaseModel):
         return WeaponData.merge(wd_merged, *weap_seq[2:])
 
     def to_constructor(self) -> str:
+        if self.should_ignore:
+            msg = (
+                f"WeaponData {self.id} is marked to be ignored and cannot be converted"
+                " to constructor."
+            )
+            raise ValueError(msg)
+
         template = game_switch(
             HLL_WEAPON_CONSTRUCTOR_TEMPLATE,
             HLLV_WEAPON_CONSTRUCTOR_TEMPLATE,
@@ -130,6 +139,7 @@ class WeaponMetaData(TypedDict, total=False):
     name: str
     type: WeaponType
     magnification: int
+    ignored_meth_names: set[str]
 
 
 HLL_WEAPON_METADATA_PATH = Path("./scripts/extract/meta/hll/weapons.json")
