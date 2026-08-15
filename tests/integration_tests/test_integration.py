@@ -19,7 +19,7 @@ pytestmark = pytest.mark.asyncio
 class TestIntegratedServer:
     @pytest.fixture(autouse=True)
     def setup_module(self, caplog: pytest.LogCaptureFixture) -> None:
-        caplog.set_level(logging.DEBUG)
+        caplog.set_level(logging.INFO)
 
     async def test_validate_player_data(
         self,
@@ -106,6 +106,7 @@ class TestIntegratedServer:
         rotation: AnyGetMapRotationResponse,
         sequence: AnyGetMapRotationResponse,
     ) -> None:
+        await rcon.set_map_shuffle_enabled(enabled=False)
         available_map_ids = await rcon.get_available_maps()
 
         # Add new map to start of rotation
