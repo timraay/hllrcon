@@ -282,12 +282,12 @@ AnyPlayerRoleId: TypeAlias = HLLPlayerRoleId | HLLVPlayerRoleId
 
 
 class ForceMode(StrEnum):
-    IMMEDIATE = "0"
-    """Force the player to be switched immediately, killing them if currently alive."""
-
     # TODO: Verify behavior when player is already dead
-    AFTER_DEATH = "1"
+    AFTER_DEATH = "0"
     """Force the player to be switched upon death."""
+
+    IMMEDIATE = "1"
+    """Force the player to be switched immediately, killing them if currently alive."""
 
 
 class _GetAdminLogResponseEntry(Response):
