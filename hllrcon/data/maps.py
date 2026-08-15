@@ -157,7 +157,7 @@ class HLLMap(_Map[HLLFaction]):
             short_name="Elsenborn",
             allies=HLLFaction.US,
             axis=HLLFaction.GER,
-            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+            allies_direction=CardinalDirection.TOP_TO_BOTTOM,
         )
 
     @class_cached_property
@@ -232,7 +232,7 @@ class HLLMap(_Map[HLLFaction]):
             short_name="Kharkov",
             allies=HLLFaction.SOV,
             axis=HLLFaction.GER,
-            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+            allies_direction=CardinalDirection.TOP_TO_BOTTOM,
         )
 
     @class_cached_property
@@ -247,7 +247,7 @@ class HLLMap(_Map[HLLFaction]):
             short_name="Kursk",
             allies=HLLFaction.SOV,
             axis=HLLFaction.GER,
-            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+            allies_direction=CardinalDirection.TOP_TO_BOTTOM,
         )
 
     @class_cached_property
@@ -292,7 +292,7 @@ class HLLMap(_Map[HLLFaction]):
             short_name="PHL",
             allies=HLLFaction.US,
             axis=HLLFaction.GER,
-            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+            allies_direction=CardinalDirection.TOP_TO_BOTTOM,
         )
 
     @class_cached_property
@@ -337,7 +337,7 @@ class HLLMap(_Map[HLLFaction]):
             short_name="SMDM",
             allies=HLLFaction.US,
             axis=HLLFaction.GER,
-            allies_direction=CardinalDirection.BOTTOM_TO_TOP,
+            allies_direction=CardinalDirection.TOP_TO_BOTTOM,
         )
 
     @class_cached_property

@@ -15,7 +15,9 @@ from hllrcon.commands import (
 from hllrcon.data.game_modes import HLLGameMode
 from hllrcon.data.layers import HLLLayer, HLLVLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
-from hllrcon.responses import HLLForceMode
+from hllrcon.responses import (
+    ForceMode,
+)
 from pydantic import BaseModel, ValidationError
 
 pytestmark = pytest.mark.asyncio
@@ -466,7 +468,7 @@ class TestCommands:
 
     async def test_commands_force_team_switch(self) -> None:
         player_id = "player123"
-        force_mode = HLLForceMode.IMMEDIATE
+        force_mode = ForceMode.IMMEDIATE
         response = await self.stub(
             "ForceTeamSwitch",
             2,

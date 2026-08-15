@@ -22,7 +22,7 @@ from hllrcon.data.layers import AnyLayer, HLLVLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
 from hllrcon.responses import (
     AnyPlayerFactionId,
-    HLLForceMode,
+    ForceMode,
     HLLGetAdminGroupsResponse,
     HLLGetAdminLogResponse,
     HLLGetAdminUsersResponse,
@@ -45,7 +45,6 @@ from hllrcon.responses import (
     HLLGetVoteKickEnabledResponse,
     HLLGetVoteKickThresholdsResponse,
     HLLPlayerFactionId,
-    HLLVForceMode,
     HLLVGetAdminGroupsResponse,
     HLLVGetAdminLogResponse,
     HLLVGetAdminUsersResponse,
@@ -574,7 +573,7 @@ class _RconCommands(ABC):
     async def force_team_switch(
         self,
         player_id: str,
-        force_mode: Any,  # noqa: ANN401
+        force_mode: ForceMode = ForceMode.IMMEDIATE,
     ) -> None:
         """Force a player to switch to a specific team.
 
@@ -582,8 +581,8 @@ class _RconCommands(ABC):
         ----------
         player_id : str
             The ID of the player to force switch.
-        force_mode : AnyForceMode
-            When to force the player to switch, by default `AnyForceMode.IMMEDIATE`.
+        force_mode : ForceMode
+            When to force the player to switch, by default `ForceMode.IMMEDIATE`.
 
         Returns
         -------
@@ -1760,28 +1759,6 @@ class HLLRconCommands(_RconCommands):
         ) -> bool: ...
 
         @override
-        async def force_team_switch(
-            self,
-            player_id: str,
-            force_mode: HLLForceMode = HLLForceMode.IMMEDIATE,
-        ) -> bool:
-            """Force a player to switch to a specific team.
-
-            Parameters
-            ----------
-            player_id : str
-                The ID of the player to force switch.
-            force_mode : HLLForceMode
-                When to force the player to switch, by default `HLLForceMode.IMMEDIATE`.
-
-            Returns
-            -------
-            bool
-                Whether the player was successfully forced to switch teams.
-
-            """
-
-        @override
         async def change_map(self, map_name: str | AnyLayer) -> None: ...
 
         @override
@@ -2053,29 +2030,6 @@ class HLLVRconCommands(_RconCommands):
             squad_index: int,
             reason: str,
         ) -> bool: ...
-
-        @override
-        async def force_team_switch(
-            self,
-            player_id: str,
-            force_mode: HLLVForceMode = HLLVForceMode.IMMEDIATE,
-        ) -> bool:
-            """Force a player to switch to a specific team.
-
-            Parameters
-            ----------
-            player_id : str
-                The ID of the player to force switch.
-            force_mode : HLLVForceMode
-                When to force the player to switch, by default
-                `HLLVForceMode.IMMEDIATE`.
-
-            Returns
-            -------
-            bool
-                Whether the player was successfully forced to switch teams.
-
-            """
 
         @override
         async def change_map(self, map_name: str | AnyLayer) -> None: ...

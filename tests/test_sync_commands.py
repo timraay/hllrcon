@@ -12,7 +12,9 @@ import pytest
 from hllrcon.data.game_modes import HLLGameMode
 from hllrcon.data.layers import HLLLayer, HLLVLayer
 from hllrcon.exceptions import RconCommandError, RconMessageError
-from hllrcon.responses import HLLForceMode
+from hllrcon.responses import (
+    ForceMode,
+)
 from hllrcon.sync.commands import (
     HLLSyncRconCommands,
     HLLVSyncRconCommands,
@@ -469,7 +471,7 @@ class TestCommands:
 
     def test_commands_force_team_switch(self) -> None:
         player_id = "player123"
-        force_mode = HLLForceMode.IMMEDIATE
+        force_mode = ForceMode.IMMEDIATE
         response = self.stub(
             "ForceTeamSwitch",
             2,
