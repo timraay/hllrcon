@@ -1386,7 +1386,7 @@ class _RconCommands(ABC):
             2,
             {
                 "PlayerId": player_id,
-                "Comment": description,
+                "Description": description,
             },
         )
 
