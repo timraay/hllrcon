@@ -3026,8 +3026,8 @@ SECTORS_THANH_HOA_BRIDGE_WARFARE = Sector.warfare_layout(
                 radius=6500.0,
             ),
             Strongpoint(
-                id="DRAGONS JAW",
-                name="Dragons Jaw",
+                id="DRAGON'S JAW",
+                name="Dragon's Jaw",
                 center=(82.95596, 28.122723, 1034.0825),
                 radius=6500.0,
             ),
@@ -3278,7 +3278,7 @@ SECTORS_HUE_OUTSKIRTS_CONQUEST = Sector.conquest_layout(
             Strongpoint(
                 id="FACTORY CHECKPOINT",
                 name="Factory Checkpoint",
-                center=(6185.4463, -34842.41, -4883.032),
+                center=(6185.4463, -34842.41, -2464.303),
                 radius=8000.0,
             ),
         ),
@@ -3292,7 +3292,7 @@ SECTORS_HUE_OUTSKIRTS_CONQUEST = Sector.conquest_layout(
             Strongpoint(
                 id="INDUSTRIAL ZONE",
                 name="Industrial Zone",
-                center=(9859.815, -6.631808e-06, -3.637979e-12),
+                center=(9859.815, -6.631808e-06, -1679.1979),
                 radius=8000.0,
             ),
             Strongpoint(
@@ -3306,7 +3306,7 @@ SECTORS_HUE_OUTSKIRTS_CONQUEST = Sector.conquest_layout(
             Strongpoint(
                 id="ARMOURED CHECKPOINT",
                 name="Armoured Checkpoint",
-                center=(-369.7358, 39376.543, -5497.7324),
+                center=(-369.73578, 39376.543, -2294.7153),
                 radius=8000.0,
             ),
         ),
@@ -3374,8 +3374,8 @@ SECTORS_THANH_HOA_BRIDGE_CONQUEST = Sector.conquest_layout(
                 radius=8000.0,
             ),
             Strongpoint(
-                id="DRAGONS JAW",
-                name="Dragons Jaw",
+                id="DRAGON'S JAW",
+                name="Dragon's Jaw",
                 center=(-587.4018, 287.6527, -3.637979e-12),
                 radius=8000.0,
             ),

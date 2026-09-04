@@ -1019,7 +1019,7 @@ class TestCommands:
         self.stub(
             "AddVip",
             2,
-            {"PlayerId": player_id, "Comment": description},
+            {"PlayerId": player_id, "Description": description},
         ).add_vip(player_id, description)
 
     def test_commands_remove_vip(self) -> None:

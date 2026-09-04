@@ -140,3 +140,38 @@ class TestIntegratedServer:
         new_sequence = await rcon.get_map_sequence()
         assert rotation == new_rotation
         assert sequence == new_sequence
+
+    async def test_add_remove_vip(
+        self,
+        rcon: AnyRcon,
+    ) -> None:
+        player_id = "123456"
+        description = "hllrcon integration test"
+        await rcon.remove_vip(player_id)
+
+        try:
+            # Add the VIP
+            await rcon.add_vip(player_id, description)
+
+            # Assert that the VIP was added
+            vips = await rcon.get_vip_users()
+            for vip in vips.vips:
+                if vip.id == player_id:
+                    assert vip.comment == description
+                    break
+            else:
+                pytest.fail(f"VIP {player_id} not found in VIP list")
+
+            # Remove the VIP
+            await rcon.remove_vip(player_id)
+
+            # Assert that the VIP was removed
+            vips = await rcon.get_vip_users()
+            for vip in vips.vips:
+                if vip.id == player_id:
+                    pytest.fail(
+                        f"VIP {player_id} still found in VIP list after removal",
+                    )
+
+        finally:
+            await rcon.remove_vip(player_id)

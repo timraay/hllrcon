@@ -2994,49 +2994,10 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
 
     @class_cached_property
     @classmethod
-    def US_BOAT(cls) -> "HLLVVehicle":
-        """*US Boat*"""
+    def UH_1_HUEY_SUPPLY(cls) -> "HLLVVehicle":
+        """*UH-1 Huey Supply*"""
         return cls(
-            id="US Boat",
-            name="PBR",
-            factions={HLLVFaction.US},
-            type=VehicleType.BOAT,
-            seats=[
-                HLLVVehicleSeat(
-                    index=0,
-                    type=VehicleSeatType.DRIVER,
-                    weapons=[],
-                    requires_roles=None,
-                    exposed=True,
-                ),
-                HLLVVehicleSeat(
-                    index=1,
-                    type=VehicleSeatType.GUNNER,
-                    weapons=[
-                        HLLVWeapon.V_M2_BROWNING__US_BOAT,
-                        HLLVWeapon.V_M2_BROWNING__US_BOAT,
-                    ],
-                    requires_roles=None,
-                    exposed=True,
-                ),
-                HLLVVehicleSeat(
-                    index=2,
-                    type=VehicleSeatType.GUNNER,
-                    weapons=[
-                        HLLVWeapon.V_M2_BROWNING__US_BOAT,
-                    ],
-                    requires_roles=None,
-                    exposed=True,
-                ),
-            ],
-        )
-
-    @class_cached_property
-    @classmethod
-    def US_SUPPLY_HELICOPTER(cls) -> "HLLVVehicle":
-        """*US Supply Helicopter*"""
-        return cls(
-            id="US Supply Helicopter",
+            id="UH-1 Huey Supply",
             name="Bell UH-1 Iroquois",
             factions={HLLVFaction.US},
             type=VehicleType.HELICOPTER,
@@ -3060,10 +3021,10 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
 
     @class_cached_property
     @classmethod
-    def US_TRANSPORT_HELICOPTER(cls) -> "HLLVVehicle":
-        """*US Transport Helicopter*"""
+    def UH_1_HUEY_TRANSPORT(cls) -> "HLLVVehicle":
+        """*UH-1 Huey Transport*"""
         return cls(
-            id="US Transport Helicopter",
+            id="UH-1 Huey Transport",
             name="Bell UH-1 Iroquois",
             factions={HLLVFaction.US},
             type=VehicleType.HELICOPTER,
@@ -3079,7 +3040,7 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     index=1,
                     type=VehicleSeatType.GUNNER,
                     weapons=[
-                        HLLVWeapon.V_FLARE_GUN__US_TRANSPORT_HELICOPTER,
+                        HLLVWeapon.V_FLARE_GUN__UH_1_HUEY_TRANSPORT,
                     ],
                     requires_roles=None,
                     exposed=True,
@@ -3088,7 +3049,7 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     index=2,
                     type=VehicleSeatType.GUNNER,
                     weapons=[
-                        HLLVWeapon.V_M60D__US_TRANSPORT_HELICOPTER,
+                        HLLVWeapon.V_M60D__UH_1_HUEY_TRANSPORT,
                     ],
                     requires_roles=None,
                     exposed=True,
@@ -3097,7 +3058,7 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     index=3,
                     type=VehicleSeatType.CO_PILOT,
                     weapons=[
-                        HLLVWeapon.V_M60D__US_TRANSPORT_HELICOPTER,
+                        HLLVWeapon.V_M60D__UH_1_HUEY_TRANSPORT,
                     ],
                     requires_roles=None,
                     exposed=True,
@@ -3134,6 +3095,45 @@ class HLLVVehicle(_Vehicle[HLLVFaction, HLLVVehicleSeat]):
                     index=8,
                     type=VehicleSeatType.PASSENGER,
                     weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_BOAT(cls) -> "HLLVVehicle":
+        """*US Boat*"""
+        return cls(
+            id="US Boat",
+            name="PBR",
+            factions={HLLVFaction.US},
+            type=VehicleType.BOAT,
+            seats=[
+                HLLVVehicleSeat(
+                    index=0,
+                    type=VehicleSeatType.DRIVER,
+                    weapons=[],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVVehicleSeat(
+                    index=1,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLVWeapon.V_M2_BROWNING__US_BOAT,
+                        HLLVWeapon.V_M2_BROWNING__US_BOAT,
+                    ],
+                    requires_roles=None,
+                    exposed=True,
+                ),
+                HLLVVehicleSeat(
+                    index=2,
+                    type=VehicleSeatType.GUNNER,
+                    weapons=[
+                        HLLVWeapon.V_M2_BROWNING__US_BOAT,
+                    ],
                     requires_roles=None,
                     exposed=True,
                 ),
