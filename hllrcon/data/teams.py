@@ -9,25 +9,26 @@ from ._utils import IndexedBaseModel, class_cached_property
 class _Team(IndexedBaseModel[int]):
     id: int
     name: str
+    pretty_name: str
 
 
 class HLLTeam(_Team):
     @class_cached_property
     @classmethod
     def ALLIES(cls) -> "HLLTeam":
-        return cls(id=1, name="Allies")
+        return cls(id=1, name="Allies", pretty_name="Allies")
 
     @class_cached_property
     @classmethod
     def AXIS(cls) -> "HLLTeam":
-        return cls(id=2, name="Axis")
+        return cls(id=2, name="Axis", pretty_name="Axis")
 
 
 class HLLVTeam(_Team):
     @class_cached_property
     @classmethod
     def SOUTH(cls) -> "HLLVTeam":
-        return cls(id=1, name="South")
+        return cls(id=1, name="Allies", pretty_name="South")
 
     @class_cached_property
     @classmethod
@@ -37,7 +38,7 @@ class HLLVTeam(_Team):
     @class_cached_property
     @classmethod
     def NORTH(cls) -> "HLLVTeam":
-        return cls(id=2, name="North")
+        return cls(id=2, name="Axis", pretty_name="North")
 
     @class_cached_property
     @classmethod
