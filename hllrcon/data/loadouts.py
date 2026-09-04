@@ -12214,9 +12214,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def NVA_AAWRENCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="NVA_AAWrench",
-            name="Wrench",
+            name="Anti-aircraft Wrench",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.WRENCH,
+            weapon=HLLVWeapon.ANTI_AIRCRAFT_WRENCH,
             type=HLLVLoadoutItemType.UTILITY,
             weight=3,
             description_tags=[

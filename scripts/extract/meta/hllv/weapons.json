@@ -43,6 +43,10 @@
     "name": "Wrench",
     "type": "Wrench"
   },
+  "Anti-aircraft Wrench": {
+    "name": "Wrench",
+    "type": "Wrench"
+  },
   "M18 ": {
     "name": "M18 Smoke Grenade",
     "type": "Smoke"
@@ -255,11 +259,11 @@
     "name": "M2 Browning"
   },
   "M2 Browning": {},
-  "Flare Gun [US Transport Helicopter]": {
+  "Flare Gun [UH-1 Huey Transport]": {
     "name": "Flare Gun"
   },
   "Flare Gun": {},
-  "M60D [US Transport Helicopter]": {
+  "M60D [UH-1 Huey Transport]": {
     "name": "M60D"
   },
   "M60D": {},
@@ -287,8 +291,8 @@
   },
   "M73": {},
   "US Boat": {},
-  "US Supply Helicopter": {},
-  "US Transport Helicopter": {},
+  "UH-1 Huey Supply": {},
+  "UH-1 Huey Transport": {},
   "MORTAR": {
     "name": "Mortar"
   },

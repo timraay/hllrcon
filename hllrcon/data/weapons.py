@@ -4233,6 +4233,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def ANTI_AIRCRAFT_WRENCH(cls) -> "HLLVWeapon":
+        """*Anti-aircraft Wrench*"""
+        return cls(
+            id="Anti-aircraft Wrench",
+            name="Wrench",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.WRENCH,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def AN_M8_FLARE(cls) -> "HLLVWeapon":
         """*AN-M8 Flare*"""
         return cls(
@@ -5004,12 +5017,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_FLARE_GUN__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
-        """*Flare Gun [US Transport Helicopter]*"""
+    def V_FLARE_GUN__UH_1_HUEY_TRANSPORT(cls) -> "HLLVWeapon":
+        """*Flare Gun [UH-1 Huey Transport]*"""
         return cls(
-            id="Flare Gun [US Transport Helicopter]",
+            id="Flare Gun [UH-1 Huey Transport]",
             name="Flare Gun",
-            vehicle_id="US Transport Helicopter",
+            vehicle_id="UH-1 Huey Transport",
             factions={HLLVFaction.US},
             type=WeaponType.RECON_FLARE,
             magnification=None,
@@ -5121,12 +5134,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_M60D__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
-        """*M60D [US Transport Helicopter]*"""
+    def V_M60D__UH_1_HUEY_TRANSPORT(cls) -> "HLLVWeapon":
+        """*M60D [UH-1 Huey Transport]*"""
         return cls(
-            id="M60D [US Transport Helicopter]",
+            id="M60D [UH-1 Huey Transport]",
             name="M60D",
-            vehicle_id="US Transport Helicopter",
+            vehicle_id="UH-1 Huey Transport",
             factions={HLLVFaction.US},
             type=WeaponType.MOUNTED_MG,
             magnification=None,
@@ -5277,38 +5290,38 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def V_ROADKILL__UH_1_HUEY_SUPPLY(cls) -> "HLLVWeapon":
+        """*UH-1 Huey Supply*"""
+        return cls(
+            id="UH-1 Huey Supply",
+            name="UH-1 Huey Supply",
+            vehicle_id="UH-1 Huey Supply",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__UH_1_HUEY_TRANSPORT(cls) -> "HLLVWeapon":
+        """*UH-1 Huey Transport*"""
+        return cls(
+            id="UH-1 Huey Transport",
+            name="UH-1 Huey Transport",
+            vehicle_id="UH-1 Huey Transport",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def V_ROADKILL__US_BOAT(cls) -> "HLLVWeapon":
         """*US Boat*"""
         return cls(
             id="US Boat",
             name="US Boat",
             vehicle_id="US Boat",
-            factions={HLLVFaction.US},
-            type=WeaponType.ROADKILL,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def V_ROADKILL__US_SUPPLY_HELICOPTER(cls) -> "HLLVWeapon":
-        """*US Supply Helicopter*"""
-        return cls(
-            id="US Supply Helicopter",
-            name="US Supply Helicopter",
-            vehicle_id="US Supply Helicopter",
-            factions={HLLVFaction.US},
-            type=WeaponType.ROADKILL,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def V_ROADKILL__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
-        """*US Transport Helicopter*"""
-        return cls(
-            id="US Transport Helicopter",
-            name="US Transport Helicopter",
-            vehicle_id="US Transport Helicopter",
             factions={HLLVFaction.US},
             type=WeaponType.ROADKILL,
             magnification=None,
