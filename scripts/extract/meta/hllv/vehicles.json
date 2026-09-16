@@ -19,11 +19,11 @@
     "name": "NVA Boat",
     "exposed": true
   },
-  "UH-1 Huey Transport": {
+  "US Transport Helicopter": {
     "name": "Bell UH-1 Iroquois",
     "exposed": true
   },
-  "UH-1 Huey Supply": {
+  "US Supply Helicopter": {
     "name": "Bell UH-1 Iroquois",
     "exposed": true
   },

@@ -4234,9 +4234,9 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
     @class_cached_property
     @classmethod
     def ANTI_AIRCRAFT_WRENCH(cls) -> "HLLVWeapon":
-        """*Anti-aircraft Wrench*"""
+        """*Anti-Aircraft Wrench*"""
         return cls(
-            id="Anti-aircraft Wrench",
+            id="Anti-Aircraft Wrench",
             name="Wrench",
             vehicle_id=None,
             factions={HLLVFaction.NVA},
@@ -4449,6 +4449,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id=None,
             factions={HLLVFaction.NVA},
             type=WeaponType.FLAMETHROWER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M14(cls) -> "HLLVWeapon":
+        """*M14*"""
+        return cls(
+            id="M14",
+            name="M14",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SEMI_AUTO_RIFLE,
             magnification=None,
         )
 
@@ -4766,6 +4779,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def SKS_BAYONET(cls) -> "HLLVWeapon":
+        """*SKS Bayonet*"""
+        return cls(
+            id="SKS Bayonet",
+            name="SKS w/Bayonet",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.SEMI_AUTO_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def SUPPLIES(cls) -> "HLLVWeapon":
         """*Supplies*"""
         return cls(
@@ -5017,12 +5043,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_FLARE_GUN__UH_1_HUEY_TRANSPORT(cls) -> "HLLVWeapon":
-        """*Flare Gun [UH-1 Huey Transport]*"""
+    def V_FLARE_GUN__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
+        """*Flare Gun [US Transport Helicopter]*"""
         return cls(
-            id="Flare Gun [UH-1 Huey Transport]",
+            id="Flare Gun [US Transport Helicopter]",
             name="Flare Gun",
-            vehicle_id="UH-1 Huey Transport",
+            vehicle_id="US Transport Helicopter",
             factions={HLLVFaction.US},
             type=WeaponType.RECON_FLARE,
             magnification=None,
@@ -5134,12 +5160,12 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_M60D__UH_1_HUEY_TRANSPORT(cls) -> "HLLVWeapon":
-        """*M60D [UH-1 Huey Transport]*"""
+    def V_M60D__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
+        """*M60D [US Transport Helicopter]*"""
         return cls(
-            id="M60D [UH-1 Huey Transport]",
+            id="M60D [US Transport Helicopter]",
             name="M60D",
-            vehicle_id="UH-1 Huey Transport",
+            vehicle_id="US Transport Helicopter",
             factions={HLLVFaction.US},
             type=WeaponType.MOUNTED_MG,
             magnification=None,
@@ -5290,38 +5316,38 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
-    def V_ROADKILL__UH_1_HUEY_SUPPLY(cls) -> "HLLVWeapon":
-        """*UH-1 Huey Supply*"""
-        return cls(
-            id="UH-1 Huey Supply",
-            name="UH-1 Huey Supply",
-            vehicle_id="UH-1 Huey Supply",
-            factions={HLLVFaction.US},
-            type=WeaponType.ROADKILL,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
-    def V_ROADKILL__UH_1_HUEY_TRANSPORT(cls) -> "HLLVWeapon":
-        """*UH-1 Huey Transport*"""
-        return cls(
-            id="UH-1 Huey Transport",
-            name="UH-1 Huey Transport",
-            vehicle_id="UH-1 Huey Transport",
-            factions={HLLVFaction.US},
-            type=WeaponType.ROADKILL,
-            magnification=None,
-        )
-
-    @class_cached_property
-    @classmethod
     def V_ROADKILL__US_BOAT(cls) -> "HLLVWeapon":
         """*US Boat*"""
         return cls(
             id="US Boat",
             name="US Boat",
             vehicle_id="US Boat",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__US_SUPPLY_HELICOPTER(cls) -> "HLLVWeapon":
+        """*US Supply Helicopter*"""
+        return cls(
+            id="US Supply Helicopter",
+            name="US Supply Helicopter",
+            vehicle_id="US Supply Helicopter",
+            factions={HLLVFaction.US},
+            type=WeaponType.ROADKILL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def V_ROADKILL__US_TRANSPORT_HELICOPTER(cls) -> "HLLVWeapon":
+        """*US Transport Helicopter*"""
+        return cls(
+            id="US Transport Helicopter",
+            name="US Transport Helicopter",
+            vehicle_id="US Transport Helicopter",
             factions={HLLVFaction.US},
             type=WeaponType.ROADKILL,
             magnification=None,
