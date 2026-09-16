@@ -1752,6 +1752,27 @@ class HLLSyncRconCommands(_SyncRconCommands):
     def get_vote_kick_thresholds(self) -> str:
         return self._get_vote_kick_thresholds()
 
+    @override
+    def add_vip(self, player_id: str, description: str) -> None:
+        """Add a player to the VIP list.
+
+        Parameters
+        ----------
+        player_id : str
+            The ID of the player to add as a VIP.
+        description : str
+            A description of the VIP. This is usually the name of the player.
+
+        """
+        self.execute(
+            "AddVip",
+            2,
+            {
+                "PlayerId": player_id,
+                "Comment": description,
+            },
+        )
+
     if TYPE_CHECKING:
 
         @override

@@ -575,7 +575,8 @@ class VehicleExtractor(ABC, Generic[HLLVehiclePropT_co]):
             if not ammo_type:
                 ammo_type = VehicleWeaponAmmoType.AP
                 logger.error(
-                    "Cannot determine ammo type for source %s",
+                    "Cannot determine ammo type for source (%s) %s",
+                    weapon_data.name,
                     ammo_source,
                 )
 

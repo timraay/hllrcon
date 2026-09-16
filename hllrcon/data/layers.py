@@ -2573,7 +2573,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_CAM_RANH_PORT_WARFARE,
-            attacking_team=HLLVTeam.NORTH,
+            attacking_team=HLLVTeam.AXIS,
         )
 
     @class_cached_property
@@ -2594,7 +2594,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_CAM_RANH_PORT_WARFARE,
-            attacking_team=HLLVTeam.SOUTH,
+            attacking_team=HLLVTeam.ALLIES,
         )
 
     @class_cached_property
@@ -2678,7 +2678,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_DAK_TO_AIRFIELD_WARFARE,
-            attacking_team=HLLVTeam.NORTH,
+            attacking_team=HLLVTeam.AXIS,
         )
 
     @class_cached_property
@@ -2699,7 +2699,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_DAK_TO_AIRFIELD_WARFARE,
-            attacking_team=HLLVTeam.SOUTH,
+            attacking_team=HLLVTeam.ALLIES,
         )
 
     @class_cached_property
@@ -2783,7 +2783,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_HUE_OUTSKIRTS_WARFARE,
-            attacking_team=HLLVTeam.NORTH,
+            attacking_team=HLLVTeam.AXIS,
         )
 
     @class_cached_property
@@ -2804,7 +2804,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_HUE_OUTSKIRTS_WARFARE,
-            attacking_team=HLLVTeam.SOUTH,
+            attacking_team=HLLVTeam.ALLIES,
         )
 
     @class_cached_property
@@ -2888,7 +2888,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_QUANG_NGAI_WARFARE,
-            attacking_team=HLLVTeam.NORTH,
+            attacking_team=HLLVTeam.AXIS,
         )
 
     @class_cached_property
@@ -2909,7 +2909,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_QUANG_NGAI_WARFARE,
-            attacking_team=HLLVTeam.SOUTH,
+            attacking_team=HLLVTeam.ALLIES,
         )
 
     @class_cached_property
@@ -2993,7 +2993,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_THANH_HOA_BRIDGE_WARFARE,
-            attacking_team=HLLVTeam.NORTH,
+            attacking_team=HLLVTeam.AXIS,
         )
 
     @class_cached_property
@@ -3014,7 +3014,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_THANH_HOA_BRIDGE_WARFARE,
-            attacking_team=HLLVTeam.SOUTH,
+            attacking_team=HLLVTeam.ALLIES,
         )
 
     @class_cached_property
@@ -3098,7 +3098,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_VAN_TUONG_WARFARE,
-            attacking_team=HLLVTeam.NORTH,
+            attacking_team=HLLVTeam.AXIS,
         )
 
     @class_cached_property
@@ -3119,7 +3119,7 @@ class HLLVLayer(_Layer[HLLVTeam, HLLVFaction, HLLVMap, HLLVGameMode]):
                 ),
             ),
             sectors=SECTORS_VAN_TUONG_WARFARE,
-            attacking_team=HLLVTeam.SOUTH,
+            attacking_team=HLLVTeam.ALLIES,
         )
 
     @class_cached_property

@@ -3,6 +3,10 @@
     "name": "M16A1",
     "type": "Assault Rifle"
   },
+  "M14": {
+    "name": "M14",
+    "type": "Semi-Auto Rifle"
+  },
   "TNT": {
     "name": "TNT",
     "type": "Satchel"
@@ -43,7 +47,7 @@
     "name": "Wrench",
     "type": "Wrench"
   },
-  "Anti-aircraft Wrench": {
+  "Anti-Aircraft Wrench": {
     "name": "Wrench",
     "type": "Wrench"
   },
@@ -198,6 +202,10 @@
     "name": "Type 56 w/Bayonet",
     "type": "Assault Rifle"
   },
+  "SKS Bayonet": {
+    "name": "SKS w/Bayonet",
+    "type": "Semi-Auto Rifle"
+  },
   "Ammo Box": {
     "name": "Small Ammo Box",
     "type": "Supplies"
@@ -259,11 +267,11 @@
     "name": "M2 Browning"
   },
   "M2 Browning": {},
-  "Flare Gun [UH-1 Huey Transport]": {
+  "Flare Gun [US Transport Helicopter]": {
     "name": "Flare Gun"
   },
   "Flare Gun": {},
-  "M60D [UH-1 Huey Transport]": {
+  "M60D [US Transport Helicopter]": {
     "name": "M60D"
   },
   "M60D": {},
@@ -291,8 +299,8 @@
   },
   "M73": {},
   "US Boat": {},
-  "UH-1 Huey Supply": {},
-  "UH-1 Huey Transport": {},
+  "US Supply Helicopter": {},
+  "US Transport Helicopter": {},
   "MORTAR": {
     "name": "Mortar"
   },

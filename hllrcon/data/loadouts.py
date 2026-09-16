@@ -11565,6 +11565,33 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def M14(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M14",
+            name="M14",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M14,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=6,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 3,
+                HLLVRole.SQUAD_LEADER: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.COMMANDER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
     def M16A1(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M16A1",
@@ -11579,8 +11606,8 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 "Automatic",
                 "Semi-Automatic",
             ],
-            base_ammo=4,
-            max_ammo=8,
+            base_ammo=6,
+            max_ammo=10,
             ammo_weight=1,
             level_requirements={
                 HLLVRole.RIFLEMAN: 0,
@@ -11617,8 +11644,8 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 "Automatic",
                 "Semi-Automatic",
             ],
-            base_ammo=4,
-            max_ammo=8,
+            base_ammo=6,
+            max_ammo=10,
             ammo_weight=1,
             level_requirements={
                 HLLVRole.COMMANDER: 4,
@@ -12214,7 +12241,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def NVA_AAWRENCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="NVA_AAWrench",
-            name="Anti-aircraft Wrench",
+            name="Anti-Aircraft Wrench",
             faction=HLLVFaction.NVA,
             weapon=HLLVWeapon.ANTI_AIRCRAFT_WRENCH,
             type=HLLVLoadoutItemType.UTILITY,
@@ -12398,6 +12425,33 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def SKS(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="SKS",
+            name="SKS Bayonet",
+            faction=HLLVFaction.NVA,
+            weapon=HLLVWeapon.SKS_BAYONET,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=4,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Semi-Automatic",
+            ],
+            base_ammo=6,
+            max_ammo=12,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 3,
+                HLLVRole.SQUAD_LEADER: 3,
+                HLLVRole.ENGINEER: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.COMMANDER: 3,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
     def TM_46(cls) -> "HLLVLoadoutItem":
         return cls(
             id="TM-46",
@@ -12552,7 +12606,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
                 "Semi-Automatic",
             ],
             base_ammo=4,
-            max_ammo=8,
+            max_ammo=7,
             ammo_weight=1,
             level_requirements={
                 HLLVRole.RIFLEMAN: 0,
