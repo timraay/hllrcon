@@ -1748,6 +1748,27 @@ class HLLRconCommands(_RconCommands):
     async def get_vote_kick_thresholds(self) -> str:
         return await self._get_vote_kick_thresholds()
 
+    @override
+    async def add_vip(self, player_id: str, description: str) -> None:
+        """Add a player to the VIP list.
+
+        Parameters
+        ----------
+        player_id : str
+            The ID of the player to add as a VIP.
+        description : str
+            A description of the VIP. This is usually the name of the player.
+
+        """
+        await self.execute(
+            "AddVip",
+            2,
+            {
+                "PlayerId": player_id,
+                "Comment": description,
+            },
+        )
+
     if TYPE_CHECKING:
 
         @override

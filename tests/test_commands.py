@@ -1247,6 +1247,15 @@ class TestHLLCommands(TestCommands):
             ),
         ).get_players()
 
+    async def test_commands_add_vip(self) -> None:
+        player_id = "vip123"
+        description = "desc"
+        await self.stub(
+            "AddVip",
+            2,
+            {"PlayerId": player_id, "Comment": description},
+        ).add_vip(player_id, description)
+
 
 class TestHLLVCommands(TestCommands):
     stub: ClassVar[type[HLLVRconCommandsStub]] = HLLVRconCommandsStub
