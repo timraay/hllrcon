@@ -491,6 +491,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             name="Hammer",
             vehicle_id=None,
             factions={
+                HLLFaction.GER,
                 HLLFaction.CW,
                 HLLFaction.B8A,
                 HLLFaction.CAN,
@@ -506,6 +507,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
         return cls(
             id="KARABINER 98K",
             name="Karabiner 98k",
+            vehicle_id=None,
+            factions={HLLFaction.GER, HLLFaction.DAK},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def KARABINER_98K_W_SCHIESSBECHER(cls) -> "HLLWeapon":
+        """*KARABINER 98K W/ SCHIESSBECHER*"""
+        return cls(
+            id="KARABINER 98K W/ SCHIESSBECHER",
+            name="Karabiner 98k w/Schiessbecher",
             vehicle_id=None,
             factions={HLLFaction.GER, HLLFaction.DAK},
             type=WeaponType.BOLT_ACTION_RIFLE,
@@ -579,11 +593,24 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
-    def M1903_SPRINGFIELD(cls) -> "HLLWeapon":
-        """*M1903 SPRINGFIELD*"""
+    def M1903A3_SPRINGFIELD(cls) -> "HLLWeapon":
+        """*M1903A3 SPRINGFIELD*"""
         return cls(
-            id="M1903 SPRINGFIELD",
-            name="M1903 Springfield",
+            id="M1903A3 SPRINGFIELD",
+            name="M1903A3 Springfield",
+            vehicle_id=None,
+            factions={HLLFaction.US},
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M1903A4_SPRINGFIELD(cls) -> "HLLWeapon":
+        """*M1903A4 SPRINGFIELD*"""
+        return cls(
+            id="M1903A4 SPRINGFIELD",
+            name="M1903A4 Springfield",
             vehicle_id=None,
             factions={HLLFaction.US},
             type=WeaponType.BOLT_ACTION_RIFLE,
@@ -670,6 +697,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def M1_GARAND_W_M7_RGL(cls) -> "HLLWeapon":
+        """*M1 GARAND W/ M7 RGL*"""
+        return cls(
+            id="M1 GARAND W/ M7 RGL",
+            name="M1 Garand w/M7 RGL",
+            vehicle_id=None,
+            factions={HLLFaction.US},
+            type=WeaponType.SEMI_AUTO_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def M24_STIELHANDGRANATE(cls) -> "HLLWeapon":
         """*M24 STIELHANDGRANATE*"""
         return cls(
@@ -741,7 +781,7 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
             id="M43 STIELHANDGRANATE",
             name="M43 Stielhandgranate",
             vehicle_id=None,
-            factions={HLLFaction.GER, HLLFaction.DAK},
+            factions={HLLFaction.GER},
             type=WeaponType.GRENADE,
             magnification=None,
         )
@@ -1261,6 +1301,19 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
 
     @class_cached_property
     @classmethod
+    def ROKS_2(cls) -> "HLLWeapon":
+        """*ROKS-2*"""
+        return cls(
+            id="ROKS-2",
+            name="ROKS-2",
+            vehicle_id=None,
+            factions={HLLFaction.SOV},
+            type=WeaponType.FLAMETHROWER,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def SATCHEL(cls) -> "HLLWeapon":
         """*SATCHEL*"""
         return cls(
@@ -1374,6 +1427,23 @@ class HLLWeapon(_Weapon[HLLFaction, "HLLVehicle"]):
         return cls(
             id="SMLE No.1 Mk III",
             name="SMLE Mk III",
+            vehicle_id=None,
+            factions={
+                HLLFaction.CW,
+                HLLFaction.B8A,
+                HLLFaction.CAN,
+            },
+            type=WeaponType.BOLT_ACTION_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def SMLE_NO_1_MK_III_EY(cls) -> "HLLWeapon":
+        """*SMLE No.1 Mk III EY*"""
+        return cls(
+            id="SMLE No.1 Mk III EY",
+            name="SMLE Mk III w/Cup Discharger",
             vehicle_id=None,
             factions={
                 HLLFaction.CW,

@@ -3,6 +3,10 @@
     "name": "M1 Garand",
     "type": "Semi-Auto Rifle"
   },
+  "M1 GARAND W/ M7 RGL": {
+    "name": "M1 Garand w/M7 RGL",
+    "type": "Semi-Auto Rifle"
+  },
   "M1 CARBINE": {
     "name": "M1 Carbine",
     "type": "Semi-Auto Rifle"
@@ -175,6 +179,10 @@
   },
   "KARABINER 98K": {
     "name": "Karabiner 98k",
+    "type": "Bolt Action Rifle"
+  },
+  "KARABINER 98K W/ SCHIESSBECHER": {
+    "name": "Karabiner 98k w/Schiessbecher",
     "type": "Bolt Action Rifle"
   },
   "GEWEHR 43": {
@@ -372,6 +380,10 @@
     "name": "DP-27",
     "type": "Machine Gun"
   },
+  "ROKS-2": {
+    "name": "ROKS-2",
+    "type": "Flamethrower"
+  },
   "SCOPED MOSIN NAGANT 91/30": {
     "name": "Mosin-Nagant 91/30",
     "type": "Bolt Action Rifle",
@@ -494,6 +506,10 @@
   },
   "SMLE No.1 Mk III": {
     "name": "SMLE Mk III",
+    "type": "Bolt Action Rifle"
+  },
+  "SMLE No.1 Mk III EY": {
+    "name": "SMLE Mk III w/Cup Discharger",
     "type": "Bolt Action Rifle"
   },
   "Rifle No.4 Mk I": {
