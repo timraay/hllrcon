@@ -1184,6 +1184,8 @@ SECTORS_JUNOBEACH_LARGE = Sector.warfare_layout(
     ),
 )
 
+SECTORS_JUNOBEACH_CONQUEST = convert_warfare_layout_to_conquest(SECTORS_JUNOBEACH_LARGE)
+
 SECTORS_JUNOBEACH_SMALL = Sector.skirmish_layout(
     orientation=Orientation.VERTICAL,
     strongpoint=Strongpoint(
@@ -1626,6 +1628,10 @@ SECTORS_OMAHABEACH_LARGE = Sector.warfare_layout(
             ),
         ),
     ),
+)
+
+SECTORS_OMAHABEACH_CONQUEST = convert_warfare_layout_to_conquest(
+    SECTORS_OMAHABEACH_LARGE,
 )
 
 SECTORS_PURPLEHEARTLANE_LARGE = Sector.warfare_layout(
@@ -2200,6 +2206,10 @@ SECTORS_STMARIEDUMONT_LARGE = Sector.warfare_layout(
     ),
 )
 
+SECTORS_STMARIEDUMONT_CONQUEST = convert_warfare_layout_to_conquest(
+    SECTORS_STMARIEDUMONT_LARGE,
+)
+
 SECTORS_STMARIEDUMONT_SMALL = Sector.skirmish_layout(
     orientation=Orientation.VERTICAL,
     strongpoint=Strongpoint(
@@ -2314,6 +2324,10 @@ SECTORS_STMEREEGLISE_LARGE = Sector.warfare_layout(
             ),
         ),
     ),
+)
+
+SECTORS_STMEREEGLISE_CONQUEST = convert_warfare_layout_to_conquest(
+    SECTORS_STMEREEGLISE_LARGE,
 )
 
 SECTORS_STMEREEGLISE_SMALL = Sector.skirmish_layout(

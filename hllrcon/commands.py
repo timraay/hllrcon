@@ -104,8 +104,8 @@ P = ParamSpec("P")
 T = TypeVar("T")
 ModelT = TypeVar("ModelT", bound=BaseModel)
 
-_GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Conquest", "Skirmish"]
-HLLGameModeLiteral: TypeAlias = _GameModeLiteral
+_GameModeLiteral: TypeAlias = Literal["Warfare", "Offensive", "Conquest"]
+HLLGameModeLiteral: TypeAlias = _GameModeLiteral | Literal["Skirmish"]
 HLLVGameModeLiteral: TypeAlias = _GameModeLiteral | Literal["Domination"]
 GameModeLiteral: TypeAlias = HLLGameModeLiteral | HLLVGameModeLiteral
 

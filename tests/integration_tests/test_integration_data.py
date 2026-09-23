@@ -5,6 +5,7 @@ from hllrcon import (
     HLLLayer,
     HLLVLayer,
 )
+from hllrcon.data.game_modes import HLLGameMode
 from hllrcon.rcon import HLLRcon, HLLVRcon
 
 from tests.integration_tests.conftest import HLL_GAME
@@ -37,6 +38,9 @@ class TestIntegratedServer:
             pytest.skip("Test only applies to HLL servers")
 
         session = await rcon.get_server_session()
+        if session.game_mode is HLLGameMode.CONQUEST:
+            pytest.skip("Test does not work for Conquest mode")
+
         configured_strongpoints = tuple(
             [capture_zone.strongpoint.id for capture_zone in sector.capture_zones]
             for sector in session.find_layer().sectors

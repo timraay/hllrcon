@@ -212,7 +212,9 @@ class VehicleWeaponAmmoType(StrEnum):
         if shell_type in (EShellType.SMOKE, EShellType.MAX):
             return cls.SMOKE
 
-        if projectile.type in ("BP_Heavy_Shell_C", "BP_ATGun_Shell_C"):
+        if projectile.type == "BP_Heavy_Shell_C" or projectile.type.endswith(
+            "_ATGun_Shell_C",
+        ):
             return cls.AP
         if projectile.type in (
             "BP_HE_Heavy_Shell_C",

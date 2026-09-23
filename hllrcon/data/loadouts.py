@@ -238,6 +238,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def GER_RIFLEMAN_RIFLE_GRENADIER(cls) -> "HLLLoadout":
+        return cls(
+            name="Rifle Grenadier",
+            faction=HLLFaction.GER,
+            role=HLLRole.RIFLEMAN,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_W_SCHIESSBECHER,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def GER_ASSAULT_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -547,6 +579,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def GER_MEDIC_SECTION_MEDIC(cls) -> "HLLLoadout":
+        return cls(
+            name="Section Medic",
+            faction=HLLFaction.GER,
+            role=HLLRole.MEDIC,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_W_SCHIESSBECHER,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_AMPOULE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
                     ammo=1,
                 ),
             ],
@@ -1010,6 +1074,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def GER_ENGINEER_DEMOLITIONIST(cls) -> "HLLLoadout":
+        return cls(
+            name="Demolitionist",
+            faction=HLLFaction.GER,
+            role=HLLRole.ENGINEER,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_W_SCHIESSBECHER,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def GER_OFFICER_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -1220,6 +1320,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.WALTHER_P38,
                     ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -1806,6 +1910,74 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def US_RIFLEMAN_MARKSMAN(cls) -> "HLLLoadout":
+        return cls(
+            name="Marksman",
+            faction=HLLFaction.US,
+            role=HLLRole.RIFLEMAN,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1903A3_SPRINGFIELD,
+                    ammo=13,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MK2_GRENADE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def US_RIFLEMAN_RIFLE_GRENADIER(cls) -> "HLLLoadout":
+        return cls(
+            name="Rifle Grenadier",
+            faction=HLLFaction.US,
+            role=HLLRole.RIFLEMAN,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND_W_M7_RGL,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def US_ASSAULT_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -2090,6 +2262,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def US_MEDIC_SECTION_MEDIC(cls) -> "HLLLoadout":
+        return cls(
+            name="Section Medic",
+            faction=HLLFaction.US,
+            role=HLLRole.MEDIC,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND_W_M7_RGL,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_SYRETTE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def US_SPOTTER_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -2191,7 +2395,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             items=[
                 HLLLoadoutItem(
                     weapon=HLLWeapon.M1_GARAND,
-                    ammo=12,
+                    ammo=8,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.MK2_GRENADE,
@@ -2362,7 +2566,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=1,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M1_GARAND,
+                    weapon=HLLWeapon.M1_CARBINE,
                     ammo=12,
                 ),
                 HLLLoadoutItem(
@@ -2590,6 +2794,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def US_ENGINEER_DEMOLITIONIST(cls) -> "HLLLoadout":
+        return cls(
+            name="Demolitionist",
+            faction=HLLFaction.US,
+            role=HLLRole.ENGINEER,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M1_GARAND_W_M7_RGL,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.COLT_M1911,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.M3_KNIFE,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def US_OFFICER_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -2726,7 +2966,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=1,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M1903_SPRINGFIELD,
+                    weapon=HLLWeapon.M1903A4_SPRINGFIELD,
                     ammo=17,
                 ),
                 HLLLoadoutItem(
@@ -2762,7 +3002,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=3,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M1903_SPRINGFIELD,
+                    weapon=HLLWeapon.M1903A4_SPRINGFIELD,
                     ammo=17,
                 ),
                 HLLLoadoutItem(
@@ -2800,6 +3040,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.COLT_M1911,
                     ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -2910,7 +3154,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=1,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M1A1_THOMPSON,
+                    weapon=HLLWeapon.M3_GREASE_GUN,
                     ammo=4,
                 ),
                 HLLLoadoutItem(
@@ -3162,7 +3406,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=1,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M1_CARBINE,
+                    weapon=HLLWeapon.M1903A3_SPRINGFIELD,
                     ammo=12,
                 ),
                 HLLLoadoutItem(
@@ -3390,9 +3634,9 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
-    def SOV_RIFLEMAN_FLAMER(cls) -> "HLLLoadout":
+    def SOV_RIFLEMAN_FIREBOMBER(cls) -> "HLLLoadout":
         return cls(
-            name="Flamer",
+            name="Firebomber",
             faction=HLLFaction.SOV,
             role=HLLRole.RIFLEMAN,
             requires_level=6,
@@ -3530,9 +3774,9 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
-    def SOV_ASSAULT_FLAMER(cls) -> "HLLLoadout":
+    def SOV_ASSAULT_FIREBOMBER(cls) -> "HLLLoadout":
         return cls(
-            name="Flamer",
+            name="Firebomber",
             faction=HLLFaction.SOV,
             role=HLLRole.ASSAULT,
             requires_level=9,
@@ -3598,9 +3842,9 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
-    def SOV_AUTOMATIC_RIFLEMAN_FLAMER(cls) -> "HLLLoadout":
+    def SOV_AUTOMATIC_RIFLEMAN_FIREBOMBER(cls) -> "HLLLoadout":
         return cls(
-            name="Flamer",
+            name="Firebomber",
             faction=HLLFaction.SOV,
             role=HLLRole.AUTOMATIC_RIFLEMAN,
             requires_level=3,
@@ -3870,9 +4114,9 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
-    def SOV_SUPPORT_FLAMER(cls) -> "HLLLoadout":
+    def SOV_SUPPORT_FIREBOMBER(cls) -> "HLLLoadout":
         return cls(
-            name="Flamer",
+            name="Firebomber",
             faction=HLLFaction.SOV,
             role=HLLRole.SUPPORT,
             requires_level=6,
@@ -3891,6 +4135,46 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SUPPLIES,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MPL_50_SPADE,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def SOV_SUPPORT_FLAMER(cls) -> "HLLLoadout":
+        return cls(
+            name="Flamer",
+            faction=HLLFaction.SOV,
+            role=HLLRole.SUPPORT,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.ROKS_2,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TOKAREV_TT33,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.RDG_2_SMOKE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -4368,6 +4652,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.NAGANT_M1895,
                     ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -4950,6 +5238,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def CW_RIFLEMAN_RIFLE_GRENADIER(cls) -> "HLLLoadout":
+        return cls(
+            name="Rifle Grenadier",
+            faction=HLLFaction.CW,
+            role=HLLRole.RIFLEMAN,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def CW_ASSAULT_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -5224,6 +5544,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.MEDICAL_SUPPLIES,
                     ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_MEDIC_SECTION_MEDIC(cls) -> "HLLLoadout":
+        return cls(
+            name="Section Medic",
+            faction=HLLFaction.CW,
+            role=HLLRole.MEDIC,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.FAIRBAIRN_SYKES,
@@ -5658,7 +6010,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=1,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
                     ammo=6,
                 ),
                 HLLLoadoutItem(
@@ -5702,7 +6054,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=3,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
                     ammo=6,
                 ),
                 HLLLoadoutItem(
@@ -5767,6 +6119,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.TORCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CW_ENGINEER_DEMOLITIONIST(cls) -> "HLLLoadout":
+        return cls(
+            name="Demolitionist",
+            faction=HLLFaction.CW,
+            role=HLLRole.ENGINEER,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
                     ammo=1,
                 ),
                 HLLLoadoutItem(
@@ -5988,6 +6376,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.WEBLEY_MK_VI,
                     ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -6494,7 +6886,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=13,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -6570,7 +6962,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=12,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -6594,6 +6986,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def DAK_RIFLEMAN_RIFLE_GRENADIER(cls) -> "HLLLoadout":
+        return cls(
+            name="Rifle Grenadier",
+            faction=HLLFaction.DAK,
+            role=HLLRole.RIFLEMAN,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_W_SCHIESSBECHER,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def DAK_ASSAULT_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -6606,7 +7030,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=12,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -6642,7 +7066,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=8,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -6678,7 +7102,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=12,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=6,
                 ),
                 HLLLoadoutItem(
@@ -6714,7 +7138,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=8,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=1,
                 ),
                 HLLLoadoutItem(
@@ -6754,7 +7178,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=10,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -6878,6 +7302,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def DAK_MEDIC_SECTION_MEDIC(cls) -> "HLLLoadout":
+        return cls(
+            name="Section Medic",
+            faction=HLLFaction.DAK,
+            role=HLLRole.MEDIC,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_W_SCHIESSBECHER,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.LUGER_P08,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE_AMPOULE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def DAK_SPOTTER_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -6890,7 +7346,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=8,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -6982,7 +7438,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=12,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7158,7 +7614,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=2,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7186,7 +7642,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=12,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7222,7 +7678,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=6,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7334,6 +7790,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def DAK_ENGINEER_DEMOLITIONIST(cls) -> "HLLLoadout":
+        return cls(
+            name="Demolitionist",
+            faction=HLLFaction.DAK,
+            role=HLLRole.ENGINEER,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.KARABINER_98K_W_SCHIESSBECHER,
+                    ammo=8,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WALTHER_P38,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FELDSPATEN,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def DAK_OFFICER_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -7350,7 +7842,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=6,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7394,7 +7886,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=4,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7434,7 +7926,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=8,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=3,
                 ),
                 HLLLoadoutItem(
@@ -7478,7 +7970,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=6,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7544,6 +8036,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.WALTHER_P38,
                     ammo=6,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -7802,7 +8298,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=2,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -7978,7 +8474,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                     ammo=2,
                 ),
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.M43_STIELHANDGRANATE,
+                    weapon=HLLWeapon.M24_STIELHANDGRANATE,
                     ammo=2,
                 ),
                 HLLLoadoutItem(
@@ -8135,6 +8631,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.EXPLOSIVE_AMMO_BOX,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_RIFLEMAN_RIFLE_GRENADIER(cls) -> "HLLLoadout":
+        return cls(
+            name="Rifle Grenadier",
+            faction=HLLFaction.B8A,
+            role=HLLRole.RIFLEMAN,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
                     ammo=1,
                 ),
                 HLLLoadoutItem(
@@ -8420,6 +8948,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.MEDICAL_SUPPLIES,
                     ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_MEDIC_SECTION_MEDIC(cls) -> "HLLLoadout":
+        return cls(
+            name="Section Medic",
+            faction=HLLFaction.B8A,
+            role=HLLRole.MEDIC,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.FAIRBAIRN_SYKES,
@@ -8854,7 +9414,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=1,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
+                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
                     ammo=6,
                 ),
                 HLLLoadoutItem(
@@ -8898,7 +9458,7 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
             requires_level=3,
             items=[
                 HLLLoadoutItem(
-                    weapon=HLLWeapon.RIFLE_NO_4_MK_I,
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III,
                     ammo=6,
                 ),
                 HLLLoadoutItem(
@@ -8964,6 +9524,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
                     ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def B8A_ENGINEER_DEMOLITIONIST(cls) -> "HLLLoadout":
+        return cls(
+            name="Demolitionist",
+            faction=HLLFaction.B8A,
+            role=HLLRole.ENGINEER,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WEBLEY_MK_VI,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.FAIRBAIRN_SYKES,
@@ -9188,6 +9784,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.WEBLEY_MK_VI,
                     ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,
@@ -9810,6 +10410,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def CAN_RIFLEMAN_RIFLE_GRENADIER(cls) -> "HLLLoadout":
+        return cls(
+            name="Rifle Grenadier",
+            faction=HLLFaction.CAN,
+            role=HLLRole.RIFLEMAN,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.ENFIELD_NO_2_MK_I,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def CAN_ASSAULT_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -10084,6 +10716,38 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.MEDICAL_SUPPLIES,
                     ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
+    def CAN_MEDIC_SECTION_MEDIC(cls) -> "HLLLoadout":
+        return cls(
+            name="Section Medic",
+            faction=HLLFaction.CAN,
+            role=HLLRole.MEDIC,
+            requires_level=6,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FN_INGLIS_NO_2_MK_I,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.MORPHINE,
+                    ammo=20,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=20,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.FAIRBAIRN_SYKES,
@@ -10574,6 +11238,42 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
 
     @class_cached_property
     @classmethod
+    def CAN_ENGINEER_DEMOLITIONIST(cls) -> "HLLLoadout":
+        return cls(
+            name="Demolitionist",
+            faction=HLLFaction.CAN,
+            role=HLLRole.ENGINEER,
+            requires_level=8,
+            items=[
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.SMLE_NO_1_MK_III_EY,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FN_INGLIS_NO_2_MK_I,
+                    ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.BANDAGE,
+                    ammo=2,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.WRENCH,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.HAMMER,
+                    ammo=1,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.FAIRBAIRN_SYKES,
+                    ammo=1,
+                ),
+            ],
+        )
+
+    @class_cached_property
+    @classmethod
     def CAN_OFFICER_STANDARD_ISSUE(cls) -> "HLLLoadout":
         return cls(
             name="Standard Issue",
@@ -10784,6 +11484,10 @@ class HLLLoadout(IndexedBaseModel[HLLLoadoutId]):
                 HLLLoadoutItem(
                     weapon=HLLWeapon.ENFIELD_NO_2_MK_I,
                     ammo=4,
+                ),
+                HLLLoadoutItem(
+                    weapon=HLLWeapon.TORCH,
+                    ammo=1,
                 ),
                 HLLLoadoutItem(
                     weapon=HLLWeapon.BANDAGE,

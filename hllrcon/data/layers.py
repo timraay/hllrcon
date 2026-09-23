@@ -10,6 +10,7 @@ from typing import Annotated, ClassVar, Generic, Never, Self, TypeAlias, TypeVar
 from pydantic import computed_field, field_serializer, model_validator
 
 from hllrcon.data.sectors import (
+    SECTORS_CARENTAN_CONQUEST,
     SECTORS_CARENTAN_LARGE,
     SECTORS_CARENTAN_SMALL,
     SECTORS_DRIEL_LARGE,
@@ -22,12 +23,14 @@ from hllrcon.data.sectors import (
     SECTORS_HILL400_LARGE,
     SECTORS_HILL400_SMALL,
     SECTORS_HURTGENFOREST_LARGE,
+    SECTORS_JUNOBEACH_CONQUEST,
     SECTORS_JUNOBEACH_LARGE,
     SECTORS_JUNOBEACH_SMALL,
     SECTORS_KHARKOV_LARGE,
     SECTORS_KURSK_LARGE,
     SECTORS_MORTAIN_LARGE,
     SECTORS_MORTAIN_SMALL,
+    SECTORS_OMAHABEACH_CONQUEST,
     SECTORS_OMAHABEACH_LARGE,
     SECTORS_PURPLEHEARTLANE_LARGE,
     SECTORS_PURPLEHEARTLANE_SMALL,
@@ -37,8 +40,10 @@ from hllrcon.data.sectors import (
     SECTORS_SMOLENSK_SMALL,
     SECTORS_STALINGRAD_LARGE,
     SECTORS_STALINGRAD_SMALL,
+    SECTORS_STMARIEDUMONT_CONQUEST,
     SECTORS_STMARIEDUMONT_LARGE,
     SECTORS_STMARIEDUMONT_SMALL,
+    SECTORS_STMEREEGLISE_CONQUEST,
     SECTORS_STMEREEGLISE_LARGE,
     SECTORS_STMEREEGLISE_SMALL,
     SECTORS_TOBRUK_LARGE,
@@ -564,6 +569,21 @@ class HLLLayer(_Layer[HLLTeam, HLLFaction, HLLMap, HLLGameMode]):
                 offset=(150.0, -110.0),
             ),
             sectors=SECTORS_CARENTAN_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def CARENTAN_CONQUEST_DAY(cls) -> "HLLLayer":
+        return cls(
+            id="CAR_L_1944_Conquest_Day",
+            map=HLLMap.CARENTAN,
+            game_mode=HLLGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=20160,
+            ),
+            sectors=SECTORS_CARENTAN_CONQUEST,
         )
 
     @class_cached_property
@@ -1287,6 +1307,19 @@ class HLLLayer(_Layer[HLLTeam, HLLFaction, HLLMap, HLLGameMode]):
 
     @class_cached_property
     @classmethod
+    def JUNOBEACH_CONQUEST_DAY(cls) -> "HLLLayer":
+        return cls(
+            id="junobeach_conquest_day",
+            map=HLLMap.JUNO_BEACH,
+            game_mode=HLLGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(),
+            sectors=SECTORS_JUNOBEACH_CONQUEST,
+        )
+
+    @class_cached_property
+    @classmethod
     def KHARKOV_WARFARE_DAY(cls) -> "HLLLayer":
         return cls(
             id="kharkov_warfare",
@@ -1637,6 +1670,21 @@ class HLLLayer(_Layer[HLLTeam, HLLFaction, HLLMap, HLLGameMode]):
             ),
             sectors=SECTORS_OMAHABEACH_LARGE,
             attacking_team=HLLTeam.AXIS,
+        )
+
+    @class_cached_property
+    @classmethod
+    def OMAHABEACH_CONQUEST_DAY(cls) -> "HLLLayer":
+        return cls(
+            id="OMA_L_1944_Conquest_Day",
+            map=HLLMap.OMAHA_BEACH,
+            game_mode=HLLGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_OMAHABEACH_CONQUEST,
         )
 
     @class_cached_property
@@ -2191,6 +2239,21 @@ class HLLLayer(_Layer[HLLTeam, HLLFaction, HLLMap, HLLGameMode]):
 
     @class_cached_property
     @classmethod
+    def STMARIEDUMONT_CONQUEST_DAY(cls) -> "HLLLayer":
+        return cls(
+            id="SMDM_L_1944_Conquest_Day",
+            map=HLLMap.ST_MARIE_DU_MONT,
+            game_mode=HLLGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMARIEDUMONT_CONQUEST,
+        )
+
+    @class_cached_property
+    @classmethod
     def STMEREEGLISE_WARFARE_DAY(cls) -> "HLLLayer":
         return cls(
             id="stmereeglise_warfare",
@@ -2288,6 +2351,21 @@ class HLLLayer(_Layer[HLLTeam, HLLFaction, HLLMap, HLLGameMode]):
             weather=Weather.CLEAR,
             grid=Grid.small(),
             sectors=SECTORS_STMEREEGLISE_SMALL,
+        )
+
+    @class_cached_property
+    @classmethod
+    def STMEREEGLISE_CONQUEST_DAY(cls) -> "HLLLayer":
+        return cls(
+            id="SME_L_1944_Conquest_Day",
+            map=HLLMap.ST_MERE_EGLISE,
+            game_mode=HLLGameMode.CONQUEST,
+            time_of_day=TimeOfDay.DAY,
+            weather=Weather.CLEAR,
+            grid=Grid.large(
+                scale=19840,
+            ),
+            sectors=SECTORS_STMEREEGLISE_CONQUEST,
         )
 
     @class_cached_property
