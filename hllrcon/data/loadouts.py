@@ -12334,6 +12334,44 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
 
     @class_cached_property
     @classmethod
+    def M16A1_30(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="M16A1_30",
+            name="M16A1 - 30 rounds",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M16A1___30_ROUNDS,
+            type=HLLVLoadoutItemType.PRIMARY,
+            weight=5,
+            description_tags=[
+                "Primary",
+                "Rifle",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=6,
+            max_ammo=10,
+            ammo_weight=2,
+            level_requirements={
+                HLLVRole.RIFLEMAN: 4,
+                HLLVRole.MEDIC: 4,
+                HLLVRole.SPOTTER: 4,
+                HLLVRole.SPECIALIST: 4,
+                HLLVRole.GRENADIER: 4,
+                HLLVRole.ENGINEER: 4,
+                HLLVRole.SQUAD_LEADER: 4,
+                HLLVRole.CREWMAN: 5,
+                HLLVRole.TANK_COMMANDER: 5,
+                HLLVRole.SUPPORT: 4,
+                HLLVRole.OBSERVER: 4,
+                HLLVRole.GUNNER: 4,
+                HLLVRole.PILOT: 5,
+                HLLVRole.LOGISTICS_OFFICER: 5,
+                HLLVRole.COMMANDER: 4,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
     def M16A1_BAYONET(cls) -> "HLLVLoadoutItem":
         return cls(
             id="M16A1_Bayonet",
@@ -13023,9 +13061,9 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def NVA_MORTARWRENCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="NVA_MortarWrench",
-            name="Wrench",
+            name="Mortar Wrench",
             faction=HLLVFaction.NVA,
-            weapon=HLLVWeapon.WRENCH,
+            weapon=HLLVWeapon.MORTAR_WRENCH,
             type=HLLVLoadoutItemType.LOCKED_ITEM,
             weight=1,
             description_tags=[
@@ -13456,7 +13494,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def USMORTARWRENCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="USMortarWrench",
-            name="Wrench ",
+            name="Wrench",
             faction=HLLVFaction.US,
             weapon=HLLVWeapon.WRENCH,
             type=HLLVLoadoutItemType.LOCKED_ITEM,
@@ -13491,6 +13529,39 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
             ammo_weight=1,
             level_requirements={
                 HLLVRole.SPECIALIST: 0,
+            },
+        )
+
+    @class_cached_property
+    @classmethod
+    def WFL_M1A1_THOMPSON(cls) -> "HLLVLoadoutItem":
+        return cls(
+            id="WFL_M1A1_Thompson",
+            name="M1A1 Thompson ",
+            faction=HLLVFaction.US,
+            weapon=HLLVWeapon.M1A1_THOMPSON,
+            type=HLLVLoadoutItemType.VERSATILE,
+            weight=3,
+            description_tags=[
+                "Primary",
+                "Submachine Gun",
+                "Automatic",
+                "Semi-Automatic",
+            ],
+            base_ammo=4,
+            max_ammo=8,
+            ammo_weight=1,
+            level_requirements={
+                HLLVRole.COMMANDER: 3,
+                HLLVRole.TANK_COMMANDER: 3,
+                HLLVRole.CREWMAN: 3,
+                HLLVRole.OBSERVER: 3,
+                HLLVRole.SNIPER: 3,
+                HLLVRole.SQUAD_LEADER: 3,
+                HLLVRole.MEDIC: 3,
+                HLLVRole.SPECIALIST: 3,
+                HLLVRole.GRENADIER: 3,
+                HLLVRole.ENGINEER: 3,
             },
         )
 
@@ -14244,7 +14315,7 @@ class HLLVLoadoutItem(IndexedBaseModel[str]):
     def WFL_USMORTARWRENCH(cls) -> "HLLVLoadoutItem":
         return cls(
             id="WFL_USMortarWrench",
-            name="Wrench",
+            name="Mortar Wrench",
             faction=HLLVFaction.US,
             weapon=HLLVWeapon.WRENCH,
             type=HLLVLoadoutItemType.LOCKED_ITEM,
