@@ -3,9 +3,17 @@
     "name": "M16A1",
     "type": "Assault Rifle"
   },
+  "M16A1 - 30 rounds": {
+    "name": "M16A1 w/30 mag",
+    "type": "Assault Rifle"
+  },
   "M14": {
     "name": "M14",
     "type": "Semi-Auto Rifle"
+  },
+  "M1A1 Thompson ": {
+    "name": "M1A1 Thompson",
+    "type": "Submachine Gun"
   },
   "TNT": {
     "name": "TNT",
@@ -44,6 +52,10 @@
     "type": "Satchel"
   },
   "Wrench": {
+    "name": "Wrench",
+    "type": "Wrench"
+  },
+  "Mortar Wrench": {
     "name": "Wrench",
     "type": "Wrench"
   },

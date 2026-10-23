@@ -26,6 +26,7 @@ class EPlayerRole(StrEnum):
     FLIGHT_ENGINEER = "EPlayerRole::HelicopterFlightEngineer"
     HELI_MEDIC = "EPlayerRole::HelicopterMedic"
     COMMANDER = "EPlayerRole::ArmyCommander"
+    RAMBO = "EPlayerRole::Rambo"
 
     def get_role_name(self) -> str:
         return self.value.split("::")[1]

@@ -4576,6 +4576,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
 
     @class_cached_property
     @classmethod
+    def M16A1___30_ROUNDS(cls) -> "HLLVWeapon":
+        """*M16A1 - 30 rounds*"""
+        return cls(
+            id="M16A1 - 30 rounds",
+            name="M16A1 w/30 mag",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.ASSAULT_RIFLE,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
     def M18(cls) -> "HLLVWeapon":
         """*M18 *"""
         return cls(
@@ -4623,6 +4636,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id=None,
             factions={HLLVFaction.US},
             type=WeaponType.PISTOL,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def M1A1_THOMPSON(cls) -> "HLLVWeapon":
+        """*M1A1 Thompson *"""
+        return cls(
+            id="M1A1 Thompson ",
+            name="M1A1 Thompson",
+            vehicle_id=None,
+            factions={HLLVFaction.US},
+            type=WeaponType.SUBMACHINE_GUN,
             magnification=None,
         )
 
@@ -4766,6 +4792,19 @@ class HLLVWeapon(_Weapon[HLLVFaction, "HLLVVehicle"]):
             vehicle_id=None,
             factions={HLLVFaction.US},
             type=WeaponType.SHOTGUN,
+            magnification=None,
+        )
+
+    @class_cached_property
+    @classmethod
+    def MORTAR_WRENCH(cls) -> "HLLVWeapon":
+        """*Mortar Wrench*"""
+        return cls(
+            id="Mortar Wrench",
+            name="Wrench",
+            vehicle_id=None,
+            factions={HLLVFaction.NVA},
+            type=WeaponType.WRENCH,
             magnification=None,
         )
 

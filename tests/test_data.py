@@ -880,6 +880,7 @@ class TestDataRoles:
             HLLVLoadoutItem.M61X3,
             HLLVLoadoutItem.M18_CLAYMOREX2,
             HLLVLoadoutItem.MODEL_77E_SHOTGUN,
+            HLLVLoadoutItem.WFL_M1A1_THOMPSON,
         }
 
         assert role.get_available_items(0, faction) == l1_items
